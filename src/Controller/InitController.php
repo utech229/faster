@@ -16,15 +16,5 @@ class InitController extends AbstractController
 
     public function __construct(){
 	}
-    #[Route('/')]
-    public function index(): Response
-    {
-        return $this->redirectToRoute('app_login');
-    }
-
-    #[Route('/{_locale}')]
-    public function indexi(): Response
-    {
-        return $this->redirectToRoute('app_login');
-    }
+    
 }

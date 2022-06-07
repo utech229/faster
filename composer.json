@@ -31,7 +31,7 @@
         "symfony/intl": "*",
         "symfony/mailer": "*",
         "symfony/mime": "*",
-        "symfony/monolog-bundle": "^3.0",
+        "symfony/monolog-bundle": "^3.8",
         "symfony/notifier": "*",
         "symfony/process": "*",
         "symfony/property-access": "*",
