@@ -8,17 +8,18 @@
 return [
     false, // $matchHost
     [ // $staticRoutes
+        '/' => [[['_route' => 'app_init_index', '_controller' => 'App\\Controller\\InitController::index'], null, null, null, false, false, null]],
     ],
     [ // $regexpList
         0 => '{^(?'
-                .'|/qr\\-code/([^/]++)/([\\w\\W]+)(*:35)'
-                .'|/_error/(\\d+)(?:\\.([^/]++))?(*:70)'
+                .'|/_error/(\\d+)(?:\\.([^/]++))?(*:35)'
+                .'|/([^/]++)(*:51)'
             .')/?$}sDu',
     ],
     [ // $dynamicRoutes
-        35 => [[['_route' => 'qr_code_generate', '_controller' => 'Endroid\\QrCodeBundle\\Controller\\GenerateController'], ['builder', 'data'], null, null, false, true, null]],
-        70 => [
-            [['_route' => '_preview_error', '_controller' => 'error_controller::preview', '_format' => 'html'], ['code', '_format'], null, null, false, true, null],
+        35 => [[['_route' => '_preview_error', '_controller' => 'error_controller::preview', '_format' => 'html'], ['code', '_format'], null, null, false, true, null]],
+        51 => [
+            [['_route' => 'app_init_indexi', '_controller' => 'App\\Controller\\InitController::indexi'], ['_locale'], null, null, false, true, null],
             [null, null, null, null, false, false, 0],
         ],
     ],

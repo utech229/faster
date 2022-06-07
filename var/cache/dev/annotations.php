@@ -54,6 +54,14 @@ return [[
 '[C]Symfony%5CBundle%5CFrameworkBundle%5CController%5CAbstractController%23addLink' => 1,
 'Symfony%5CBundle%5CFrameworkBundle%5CController%5CAbstractController%24container' => 0,
 '[C]Symfony%5CBundle%5CFrameworkBundle%5CController%5CAbstractController%24container' => 1,
+'App%5CController%5CInitController' => 0,
+'[C]App%5CController%5CInitController' => 1,
+'App%5CController%5CInitController%23__construct' => 0,
+'[C]App%5CController%5CInitController%23__construct' => 1,
+'App%5CController%5CInitController%23index' => 0,
+'[C]App%5CController%5CInitController%23index' => 1,
+'App%5CController%5CInitController%23indexi' => 0,
+'[C]App%5CController%5CInitController%23indexi' => 1,
 'Doctrine%5CBundle%5CDoctrineBundle%5CController%5CProfilerController' => 0,
 '[C]Doctrine%5CBundle%5CDoctrineBundle%5CController%5CProfilerController' => 1,
 'Doctrine%5CBundle%5CDoctrineBundle%5CController%5CProfilerController%23__construct' => 0,
@@ -492,14 +500,6 @@ return [[
 '[C]Doctrine%5CORM%5CPersisters%5CEntity%5CSingleTablePersister%23generateFilterConditionSQL' => 1,
 'Doctrine%5CORM%5CPersisters%5CEntity%5CSingleTablePersister%23getSQLResultCasing' => 0,
 '[C]Doctrine%5CORM%5CPersisters%5CEntity%5CSingleTablePersister%23getSQLResultCasing' => 1,
-'Endroid%5CQrCodeBundle%5CController%5CGenerateController' => 0,
-'[C]Endroid%5CQrCodeBundle%5CController%5CGenerateController' => 1,
-'Endroid%5CQrCodeBundle%5CController%5CGenerateController%23__construct' => 0,
-'[C]Endroid%5CQrCodeBundle%5CController%5CGenerateController%23__construct' => 1,
-'Endroid%5CQrCodeBundle%5CController%5CGenerateController%23__invoke' => 0,
-'[C]Endroid%5CQrCodeBundle%5CController%5CGenerateController%23__invoke' => 1,
-'Endroid%5CQrCodeBundle%5CController%5CGenerateController%24builderRegistry' => 0,
-'[C]Endroid%5CQrCodeBundle%5CController%5CGenerateController%24builderRegistry' => 1,
 'Symfony%5CBundle%5CFrameworkBundle%5CController%5CRedirectController' => 0,
 '[C]Symfony%5CBundle%5CFrameworkBundle%5CController%5CRedirectController' => 1,
 'Symfony%5CBundle%5CFrameworkBundle%5CController%5CRedirectController%23__construct' => 0,
@@ -540,6 +540,6 @@ return [[
 ], [
 
 0 => [],
-1 => 1654251251,
+1 => 1654596463,
 
 ]];
