@@ -121,11 +121,12 @@ class SuperController extends AbstractController
                 $this->intl->trans("Utilisateur SUP-ONE ajouté avec succès")
             );
         }else {
+            
             $brand   = $this->brandRepository->findOneById(1);
             $sender  = $this->senderRepository->findOneById(1);
-            $brand->setManager($existed_user);
-            $this->brandRepository->add($brand);
-            $company = $this->companyRepository->findOneByName($this->brand->index()['name']);
+            $company = $this->companyRepository->findOneById(1);
+            $company->setManager($existed_user);
+            $this->companyRepository->add($company);
             $existed_user->setAdmin($existed_user)->setBrand($brand)->setDefaultSender($sender);
             $this->userRepository->add($existed_user);
             return $this->services->ajax_success_crud(
