@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Service\BaseUrl;
 use App\Repository\BrandRepository;
+use App\Repository\CompanyRepository;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -12,11 +13,13 @@ class uBrand extends AbstractController
 {
     protected $brand;
    
-	public function __construct(TranslatorInterface $intl, BaseUrl $baseUrl, BrandRepository $brandRepository)
+	public function __construct(TranslatorInterface $intl, BaseUrl $baseUrl, BrandRepository $brandRepository,
+    CompanyRepository $companyRepository)
 	{
        $this->intl    = $intl;
        $this->baseUrl = $baseUrl;
        $this->brandRepository = $brandRepository;
+       $this->companyRepository = $companyRepository;
     }
 
     public function index(){
