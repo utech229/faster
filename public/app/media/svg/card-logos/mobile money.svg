@@ -1,0 +1,23 @@
+<svg id="Calque_1" data-name="Calque 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 97.2 58.5">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #f6f8fa;
+      }
+
+      .cls-2 {
+        fill: #e6a540;
+      }
+
+      .cls-3 {
+        font-size: 26px;
+        fill: #2566af;
+        font-family: TimesNewRomanPS-BoldMT, Times New Roman;
+        font-weight: 700;
+      }
+    </style>
+  </defs>
+  <path class="cls-1" d="M-.15-5.44H82.47a7.3,7.3,0,0,1,7.29,7.31V45.75a7.3,7.3,0,0,1-7.29,7.31H-.15a7.3,7.3,0,0,1-7.29-7.31V1.87A7.3,7.3,0,0,1-.15-5.44Z" transform="translate(7.44 5.44)"/>
+  <path class="cls-2" d="M75.29,15.21,64.77,16.9a2.27,2.27,0,0,0-2.08,2.25l.07,7.43.4.09a16.79,16.79,0,0,1,4.47-7A19.23,19.23,0,0,1,75.29,15.21Z" transform="translate(7.44 5.44)"/>
+  <text class="cls-3" transform="translate(9.85 38.6)">MoMo</text>
+</svg>

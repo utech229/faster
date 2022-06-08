@@ -37,6 +37,14 @@ class ContactIndex
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     private $updatedAt;
 
+    #[ORM\ManyToOne(targetEntity: ContactGroup::class, inversedBy: 'contactIndices')]
+    #[ORM\JoinColumn(nullable: false)]
+    private $contactGroup;
+
+    #[ORM\ManyToOne(targetEntity: Contact::class, inversedBy: 'contactIndices')]
+    #[ORM\JoinColumn(nullable: false)]
+    private $contact;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -134,6 +142,30 @@ class ContactIndex
     public function setUpdatedAt(?\DateTimeImmutable $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getContactGroup(): ?ContactGroup
+    {
+        return $this->contactGroup;
+    }
+
+    public function setContactGroup(?ContactGroup $contactGroup): self
+    {
+        $this->contactGroup = $contactGroup;
+
+        return $this;
+    }
+
+    public function getContact(): ?Contact
+    {
+        return $this->contact;
+    }
+
+    public function setContact(?Contact $contact): self
+    {
+        $this->contact = $contact;
 
         return $this;
     }

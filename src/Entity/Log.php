@@ -25,6 +25,12 @@ class Log
     #[ORM\Column(type: 'datetime_immutable')]
     private $createdAt;
 
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'logs')]
+    private $user;
+
+    #[ORM\ManyToOne(targetEntity: Status::class, inversedBy: 'logs')]
+    private $status;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -74,6 +80,30 @@ class Log
     public function setCreatedAt(\DateTimeImmutable $createdAt): self
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    public function getStatus(): ?Status
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?Status $status): self
+    {
+        $this->status = $status;
 
         return $this;
     }

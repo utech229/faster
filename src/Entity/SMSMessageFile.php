@@ -25,6 +25,10 @@ class SMSMessageFile
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     private $updatedAt;
 
+    #[ORM\OneToOne(targetEntity: SMSCampaign::class, cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(nullable: false)]
+    private $campaign;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -74,6 +78,18 @@ class SMSMessageFile
     public function setUpdatedAt(?\DateTimeImmutable $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getCampaign(): ?SMSCampaign
+    {
+        return $this->campaign;
+    }
+
+    public function setCampaign(SMSCampaign $campaign): self
+    {
+        $this->campaign = $campaign;
 
         return $this;
     }

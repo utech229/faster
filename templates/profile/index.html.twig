@@ -1,0 +1,639 @@
+{% extends 'base.app.html.twig' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block stylesheets %} {% endblock %}
+
+{% block body %}
+
+<!--begin::Content-->
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+    <!--begin::Toolbar-->
+    <div class="toolbar" id="kt_toolbar"> 
+        <!--begin::Container-->
+        <div id="kt_toolbar_container" class="container-fluid d-flex flex-stack">
+            <!--begin::Page title-->
+           {% include 'app.title.html.twig' %}
+            <!--end::Page title-->
+            <!--begin::Actions-->
+            {% include 'section/header.action.html.twig' %}
+            <!--end::Actions-->
+        </div>
+        <!--end::Container-->
+    </div>
+    <!--end::Toolbar-->
+    <!--begin::Post-->
+    <div class="post d-flex flex-column-fluid" id="kt_post">
+        <!--begin::Container-->
+        <div id="kt_content_container" class="container-xxl">
+            <!--begin::Navbar-->
+            {% include 'section/profile.header.html.twig' %}
+            <!--end::Navbar-->
+            <!--begin::Hero card-->
+            <div class="card mb-12">
+                <!--begin::Hero body-->
+                <div class="card-body flex-column p-2">
+                    <!--begin::Hero nav-->
+                    <div class="card-rounded bg-light d-flex flex-stack flex-wrap bg-primary p-5">
+                        <!--begin::Nav-->
+                        <ul class="nav flex-wrap border-transparent fw-bolder ">
+                            <!--begin::Nav item-->
+                            <li class="nav-item my-1">
+                                <a class="btn btn-color-gray-600 btn-active-white btn-active-color-primary fw-boldest fs-8 fs-lg-base nav-link px-3 px-lg-8 mx-1 text-uppercase active" href="../../demo1/dist/apps/support-center/overview.html">Overview</a>
+                            </li>
+                            <!--end::Nav item-->
+                            <!--begin::Nav item-->
+                            <li class="nav-item my-1">
+                                <a class="btn btn-color-gray-600 btn-active-white btn-active-color-primary fw-boldest fs-8 fs-lg-base nav-link px-3 px-lg-8 mx-1 text-uppercase" href="../../demo1/dist/apps/support-center/tickets/list.html">tickets</a>
+                            </li>
+                            <!--end::Nav item-->
+                            <!--begin::Nav item-->
+                            <li class="nav-item my-1">
+                                <a class="btn btn-color-gray-600 btn-active-white btn-active-color-primary fw-boldest fs-8 fs-lg-base nav-link px-3 px-lg-8 mx-1 text-uppercase" href="../../demo1/dist/apps/support-center/tutorials/list.html">Tutorials</a>
+                            </li>
+                            <!--end::Nav item-->
+                            <!--begin::Nav item-->
+                            <li class="nav-item my-1">
+                                <a class="btn btn-color-gray-600 btn-active-white btn-active-color-primary fw-boldest fs-8 fs-lg-base nav-link px-3 px-lg-8 mx-1 text-uppercase" href="../../demo1/dist/apps/support-center/faq.html">FAQ</a>
+                            </li>
+                            <!--end::Nav item-->
+                            <!--begin::Nav item-->
+                            <li class="nav-item my-1">
+                                <a class="btn btn-color-gray-600 btn-active-white btn-active-color-primary fw-boldest fs-8 fs-lg-base nav-link px-3 px-lg-8 mx-1 text-uppercase" href="../../demo1/dist/apps/support-center/licenses.html">Licenses</a>
+                            </li>
+                            <!--end::Nav item-->
+                            <!--begin::Nav item-->
+                            <li class="nav-item my-1">
+                                <a class="btn btn-color-gray-600 btn-active-white btn-active-color-primary fw-boldest fs-8 fs-lg-base nav-link px-3 px-lg-8 mx-1 text-uppercase" href="../../demo1/dist/apps/support-center/contact.html">Contact US</a>
+                            </li>
+                            <!--end::Nav item-->
+                        </ul>
+                        <!--end::Nav-->
+                        <!--begin::Action-->
+                        <a href="#" data-bs-toggle="modal" data-bs-target="#kt_modal_new_ticket" class="btn btn-white fw-bolder fs-8 fs-lg-base">Create Ticket</a>
+                        <!--end::Action-->
+                    </div>
+                    <!--end::Hero nav-->
+                </div>
+                <!--end::Hero body-->
+            </div>
+            <!--end::Hero card-->
+            
+            <!--begin::details View-->
+            <div class="card mb-5 mb-xl-10" id="kt_profile_details_view">
+                <!--begin::Card header-->
+                <div class="card-header cursor-pointer">
+                    <!--begin::Card title-->
+                    <div class="card-title m-0">
+                        <h3 class="fw-bolder m-0">{% trans %}Détail de profil{% endtrans %}</h3>
+                    </div>
+                    <!--end::Card title-->
+                    <!--begin::Action-->
+                    <a href="javascript:;" id="kt_profile_details_edit_button" class="btn btn-primary align-self-center">{% trans %}Editer{% endtrans %}</a>
+                    <!--end::Action-->
+                </div>
+                <!--begin::Card header-->
+                <!--begin::Card body-->
+                <div class="card-body p-9">
+                    <!--begin::Row-->
+                    <div class="row mb-7">
+                        <!--begin::Label-->
+                        <label class="col-lg-4 fw-bold text-muted">{% trans %}Nom complet{% endtrans %}</label>
+                        <!--end::Label-->
+                        <!--begin::Col-->
+                        <div class="col-lg-8">
+                            <span class="fw-bolder fs-6 text-gray-800"> {% if  app.user.usetting.firstname is not null %} 
+                            {{ app.user.usetting.firstname }} {{ app.user.usetting.lastname }} 
+                            {% else %}
+                            <span class="text-danger">Non défini</span>
+                            {% endif %} </span>
+                        </div>
+                        <!--end::Col-->
+                    </div>
+                    <!--end::Row-->
+                    <!--begin::Input group-->
+                  
+                    <!--end::Input group-->
+                    <!--begin::Input group-->
+                    <div class="row mb-7">
+                        <!--begin::Label-->
+                        <label class="col-lg-4 fw-bold text-muted">{% trans %}Téléphone{% endtrans %}
+                        <i class="fas fa-exclamation-circle ms-1 fs-7" data-bs-toggle="tooltip" title="{{'Le numéro téléphone doit etre valide'}}"></i></label>
+                        <!--end::Label-->
+                        <!--begin::Col-->
+                        <div class="col-lg-8 d-flex align-items-center">
+                            <span class="fw-bolder fs-6 text-gray-800 me-2">{{ app.user.phone }}</span>
+                        </div>
+                        <!--end::Col-->
+                    </div>
+                    <!--end::Input group-->
+                   
+                    <!--end::Input group-->
+                    <!--begin::Input group-->
+                    <div class="row mb-7">
+                        <!--begin::Label-->
+                        <label class="col-lg-4 fw-bold text-muted">{% trans %}Pays{% endtrans %}
+                        <i class="fas fa-exclamation-circle ms-1 fs-7" data-bs-toggle="tooltip" title="{{"Votre pays d'origine"| trans}}"></i></label>
+                        <!--end::Label-->
+                        <!--begin::Col-->
+                        <div class="col-lg-8">
+                            <span class="fw-bolder fs-6 text-gray-800">{{ app.user.country.name }}</span>
+                        </div>
+                        <!--end::Col-->
+                    </div>
+                    <!--end::Input group-->
+                    <!--begin::Notice-->
+                    <div class="notice d-flex bg-light-info rounded border-info border border-dashed p-6">
+                        <!--begin::Icon-->
+                        <!--begin::Svg Icon | path: icons/duotune/general/gen044.svg-->
+                        <span class="svg-icon svg-icon-2tx svg-icon-info me-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="black" />
+                                <rect x="11" y="14" width="7" height="2" rx="1" transform="rotate(-90 11 14)" fill="black" />
+                                <rect x="11" y="17" width="2" height="2" rx="1" transform="rotate(-90 11 17)" fill="black" />
+                            </svg>
+                        </span>
+                        <!--end::Svg Icon-->
+                        <!--end::Icon-->
+                        <!--begin::Wrapper-->
+                        <div class="d-flex flex-stack flex-grow-1">
+                            <!--begin::Content-->
+                            <div class="fw-bold">
+                                <h4 class="text-gray-900 fw-bolder">{% trans %}Nous avons besoins de votre attention{% endtrans %}</h4>
+                                <div class="fs-6 text-gray-700">{% trans %}Si vous désirez modifier les paramètre de votre profil, {% endtrans %}
+                                <a class="fw-bolder" id="kt_profile_details_edit_button_for_notice" 
+                                href="javascript:;">{% trans %}cliquez ici{% endtrans %}</a>.</div>
+                            </div>
+                            <!--end::Content-->
+                        </div>
+                        <!--end::Wrapper-->
+                    </div>
+                    <!--end::Notice-->
+                </div>
+                <!--end::Card body-->
+            </div>
+            <!--end::details View-->
+            <!--begin::Basic info-->
+            <div class="card mb-5 mb-xl-10 d-none" id="kt_profile_details_setting">
+                <!--begin::Card header-->
+                <div class="card-header border-0 cursor-pointer" role="button" data-bs-toggle="collapse" data-bs-target="#kt_account_profile_details" aria-expanded="true" aria-controls="kt_account_profile_details">
+                    <!--begin::Card title-->
+                    <div class="card-title m-0">
+                        <h3 class="fw-bolder m-0"> {% trans %}Détail de profil{% endtrans %}</h3>
+                    </div>
+                    <!--end::Card title-->
+                     <!--begin::Action-->
+                    <a href="javascript:;" id="kt_profile_details_review_button" class="btn btn-primary align-self-center">{% trans %}Voir{% endtrans %}</a>
+                    <!--end::Action-->
+                </div>
+                <!--begin::Card header-->
+                <!--begin::Content-->
+                <div id="kt_account_settings_profile_details" class="collapse show">
+                    <!--begin::Form-->
+                    <form id="kt_account_profile_details_form" class="form">
+                        <!--begin::Card body-->
+                        <div class="card-body border-top p-9">
+                            <!--begin::Input group-->
+                            <div class="row mb-6">
+                                <!--begin::Label-->
+                                <label class="col-lg-4 col-form-label fw-bold fs-6">{{'Avatar de profil'|trans}}</label>
+                                <!--end::Label-->
+                                <!--begin::Col-->
+                                <div class="col-lg-8">
+                                    <!--begin::Image input-->
+                                    <div class="image-input image-input-outline" data-kt-image-input="true" style="background-image: url('assets/media/svg/avatars/blank.svg')">
+                                        <!--begin::Preview existing avatar-->
+                                        <div class="image-input-wrapper w-125px h-125px" style="background-image: url({{ asset('app/uploads/avatars/'~ app.user.profilePhoto ~'') }})"></div>
+                                        <!--end::Preview existing avatar-->
+                                        <!--begin::Label-->
+                                        <label class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="change" data-bs-toggle="tooltip" title="{{'Changer avatar'|trans}}">
+                                            <i class="bi bi-pencil-fill fs-7"></i>
+                                            <!--begin::Inputs-->
+                                            <input type="file" name="avatar" accept=".png, .jpg, .jpeg" />
+                                            <input type="hidden" name="avatar_remove" />
+                                            <!--end::Inputs-->
+                                        </label>
+                                        <!--end::Label-->
+                                        <!--begin::Cancel-->
+                                        <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="cancel" data-bs-toggle="tooltip" title="{{'Annuler avatar'|trans}}">
+                                            <i class="bi bi-x fs-2"></i>
+                                        </span>
+                                        <!--end::Cancel-->
+                                        <!--begin::Remove-->
+                                        <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="remove" data-bs-toggle="tooltip" title="{{'Supprimer l\'avatar'|trans}}">
+                                            <i class="bi bi-x fs-2"></i>
+                                        </span>
+                                        <!--end::Remove-->
+                                    </div>
+                                    <!--end::Image input-->
+                                    <!--begin::Hint-->
+                                    <div class="form-text">{% trans %}Type de fichier autorisé{% endtrans %}: png, jpg, jpeg.</div>
+                                    <!--end::Hint-->
+                                </div>
+                                <!--end::Col-->
+                            </div>
+                            <!--end::Input group-->
+                            <!--begin::Input group-->
+                            <div class="row mb-6">
+                                <!--begin::Label-->
+                                <label class="col-lg-4 col-form-label required fw-bold fs-6">{% trans %}Nom complet{% endtrans %}</label>
+                                <!--end::Label-->
+                                <!--begin::Col-->
+                                <div class="col-lg-8">
+                                    <!--begin::Row-->
+                                    <div class="row">
+                                        <!--begin::Col-->
+                                        <div class="col-lg-6 fv-row">
+                                            <input type="text" name="fname" id="user_fname" class="form-control form-control-lg form-control-solid mb-4 mb-lg-0" placeholder="{{'Prénoms'|trans}}" value="{{app.user.usetting.firstname}}" />
+                                        </div>
+                                        <!--end::Col-->
+                                        <!--begin::Col-->
+                                        <div class="col-lg-6 fv-row">
+                                            <input type="text" name="lname" id="user_lname" class="form-control form-control-lg form-control-solid" placeholder="{{'Noms'|trans}}" value="{{app.user.usetting.lastname}}" />
+                                        </div>
+                                        <!--end::Col-->
+                                    </div>
+                                    <!--end::Row-->
+                                </div>
+                                <!--end::Col-->
+                            </div>
+                            <!--end::Input group-->
+                            <!--begin::Input group-->
+                            <div class="row mb-6">
+                                <!--begin::Label-->
+                                <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                    <span class="required">{{'Email & Téléphone'|trans}}</span>
+                                     <i class="fas fa-exclamation-circle ms-1 fs-7" data-bs-toggle="tooltip" title="{{"Vous ne pouvez modifier ni l'email ni le téléphone ici"|trans}}"></i>
+                                </label>
+                                <!--end::Label-->
+                                <!--begin::Col-->
+                                <div class="col-lg-8">
+                                    <!--begin::Row-->
+                                    <div class="row">
+                                        <!--begin::Col-->
+                                        <div class="col-lg-6 fv-row">
+                                            <input type="text" name="email"  id="email" class="form-control form-control-lg form-control-solid mb-4 mb-lg-0" placeholder="{{'Votre email'|trans}}" value="{{ app.user.email }}" disabled />
+                                        </div>
+                                        <!--end::Col-->
+                                        <!--begin::Col-->
+                                        <div class="col-lg-6 fv-row">
+                                            <input type="tel" name="phone" id="user_phone" class="form-control form-control-lg form-control-solid" placeholder={{'Téléphone'|trans}} value="{{ app.user.phone }}" disabled/>
+                                        </div>
+                                        <!--end::Col-->
+                                    </div>
+                                    <!--end::Row-->
+                                </div>
+                                <!--end::Col-->
+                            </div>
+                            <!--end::Input group-->
+                            <!--begin::Input group-->
+                            <div class="row mb-6">
+                                <!--begin::Label-->
+                                <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                    <span class="required">{{'Genre & Pays'|trans}}</span>
+                                     <i class="fas fa-exclamation-circle ms-1 fs-7" data-bs-toggle="tooltip" title="{{'Renseignez votre genre et votre pays de résidence'|trans}}"></i>
+                                </label>
+                                <!--end::Label-->
+                                <!--begin::Col-->
+                                <div class="col-lg-8">
+                                    <!--begin::Row-->
+                                    <div class="row">
+                                        <!--begin::Col-->
+                                        <div class="col-lg-6 fv-row">
+                                             <select name="currency" id="user_currency" aria-label="{{'Selectionnez une devise'}}" data-control="select2" data-placeholder="{{'Choissez une devise'}}.." class="form-select form-select-solid form-select-lg">
+                                                <option value="">{{'Choisir une devise'}}..</option>
+                                                <option data-kt-select2-country="{{ asset('app/media/flags/united-states.svg') }}" value="XOF">XOF</option>
+                                                <option data-kt-select2-country="{{ asset('app/media/flags/united-kingdom.svg') }}" value="XAF">XAF</option>
+                                            </select>
+                                        </div>
+                                        <!--end::Col-->
+                                        <!--begin::Col-->
+                                        <div class="col-lg-6 fv-row">
+                                            <select name="country" id="kt_user_add_select2_country" aria-label="Select a Country" data-control="select2" data-placeholder="{{'Choisir un pays'|trans}}..." 
+                                                class="form-select form-select-solid form-select-lg fw-bold" data-kt-user-settings-type="select2_flags">
+                                                <option value="">{{'Choisir un pays'|trans}}</option>
+                                                <option value="BJ" data-kt-select2-country="{{ asset('app/media/flags/benin.svg')}}">{% trans %}Benin{% endtrans %}</option>
+                                                <option value="TG" data-kt-select2-country="{{ asset('app/media/flags/togo.svg')}}">{% trans %}Togo{% endtrans %}</option>
+                                                <option value="CI" data-kt-select2-country="{{ asset('app/media/flags/ivory-coast.svg')}}">{% trans %}Cote d'Ivoire{% endtrans %}</option>
+                                                <option value="NE" data-kt-select2-country="{{ asset('app/media/flags/niger.svg')}}">{% trans %}Niger{% endtrans %}</option>
+                                                <option value="SN" data-kt-select2-country="{{ asset('app/media/flags/senegal.svg')}}">{% trans %}Senegal{% endtrans %}</option>
+                                            </select>
+                                        </div>
+                                        <!--end::Col-->
+                                    </div>
+                                    <!--end::Row-->
+                                </div>
+                                <!--end::Col-->
+                            </div>
+                            <!--end::Input group-->
+                             <div class="row mb-6">
+                                <!--begin::Label-->
+                                <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                    <span class="required">{{'Langue & Timezone'|trans}}</span>
+                                     <i class="fas fa-exclamation-circle ms-1 fs-7" data-bs-toggle="tooltip" title="{{'Choississez votre langue préferée et utilisez le timezone par défaut'|trans}}"></i>
+                                </label>
+                                <!--end::Label-->
+                                <!--begin::Col-->
+                                <div class="col-lg-8">
+                                    <!--begin::Row-->
+                                    <div class="row">
+                                        <!--begin::Col-->
+                                        <div class="col-lg-6 fv-row">
+                                             <select name="language" id="user_language" aria-label="{{'Selectionnez votre langue préférée'}}" data-control="select2" 
+                                             data-placeholder="{{'Selectionnez votre langue préférée'}}.." class="form-select form-select-solid form-select-lg mb-4 mb-lg-0">
+                                                <option value="">{% trans %}Choisir une langue{% endtrans %}</option>
+                                                <option data-kt-select2-country="{{ asset('app/media/flags/united-kingdom.svg') }}" value="en">Anglais - English</option>
+                                                <option data-kt-select2-country="{{ asset('app/media/flags/france.svg') }}" value="fr"> Français - French</option>
+                                            </select>
+                                        </div>
+                                        <!--end::Col-->
+                                        <!--begin::Col-->
+                                        <div class="col-lg-6 fv-row">
+                                            <select name="timezone" id="user_timezone" aria-label="{% trans %}Selectionnez un timezone{% endtrans %}" data-control="select2" 
+                                                data-placeholder="{{'Selectionnez un timezone'| trans }}..." class="form-select form-select-solid form-select-lg">
+                                                <option value="">{% trans %}Choisir un timezone{% endtrans %}...</option>
+                                                <option data-bs-offset="3600" value="+01:00">(GMT+01:00) West Central Africa</option>
+                                            </select>
+                                        </div>
+                                        <!--end::Col-->
+                                    </div>
+                                    <!--end::Row-->
+                                </div>
+                                <!--end::Col-->
+                            </div>
+                            <!--end::Input group-->
+                        </div>
+                        <!--end::Card body-->
+                        <!--begin::Actions-->
+                        <div class="card-footer d-flex justify-content-end py-6 px-9">
+                            <button id="kt_profile_details_discard_button" class="btn btn-light btn-active-light-primary me-2">{{'Annuler'| trans}}</button>
+                            <button type="submit" class="btn btn-primary" id="kt_account_profile_details_submit" data-kt-account-profile-details-action="submit">
+                                <span class="indicator-label">{{"Enregister"|trans }}</span>
+                                <span class="indicator-progress">{{"Veuillez patienter..."| trans }}
+                                <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                            </button>
+                        </div>
+                        <!--end::Actions-->
+                    </form>
+                    <!--end::Form-->
+                </div>
+                <!--end::Content-->
+            </div>
+            <!--end::Basic info-->
+
+            <!--begin::Sign-in Method-->
+            <div class="card mb-5 mb-xl-10 d-none" id="kt_profile_sign_in_methods">
+                <!--begin::Card header-->
+                <div class="card-header border-0 cursor-pointer" role="button" data-bs-toggle="collapse" data-bs-target="#kt_account_signin_method">
+                    <div class="card-title m-0">
+                        <h3 class="fw-bolder m-0">{% trans %}Méthode de connexion{% endtrans %}</h3>
+                    </div>
+                </div>
+                <!--end::Card header-->
+                <!--begin::Content-->
+                <div id="kt_account_settings_signin_method" class="collapse show">
+                    <!--begin::Card body-->
+                    <div class="card-body border-top p-9">
+                        <!--begin::Email Address-->
+                        <div class="d-flex flex-wrap align-items-center">
+                            <!--begin::Label-->
+                            <div id="kt_signin_email">
+                                <div class="fs-6 fw-bolder mb-1">{% trans %}Adresse email{% endtrans %}</div>
+                                <div class="fw-bold text-gray-600">{{app.user.email}}</div>
+                            </div>
+                            <!--end::Label-->
+                            <!--begin::Edit-->
+                            <div id="kt_signin_email_edit" class="flex-row-fluid d-none">
+                                <!--begin::Form-->
+                                <form id="kt_signin_change_email" class="form" novalidate="novalidate">
+                                    <div class="row mb-6">
+                                        <div class="col-lg-6 mb-4 mb-lg-0">
+                                            <div class="fv-row mb-0">
+                                                <label for="emailaddress" class="form-label fs-6 fw-bolder mb-3">{% trans %}Nouvelle adresse email{% endtrans %}</label>
+                                                <input type="email" class="form-control form-control-lg form-control-solid" id="newemail" placeholder="nouvelle.email@...com" name="email" value="support@keenthemes.com" />
+                                                <input type="hidden" name="_token" value="{{ csrf_token(app.user.uid) }}">
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="fv-row mb-0">
+                                                <label for="confirmemailpassword" class="form-label fs-6 fw-bolder mb-3">{% trans %}Confirmer mot de passe{% endtrans %}</label>
+                                                <input type="password" class="form-control form-control-lg form-control-solid" name="cpassword" id="confirmemailpassword"
+                                                maxlength="30" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex">
+                                        {#<button id="kt_signin_submit" type="button" class="btn btn-primary me-2 px-6">{% trans %}Modifier{% endtrans %}</button>#}
+                                        <button type="submit" class="btn btn-primary" id="kt_signin_submit" data-kt-signin-submit-action="submit">
+                                            <span class="indicator-label">{{"Modifier"|trans }}</span>
+                                            <span class="indicator-progress">{{"Veuillez patienter..."| trans }}
+                                            <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                                        </button>
+                                        <button id="kt_signin_cancel" type="button" class="btn btn-color-gray-400 btn-active-light-primary px-6">Cancel</button>
+                                    </div>
+                                </form>
+                                <!--end::Form-->
+                            </div>
+                            <!--end::Edit-->
+                            <!--begin::Action-->
+                            <div id="kt_signin_email_button" class="ms-auto">
+                                <button class="btn btn-light btn-active-light-primary">{% trans %}Changer email{% endtrans %}</button>
+                            </div>
+                            <!--end::Action-->
+                        </div>
+                        <!--end::Email Address-->
+                        <!--begin::Separator-->
+                        <div class="separator separator-dashed my-6"></div>
+                        <!--end::Separator-->
+                        <!--begin::Password-->
+                        <div class="d-flex flex-wrap align-items-center mb-10">
+                            <!--begin::Label-->
+                            <div id="kt_signin_password">
+                                <div class="fs-6 fw-bolder mb-1">{% trans %}Mot de passe{% endtrans %}</div>
+                                <div class="fw-bold text-gray-600">************</div>
+                            </div>
+                            <!--end::Label-->
+                            <!--begin::Edit-->
+                            <div id="kt_signin_password_edit" class="flex-row-fluid d-none">
+                                <!--begin::Form-->
+                                <form id="kt_signin_change_password" class="form" novalidate="novalidate">
+                                    <div class="row mb-1">
+                                        <div class="col-lg-4">
+                                            <div class="fv-row mb-0">
+                                                <label for="currentpassword" class="form-label fs-6 fw-bolder mb-3">{% trans %}Mot de passe actuel{% endtrans %}</label>
+                                                <input type="password" class="form-control form-control-lg form-control-solid" name="currentpassword" id="currentpassword" />
+                                                <input type="hidden" name="_token" value="{{ csrf_token(app.user.uid) }}">
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4" data-kt-password-meter="true">
+                                            <div class="fv-row mb-0">
+                                                <label for="newpassword" class="form-label fs-6 fw-bolder mb-3">{% trans %}Nouveau mot de passe{% endtrans %}</label>
+                                                <input type="password" class="form-control form-control-lg form-control-solid" name="newpassword" id="newpassword" />
+                                                <span class="btn btn-sm btn-icon position-absolute translate-middle top-50 end-0 me-n2" data-kt-password-meter-control="visibility">
+                                                    <i class="bi bi-eye-slash fs-2"></i>
+                                                    <i class="bi bi-eye fs-2 d-none"></i>
+                                                </span>
+                                            </div>
+                                             <!--begin::Meter-->
+                                            <div class="d-flex align-items-center mb-3" data-kt-password-meter-control="highlight">
+                                                <div class="flex-grow-1 bg-secondary bg-active-success rounded h-5px me-2"></div>
+                                                <div class="flex-grow-1 bg-secondary bg-active-success rounded h-5px me-2"></div>
+                                                <div class="flex-grow-1 bg-secondary bg-active-success rounded h-5px me-2"></div>
+                                                <div class="flex-grow-1 bg-secondary bg-active-success rounded h-5px"></div>
+                                            </div>
+                                            <!--end::Meter-->
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <div class="fv-row mb-0">
+                                                <label for="confirmpassword" class="form-label fs-6 fw-bolder mb-3">{% trans %}Confirmer nouveau{% endtrans %}</label>
+                                                <input type="password" class="form-control form-control-lg form-control-solid" name="confirmpassword" id="confirmpassword" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-text mb-5">{% trans %}Le mot de passe doit contenir 8 caractère au moin, des lettres et des symboles{% endtrans %}</div>
+                                    <div class="d-flex">
+                                        <button type="submit" class="btn btn-primary" id="kt_password_submit" data-kt-signin-password-submit-action="submit">
+                                            <span class="indicator-label">{{"Modifier"|trans }}</span>
+                                            <span class="indicator-progress">{{"Veuillez patienter..."| trans }}
+                                            <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                                        </button>
+                                        <button id="kt_password_cancel" type="button" class="btn btn-color-gray-400 btn-active-light-primary px-6">{% trans %}Annuler{% endtrans %}</button>
+                                    </div>
+                                </form>
+                                <!--end::Form-->
+                            </div>
+                            <!--end::Edit-->
+                            <!--begin::Action-->
+                            <div id="kt_signin_password_button" class="ms-auto">
+                                <button class="btn btn-light btn-active-light-primary">{% trans %}Réinitialiser{% endtrans %}</button>
+                            </div>
+                            <!--end::Action-->
+                        </div>
+                        <!--end::Password-->
+                        <!--begin::Notice-->
+                        <div class="notice d-flex bg-light-primary rounded border-primary border border-dashed p-6">
+                            <!--begin::Icon-->
+                            <!--begin::Svg Icon | path: icons/duotune/general/gen048.svg-->
+                            <span class="svg-icon svg-icon-2tx svg-icon-primary me-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                    <path opacity="0.3" d="M20.5543 4.37824L12.1798 2.02473C12.0626 1.99176 11.9376 1.99176 11.8203 2.02473L3.44572 4.37824C3.18118 4.45258 3 4.6807 3 4.93945V13.569C3 14.6914 3.48509 15.8404 4.4417 16.984C5.17231 17.8575 6.18314 18.7345 7.446 19.5909C9.56752 21.0295 11.6566 21.912 11.7445 21.9488C11.8258 21.9829 11.9129 22 12.0001 22C12.0872 22 12.1744 21.983 12.2557 21.9488C12.3435 21.912 14.4326 21.0295 16.5541 19.5909C17.8169 18.7345 18.8277 17.8575 19.5584 16.984C20.515 15.8404 21 14.6914 21 13.569V4.93945C21 4.6807 20.8189 4.45258 20.5543 4.37824Z" fill="black" />
+                                    <path d="M10.5606 11.3042L9.57283 10.3018C9.28174 10.0065 8.80522 10.0065 8.51412 10.3018C8.22897 10.5912 8.22897 11.0559 8.51412 11.3452L10.4182 13.2773C10.8099 13.6747 11.451 13.6747 11.8427 13.2773L15.4859 9.58051C15.771 9.29117 15.771 8.82648 15.4859 8.53714C15.1948 8.24176 14.7183 8.24176 14.4272 8.53714L11.7002 11.3042C11.3869 11.6221 10.874 11.6221 10.5606 11.3042Z" fill="black" />
+                                </svg>
+                            </span>
+                            <!--end::Svg Icon-->
+                            <!--end::Icon-->
+                            <!--begin::Wrapper-->
+                            <div class="d-flex flex-stack flex-grow-1 flex-wrap flex-md-nowrap">
+                                <!--begin::Content-->
+                                <div class="mb-3 mb-md-0 fw-bold">
+                                    <h4 class="text-gray-900 fw-bolder">{% trans %}Sécurisé votre compte{% endtrans %}</h4>
+                                    <div class="fs-6 text-gray-700 pe-7">{% trans %}L'authentification à deux facteurs ajoute une couche supplémentaire de sécurité à votre compte. Pour vous connecter, vous devrez en outre fournir un code à 6 chiffres{% endtrans %} </div>
+                                </div>
+                                <!--end::Content-->
+                                <!--begin::Action-->
+                                <a href="#" class="btn btn-primary px-6 align-self-center text-nowrap" data-bs-toggle="modal" data-bs-target="#kt_modal_two_factor_authentication">Enable</a>
+                                <!--end::Action-->
+                            </div>
+                            <!--end::Wrapper-->
+                        </div>
+                        <!--end::Notice-->
+                    </div>
+                    <!--end::Card body-->
+                </div>
+                <!--end::Content-->
+            </div>
+            <!--end::Sign-in Method-->
+            <!--begin::Desactivate Account-->
+            <div class="card d-none"  id="kt_profile_desactivate_account">
+                <!--begin::Card header-->
+                <div class="card-header border-0 cursor-pointer" role="button" data-bs-toggle="collapse" data-bs-target="#kt_account_deactivate" aria-expanded="true" aria-controls="kt_account_deactivate">
+                    <div class="card-title m-0">
+                        <h3 class="fw-bolder m-0">{% trans %}Désactivation du compte{% endtrans %}</h3>
+                    </div>
+                </div>
+                <!--end::Card header-->
+                <!--begin::Content-->
+                <div id="kt_account_settings_deactivate" class="collapse show">
+                    <!--begin::Form-->
+                    <form id="kt_account_deactivate_form" class="form">
+                        <!--begin::Card body-->
+                        <div class="card-body border-top p-9">
+                            <!--begin::Notice-->
+                            <div class="notice d-flex bg-light-warning rounded border-warning border border-dashed mb-9 p-6">
+                                <!--begin::Icon-->
+                                <!--begin::Svg Icon | path: icons/duotune/general/gen044.svg-->
+                                <span class="svg-icon svg-icon-2tx svg-icon-warning me-4">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                        <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="black" />
+                                        <rect x="11" y="14" width="7" height="2" rx="1" transform="rotate(-90 11 14)" fill="black" />
+                                        <rect x="11" y="17" width="2" height="2" rx="1" transform="rotate(-90 11 17)" fill="black" />
+                                    </svg>
+                                </span>
+                                <!--end::Svg Icon-->
+                                <!--end::Icon-->
+                                <!--begin::Wrapper-->
+                                <div class="d-flex flex-stack flex-grow-1">
+                                    <!--begin::Content-->
+                                    <div class="fw-bold">
+                                        <h4 class="text-gray-900 fw-bolder">{% trans %}Vous désirez désactiver votre compte ?{% endtrans %}</h4>
+                                        <div class="fs-6 text-gray-700">{% trans %}Pour des raison de sécurité, vous devez confirmer votre 
+                                        numéro de téléphone ou votre adresse email lors de la désactivation{% endtrans %}.</div>
+                                    </div>
+                                    <!--end::Content-->
+                                </div>
+                                <!--end::Wrapper-->
+                            </div>
+                            <!--end::Notice-->
+                            <!--begin::Form input row-->
+                            <div class="form-check form-check-solid fv-row">
+                                <input name="deactivate" class="form-check-input" type="checkbox" value="true" id="deactivate" />
+                                <input type="hidden" name="_token" value="{{ csrf_token(app.user.uid) }}">
+                                <label class="form-check-label fw-bold ps-2 fs-6" for="deactivate">{% trans %}Je confirm la désactivation de mon compte{% endtrans %}</label>
+                            </div>
+                            <!--end::Form input row-->
+                        </div>
+                        <!--end::Card body-->
+                        <!--begin::Card footer-->
+                        <div class="card-footer d-flex justify-content-end py-6 px-9">
+                            <button id="kt_account_deactivate_account_submit" type="submit" class="btn btn-danger fw-bold">{% trans %}Désactiver mon compte{% endtrans %}</button>
+                        </div>
+                        <!--end::Card footer-->
+                    </form>
+                    <!--end::Form-->
+                </div>
+                <!--end::Content-->
+            </div>
+            <!--end::Deactivate Account-->
+        </div>
+        <!--end::Container-->
+    </div>
+    <!--end::Post-->
+</div>
+<!--end::Content-->
+
+{% endblock %}
+
+{% block javascripts %} 
+<script type="text/javascript">
+    const get_this_user_link   = "{{path('get_this_user', {'uid': app.user.uid } )}}";
+    const profile_details_link = "{{path('app_user_profile_edit', {'uid': app.user.uid } )}}";
+    const csrfToken            = "{{ csrf_token(app.user.uid) }}";
+    var input                  = document.querySelector('#user_phone');
+    const countrySelecter      = document.querySelector('#kt_user_add_select2_country');
+    const email_edit_link      = "{{path('app_user_email_edit' )}}";
+    const password_edit_link   = "{{path('app_user_password_edit' )}}";
+    const account_disable_link = "{{path('app_user_account_disable' )}}";
+    var input2                 = document.querySelector('#newphone');
+    const userCountryCode      = "{{ app.user.country.code }}";
+</script>
+<script src="{{ asset('app/js/queries/public-app/country-flag-input.js') }}"></script>
+<script type="module" src="{{ asset('app/js/modules/country_choice/switcher.js') }}"></script>
+{% include 'intl.input.html.twig' %}
+<script src="{{ asset('app/js/queries/account/settings/overview.js') }}"></script>
+<script src="{{ asset('app/js/queries/account/settings/profile-details.js') }}"></script>
+<script src="{{ asset('app/js/queries/account/settings/signin-methods.js') }}"></script>
+<script src="{{ asset('app/js/queries/account/settings/deactivate-account.js') }}"></script>
+
+<script src="{{ asset('app/js/widgets.bundle.js') }}"></script>
+<script src="{{ asset('app/js/custom/widgets.js') }}"></script>
+{% endblock %}

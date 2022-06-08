@@ -1,0 +1,75 @@
+.label-form{font-weight: bolder; }
+
+.swal2-title{font-size: 16px !important;}
+
+.swal2-icon{font-size: 8px !important;}
+
+#swal2-content{font-size: 14px !important;}
+
+.swal2-confirm, .swal2-cancel{font-size: 13px !important; border-style: none !important;}
+
+.swal2-popup{width: 30% !important; transition: ease 5s !important;
+}
+
+.iti__flag{background-image: url("flags.png"); }
+
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .iti__flag {background-image: url("flags@2x.png");}
+}
+
+.btn-facturation{
+  margin-top: 50px;
+  padding-bottom: 15px;
+}
+
+.btn-facturation:hover{
+  border-bottom-style: solid; border-width: 5px;
+  cursor: pointer;
+
+}
+
+@media screen and (max-width: 600px) {
+    .swal2-popup{width: 80% !important; transition: ease 5s !important;
+    }
+  }
+
+#logo>img{
+  width: 40px;
+  height: 40px;
+  vertical-align: middle;
+border-style: none;
+}
+.test{
+  font-size: 50px;
+}
+
+.titre-setting{
+  font-size: 14px;
+}
+
+.TestSetting{
+  width: 80%;
+}
+
+.hiddenApercu{
+  height: 80px !important;
+  display: none;
+  margin-bottom: 20px;
+}
+
+.setting-template{
+  padding: 30px;
+  margin: 5px;
+}
+
+.setting-add{
+  border-left-style: solid; border-left-color: #000; border-left-width: 20px;
+}
+
+.input-radius{
+  border-radius: 5px;
+}
+
+.white-box{
+  border-radius: 20px !important;
+}

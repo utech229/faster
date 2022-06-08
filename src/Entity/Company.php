@@ -37,6 +37,17 @@ class Company
     #[ORM\Column(type: 'text')]
     private $address;
 
+    #[ORM\ManyToOne(targetEntity: Status::class, inversedBy: 'companies')]
+    #[ORM\JoinColumn(nullable: false)]
+    private $status;
+
+    #[ORM\Column(type: 'string', length: 25)]
+    private $phone;
+
+    #[ORM\OneToOne(inversedBy: 'company', targetEntity: User::class, cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(nullable: true)]
+    private $manager;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -134,6 +145,42 @@ class Company
     public function setAddress(string $address): self
     {
         $this->address = $address;
+
+        return $this;
+    }
+
+    public function getManager(): ?User
+    {
+        return $this->manager;
+    }
+
+    public function setManager(?User $manager): self
+    {
+        $this->manager = $manager;
+
+        return $this;
+    }
+
+    public function getStatus(): ?Status
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?Status $status): self
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    public function getPhone(): ?string
+    {
+        return $this->phone;
+    }
+
+    public function setPhone(string $phone): self
+    {
+        $this->phone = $phone;
 
         return $this;
     }

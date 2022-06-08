@@ -37,6 +37,16 @@ class SMSMessage
     #[ORM\Column(type: 'string', length: 10)]
     private $timezone;
 
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'sMSMessages')]
+    private $manager;
+
+    #[ORM\ManyToOne(targetEntity: SMSCampaign::class, inversedBy: 'sMSMessages')]
+    private $campaign;
+
+    #[ORM\ManyToOne(targetEntity: Status::class, inversedBy: 'sMSMessages')]
+    #[ORM\JoinColumn(nullable: false)]
+    private $status;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -134,6 +144,42 @@ class SMSMessage
     public function setTimezone(string $timezone): self
     {
         $this->timezone = $timezone;
+
+        return $this;
+    }
+
+    public function getManager(): ?User
+    {
+        return $this->manager;
+    }
+
+    public function setManager(?User $manager): self
+    {
+        $this->manager = $manager;
+
+        return $this;
+    }
+
+    public function getCampaign(): ?SMSCampaign
+    {
+        return $this->campaign;
+    }
+
+    public function setCampaign(?SMSCampaign $campaign): self
+    {
+        $this->campaign = $campaign;
+
+        return $this;
+    }
+
+    public function getStatus(): ?Status
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?Status $status): self
+    {
+        $this->status = $status;
 
         return $this;
     }

@@ -37,6 +37,10 @@ class ContactGroupField
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     private $updatedAt;
 
+    #[ORM\OneToOne(inversedBy: 'contactGroupField', targetEntity: ContactGroup::class, cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(nullable: false)]
+    private $contactGroup;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -134,6 +138,18 @@ class ContactGroupField
     public function setUpdatedAt(?\DateTimeImmutable $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getContactGroup(): ?ContactGroup
+    {
+        return $this->contactGroup;
+    }
+
+    public function setContactGroup(ContactGroup $contactGroup): self
+    {
+        $this->contactGroup = $contactGroup;
 
         return $this;
     }

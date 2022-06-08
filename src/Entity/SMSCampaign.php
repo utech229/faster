@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\SMSCampaignRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: SMSCampaignRepository::class)]
@@ -36,6 +38,18 @@ class SMSCampaign
 
     #[ORM\Column(type: 'string', length: 10)]
     private $timezone;
+
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'sMSCampaigns')]
+    #[ORM\JoinColumn(nullable: false)]
+    private $manager;
+
+    #[ORM\OneToMany(mappedBy: 'campaign', targetEntity: SMSMessage::class)]
+    private $sMSMessages;
+
+    public function __construct()
+    {
+        $this->sMSMessages = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -134,6 +148,48 @@ class SMSCampaign
     public function setTimezone(string $timezone): self
     {
         $this->timezone = $timezone;
+
+        return $this;
+    }
+
+    public function getManager(): ?User
+    {
+        return $this->manager;
+    }
+
+    public function setManager(?User $manager): self
+    {
+        $this->manager = $manager;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, SMSMessage>
+     */
+    public function getSMSMessages(): Collection
+    {
+        return $this->sMSMessages;
+    }
+
+    public function addSMSMessage(SMSMessage $sMSMessage): self
+    {
+        if (!$this->sMSMessages->contains($sMSMessage)) {
+            $this->sMSMessages[] = $sMSMessage;
+            $sMSMessage->setCampaign($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSMSMessage(SMSMessage $sMSMessage): self
+    {
+        if ($this->sMSMessages->removeElement($sMSMessage)) {
+            // set the owning side to null (unless already changed)
+            if ($sMSMessage->getCampaign() === $this) {
+                $sMSMessage->setCampaign(null);
+            }
+        }
 
         return $this;
     }

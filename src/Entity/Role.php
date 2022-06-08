@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\RoleRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: RoleRepository::class)]
@@ -30,6 +32,25 @@ class Role
 
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     private $updatedAt;
+
+    #[ORM\OneToMany(mappedBy: 'role', targetEntity: User::class)]
+    private $users;
+
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'manageringRoles')]
+    private $manager;
+
+    #[ORM\OneToMany(mappedBy: 'role', targetEntity: Authorization::class, orphanRemoval: true)]
+    private $authorizations;
+
+    #[ORM\ManyToOne(targetEntity: Status::class, inversedBy: 'roles')]
+    #[ORM\JoinColumn(nullable: false)]
+    private $status;
+
+    public function __construct()
+    {
+        $this->users = new ArrayCollection();
+        $this->authorizations = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -104,6 +125,90 @@ class Role
     public function setUpdatedAt(?\DateTimeImmutable $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, User>
+     */
+    public function getUsers(): Collection
+    {
+        return $this->users;
+    }
+
+    public function addUser(User $user): self
+    {
+        if (!$this->users->contains($user)) {
+            $this->users[] = $user;
+            $user->setRole($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUser(User $user): self
+    {
+        if ($this->users->removeElement($user)) {
+            // set the owning side to null (unless already changed)
+            if ($user->getRole() === $this) {
+                $user->setRole(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getManager(): ?User
+    {
+        return $this->manager;
+    }
+
+    public function setManager(?User $manager): self
+    {
+        $this->manager = $manager;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Authorization>
+     */
+    public function getAuthorizations(): Collection
+    {
+        return $this->authorizations;
+    }
+
+    public function addAuthorization(Authorization $authorization): self
+    {
+        if (!$this->authorizations->contains($authorization)) {
+            $this->authorizations[] = $authorization;
+            $authorization->setRole($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAuthorization(Authorization $authorization): self
+    {
+        if ($this->authorizations->removeElement($authorization)) {
+            // set the owning side to null (unless already changed)
+            if ($authorization->getRole() === $this) {
+                $authorization->setRole(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getStatus(): ?Status
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?Status $status): self
+    {
+        $this->status = $status;
 
         return $this;
     }

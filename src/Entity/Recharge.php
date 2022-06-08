@@ -22,6 +22,21 @@ class Recharge
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     private $updatedAt;
 
+    #[ORM\OneToOne(inversedBy: 'recharge', targetEntity: Transaction::class, cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(nullable: false)]
+    private $transaction;
+
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'recharges')]
+    #[ORM\JoinColumn(nullable: false)]
+    private $user;
+
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'allToRecharge')]
+    private $rechargeBy;
+
+    #[ORM\ManyToOne(targetEntity: Status::class, inversedBy: 'recharges')]
+    #[ORM\JoinColumn(nullable: false)]
+    private $status;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -59,6 +74,54 @@ class Recharge
     public function setUpdatedAt(?\DateTimeImmutable $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getTransaction(): ?Transaction
+    {
+        return $this->transaction;
+    }
+
+    public function setTransaction(Transaction $transaction): self
+    {
+        $this->transaction = $transaction;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    public function getRechargeBy(): ?User
+    {
+        return $this->rechargeBy;
+    }
+
+    public function setRechargeBy(?User $rechargeBy): self
+    {
+        $this->rechargeBy = $rechargeBy;
+
+        return $this;
+    }
+
+    public function getStatus(): ?Status
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?Status $status): self
+    {
+        $this->status = $status;
 
         return $this;
     }

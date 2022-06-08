@@ -1,0 +1,27 @@
+<script type="text/javascript">
+    const intl = window.intlTelInput(input, {
+    initialCountry: 'bj',
+    hiddenInput: "full_number",
+    separateDialCode : true,
+    nationalMode: true,
+    placeholder: true,
+    formatOnDisplay: true,
+    utilsScript: "{{asset('librairies/intl/build/js/utils.js?1638200991544') }}", // just for formatting/placeholders etc
+    onlyCountries: ["bj", "ci", "tg", "sn", "ne"],
+    });
+
+if (typeof input2 != 'undefined') {
+    const intl2 = window.intlTelInput(input2, {
+    initialCountry: 'bj',
+    hiddenInput: "full_number",
+    separateDialCode : true,
+    nationalMode: true,
+    placeholder: true,
+    formatOnDisplay: true,
+    utilsScript: "{{asset('librairies/intl/build/js/utils.js?1638200991544') }}", // just for formatting/placeholders etc
+    onlyCountries: ["bj", "ci", "tg", "sn", "ne"],
+    });
+}
+    
+    
+</script>

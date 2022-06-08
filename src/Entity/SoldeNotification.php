@@ -34,6 +34,13 @@ class SoldeNotification
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     private $updatedAt;
 
+    #[ORM\OneToOne(inversedBy: 'soldeNotification', targetEntity: User::class, cascade: ['persist', 'remove'])]
+    private $user;
+
+    #[ORM\ManyToOne(targetEntity: Status::class)]
+    #[ORM\JoinColumn(nullable: false)]
+    private $status;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -119,6 +126,30 @@ class SoldeNotification
     public function setUpdatedAt(?\DateTimeImmutable $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    public function getStatus(): ?Status
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?Status $status): self
+    {
+        $this->status = $status;
 
         return $this;
     }

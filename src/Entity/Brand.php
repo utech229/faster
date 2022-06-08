@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\BrandRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: BrandRepository::class)]
@@ -45,6 +47,26 @@ class Brand
 
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     private $updatedAt;
+
+    #[ORM\OneToMany(mappedBy: 'brand', targetEntity: User::class)]
+    private $users;
+
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'brands')]
+    #[ORM\JoinColumn(nullable: true)]
+    private $manager;
+
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'validator')]
+    private $validator;
+
+    #[ORM\ManyToOne(targetEntity: Status::class, inversedBy: 'brands')]
+    #[ORM\JoinColumn(nullable: false)]
+    private $status;
+
+    public function __construct()
+    {
+        $this->brand = new ArrayCollection();
+        $this->users = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -182,4 +204,71 @@ class Brand
 
         return $this;
     }
+
+    /**
+     * @return Collection<int, User>
+     */
+    public function getUsers(): Collection
+    {
+        return $this->users;
+    }
+
+    public function addUser(User $user): self
+    {
+        if (!$this->users->contains($user)) {
+            $this->users[] = $user;
+            $user->setBrand($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUser(User $user): self
+    {
+        if ($this->users->removeElement($user)) {
+            // set the owning side to null (unless already changed)
+            if ($user->getBrand() === $this) {
+                $user->setBrand(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getManager(): ?User
+    {
+        return $this->manager;
+    }
+
+    public function setManager(?User $manager): self
+    {
+        $this->manager = $manager;
+
+        return $this;
+    }
+
+    public function getValidator(): ?User
+    {
+        return $this->validator;
+    }
+
+    public function setValidator(?User $validator): self
+    {
+        $this->validator = $validator;
+
+        return $this;
+    }
+
+    public function getStatus(): ?Status
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?Status $status): self
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
 }

@@ -1,0 +1,391 @@
+
+{% extends 'base.app.html.twig' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block stylesheets %} {% endblock %}
+
+{% block body %}
+<!--begin::Content-->
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+    <!--begin::Toolbar-->
+    <div class="toolbar" id="kt_toolbar"> 
+        <!--begin::Container-->
+        <div id="kt_toolbar_container" class="container-fluid d-flex flex-stack">
+            <!--begin::Page title-->
+           {% include 'app.title.html.twig' %}
+            <!--end::Page title-->
+            <!--begin::Actions-->
+
+            <!--end::Actions-->
+        </div>
+        <!--end::Container-->
+    </div>
+    <!--end::Toolbar-->
+    <!--begin::Post-->
+    <div class="post d-flex flex-column-fluid" id="kt_post">
+        <!--begin::Container-->
+        <div id="kt_content_container" class="container-xxl">
+            <!--begin::Referral program-->
+            <div class="card mb-5 mb-xl-10">
+                <!--begin::Body-->
+                <div class="card-body py-10">
+                    <h2 class="mb-9">{{'Clé api'| trans | upper}}</h2>
+                    <!--begin::Overview-->
+                    <div class="row mb-2">
+                        <!--begin::Col-->
+                        <div class="col-xl-12">
+                            <!--begin::Alert-->
+                            <div class="alert alert-dismissible bg-light-danger border border-danger border-dashed d-flex flex-column flex-sm-row w-100 p-5 mb-10">
+                                <!--begin::Icon-->
+                                <!--begin::Svg Icon | path: icons/duotune/communication/com003.svg-->
+                                <span class="svg-icon svg-icon-2hx svg-icon-danger me-4 mb-5 mb-sm-0">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                        <path opacity="0.3" d="M2 4V16C2 16.6 2.4 17 3 17H13L16.6 20.6C17.1 21.1 18 20.8 18 20V17H21C21.6 17 22 16.6 22 16V4C22 3.4 21.6 3 21 3H3C2.4 3 2 3.4 2 4Z" fill="currentColor" />
+                                        <path d="M18 9H6C5.4 9 5 8.6 5 8C5 7.4 5.4 7 6 7H18C18.6 7 19 7.4 19 8C19 8.6 18.6 9 18 9ZM16 12C16 11.4 15.6 11 15 11H6C5.4 11 5 11.4 5 12C5 12.6 5.4 13 6 13H15C15.6 13 16 12.6 16 12Z" fill="currentColor" />
+                                    </svg>
+                                </span>
+                                <!--end::Svg Icon-->
+                                <!--end::Icon-->
+                                <!--begin::Content-->
+                                <div class="d-flex flex-column pe-0 pe-sm-10">
+                                    <h5 class="mb-1">{{'Alert de sécurité / protection '}}</h5>
+                                    <span>{% trans %} Votre clé api est personnel, unique et secrete. Veuillez ne pas le partager avec d'autres personnes, et ceux sous aucun prétexte{% endtrans %}</span>
+                                </div>
+                                <!--end::Content-->
+                            </div>
+                            <!--end::Alert-->
+                        </div>
+                        <!--end::Col-->
+                        <!--begin::Col-->
+                        <div class="col-xl-6 mb-15 mb-xl-0 pe-5">
+                            <h4 class="mb-0">{% trans %} A quoi vous sert une clé api ?{% endtrans %}</h4>
+                            <p class="fs-6 fw-bold text-gray-600 py-4 m-0">
+                            <i class="fa fa-info-circle text-primary"></i> {% trans %} Utilisez votre clé api pour intégrer l'envoie de SMS sur vos différentes plateformes avec plusieurs langages de programmation tels que le PHP, NODE JS, WINDEV etc...{% endtrans %}<br> 
+                        </div>
+                        <!--end::Col-->
+                        <!--begin::Col-->
+                        <div class="col-xl-6">
+                            <h4 class="text-gray-800 mb-0">{% trans %}Votre clé api{% endtrans %}</h4>
+                            <p class="fs-6 fw-bold text-gray-600 py-4 m-0">{% trans %}Copiez votre clé ici{% endtrans %}</p>
+                            <div class="d-flex">
+                                <input id="kt_referral_link_input" type="text" class="form-control form-control-solid me-3 flex-grow-1" name="search" value="{{app.user.apikey}}" />
+                                <button id="kt_referral_program_link_copy_btn" class="btn btn-light btn-active-light-primary fw-bolder flex-shrink-0" data-clipboard-target="#kt_referral_link_input">{{'Copier'| trans}}</button>
+                            </div>
+                        </div>
+                        <!--end::Col-->
+                    </div>
+                    <!--end::Overview-->
+                   
+                    <!--begin::Notice-->
+                    <div class="notice d-flex bg-light-primary rounded border-primary border border-dashed p-6 mt-8">
+                        <!--begin::Icon-->
+                       <!--begin::Svg Icon | path: icons/duotune/general/gen007.svg-->
+                        <span class="svg-icon svg-icon-2hx svg-icon-primary me-4 mb-5 mb-sm-0">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <path opacity="0.3" d="M12 22C13.6569 22 15 20.6569 15 19C15 17.3431 13.6569 16 12 16C10.3431 16 9 17.3431 9 19C9 20.6569 10.3431 22 12 22Z" fill="currentColor" />
+                                <path d="M19 15V18C19 18.6 18.6 19 18 19H6C5.4 19 5 18.6 5 18V15C6.1 15 7 14.1 7 13V10C7 7.6 8.7 5.6 11 5.1V3C11 2.4 11.4 2 12 2C12.6 2 13 2.4 13 3V5.1C15.3 5.6 17 7.6 17 10V13C17 14.1 17.9 15 19 15ZM11 10C11 9.4 11.4 9 12 9C12.6 9 13 8.6 13 8C13 7.4 12.6 7 12 7C10.3 7 9 8.3 9 10C9 10.6 9.4 11 10 11C10.6 11 11 10.6 11 10Z" fill="currentColor" />
+                            </svg>
+                        </span>
+                        <!--end::Svg Icon-->
+                        <!--end::Icon-->
+                        <!--begin::Wrapper-->
+                        <div class="d-flex flex-stack flex-grow-1 flex-wrap flex-md-nowrap">
+                            <!--begin::Content-->
+                            <div class="mb-3 mb-md-0 fw-bold">
+                                <h4 class="text-gray-900 fw-bolder">{{'Régénérer ma clé'}}</h4>
+                                <div class="fs-6 text-gray-700 pe-7">{% trans %}Vous pouvez régénérer votre clé api a tout moment{% endtrans %}</div>
+                            </div>
+                            <!--end::Content-->
+                            <!--begin::Action-->
+                             <button type="submit" class="btn btn-primary px-6 align-self-center text-nowrap" id="kt_password_submit" data-kt-regenerate-action="submit">
+                                <span class="indicator-label">{{"Régénérer"|trans }}</span>
+                                <span class="indicator-progress">{{"Cryptage..."| trans }}
+                                <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                            </button>
+                            <!--end::Action-->
+                        </div>
+                        <!--end::Wrapper-->
+                    </div>
+                    <!--end::Notice-->
+                </div>
+                <!--end::Body-->
+            </div>
+            <!--end::Referral program-->
+
+            <!--begin::Row-->
+            <div class="row gy-0 mb-6 mb-xl-12">
+                <!--begin::Col-->
+                <div class="col-md-12">
+                    <!--begin::Card-->
+                    <div class="card card-md-stretch me-xl-3 mb-md-0 mb-6">
+                        <!--begin::Body-->
+                        <div class="card-body p-10 p-lg-15">
+                            <!--begin::Header-->
+                            <div class="d-flex flex-stack mb-7">
+                                <!--begin::Title-->
+                                <h1 class="fw-bolder text-dark">{% trans %}Intégration API{% endtrans %}</h1>
+                                <!--end::Title-->
+                                <!--begin::Section-->
+                                <div class="d-flex align-items-center">
+                                    <!--begin::Link-->
+                                    <a href="https://keenthemes.com/support" class="text-primary fw-bolder me-1">Support</a>
+                                    <!--begin::Link-->
+                                    <!--begin::Arrow-->
+                                    <!--begin::Svg Icon | path: icons/duotune/arrows/arr064.svg-->
+                                    <span class="svg-icon svg-icon-2 svg-icon-primary">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                            <rect opacity="0.5" x="18" y="13" width="13" height="2" rx="1" transform="rotate(-180 18 13)" fill="currentColor" />
+                                            <path d="M15.4343 12.5657L11.25 16.75C10.8358 17.1642 10.8358 17.8358 11.25 18.25C11.6642 18.6642 12.3358 18.6642 12.75 18.25L18.2929 12.7071C18.6834 12.3166 18.6834 11.6834 18.2929 11.2929L12.75 5.75C12.3358 5.33579 11.6642 5.33579 11.25 5.75C10.8358 6.16421 10.8358 6.83579 11.25 7.25L15.4343 11.4343C15.7467 11.7467 15.7467 12.2533 15.4343 12.5657Z" fill="currentColor" />
+                                        </svg>
+                                    </span>
+                                    <!--end::Svg Icon-->
+                                    <!--end::Arrow-->
+                                </div>
+                                <!--end::Section-->
+                            </div>
+                            <!--end::Header-->
+                            <!--begin::Accordion-->
+                            <!--begin::Section-->
+                            <div class="m-0">
+                                <!--begin::Heading-->
+                                <div class="d-flex align-items-center collapsible py-3 toggle mb-0" data-bs-toggle="collapse" data-bs-target="#kt_support_1_1">
+                                    <!--begin::Icon-->
+                                    {% include 'developer/icon.html.twig' %}
+                                    <!--end::Icon-->
+                                    <!--begin::Section-->
+                                    <div class="d-flex align-items-center flex-wrap">
+                                        <!--begin::Title-->
+                                        <h3 class="text-gray-800 fw-bold cursor-pointer me-3 mb-0">{% trans %}Utilisation de l’API{% endtrans %} {{brand.name}}</h3>
+                                        <!--end::Title-->
+                                    </div>
+                                    <!--end::Section-->
+                                </div>
+                                <!--end::Heading-->
+                                <!--begin::Body-->
+                                <div id="kt_support_1_1" class="collapse show fs-6 ms-10">
+                                    <!--begin::Block-->
+                                    <div class="mb-4">
+                                        <!--begin::Text-->
+                                        <span class="text-muted fw-bold fs-5">{% trans %}L’API {% endtrans %}{{brand.name}} {% trans %}est une API RESTFUL qui vous permet d’envoyer des SMS via votre application (Web, mobile, etc.). 
+                                        Après chaque envoi, vous avez la possibilité d’accéder à l’historique d’envoi et à vos données de facturation soit directement
+                                         sur {% endtrans %}{{brand.name}}{% trans %} ou via l’API.{% endtrans %}</span>
+                                        <!--end::Text-->
+                                        <!--begin::Link-->
+                                        <!--end::Link-->
+                                    </div>
+                                    <!--end::Block-->
+                                </div>
+                                <!--end::Content-->
+                            </div>
+                            <!--end::Body-->
+                            <!--begin::Section-->
+                            <div class="m-0">
+                                <!--begin::Heading-->
+                                <div class="d-flex align-items-center collapsible py-3 toggle collapsed mb-0" data-bs-toggle="collapse" data-bs-target="#kt_support_1_2">
+                                    <!--begin::Icon-->
+                                    {% include 'developer/icon.html.twig' %}
+                                    <!--end::Icon-->
+                                    <!--begin::Section-->
+                                    <div class="d-flex align-items-center flex-wrap">
+                                        <!--begin::Title-->
+                                        <h3 class="text-gray-800 fw-bold cursor-pointer me-3 mb-0">How Extended Licese works?</h3>
+                                        <!--end::Title-->
+                                        <!--begin::Label-->
+                                        <span class="badge badge-light my-1 d-block">Laravel</span>
+                                        <!--end::Label-->
+                                    </div>
+                                    <!--end::Section-->
+                                </div>
+                                <!--end::Heading-->
+                                <!--begin::Body-->
+                                <div id="kt_support_1_2" class="collapse fs-6 ms-10">
+                                    <!--begin::Block-->
+                                    <div class="mb-4">
+                                        <!--begin::Text-->
+                                        <span class="text-muted fw-bold fs-5">By Keenthemes to save tons and more to time money projects are listed and outstanding</span>
+                                        <!--end::Text-->
+                                        <!--begin::Link-->
+                                        <a href="#" class="fs-5 link-primary fw-bold">Check Out</a>
+                                        <!--end::Link-->
+                                    </div>
+                                    <!--end::Block-->
+                                </div>
+                                <!--end::Content-->
+                            </div>
+                            <!--end::Body-->
+                            {#<!--begin::Section-->
+                            <div class="m-0">
+                                <!--begin::Heading-->
+                                <div class="d-flex align-items-center collapsible py-3 toggle collapsed mb-0" data-bs-toggle="collapse" data-bs-target="#kt_support_1_3">
+                                    <!--begin::Icon-->
+                                    {% include 'developer/icon.html.twig' %}
+                                    <!--end::Icon-->
+                                    <!--begin::Section-->
+                                    <div class="d-flex align-items-center flex-wrap">
+                                        <!--begin::Title-->
+                                        <h3 class="text-gray-800 fw-bold cursor-pointer me-3 mb-0">How to install on a local machine?</h3>
+                                        <!--end::Title-->
+                                        <!--begin::Label-->
+                                        <span class="badge badge-light my-1 d-block">VueJS</span>
+                                        <!--end::Label-->
+                                    </div>
+                                    <!--end::Section-->
+                                </div>
+                                <!--end::Heading-->
+                                <!--begin::Body-->
+                                <div id="kt_support_1_3" class="collapse fs-6 ms-10">
+                                    <!--begin::Block-->
+                                    <div class="mb-4">
+                                        <!--begin::Text-->
+                                        <span class="text-muted fw-bold fs-5">By Keenthemes to save tons and more to time money projects are listed and outstanding</span>
+                                        <!--end::Text-->
+                                        <!--begin::Link-->
+                                        <a href="#" class="fs-5 link-primary fw-bold">Check Out</a>
+                                        <!--end::Link-->
+                                    </div>
+                                    <!--end::Block-->
+                                </div>
+                                <!--end::Content-->
+                            </div>
+                            <!--end::Body-->
+                            <!--begin::Section-->
+                            <div class="m-0">
+                                <!--begin::Heading-->
+                                <div class="d-flex align-items-center collapsible py-3 toggle collapsed mb-0" data-bs-toggle="collapse" data-bs-target="#kt_support_1_4">
+                                    <!--begin::Icon-->
+                                    {% include 'developer/icon.html.twig' %}
+                                    <!--end::Icon-->
+                                    <!--begin::Section-->
+                                    <div class="d-flex align-items-center flex-wrap">
+                                        <!--begin::Title-->
+                                        <h3 class="text-gray-800 fw-bold cursor-pointer me-3 mb-0">How can I import Google fonts?</h3>
+                                        <!--end::Title-->
+                                        <!--begin::Label-->
+                                        <span class="badge badge-light my-1 d-block">Angular 9</span>
+                                        <!--end::Label-->
+                                    </div>
+                                    <!--end::Section-->
+                                </div>
+                                <!--end::Heading-->
+                                <!--begin::Body-->
+                                <div id="kt_support_1_4" class="collapse fs-6 ms-10">
+                                    <!--begin::Block-->
+                                    <div class="mb-4">
+                                        <!--begin::Text-->
+                                        <span class="text-muted fw-bold fs-5">By Keenthemes to save tons and more to time money projects are listed and outstanding</span>
+                                        <!--end::Text-->
+                                        <!--begin::Link-->
+                                        <a href="#" class="fs-5 link-primary fw-bold">Check Out</a>
+                                        <!--end::Link-->
+                                    </div>
+                                    <!--end::Block-->
+                                </div>
+                                <!--end::Content-->
+                            </div>
+                            <!--end::Body-->
+                            <!--begin::Section-->
+                            <div class="m-0">
+                                <!--begin::Heading-->
+                                <div class="d-flex align-items-center collapsible py-3 toggle collapsed mb-0" data-bs-toggle="collapse" data-bs-target="#kt_support_1_5">
+                                    <!--begin::Icon-->
+                                    {% include 'developer/icon.html.twig' %}
+                                    <!--end::Icon-->
+                                    <!--begin::Section-->
+                                    <div class="d-flex align-items-center flex-wrap">
+                                        <!--begin::Title-->
+                                        <h3 class="text-gray-800 fw-bold cursor-pointer me-3 mb-0">How long the license is valid?</h3>
+                                        <!--end::Title-->
+                                        <!--begin::Label-->
+                                        <span class="badge badge-light my-1 d-block">Bootstrap 5</span>
+                                        <!--end::Label-->
+                                    </div>
+                                    <!--end::Section-->
+                                </div>
+                                <!--end::Heading-->
+                                <!--begin::Body-->
+                                <div id="kt_support_1_5" class="collapse fs-6 ms-10">
+                                    <!--begin::Block-->
+                                    <div class="mb-4">
+                                        <!--begin::Text-->
+                                        <span class="text-muted fw-bold fs-5">By Keenthemes to save tons and more to time money projects are listed and outstanding</span>
+                                        <!--end::Text-->
+                                        <!--begin::Link-->
+                                        <a href="#" class="fs-5 link-primary fw-bold">Check Out</a>
+                                        <!--end::Link-->
+                                    </div>
+                                    <!--end::Block-->
+                                </div>
+                                <!--end::Content-->
+                            </div>
+                            <!--end::Body-->
+                            <!--begin::Section-->
+                            <div class="m-0">
+                                <!--begin::Heading-->
+                                <div class="d-flex align-items-center collapsible py-3 toggle collapsed mb-0" data-bs-toggle="collapse" data-bs-target="#kt_support_1_6">
+                                    <!--begin::Icon-->
+                                    {% include 'developer/icon.html.twig' %}
+                                    <!--end::Icon-->
+                                    <!--begin::Section-->
+                                    <div class="d-flex align-items-center flex-wrap">
+                                        <!--begin::Title-->
+                                        <h3 class="text-gray-800 fw-bold cursor-pointer me-3 mb-0">How many end projects I can build?</h3>
+                                        <!--end::Title-->
+                                        <!--begin::Label-->
+                                        <span class="badge badge-light my-1 d-block">PHP</span>
+                                        <!--end::Label-->
+                                    </div>
+                                    <!--end::Section-->
+                                </div>
+                                <!--end::Heading-->
+                                <!--begin::Body-->
+                                <div id="kt_support_1_6" class="collapse fs-6 ms-10">
+                                    <!--begin::Block-->
+                                    <div class="mb-4">
+                                        <!--begin::Text-->
+                                        <span class="text-muted fw-bold fs-5">By Keenthemes to save tons and more to time money projects are listed and outstanding</span>
+                                        <!--end::Text-->
+                                        <!--begin::Link-->
+                                        <a href="#" class="fs-5 link-primary fw-bold">Check Out</a>
+                                        <!--end::Link-->
+                                    </div>
+                                    <!--end::Block-->
+                                </div>
+                                <!--end::Content-->
+                            </div>
+                            <!--end::Body-->
+                            <!--end::Accordion-->#}
+                        </div>
+                        <!--end::Body-->
+                    </div>
+                    <!--end::Card-->
+                </div>
+                <!--end::Col-->
+            </div>
+            <!--end::Row-->
+           
+        </div>
+        <!--end::Container-->
+    </div>
+    <!--end::Post-->
+</div>
+{% endblock %}
+
+
+{% block javascripts %} 
+<script type="text/javascript">
+    const regenerate_apikey_link = "{{path('app_user_regenerate_apikey' )}}";
+    const csrfToken        = "{{ csrf_token(app.user.uid) }}";
+</script>
+
+<!--begin::Page Custom Javascript(used by this page)-->
+<script src="{{ asset('app/js/queries/developer/api-keys.js') }}"></script>
+<script src="{{ asset('app/js/queries/developer/api-key.js') }}"></script>
+<script src="{{ asset('app/js/queries/developer/regenerate.js') }}"></script>
+<script src="{{ asset('app/js/widgets.bundle.js') }}"></script>
+<script src="{{ asset('app/js/custom/widgets.js') }}"></script>
+<script src="{{ asset('app/js/queries/chat/chat.js') }}"></script>
+<script src="{{ asset('app/js/queries/utilities/modals/upgrade-plan.js') }}"></script>
+<script src="{{ asset('app/js/queries/utilities/modals/users-search.js') }}"></script>
+<!--end::Page Custom Javascript-->
+{% endblock %}

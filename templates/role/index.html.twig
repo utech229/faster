@@ -1,0 +1,320 @@
+{% extends 'base.app.html.twig' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block stylesheets %} {% endblock %}
+
+{% block body %}
+<!--begin::Content-->
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+    <!--begin::Toolbar-->
+    <div class="toolbar" id="kt_toolbar"> 
+        <!--begin::Container-->
+        <div id="kt_toolbar_container" class="container-fluid d-flex flex-stack">
+            <!--begin::Page title-->
+            {% include 'app.title.html.twig' %}
+            <!--end::Page title-->
+            <!--begin::Actions-->
+            {% include 'section/header.action.html.twig' %}
+            <!--end::Actions-->
+        </div>
+        <!--end::Container-->
+    </div>
+    <!--end::Toolbar-->
+    <!--begin::Post-->
+    <div class="post d-flex flex-column-fluid" id="kt_post">
+        <!--begin::Container-->
+        <div id="kt_content_container" class="container-xxl">
+            <!--begin::Row-->
+            <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-5 g-xl-9">
+                {% if roles is defined and  roles | length > 0 %}
+                    {% for role in roles %}
+                    <!--begin::Col-->
+                    <div class="col-md-4" id="{{role.uid}}">
+                        <!--begin::Card-->
+                        <div class="card card-flush h-md-100">
+                            <!--begin::Card header-->
+                            <div class="card-header">
+                                <!--begin::Card title-->
+                                <div class="card-title">
+                                    <h2>{{ role.name | upper }} </h2>
+                                </div>
+                                <!--end::Card title-->
+                            </div>
+                            <!--end::Card header-->
+                            <!--begin::Card body-->
+                            <div class="card-body pt-1">
+                                <!--begin::Users-->
+                                <div class="fw-bolder text-gray-600 mb-5"> {% trans %}Total utilisateurs ayant ce rôle : {% endtrans %} <span class="text-success">{{ totalUsersByRole[role.id] }}</span> </div>
+                                <!--end::Users-->
+                                <!--begin::Permissions-->
+                                <div class="d-flex flex-column text-gray-600">
+                                    {% set i = 0 %}
+                                    {% for autorization in role.authorizations %}
+                                        {% if autorization.status.code == 3 %}
+                                        {% set i = i + 1 %}
+                                        {% if i < 5 %}
+                                            <div class="d-flex align-items-center py-2">
+                                            <span class="bullet bg-primary me-3"></span>{{ autorization.permission.name }}</div>
+                                        {% endif %}
+                                        {% endif %}
+                                    {% endfor %}
+                                    {% if i == 0 %}
+                                        <div class="d-flex align-items-center  text-danger py-2">
+                                        <span class="bullet bg-danger me-3"></span>{% trans %}Aucune permission{% endtrans %}</div>
+                                    {% endif %}
+                                    {% if i > 4  %}
+                                    <div class='d-flex align-items-center py-2'>
+                                        <span class='bullet bg-primary me-3'></span>
+                                        <em> {% trans %}et{% endtrans %} {{ i - 4 }} {% trans %}autres{% endtrans %} ...</em>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                <!--end::Permissions-->
+                            </div>
+                            <!--end::Card body-->
+                            <!--begin::Card footer-->
+                            <div class="card-footer flex-wrap pt-0">
+                                <div class="row">
+									<div class="col-md-4 col-sm-4">
+                                        <form action="{{ path('app_user_role_view')}}" method="POST">
+                                            <input type="hidden" name="code_name" value="{{role.code }}"/>
+                                            <input type="hidden" name="_token" value="{{ csrf_token('view-role') }}">
+                                            <button  type="submit" class="btn btn-light btn-active-primary my-1 me-2">{% trans %}Voir{% endtrans %} </button>
+                                        </form>
+                                    </div>
+                                {% if pEditRole is defined and pEditRole == true %}
+                                    <div class="col-md-4 col-sm-4">
+                                         <button type="button" data-kt-role-modal-action="updating-submit" class="btn btn-light btn-active-light-primary my-1" 
+                                         onclick="event.preventDefault();update('{{role.code}}')" data-bs-toggle="modal" data-bs-target="#kt_modal_add_role">
+                                         {% trans %}Editer{% endtrans %}</button>
+                                    </div>
+                                {% endif %}
+                                {% if pDeleteRole is defined and pDeleteRole == true %}
+                                    <div class="col-md-4 col-sm-4">
+                                        <button type="button" data-kt-role-modal-action="deletion-submit" data-type="0" 
+                                        class="btn delete-role-button btn-light btn-active-light-primary my-1" data-id="{{role.uid}}" >
+                                        <i class="fa fa-trash-alt text-danger"></i></button>
+                                    </div>
+                                {% endif %}
+                                </div>
+                            </div>
+                            <!--end::Card footer-->
+                        </div>
+                        <!--end::Card-->
+                    </div>
+                    <!--end::Col-->
+                    {% endfor %}
+                {% endif %}
+                <!--begin::Add new card-->
+                {% if pCreateRole is defined and pCreateRole == true %}
+                <div class="ol-md-4">
+                    <!--begin::Card-->
+                    <div class="card h-md-100">
+                        <!--begin::Card body-->
+                        <div class="card-body d-flex flex-center">
+                            <!--begin::Button-->
+                            <button type="button" class="btn btn-clear d-flex flex-column flex-center" data-bs-toggle="modal" data-bs-target="#kt_modal_add_role">
+                                <!--begin::Illustration-->
+                                <img src="{{ asset('app/media/illustrations/sketchy-1/4.png') }}" alt="" class="mw-100 mh-150px mb-7" />
+                                <!--end::Illustration-->
+                                <!--begin::Label-->
+                                <div class="fw-bolder fs-3 text-gray-600 text-hover-primary">{% trans %}Nouveau rôle{% endtrans %}</div>
+                                <!--end::Label-->
+                            </button>
+                            <!--begin::Button-->
+                        </div>
+                        <!--begin::Card body-->
+                    </div>
+                    <!--begin::Card-->
+                </div>
+                {% endif %}
+                <!--begin::Add new card-->
+            </div>
+            <!--end::Row-->
+            <!--begin::Modals-->
+            <!--begin::Modal - Add role-->
+            <div class="modal fade" id="kt_modal_add_role" tabindex="-1" aria-hidden="true">
+                <!--begin::Modal dialog-->
+                <div class="modal-dialog modal-dialog-centered mw-750px">
+                    <!--begin::Modal content-->
+                    <div class="modal-content">
+                        <!--begin::Modal header-->
+                        <div class="modal-header">
+                            <!--begin::Modal title-->
+                            <h2 class="fw-bolder" id="kt_modal_add_role_text">{% trans %}Nouveau rôle{% endtrans %}</h2>
+                            <!--end::Modal title-->
+                            <!--begin::Close-->
+                            <div class="btn btn-icon btn-sm btn-active-icon-primary" data-kt-role-modal-action="close">
+                                <!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
+                                <span class="svg-icon svg-icon-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                        <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="black" />
+                                        <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black" />
+                                    </svg>
+                                </span>
+                                <!--end::Svg Icon-->
+                            </div>
+                            <!--end::Close-->
+                        </div>
+                        <!--end::Modal header-->
+                        <!--begin::Modal body-->
+                        <div class="modal-body scroll-y mx-lg-5 my-7">
+                            <!--begin::Form-->
+                            {{ form_start(roleform, {'attr':{'id':'kt_modal_add_role_form'}}) }}
+                                <!--begin::Scroll-->
+                                <div class="d-flex flex-column scroll-y me-n7 pe-7" id="kt_modal_add_role_scroll" data-kt-scroll="true" data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-max-height="auto" data-kt-scroll-dependencies="#kt_modal_add_role_header" data-kt-scroll-wrappers="#kt_modal_add_role_scroll" data-kt-scroll-offset="300px">
+                                    <!--begin::Input group-->
+                                    <div class="fv-row mb-10">
+                                        <!--begin::Row-->
+                                        <div class="row">
+                                            <div class="col-lg-6 fv-row">
+                                                <!--begin::Label-->
+                                                <label class="fs-5 fw-bolder form-label mb-2">
+                                                    <span class="required">{% trans %}Nom du rôle{% endtrans %}</span>
+                                                </label>
+                                                <!--end::Label-->
+                                                <!--begin::Input-->
+                                                {{ form_row(roleform.name, {'attr': {'class': 'form-control form-control-solid','maxlength': 50,'placeholder': 'Entrer le nom anglais rôle'|trans }}) }}
+                                                <input type="hidden" name="role_id" id="role_id" value="0">
+                                                <!--end::Input-->
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--end::Input group-->
+                                     <div class="fv-row mb-10">
+                                        <!--begin::Row-->
+                                        <div class="row">
+                                            <div class="col-lg-6 fv-row">
+                                                <!--begin::Label-->
+                                                <label class="fs-5 fw-bolder form-label mb-2">
+                                                    <span class="required">{% trans %}Code du rôle{% endtrans %}</span>
+                                                </label>
+                                                <!--end::Label-->
+                                                <!--begin::Input-->
+                                                {{ form_row(roleform.code, {'attr': {'class': 'form-control form-control-solid','maxlength': 5,'placeholder': 'Entrer le code du rôle'|trans }}) }}
+                                                <!--end::Input-->
+                                            </div>
+                                            <div class="col-lg-6 fv-row">
+                                                <!--begin::Label-->
+                                                <label class="fs-5 fw-bolder form-label mb-2">
+                                                    <span class="required">{% trans %}Level{% endtrans %}</span>
+                                                </label>
+                                                <!--end::Label-->
+                                                <!--begin::Input-->
+                                                {{ form_row(roleform.level, {'attr': {'class': 'form-control form-control-solid','maxlength': 3,
+                                                'type':'tel','placeholder': 'Niveau du rôle'|trans }}) }}
+                                                <!--end::Input-->
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="fv-row mb-10">
+                                        <!--begin::Label-->
+                                        <label class="fs-5 fw-bolder form-label mb-2">
+                                            <span class=""> {% trans %}Description{% endtrans %}</span>
+                                        </label>
+                                        <!--end::Label-->
+                                        <!--begin::Input-->
+                                        <textarea class="form-control form-control-solid" maxlength="500" style="resize:none" rows="3" 
+                                        cols="50" placeholder="{{'Saisir la description'| trans}}" name="description" id="description"/></textarea>
+                                        <!--end::Input-->
+                                    </div>
+                                    <!--begin::Permissions-->
+                                    <div class="fv-row">
+                                        <!--begin::Label-->
+                                        <label class="fs-5 fw-bolder form-label mb-4">{% trans %}Permission du Rôle{% endtrans %}</label>
+                                        <!--end::Label-->
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <span class="text-gray-800 fw-bolder">{% trans %}Accès Super Administrateur{% endtrans %}</span>
+                                                <i class="fas fa-exclamation-circle ms-1 fs-7"  title="{{ 'Donner un accès complet au système' | trans}}"></i>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <!--begin::Checkbox-->
+                                                    <label class="form-check form-check-custom form-check-solid me-9">          
+                                                    <input class="form-check-input" type="checkbox" value="" id="kt_roles_select_all" />
+                                                    <span class="form-check-label" for="kt_roles_select_all">{% trans %}Tout cocher{% endtrans %}</span>
+                                                    </label>
+                                                <!--end::Checkbox-->
+                                            </div>
+                                        </div>
+                                        <div class="row mt-4">
+                                        {% for permission in permissions %}
+                                            <div class="col-md-3 mt-10">
+                                                <!--begin::Wrapper-->
+                                                <div class="d-flex">
+                                                    <!--begin::Checkbox-->
+                                                    <label class="form-check form-check-sm form-check-custom form-check-solid me-5 me-lg-20">
+                                                        <input class="form-check-input permission" type="checkbox" value="{{ permission.code }}" id="{{ permission.code }}" name="{{ permission.code }}" />
+                                                        <span class="form-check-label">{{ permission.name }}</span>
+                                                    </label>
+                                                    <!--end::Checkbox-->		
+                                                </div>
+                                                <!--end::Wrapper-->
+                                                <div class="separator separator-dashed my-5"></div>
+                                            </div>
+                                        {% endfor %}
+                                        </div>
+                                    </div>
+                                    <!--end::Permissions-->
+                                </div>
+                                <!--end::Scroll-->
+                                <!--begin::Actions-->
+                                <div class="text-center pt-15">
+                                    <button type="reset" class="btn btn-light me-3" data-kt-role-modal-action="cancel">{{'Annuler'| trans}}</button>
+                                    <button type="submit" class="btn btn-primary" data-kt-role-modal-action="submit">
+                                        <span class="indicator-label">{{'Soumettre'| trans}}</span>
+                                        <span class="indicator-progress">{{'Veuillez patienter'| trans}}...
+                                        <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                                    </button>
+                                </div>
+                                <!--end::Actions-->
+                           {{ form_end(roleform) }}
+                            <!--end::Form-->
+                        </div>
+                        <!--end::Modal body-->
+                    </div>
+                    <!--end::Modal content-->
+                </div>
+                <!--end::Modal dialog-->
+            </div>
+            <!--end::Modal - Add role-->
+            <!--end::Modals-->
+        </div>
+        <!--end::Container-->
+    </div>
+    <!--end::Post-->
+</div>
+{% endblock %}
+
+
+{% block javascripts %} 
+<script type="text/javascript">
+	const editRole       = {{pEditRole}};
+	const delRole        = {{pDeleteRole}};
+
+    const add_role           = "{{path('app_user_role_add')}}";
+    const csrfToken          = "{{ csrf_token(app.user.uid) }}"
+    var authorizationByRoles = {{ authorizationByRole|raw }};
+    var permissionProperty   = {{ permissionProperty|raw }};
+    var roleProperty         = {{ roleProperty|raw }};
+    var activeRoleCode       = null;
+</script>
+<script src="{{ asset('app/plugins/custom/datatables/datatables.bundle.js') }}"></script>
+<script src="{{ asset('app/js/queries/user-management/roles/updateDataInit.js') }}"></script>
+{% if pCreateRole is defined and pCreateRole == true %}
+<script src="{{ asset('app/js/queries/user-management/roles/add.js') }}"></script>
+{% endif %}
+{% if pDeleteRole is defined and pDeleteRole == true %}
+<script src="{{ asset('app/js/queries/user-management/roles/delete-role.js') }}"></script>
+{% endif %}
+ {% if pEditRole is defined and pEditRole == true %}
+<script src="{{ asset('app/js/queries/user-management/roles/update-role.js') }}"></script>
+{% endif %}
+<script src="{{ asset('app/js/widgets.bundle.js') }}"></script>
+<script src="{{ asset('app/js/custom/widgets.js') }}"></script>
+<script src="{{ asset('app/js/custom/apps/chat/chat.js') }}"></script>
+<script src="{{ asset('app/js/custom/utilities/modals/upgrade-plan.js') }}"></script>
+<script src="{{ asset('app/js/custom/utilities/modals/create-app.js') }}"></script>
+<script src="{{ asset('app/js/custom/utilities/modals/users-search.js') }}"></script>
+{% endblock %}

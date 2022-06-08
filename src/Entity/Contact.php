@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ContactRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ContactRepository::class)]
@@ -30,6 +32,14 @@ class Contact
 
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     private $updatedAt;
+
+    #[ORM\OneToMany(mappedBy: 'contact', targetEntity: ContactIndex::class, orphanRemoval: true)]
+    private $contactIndices;
+
+    public function __construct()
+    {
+        $this->contactIndices = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -104,6 +114,36 @@ class Contact
     public function setUpdatedAt(?\DateTimeImmutable $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ContactIndex>
+     */
+    public function getContactIndices(): Collection
+    {
+        return $this->contactIndices;
+    }
+
+    public function addContactIndex(ContactIndex $contactIndex): self
+    {
+        if (!$this->contactIndices->contains($contactIndex)) {
+            $this->contactIndices[] = $contactIndex;
+            $contactIndex->setContact($this);
+        }
+
+        return $this;
+    }
+
+    public function removeContactIndex(ContactIndex $contactIndex): self
+    {
+        if ($this->contactIndices->removeElement($contactIndex)) {
+            // set the owning side to null (unless already changed)
+            if ($contactIndex->getContact() === $this) {
+                $contactIndex->setContact(null);
+            }
+        }
 
         return $this;
     }

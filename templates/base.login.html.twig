@@ -1,0 +1,114 @@
+{% set _locale = app.request.locale|default('fr') %}
+{% set route   = app.request.attributes.get('_route') %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ title }}</title>
+    <link href={{ brand.white_logo }} rel="icon">
+    <link href="{{ asset('login/bootstrap/dist/css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('librairies/fontawesome/css/all.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('login/plugins/bower_components/bootstrap-extension/css/bootstrap-extension.css') }}" rel="stylesheet">
+    <link href="{{ asset('login/css/animate.css') }}" rel="stylesheet">
+    <link href="{{ asset('login/css/style.css') }}" rel="stylesheet">
+    <link href="{{ asset('login/plugins/add-css/style-add.css') }}" rel="stylesheet">
+    <link href="{{ asset('login/css/colors/purple.css') }}" id="theme" rel="stylesheet">
+    <link  rel="stylesheet" href="{{ asset('login/plugins/add-css/demomm.css') }}">
+    <!-- SWEETALERT CSS -->
+    <link href="{{ asset('login/plugins/vendor/sweetalert2/dist/sweetalert2.min.css') }}" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" href="{{ asset('librairies/intl/build/css/intlTelInput.css') }}">
+    <input type="hidden" value="{{app.request.locale|locale_name(app.request.locale)}}" id="login_locale">
+    <style type="text/css">
+    .login-carem-box {
+            margin :3%
+        }
+    </style>
+</head>
+<body>
+	<input type="hidden" value="{{app.request.locale}}" id="in_session_locale">
+    <section id="wrapper" class="login-register" style="background-color: rgb(0,0,0,0.5);">
+        <a href="{{ path('app_login') }}" class="text-center db login-carem-box">
+        <img width="60" height="60" src={{ brand.white_logo }} /></a>
+        <!-- content begin -->
+		{% block body %}{% endblock %}
+		<!-- content end -->
+		<div  class="text-center" style="margin-top: 90px; color: #fff !important;">
+			<footer>
+				<strong><a href="" target="_blank" style="color: #fff !important;">{{ brand.name }}</a> </strong>© 2021
+			</footer>
+
+			{% if brand.name == "FASTERMESSAGE" %}
+					<script type="text/javascript">
+				var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+				(function(){
+				var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+				s1.async=true;
+				s1.src='https://embed.tawk.to/621793d51ffac05b1d7b8bf3/1fsm1j00n';
+				s1.charset='UTF-8';
+				s1.setAttribute('crossorigin','*');
+				s0.parentNode.insertBefore(s1,s0);
+				})();
+				</script>
+			{% else %}
+				<script type="text/javascript">
+							var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+							(function(){
+							var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+							s1.async=true;
+							s1.src='https://embed.tawk.to/6218920d1ffac05b1d7bad46/1fsnvl2i5';
+							s1.charset='UTF-8';
+							s1.setAttribute('crossorigin','*');
+							s0.parentNode.insertBefore(s1,s0);
+							})();
+
+				</script>
+
+			{% endif %}
+			<!--Start of Tawk.to Script-->
+		<!--End of Tawk.to Script-->
+		</div>
+    </section>
+    <!-- jQuery -->
+    <script src="{{ asset('login/plugins/bower_components/jquery/dist/jquery.min.js') }}"></script>
+    <script src="{{ asset('login/bootstrap/dist/js/tether.min.js') }}"></script>
+    <script src="{{ asset('login/bootstrap/dist/js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('login/plugins/bower_components/bootstrap-extension/js/bootstrap-extension.min.js') }}"></script>
+    <script src="{{ asset('login/plugins/bower_components/sidebar-nav/dist/sidebar-nav.min.js') }}"></script>
+    <script src="{{ asset('login/js/jquery.slimscroll.js') }}"></script>
+    <script src="{{ asset('login/js/waves.js') }}"></script>
+    <script src="{{ asset('login/js/custom.min.js') }}"></script>
+    <script src="{{ asset('login/js/validator.js') }}"></script>
+    <script src="{{ asset('login/plugins/bower_components/styleswitcher/jQuery.style.switcher.js') }}"></script>
+    <!-- Intl-tel-input -->
+    <script src="{{ asset('login/plugins/ajax-query/users/open_account.js') }}"></script>
+    <script src="{{ asset('login/plugins/vendor/axios/dist/axios.min.js') }}"> </script>
+ 
+	<script src="{{ asset('librairies/intl/build/js/intlTelInput.min.js') }}"></script>
+
+	{% include 'translations/global.html.twig' %}
+	<script type="text/javascript">
+		const route = "{{ route }}";
+		var input = document.querySelector('#registration_form_phone');
+		function verif_nombre(phone)
+		{
+			var chiffres = new RegExp("[0-9]");
+			var verif;
+			var points = 0;
+
+			for(x = 0; x < phone.value.length; x++)
+			{
+				verif = chiffres.test(phone.value.charAt(x));
+				if(phone.value.charAt(x) == "."){points++;}
+					if(points > 1){verif = false; points = 1;}
+				if(verif == false){phone.value = phone.value.substr(0,x) + phone.value.substr(x+1,phone.value.length-x+1); x--;}
+			}
+		}
+	</script>
+		{% include 'intl.input.html.twig' %}
+	{% block javascripts %} {% endblock %}
+	<!--end::Javascript-->
+</body>
+</html>
+

@@ -34,6 +34,17 @@ class Transaction
     #[ORM\Column(type: 'float')]
     private $afterBalance;
 
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'transactions')]
+    #[ORM\JoinColumn(nullable: false)]
+    private $user;
+
+    #[ORM\ManyToOne(targetEntity: Status::class, inversedBy: 'transactions')]
+    #[ORM\JoinColumn(nullable: false)]
+    private $status;
+
+    #[ORM\OneToOne(mappedBy: 'transaction', targetEntity: Recharge::class, cascade: ['persist', 'remove'])]
+    private $recharge;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -119,6 +130,47 @@ class Transaction
     public function setBeforeBalance(?float $beforeBalance): self
     {
         $this->beforeBalance = $beforeBalance;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    public function getStatus(): ?Status
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?Status $status): self
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    public function getRecharge(): ?Recharge
+    {
+        return $this->recharge;
+    }
+
+    public function setRecharge(Recharge $recharge): self
+    {
+        // set the owning side of the relation if necessary
+        if ($recharge->getTransaction() !== $this) {
+            $recharge->setTransaction($this);
+        }
+
+        $this->recharge = $recharge;
 
         return $this;
     }
