@@ -77,20 +77,6 @@ var KTUsersAddUser = function() {
                                 }
                             }
                         },
-                        'user[gender]': {
-                            validators: {
-                                notEmpty: {
-                                    message: _Gender_Required
-                                }
-                            }
-                        },
-                        'user_city': {
-                            validators: {
-                                notEmpty: {
-                                    message: _City_Required
-                                }
-                            }
-                        },
                         'user_role': {
                             validators: {
                                 notEmpty: {

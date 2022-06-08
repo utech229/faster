@@ -32,20 +32,6 @@ var KTAccountSettingsProfileDetails=function() {
                                 message: _Birthday_Required
                             }
                         }
-                    }, 'gender': {
-                        validators: {
-                            notEmpty: {
-                                message: _Gender_Required
-                            }
-                        }
-                    },
-
-                    'user_city': {
-                        validators: {
-                            notEmpty: {
-                                message: _City_Required
-                            }
-                        }
                     },
                     timezone: {
                         validators: {
@@ -54,15 +40,6 @@ var KTAccountSettingsProfileDetails=function() {
                             }
                         }
                     }
-
-                    , "communication_email": {
-                        validators: {
-                            notEmpty: {
-                                message: _Communication_Email_Required
-                            }
-                        }
-                    }
-
                     , language: {
                         validators: {
                             notEmpty: {
@@ -95,6 +72,7 @@ var KTAccountSettingsProfileDetails=function() {
                 a.preventDefault(), t && t.validate().then((function(v) {
                     "Valid" == v ? 
                     (i.setAttribute("data-kt-indicator", "on"), i.disabled = !0, 
+                        $('#user_phone').val(intl.getNumber()),
                         load.removeClass('sr-only'),
                         $.ajax({
                             url: profile_details_link,

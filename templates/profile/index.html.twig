@@ -39,39 +39,32 @@
                         <ul class="nav flex-wrap border-transparent fw-bolder ">
                             <!--begin::Nav item-->
                             <li class="nav-item my-1">
-                                <a class="btn btn-color-gray-600 btn-active-white btn-active-color-primary fw-boldest fs-8 fs-lg-base nav-link px-3 px-lg-8 mx-1 text-uppercase active" href="../../demo1/dist/apps/support-center/overview.html">Overview</a>
+                                <a id="overview_link" class="btn btn-color-gray-600 btn-active-white btn-active-color-primary fw-boldest fs-8 fs-lg-base nav-link px-3 px-lg-8 mx-1 text-uppercase active" href="javascript:;">{% trans %}Détails profil{% endtrans %}</a>
                             </li>
                             <!--end::Nav item-->
                             <!--begin::Nav item-->
                             <li class="nav-item my-1">
-                                <a class="btn btn-color-gray-600 btn-active-white btn-active-color-primary fw-boldest fs-8 fs-lg-base nav-link px-3 px-lg-8 mx-1 text-uppercase" href="../../demo1/dist/apps/support-center/tickets/list.html">tickets</a>
+                                <a id="company_link" class="btn btn-color-gray-600 btn-active-white btn-active-color-primary fw-boldest fs-8 fs-lg-base nav-link px-3 px-lg-8 mx-1 text-uppercase" href="javascript:;">{% trans %}Entreprise{% endtrans %}</a>
                             </li>
                             <!--end::Nav item-->
                             <!--begin::Nav item-->
                             <li class="nav-item my-1">
-                                <a class="btn btn-color-gray-600 btn-active-white btn-active-color-primary fw-boldest fs-8 fs-lg-base nav-link px-3 px-lg-8 mx-1 text-uppercase" href="../../demo1/dist/apps/support-center/tutorials/list.html">Tutorials</a>
+                                <a id="solde_notification_link" class="btn btn-color-gray-600 btn-active-white btn-active-color-primary fw-boldest fs-8 fs-lg-base nav-link px-3 px-lg-8 mx-1 text-uppercase" href="javascript:;">{% trans %}Notification de solde{% endtrans %}</a>
                             </li>
                             <!--end::Nav item-->
                             <!--begin::Nav item-->
                             <li class="nav-item my-1">
-                                <a class="btn btn-color-gray-600 btn-active-white btn-active-color-primary fw-boldest fs-8 fs-lg-base nav-link px-3 px-lg-8 mx-1 text-uppercase" href="../../demo1/dist/apps/support-center/faq.html">FAQ</a>
+                                <a id="signin_link" class="btn btn-color-gray-600 btn-active-white btn-active-color-primary fw-boldest fs-8 fs-lg-base nav-link px-3 px-lg-8 mx-1 text-uppercase" href="javascript:;">{% trans %}Méthode de connexion{% endtrans %}</a>
                             </li>
                             <!--end::Nav item-->
                             <!--begin::Nav item-->
                             <li class="nav-item my-1">
-                                <a class="btn btn-color-gray-600 btn-active-white btn-active-color-primary fw-boldest fs-8 fs-lg-base nav-link px-3 px-lg-8 mx-1 text-uppercase" href="../../demo1/dist/apps/support-center/licenses.html">Licenses</a>
+                                <a id="desactivate_link" class="btn btn-color-gray-600 btn-active-white btn-active-color-primary fw-boldest fs-8 fs-lg-base nav-link px-3 px-lg-8 mx-1 text-uppercase" href="javascript:;">{% trans %}Désactivation{% endtrans %}</a>
                             </li>
                             <!--end::Nav item-->
-                            <!--begin::Nav item-->
-                            <li class="nav-item my-1">
-                                <a class="btn btn-color-gray-600 btn-active-white btn-active-color-primary fw-boldest fs-8 fs-lg-base nav-link px-3 px-lg-8 mx-1 text-uppercase" href="../../demo1/dist/apps/support-center/contact.html">Contact US</a>
-                            </li>
-                            <!--end::Nav item-->
+                            
                         </ul>
                         <!--end::Nav-->
-                        <!--begin::Action-->
-                        <a href="#" data-bs-toggle="modal" data-bs-target="#kt_modal_new_ticket" class="btn btn-white fw-bolder fs-8 fs-lg-base">Create Ticket</a>
-                        <!--end::Action-->
                     </div>
                     <!--end::Hero nav-->
                 </div>
@@ -277,7 +270,7 @@
                                         <!--end::Col-->
                                         <!--begin::Col-->
                                         <div class="col-lg-6 fv-row">
-                                            <input type="tel" name="phone" id="user_phone" class="form-control form-control-lg form-control-solid" placeholder={{'Téléphone'|trans}} value="{{ app.user.phone }}" disabled/>
+                                            <input type="tel" name="phone" id="user_phone" class="form-control form-control-lg form-control-solid" placeholder={{'Téléphone'|trans}} value="{{ app.user.phone }}"/>
                                         </div>
                                         <!--end::Col-->
                                     </div>
@@ -300,7 +293,7 @@
                                     <div class="row">
                                         <!--begin::Col-->
                                         <div class="col-lg-6 fv-row">
-                                             <select name="currency" id="user_currency" aria-label="{{'Selectionnez une devise'}}" data-control="select2" data-placeholder="{{'Choissez une devise'}}.." class="form-select form-select-solid form-select-lg">
+                                             <select name="currency" id="user_currency" aria-label="{{'Selectionnez une devise'}}" data-control="select2" data-placeholder="{{'Choissez une devise'}}.." class="form-select form-select-solid form-select-lg mb-4">
                                                 <option value="">{{'Choisir une devise'}}..</option>
                                                 <option data-kt-select2-country="{{ asset('app/media/flags/united-states.svg') }}" value="XOF">XOF</option>
                                                 <option data-kt-select2-country="{{ asset('app/media/flags/united-kingdom.svg') }}" value="XAF">XAF</option>

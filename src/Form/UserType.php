@@ -32,23 +32,7 @@ class UserType extends AbstractType
             ->add('lastname',TextType::class,array('label' => false, 'mapped' => false, "required"=>true))
             ->add('email',EmailType::class,array('label' => false ,"required"=>true))
             ->add('phone',TelType::class,array('label' => false, 'mapped' => true, "required"=>true))
-            ->add('status', ChoiceType::class, ['label' => false,
-                'choices'  => [
-                    $this->intl->trans("Actif")      => '1',
-                    $this->intl->trans("En attente") => '0',
-                    $this->intl->trans("Désactivé")  => '2',
-                    $this->intl->trans("Suspendu")   => '3',
-                    $this->intl->trans("Suprimé")    => '4',
-                ]
-            ])
-            ->add('gender', ChoiceType::class, ['label' => false,
-            'choices'  => [
-                $this->intl->trans("Homme") => 'M',
-                $this->intl->trans("Femme") => 'F',
-            ]
-        ])
-            ->add('uid',HiddenType::class,  array('mapped' => false))
-        ;
+            ->add('uid',HiddenType::class,  array('mapped' => false));
     }
 
     public function configureOptions(OptionsResolver $resolver): void

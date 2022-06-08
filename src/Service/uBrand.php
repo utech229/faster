@@ -20,7 +20,7 @@ class uBrand extends AbstractController
     }
 
     public function index(){
-        $search_brand     = $this->brandRepository->findOneBy(['siteUrl' => 'https://'.$_SERVER['SERVER_NAME']]);
+        $search_brand     = $this->brandRepository->findOneBy(['siteUrl' => ['https://'.$_SERVER['SERVER_NAME'],'http://'.$_SERVER['SERVER_NAME']]]);
         $brand     = ($search_brand) ? $search_brand : $this->brandRepository->findOneBy(['siteUrl' => 'https://'.$_SERVER['SERVER_NAME']]);;
         $brandAdmin   = $brand->getManager();
         $company      = ($brandAdmin) ? $brandAdmin->getCompany() : $this->companyRepository->findOneBy(['id' => 1]);

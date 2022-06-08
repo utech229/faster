@@ -5,8 +5,10 @@ var KTAccountSettingsOverview= {
         var initer = true;
         const detail_section = $('#kt_profile_details_view');
         const param_section  = $('#kt_profile_details_setting');
-        const desactive_section       = $('#kt_profile_desactivate_account');
-        const signin_method_section   = $('#kt_profile_sign_in_methods');
+        const desactivate_section              = $('#kt_profile_desactivate_account');
+        const signin_method_section            = $('#kt_profile_sign_in_methods');
+        const solde_notification_section       = $('#kt_profile_desactivate_account');
+        const _section       = $('#kt_profile_desactivate_account');
         
         var initButton       = $('#kt_profile_details_edit_button')
         var initNoticeButton = $('#kt_profile_details_edit_button_for_notice')

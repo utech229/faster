@@ -36,7 +36,7 @@ class ProfileController extends AbstractController
 	public function __construct(BaseUrl $baseUrl, Services $services, EntityManagerInterface $entityManager, TranslatorInterface $translator,
     RoleRepository $roleRepository, UserRepository $userRepository, PermissionRepository $permissionRepository,
     AuthorizationRepository $authorizationRepository, UrlGeneratorInterface $urlGenerator, uBrand $brand, ValidatorInterface $validator,
-    BrickPhone $brickPhone, AddEntity $addEntity , StatusRepository $statusRepository){
+    BrickPhone $brickPhone, AddEntity $addEntity , StatusRepository $statusRepository, UsettingRepository $usettingRepository){
 		$this->baseUrl         = $baseUrl;
         $this->urlGenerator    = $urlGenerator;
         $this->intl            = $translator;
@@ -44,6 +44,7 @@ class ProfileController extends AbstractController
         $this->brand           = $brand;
         $this->em	           = $entityManager;
         $this->userRepository  = $userRepository;
+        $this->usettingRepository  = $usettingRepository;
         $this->roleRepository           = $roleRepository;
         $this->authorizationRepository  = $authorizationRepository;
         $this->permissionRepository     = $permissionRepository;
@@ -99,7 +100,8 @@ class ProfileController extends AbstractController
             return $this->redirectToRoute("app_home");
         }
 
-        $user = $this->getUser();
+        $user     = $this->getUser();
+        $usetting = $user->getUsetting();
         $cemailform = $this->createForm(PasswordFormType::class, $user);
 
         if ($request->request->count() > 0)
@@ -128,10 +130,21 @@ class ProfileController extends AbstractController
             //profil photo setting end
 
             //user data setting
-            $user->setFirstName($fname);
-            $user->setLastName($lname);
             $user->setProfilePhoto($avatarProcess);
             $user->setUpdatedAt(new \DatetimeImmutable());
+            $this->userRepository->add($user);
+
+            $language  = [ 'code' => $languageCode, 'name' => $languageName];
+            $currency  = [ 'code' => $currency, 'name' => "West African CFA Franc"];
+
+            $usetting->setFirstname($fname)
+                ->setLastname($lname)
+                ->setLanguage($language)
+                ->setCurrency($currency)
+                ->setTimezone($timezone)
+                ->setUpdatedAt(new \DatetimeImmutable());
+            $this->usettingRepository->add($usetting);
+            
             $this->userRepository->add($user);
             return $this->services->ajax_success_crud(
                 $this->intl->trans("Modification de profil ").$user->getEmail(),
