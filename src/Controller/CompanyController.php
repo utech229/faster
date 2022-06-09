@@ -51,7 +51,6 @@ class CompanyController extends AbstractController
     #[Route('/add', name: 'app_company_manage', methods: ['POST'])]
     public function index(Request $request): Response
     {
-        dd($this->pCreate, $this->pEdit);
         $user = $this->getUser();
         //ajax method
         $company       = $this->getUser()->getCompany();
@@ -62,10 +61,10 @@ class CompanyController extends AbstractController
         {
             $form->handleRequest($request);
             if ($isCompanyAdd == true) { //method calling
-                if (!$this->pCreate) return $this->services->no_access($this->intl->trans("Enrégistrement d'une entreprise"));
+                //if (!$this->pCreate) return $this->services->no_access($this->intl->trans("Enrégistrement d'une entreprise"));
                 return $this->addCompany($request, $form, $company, $user);
             }else {
-                if (!$this->pEdit) return $this->services->no_access($this->intl->trans("Mise à jour d'une entreprise"));
+                //if (!$this->pEdit) return $this->services->no_access($this->intl->trans("Mise à jour d'une entreprise"));
                 return $this->updateCompany($request, $form, $company, $user);
             }
         }
@@ -91,7 +90,9 @@ class CompanyController extends AbstractController
             $this->companyRepository->add($company);
             return $this->services->msg_success(
                 $this->intl->trans("Ajout d'un nouveau Company"),
-                $this->intl->trans("Company ajouté avec succès")
+                $this->intl->trans("Company ajouté avec succès"), 
+                ['name' => $company->getName(), 'phone' => $company->getPhone(), 'email' => $company->getEmail(), 
+                'ifu' => $company->getIfu(), 'rccm' => $company->getRccm(), 'address' => $company->getAddress(), 'isAdd' => true]
             );
         }
         else 
@@ -107,17 +108,17 @@ class CompanyController extends AbstractController
         { 
             $phone           =  $form->get('phone')->getData();
             $address         =  $request->request->get('adress');
-
-            $sectors  = [ 'sector_one' => $sector_one,'sector_two' => $sector_two ];
             $company->setPhone($phone);
             $company->setManager($user);
             $company->setAddress($address);;
-            $company->setCreatedAt(new \DatetimeImmutable());;
+            $company->setCreatedAt(new \DatetimeImmutable());
             $company->setUpdatedAt(new \DatetimeImmutable());
             $this->companyRepository->add($company);
             return $this->services->msg_success(
                 $this->intl->trans("Modification de l'entreprise")." : ".$company->getUid(),
-                $this->intl->trans("Profil entreprise modifié avec succès")
+                $this->intl->trans("Profil entreprise modifié avec succès"), 
+                ['name' => $company->getName(), 'phone' => $company->getPhone(), 'email' => $company->getEmail(), 
+                'ifu' => $company->getIfu(), 'rccm' => $company->getRccm(), 'address' => $company->getAddress(), 'isAdd' => false]
             );
         }
         else 

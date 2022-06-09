@@ -102,8 +102,8 @@ var KTUsersAddCompany = function() {
                                     }).then((function(t) {
                                         if (response.type === 'success') {
                                             t.isConfirmed && e.reset();
-                                            e.reset(),tableReloadButton.click();
-                                            (isPermissionUpdating == true) ? n.hide() : null;
+                                            e.reset(), n.hide()
+                                            if(response.)
                                         }
                                     }))
                             },
