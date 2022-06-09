@@ -176,7 +176,7 @@
                                         <select class="form-select form-select-solid fw-bolder" data-kt-select2="true" data-placeholder="Select option" data-allow-clear="true" data-kt-user-table-filter="role" data-hide-search="true">
                                             <option></option>
                                             {% for theRole in role %}
-                                                <option value="{{ theRole.text }}">{{ theRole.text }}</option>
+                                                <option value="{{ theRole.name }}">{{ theRole.name }}</option>
                                             {% endfor %}
                                         </select>
                                     </div>
@@ -546,7 +546,7 @@
                                                             <!--end::Input-->
                                                             <!--begin::Label-->
                                                             <label class="form-check-label" for="kt_modal_update_role_option_{{ myrole.id }}">
-                                                                <div class="fw-bolder text-gray-800">{{ myrole.text }}</div>
+                                                                <div class="fw-bolder text-gray-800">{{ myRole.name }}</div>
                                                                 <div class="text-gray-600">{{ myrole.description }}</div>
                                                             </label>
                                                             <!--end::Label-->

@@ -55,9 +55,9 @@ class SecurityController extends AbstractController
         [
             'last_username'   => $lastUsername, 
             'error'           => $error,
-            'title'           => $this->intl->trans('Connexion').' - '. $this->brand->index()['name'],
+            'title'           => $this->intl->trans('Connexion').' - '. $this->brand->get()['name'],
             'menu_text'       => $this->intl->trans('Connexion'),
-            'brand'           => $this->brand->index(),
+            'brand'           => $this->brand->get(),
             'baseUrl'         => $this->baseUrl,
             'registrationForm' => $form->createView(),
         ]);

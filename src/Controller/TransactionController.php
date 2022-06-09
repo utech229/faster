@@ -66,13 +66,13 @@ class TransactionController extends AbstractController
         return $this->render('transaction/index.html.twig', [
             'controller_name' => 'TransactionController',
             'role'            => $this->roleRepository->findAll(),
-            'title'           => $this->intl->trans('Transactions').' - '. $this->brand->index()['name'],
+            'title'           => $this->intl->trans('Transactions').' - '. $this->brand->get()['name'],
             'pageTitle'       => [
                 'one'   => $this->intl->trans('Transactions'),
                 'two'   => $this->intl->trans('Mes Transactions'),
                 'none'  => $this->intl->trans('Gestion transaction'),
             ],
-            'brand'       => $this->brand->index(),
+            'brand'       => $this->brand->get(),
             'baseUrl'     => $this->baseUrl->init(),
             'transactions'=> $this->transactionRepository->findAll(),
             'pAccess'     => $this->pCreate,

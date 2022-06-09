@@ -102,13 +102,11 @@ class UserController extends AbstractController
         return $this->render('user/index.html.twig', [
             'controller_name' => 'UserController',
             'role'            => $this->roleRepository->findAll(),
-            'title'           => $this->intl->trans('Mes utilisateurs').' - '. $this->brand->index()['name'],
+            'title'           => $this->intl->trans('Mes utilisateurs').' - '. $this->brand->get()['name'],
             'pageTitle'       => [
-                'one'   => $this->intl->trans('Utilisateurs'),
-                'two'   => $this->intl->trans('Mes Utilisateurs'),
-                'none'  => $this->intl->trans('Gestion utilisateur'),
+                [$this->intl->trans('Utilisateurs')],
             ],
-            'brand'           => $this->brand->index(),
+            'brand'           => $this->brand->get(),
             'baseUrl'         => $this->baseUrl->init(),
             'users'           => $this->userRepository->findAll(),
             'userform'        => $form->createView(),
@@ -154,7 +152,7 @@ class UserController extends AbstractController
             $user->setUid(time().uniqid());
             $user->setProfilePhoto($avatarProcess);
             $this->userRepository->add($user);
-            return $this->services->ajax_success_crud(
+            return $this->services->msg_success(
                 $this->intl->trans("Création d'un nouvel utilisateur"),
                 $this->intl->trans("Utilisateur ajouté avec succès")
             );
@@ -199,7 +197,7 @@ class UserController extends AbstractController
             $user->setUpdatedAt(new \DatetimeImmutable());
        
             $this->userRepository->add($user);
-            return $this->services->ajax_success_crud(
+            return $this->services->msg_success(
                 $this->intl->trans("Modification de l'utilisateur ").$user->getEmail(),
                 $this->intl->trans("Utilisateur modifié avec succès").' : '.$user->getEmail()
             );
@@ -280,7 +278,7 @@ class UserController extends AbstractController
 
         $user->setStatus(4);
         $this->userRepository->add($user);
-        return $this->services->ajax_success_crud(
+        return $this->services->msg_success(
             $this->intl->trans("Suppression de l'utilisateur ").$user->getEmail(),
             $this->intl->trans("Utilisateur supprimé avec succès").' : '.$user->getEmail(),
         );

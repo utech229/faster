@@ -76,13 +76,11 @@ class ProfileController extends AbstractController
         $this->services->addLog($this->intl->trans('Accès au menu profils'));
         return $this->render('profile/index.html.twig', [
             'controller_name' => 'ProfileController',
-            'title'           => $this->intl->trans('Mon profil').' - '. $this->brand->index()['name'],
+            'title'           => $this->intl->trans('Mon profil').' - '. $this->brand->get()['name'],
             'pageTitle'       => [
-                'one'   => $this->intl->trans('Profil'),
-                'two'   => $this->intl->trans('Mon Profil'),
-                'none'  => $this->intl->trans('Gestion profil'),
+                [$this->intl->trans('Mon profil')],
             ],
-            'brand'           => $this->brand->index(),
+            'brand'           => $this->brand->get(),
             'baseUrl'         => $this->baseUrl->init(),
             'pCreateUser'     => $this->pCreate,
             'pEditUser'       => $this->pEdit,
@@ -90,9 +88,9 @@ class ProfileController extends AbstractController
         ]);
     }
 
-    #[Route('/setting', name: 'app_profile_setting')]
+    #[Route('/setting', name: 'app_profile_setting',methods: ['POST','GET'])]
     #[Route('/edit', name: 'app_user_profile_edit', methods: ['POST'])]
-    public function profile_setting(Request $request): Response
+    public function profile_setting(Request $request): JsonResponse
     {
         if(!$this->pAccess)
         {
@@ -146,29 +144,34 @@ class ProfileController extends AbstractController
             $this->usettingRepository->add($usetting);
             
             $this->userRepository->add($user);
-            return $this->services->ajax_success_crud(
+            return $this->services->msg_success(
                 $this->intl->trans("Modification de profil ").$user->getEmail(),
                 $this->intl->trans("Paramètre de compte modifié avec succès"),
                 $user->getProfilePhoto(),
             );
         }
 
-        $this->services->addLog($this->intl->trans('Accès au menu paramètre de compte'));
+        /*$this->services->addLog($this->intl->trans('Accès au menu paramètre de compte'));
         return $this->render('profile/setting.html.twig', [
             'controller_name' => 'ProfileController',
-            'title'           => $this->intl->trans('Paramètre de compte').' - '. $this->brand->index()['name'],
+            'title'           => $this->intl->trans('Paramètre de compte').' - '. $this->brand->get()['name'],
             'pageTitle'       => [
                 'one'   => $this->intl->trans('Paramètre'),
                 'two'   => $this->intl->trans('Mes Paramètres'),
                 'none'  => $this->intl->trans('Gestion de compte'),
             ],
-            'brand'           => $this->brand->index(),
+            'brand'           => $this->brand->get(),
             'baseUrl'         => $this->baseUrl->init(),
             'cemailForm'      => $cemailform->createView(),
             'pCreateUser'     => $this->pCreate,
             'pEditUser'       => $this->pEdit,
             'pDeleteUser'     => $this->pDelete,
-        ]);
+        ]);*/
+        return $this->services->msg_success(
+            $this->intl->trans("Gestion de profil : ").$user->getEmail(),
+            $this->intl->trans("Gestion de profil exécuté"),
+            $user->getProfilePhoto(),
+        );
     }
 
     #[Route('/init_email_change', name: 'app_user_email_edit', methods: ['POST'])]
@@ -178,7 +181,7 @@ class ProfileController extends AbstractController
         if ($request->request->count() > 0) 
         {
             if (!$this->isCsrfTokenValid($user->getUid(), $request->request->get('_token'))) 
-            return $this->services->ajax_ressources_no_access($this->intl->trans("Modification de l'adresse email").': '.$user->getEmail());
+            return $this->services->no_access($this->intl->trans("Modification de l'adresse email").': '.$user->getEmail());
 
             $email	  = $request->request->get('email');
 		    $password =	$request->request->get('cpassword');
@@ -192,7 +195,7 @@ class ProfileController extends AbstractController
                 $base = $this->baseUrl->init();
                 $email = base64_encode($email);
                 $url = $base."/fr/settingbylink/email_edit/".$email."/".$user->getUid()."/".$request->request->get('_token');
-                return $this->services->ajax_success_crud(
+                return $this->services->msg_success(
                     $this->intl->trans("Modification de l'adresse email").':'.$user->getEmail(),
                     $this->intl->trans(/*"Modification initialisé, veuillez consulter 
                     votre nouvelle adresse pour le vérifier et finaliser cette opération"*/$url)
@@ -215,7 +218,7 @@ class ProfileController extends AbstractController
         if ($request->request->count() > 0) 
         {
             if (!$this->isCsrfTokenValid($user->getUid(), $request->request->get('_token'))) 
-            return $this->services->ajax_ressources_no_access($this->intl->trans("Modification du mot de passe").': '.$user->getPhone());
+            return $this->services->no_access($this->intl->trans("Modification du mot de passe").': '.$user->getPhone());
 
 		    $password    =	$request->request->get('currentpassword');
 		    $newpassword =	$request->request->get('newpassword');
@@ -234,7 +237,7 @@ class ProfileController extends AbstractController
                
                 $this->addFlash('info', $this->intl->trans("Connectez vous avec votre adresse email et votre nouveau mot de passe"));
                 //dd($this->baseUrl->init().$this->urlGenerator->generate("app_logout"));
-                return $this->services->ajax_success_crud(
+                return $this->services->msg_success(
                     $this->intl->trans("Modification du mot de passe"),
                     $this->intl->trans("Votre mot de passe à été modifié avec succès, veuillez vous reconnecter maintenant"), 
                     $this->baseUrl->init().$this->urlGenerator->generate("app_logout")
@@ -257,13 +260,13 @@ class ProfileController extends AbstractController
         if ($request->request->count() > 0) 
         {
             if (!$this->isCsrfTokenValid($user->getUid(), $request->request->get('_token'))) 
-            return $this->services->ajax_ressources_no_access($this->intl->trans("Désactivation du compte").': '.$user->getPhone());
+            return $this->services->no_access($this->intl->trans("Désactivation du compte").': '.$user->getPhone());
 
             $user->setStatus(2);
             $user->setUpdatedAt(new \DatetimeImmutable());
             $this->userRepository->add($user);
             $this->addFlash('warning', $this->intl->trans("Votre compte à été désactivé"));
-            return $this->services->ajax_success_crud(
+            return $this->services->msg_success(
                 $this->intl->trans("Désactivation du compte"),
                 $this->intl->trans("Compte désactivé, vous allez nous manquer; revenez vite !"), 
                 $this->baseUrl->init().$this->urlGenerator->generate("app_logout")

@@ -75,10 +75,10 @@ class PermissionController extends AbstractController
             dd($request->request);
             $form->handleRequest($request);
             if ($isPermissionAdd == true) { //method calling
-                if (!$this->pCreatePermission) return $this->services->ajax_ressources_no_access($this->intl->trans('Création de permission'));
+                if (!$this->pCreatePermission) return $this->services->no_access($this->intl->trans('Création de permission'));
                 return $this->addPermission($request, $form, $permission);
             }else {
-                if (!$this->pEditPermission)   return $this->services->ajax_ressources_no_access($this->intl->trans('Modification permission'));
+                if (!$this->pEditPermission)   return $this->services->no_access($this->intl->trans('Modification permission'));
                 return $this->updatePermission($request, $form, $permission);
             }
         }
@@ -86,13 +86,13 @@ class PermissionController extends AbstractController
         $this->services->addLog($this->intl->trans('Accès au menu permission'));
         return $this->render('permission/index.html.twig', [
             'controller_name' => 'RoleController',
-            'title'           => $this->intl->trans('Mes Permissions').' - '. $this->brand->index()['name'],
+            'title'           => $this->intl->trans('Mes Permissions').' - '. $this->brand->get()['name'],
             'pageTitle'       => [
                 'one'   => $this->intl->trans('Permissions'),
                 'two'   => $this->intl->trans('Mes Permissions'),
                 'none'  => $this->intl->trans('Gestion utilisateur'),
             ],
-            'brand'              => $this->brand->index(),
+            'brand'              => $this->brand->get(),
             'baseUrl'            => $this->baseUrl->init(),
             'permissionform'     => $form->createView(),
             'pCreatePermission'  =>	$this->pCreatePermission,
@@ -190,7 +190,7 @@ class PermissionController extends AbstractController
     public function getCurrentPermission(Request $request, Permission $permission): Response
     {
         if (!$this->isCsrfTokenValid($this->getUser()->getUid(), $request->request->get('_token'))) 
-        return $this->services->ajax_ressources_no_access($this->intl->trans("Récupération d'une permission"));
+        return $this->services->no_access($this->intl->trans("Récupération d'une permission"));
 
         $data['id']          = $permission->getId();
         $data['name']        = $permission->getName();
@@ -205,7 +205,7 @@ class PermissionController extends AbstractController
     public function delete(Request $request, Permission $permission): Response
     {
         if (!$this->isCsrfTokenValid($this->getUser()->getUid(), $request->request->get('_token'))) 
-            return $this->services->ajax_ressources_no_access($this->intl->trans("Suppression d'une permission").': '.$permission->getCode());
+            return $this->services->no_access($this->intl->trans("Suppression d'une permission").': '.$permission->getCode());
         if (count($permission->getAuthorizations()) > 0) 
         return $this->services->ajax_error_crud(
             $this->intl->trans("Suppression de la permission ").$permission->getName(),

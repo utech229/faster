@@ -93,10 +93,10 @@ class RoleController extends AbstractController
         {
             $form->handleRequest($request);
             if ($isRoleAdd == true) { //method calling
-                if (!$this->pCreateRole) return $this->services->ajax_ressources_no_access($this->intl->trans('Création de rôle'));
+                if (!$this->pCreateRole) return $this->services->no_access($this->intl->trans('Création de rôle'));
                 return $this->addRole($request, $form, $newRole);
             }else {
-                if (!$this->pEditRole)   return $this->services->ajax_ressources_no_access($this->intl->trans('Modification rôle'));
+                if (!$this->pEditRole)   return $this->services->no_access($this->intl->trans('Modification rôle'));
                 return $this->updateRole($request, $form, $newRole);
             }
         }
@@ -104,13 +104,12 @@ class RoleController extends AbstractController
         $RPA  = $this->rolesPermissionAuthorizationData();
         return $this->render('role/index.html.twig', [
             'controller_name' => 'RoleController',
-            'title'           => $this->intl->trans('Mes Roles').' - '. $this->brand->index()['name'],
+            'title'           => $this->intl->trans('Mes Roles').' - '. $this->brand->get()['name'],
             'pageTitle'       => [
-                'one'   => $this->intl->trans('Roles'),
-                'two'   => $this->intl->trans('Mes Roles'),
-                'none'  => $this->intl->trans('Gestion utilisateur'),
+                [$this->intl->trans('Gestion utilisateurs')],
+                [$this->intl->trans('Roles')],
             ],
-            'brand'           => $this->brand->index(),
+            'brand'           => $this->brand->get(),
             'baseUrl'         => $this->baseUrl->init(),
             'roleform'        => $form->createView(),
             'roles'           =>  $RPA['roles'],
@@ -142,14 +141,14 @@ class RoleController extends AbstractController
             
             return $this->render('role/show.html.twig', [
                 'controller_name' => 'RoleController',
-                'title'           => $this->intl->trans('Mon Role').' - '. $this->brand->index()['name'],
+                'title'           => $this->intl->trans('Mon Role').' - '. $this->brand->get()['name'],
                 'pageTitle'       => [
                     'one'   => $this->intl->trans('Role'),
                     'two'   => $role->getName(),
                     'none'  => $this->intl->trans('Gestion du role '),
                 ],
                 'roleform'         => $form->createView(),
-                'brand'            => $this->brand->index(),
+                'brand'            => $this->brand->get(),
                 'baseUrl'          => $this->baseUrl->init(),
                 'role'             =>  $role,
                 'permissions'      =>  $RPA['permissions'],
@@ -182,7 +181,7 @@ class RoleController extends AbstractController
             //update authorization for role and permission
             $this->authorizationUpdate($request, $role);
             
-            return $this->services->ajax_success_crud(
+            return $this->services->msg_success(
                 $this->intl->trans("Ajout d'un nouveau role"),
                 $this->intl->trans("Nouveau role ajouté avec succès")
             );
@@ -207,7 +206,7 @@ class RoleController extends AbstractController
             //update authorization for role and permission
             $this->authorizationUpdate($request, $role);
         
-            return $this->services->ajax_success_crud(
+            return $this->services->msg_success(
                 $this->intl->trans("Modification du role ").$role->getName(),
                 $this->intl->trans("Role modifié avec succès").' : '.$role->getName()
             );
@@ -223,7 +222,7 @@ class RoleController extends AbstractController
     #[Route('/{uid}/delete', name: 'app_user_role_delete', methods: ['POST'])]
     public function delete(Request $request, Role $role): Response
     {
-        if (!$this->pDeleteRole)  return $this->services->ajax_ressources_no_access($this->intl->trans('Suppression du rôle').' : '.$role->getName());
+        if (!$this->pDeleteRole)  return $this->services->no_access($this->intl->trans('Suppression du rôle').' : '.$role->getName());
         if (count($role->getUsers()) > 0 ) return $this->services->ajax_warning_crud(
             $this->intl->trans("Echec de suppression du role ").$role->getName(),
             $this->intl->trans("Vous ne pouvez pas supprimmer un rôle ayant un ou plusieurs utilisateur(s) associé(s)")
@@ -232,7 +231,7 @@ class RoleController extends AbstractController
         if ($this->isCsrfTokenValid($this->getUser()->getUid(), $request->request->get('_token'))) 
         {
             $this->roleRepository->remove($role);
-            return $this->services->ajax_success_crud(
+            return $this->services->msg_success(
                 $this->intl->trans("Suppression réussie du rôle").' '.$role->getName(),
                 $this->intl->trans("Suppression du rôle effectué succès").': Role : '.$role->getName()
             );

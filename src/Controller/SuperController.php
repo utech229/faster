@@ -73,7 +73,7 @@ class SuperController extends AbstractController
             $this->dbInitData->addPermission();
             $this->dbInitData->addAuthorization();
             $role     = $this->roleRepository->findOneBy(['code' => 'SUP']);
-            $phone_number = $this->brand->index()['phone']['bj'];
+            $phone_number = $this->brand->get()['phone']['bj'];
             $country      = 'BJ';
             //country data manage
             $countryDatas = $this->brickPhone->getCountryByCode($country);
@@ -93,7 +93,7 @@ class SuperController extends AbstractController
             $user->setRoles(['ROLE_'.$role->getName()]);
             $user->setBalance(0);
             $user->setPhone($phone_number);
-            $user->setEmail($this->brand->index()['emails']['support']);
+            $user->setEmail($this->brand->get()['emails']['support']);
             $user->setUid($this->services->idgenerate(20));
             $user->setApiKey($this->services->idgenerate(30));
             $user->setPostPay(1);
@@ -106,17 +106,17 @@ class SuperController extends AbstractController
             // encode the plain password
             $userPasswordHasher->hashPassword($user, '@21061AdminDefault'));
             $this->userRepository->add($user);
-            $this->AddEntity->defaultUsetting($user, $this->brand->index()['name'], $this->brand->index()['name']);
+            $this->AddEntity->defaultUsetting($user, $this->brand->get()['name'], $this->brand->get()['name']);
             
 
-            $brand   = $this->brandRepository->findOneByName($this->brand->index()['name']);
+            $brand   = $this->brandRepository->findOneByName($this->brand->get()['name']);
             $route   = $this->routeRepository->findOneByName("Fastermessage_moov");
             $company = $this->companyRepository->findOneById(1);
             $user->setAdmin($user)
                 ->setBrand($brand)
                 ->setRoute($route);
             $this->userRepository->add($user);
-            return $this->services->ajax_success_crud(
+            return $this->services->msg_success(
                 $this->intl->trans("Création du super admin : SUP-ONE"),
                 $this->intl->trans("Utilisateur SUP-ONE ajouté avec succès")
             );
@@ -129,12 +129,12 @@ class SuperController extends AbstractController
             $this->companyRepository->add($company);
             $existed_user->setAdmin($existed_user)->setBrand($brand)->setDefaultSender($sender);
             $this->userRepository->add($existed_user);
-            return $this->services->ajax_success_crud(
+            return $this->services->msg_success(
                 $this->intl->trans("Mise à jour de la marque initiale"),
                 $this->intl->trans("Marque et Entreprise initiale mise à jour")
             );
         }
-        return $this->services->ajax_success_crud(
+        return $this->services->msg_success(
             $this->intl->trans("Mise à jour des données par défaut"),
             $this->intl->trans("Données par défaut mise à jour")
         );
@@ -154,7 +154,7 @@ class SuperController extends AbstractController
         $this->AddEntity->defaultCompany();
         $this->elsuperadmin($userPasswordHasher);
         $this->elsuperadmin($userPasswordHasher);
-        return $this->services->ajax_success_crud(
+        return $this->services->msg_success(
             $this->intl->trans("Mise à jour des données par défaut"),
             $this->intl->trans("Données par défaut mise à jour")
         );

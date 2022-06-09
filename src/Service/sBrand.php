@@ -21,7 +21,7 @@ class sBrand extends AbstractController
        $brandData = [
            'name'               => 'FASTERMESSAGE',
            'base_url'           =>  $this->baseUrl->init(),
-           'slogan'             => $this->intl->trans('Votre SMS partout dans le monde'),
+           'slogan'             => $this->intl->trans('Vos SMS partout dans le monde'),
            'logo_link'          => $this->baseUrl->init().'/vitrine/img/logo.png',
            'text_logo_link'     => $this->baseUrl->init().'/vitrine/img/logo-text.png',
            'white_logo_link'    => $this->baseUrl->init().'/vitrine/img/logo-white.png',
@@ -52,7 +52,7 @@ class sBrand extends AbstractController
             ],
            'description'        => $this->intl->trans('Une solution simple et rapide pour envoyer des SMS en masse partout dans le monde'),
            'author'             => [
-               'name'    => $this->intl->trans('URBAN TECHNOLOGY'),
+               'name'       => $this->intl->trans('URBAN TECHNOLOGY'),
                'name_code'  => $this->intl->trans('SARL'),
                'email'      => 'contact@urban-technology.net',
                'website' => 'https://urban-technology.net',

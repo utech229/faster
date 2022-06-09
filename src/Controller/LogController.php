@@ -78,11 +78,14 @@ class LogController extends AbstractController
         $this->services->addLog($this->intl->trans('Accès au logs : activités des utilisateurs'));
         return $this->render('log/index.html.twig', [
             'controller_name' => 'LogController',
+            'pageTitle'       => [
+                [$this->intl->trans('Log')],
+            ],
             'logsData'        => $logs,
             'role'            =>  $this->roleRepository->findAll(),
-            'title'           => $this->intl->trans('Logs').' - '. $this->brand->index()['name'],
+            'title'           => $this->intl->trans('Logs').' - '. $this->brand->get()['name'],
             'menu_text'       => $this->intl->trans('Logs'),
-            'brand'           => $this->brand->index(),
+            'brand'           => $this->brand->get(),
             'baseUrl'         => $this->baseUrl,
         ]);
     }
