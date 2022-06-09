@@ -285,5 +285,4 @@ class Brand
 
         return $this;
     }
-
 }
