@@ -62,6 +62,9 @@ class Brand
     #[ORM\JoinColumn(nullable: false)]
     private $status;
 
+    #[ORM\Column(type: 'float')]
+    private $commission;
+
     public function __construct()
     {
         $this->brand = new ArrayCollection();
@@ -267,6 +270,18 @@ class Brand
     public function setStatus(?Status $status): self
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function getCommission(): ?float
+    {
+        return $this->commission;
+    }
+
+    public function setCommission(float $commission): self
+    {
+        $this->commission = $commission;
 
         return $this;
     }
