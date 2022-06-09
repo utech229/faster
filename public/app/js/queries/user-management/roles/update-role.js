@@ -6,7 +6,7 @@ var isRoleUpdating;
 
 $(document).on('roleUpBegin', function(e, code) {
     mdHTMLTitle.html(_Edit+ ' '+ roleProperty[code][3]);
-    $('#role_id').val(roleProperty[code][4]);
+    $('#role_id').val(roleProperty[code][1]);
     isRoleUpdating = true;
 });
 

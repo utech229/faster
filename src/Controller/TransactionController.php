@@ -65,7 +65,7 @@ class TransactionController extends AbstractController
                 'two'   => $this->intl->trans('Mes Transactions'),
                 'none'  => $this->intl->trans('Gestion transaction'),
             ],
-            'brand'       => $this->brand->index(),
+            'brand'       => $this->brand->get(),
             'baseUrl'     => $this->baseUrl->init(),
             'pAccess'     => $this->pAccess,
         ]);

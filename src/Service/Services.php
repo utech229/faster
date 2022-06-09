@@ -30,10 +30,10 @@ class Services extends AbstractController
 		TranslatorInterface $Translator,
         EntityManagerInterface $em, StatusRepository $statusRepository,
 	){
-		$this->urlGenerator	= $urlGenerator;
+		$this->urlGenerator	    = $urlGenerator;
         $this->intl   = $Translator;
-		$this->em	        = $em;
-		$this->statusRepository	        = $statusRepository;
+		$this->em	  = $em;
+		$this->statusRepository	= $statusRepository;
 	}
 
 	/**
@@ -237,26 +237,8 @@ class Services extends AbstractController
 		return $allUser;
 	}
 
-     // Function returned First and last date  of this mouth
-     public function FirstAndLastDayOfMouth()
-     {
-         $query_date1     = date('Y-m-d');
-         list($y, $m, $d) = explode('-', $query_date1);
-         $first_day = $y . '-' . $m . '-01';
-         $three_day = $y . '-' . $m . '-03';
-         $last_day  = date("Y-m-t");
-
-         $mounthData = [
-             'first_date' => $first_day,
-             'three_date' => $three_day,
-             'last_date'  => $last_day,
-         ];
-
-         return $mounthData;
-     }
-
      //Notification function for forms errors
-    public function formErrorsNotification($validator, $translator, $validationObject)
+    public function formErrorsNotification($validator, $validationObject)
     {
         $errorsList = $validator->validate($validationObject);
         if (count($errorsList) > 0)
@@ -266,11 +248,11 @@ class Services extends AbstractController
                 $champ         = $error->getInvalidValue();
                 $errorsArray[] = $champ .' : '.str_replace([".", ","], "", $error->getMessage()).' ';
             }
-            return new JsonResponse(['message' => str_replace([","], "", $errorsArray),'title' =>$translator->trans('Donnée(s) invalide(s)'),'type' =>'error', 'status' =>'error', 200]);
+            return new JsonResponse(['message' => str_replace([","], "", $errorsArray),'title' => $this->intl->trans('Donnée(s) invalide(s)'),'type' =>'error', 'status' =>'error', 200]);
         }
     }
 
-    public function invalidForm($form, $translator)
+    public function invalidForm($form)
     {
         $errors = [];
         foreach ($form->getErrors(true) as $error)
@@ -278,48 +260,51 @@ class Services extends AbstractController
             $errors = (string)$error->getMessage();
         }
         $response = new JsonResponse(['message' => $errors,
-        'title' => $translator->trans('Formulaire invalide'), 'type' => 'error', 'status' =>'error', 200]);
+        'title' => $this->intl->trans('Formulaire invalide'), 'type' => 'error', 'status' =>'error', 200]);
         return $response;
     }
 
+    //en attente de cas d'utilisation
     public function failedcrud($task){
         $this->addLog($task, 400);
         return new JsonResponse(['message' => $this->intl->trans("Votre opération à échoué, veuillez réessayer"),
         'title' => $this->intl->trans('Attention'), 'type' => 'error', 'status' =>'error', 401]);
     }
 
-    public function ajax_ressources_no_access($task){
+    //return inaccessible message to user when he hasn't permission to acess on the page or manage data
+    public function no_access($task){
         $this->addLog($task, 417);
         return new JsonResponse(['message' => $this->intl->trans("Vous n'avez pas les accès requis pour traiter ces données"),
         'title' => $this->intl->trans('Alert sécurité'), 'type' => 'error', 'status' =>'error', 417]);
     }
 
-    public function invalid_token_ajax_list($task){
-        $this->addLog($task, 417);
-        return new JsonResponse(['message' => $this->intl->trans("Token de sécurité invalide : activité suspecte"),
-        'title' => $this->intl->trans('Alert sécurité'), 'type' => 'error', 'status' =>'error', 417]);
-    }
-
-    public function ajax_warning_crud($task , $message , $data = null){
+    public function msg_warning($task , $message , $data = null){
         $this->addLog($task, 400);
         return new JsonResponse(['message' => $message,
         'title' => $this->intl->trans('Attention'), 'type' => 'warning', 'status' =>'warning', 'data' => $data, 400]);
     }
 
-    public function ajax_error_crud($task , $message, $data = null){
-        $this->addLog($task, 417);
+    public function msg_info($task , $message , $data = null){
+        $this->addLog($task, 200);
         return new JsonResponse(['message' => $message,
-        'title' => $this->intl->trans('Erreur'), 'type' => 'error', 'status' =>'error','data' => $data,  417]);
+        'title' => $this->intl->trans('Attention'), 'type' => 'info', 'status' =>'info', 'data' => $data, 400]);
+    }
+
+    public function msg_error($task , $message, $data = null){
+        $this->addLog($task, 400);
+        return new JsonResponse(['message' => $message,
+        'title' => $this->intl->trans('Erreur'), 'type' => 'error', 'status' =>'error','data' => $data,  400]);
     }
     
 
-    public function ajax_success_crud($task , $message, $data = null){
+    public function msg_success($task , $message, $data = null){
         $this->addLog($task, 200);
         return new JsonResponse([
             'message' => $message,'title'  => $this->intl->trans('Opération réussie'), 'type' => 'success', 
             'status' =>'success','data' => $data, 200]);
     }
 
+    //test function
     public function price(){
         return [
             ["price" => "null","name" => "null","dial_code" => "null","code" => "null"],["price" => "0","name" => "Afghanistan","dial_code" => "+93","code" => "AF"],
@@ -332,27 +317,26 @@ class Services extends AbstractController
         ];
     }
 
-    public function idgenerate($lenght) 
+    public function idgenerate($length) 
     {
-        $chaine ="12345678901234567890123456789abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ0";
+        $chaine ="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
         srand((double)microtime()*1000000);
         $pass = "";
-        for($i=0; $i<$lenght; $i++){
+        for($i=0; $i<$length; $i++){
             @$pass .= $chaine[rand()%strlen($chaine)];
         }
         return $pass;
     }
 
-    public function numeric_generate($lenght) 
+    public function numeric_generate($length) 
     {
-        $chaine ="12345678901234567890123456789012345678901234567891234567890123456789012345678901234567890123456789";
+        $chaine ="0123456789";
         srand((double)microtime()*1000000);
         $pass = "";
-        for($i=0; $i<$lenght; $i++){
+        for($i=0; $i<$length; $i++){
             @$pass .= $chaine[rand()%strlen($chaine)];
         }
         return $pass;
-        //return ($pass + time());
     }
 
     public function status($code) 

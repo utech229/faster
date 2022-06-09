@@ -187,7 +187,6 @@
                                 </th> 
                                 <th class="min-w-125px">{% trans %}Nom{% endtrans %}</th>
                                 <th class="min-w-125px">{% trans %}Code{% endtrans %}</th>
-                                <th class="min-w-125px">{% trans %}Permanence{% endtrans %}</th>
                                 <th class="min-w-125px">{% trans %}Description{% endtrans %}</th>
                                 <th class="min-w-125px">{% trans %}Assignez à{% endtrans %}</th>
                                 <th class="min-w-100px">{% trans %}Créé le{% endtrans %}</th>
@@ -309,41 +308,6 @@
                                     <!--end::Input-->
                                 </div>
                                 <!--end::Input-->
-                                <!--begin::Input group-->
-                                <div class="fv-row mb-7">
-                                    <!--begin::Checkbox-->
-                                    <label class="form-check form-check-custom form-check-solid me-9">
-                                        <input class="form-check-input" type="checkbox" value="1" name="permission_core" id="kt_permissions_core"/>
-                                        <span class="form-check-label" for="kt_permissions_core">{% trans %}Définir comme une permission permanente{% endtrans %}</span>
-                                    </label>
-                                    <!--end::Checkbox-->
-                                </div>
-                                <!--end::Input group-->
-                                <!--begin::Notice-->
-                                <div class="notice d-flex bg-light-warning rounded border-warning border border-dashed mb-9 p-6">
-                                    <!--begin::Icon-->
-                                    <!--begin::Svg Icon | path: icons/duotune/general/gen044.svg-->
-                                    <span class="svg-icon svg-icon-2tx svg-icon-warning me-4">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                            <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor" />
-                                            <rect x="11" y="14" width="7" height="2" rx="1" transform="rotate(-90 11 14)" fill="currentColor" />
-                                            <rect x="11" y="17" width="2" height="2" rx="1" transform="rotate(-90 11 17)" fill="currentColor" />
-                                        </svg>
-                                    </span>
-                                    <!--end::Svg Icon-->
-                                    <!--end::Icon-->
-                                    <!--begin::Wrapper-->
-                                    <div class="d-flex flex-stack flex-grow-1">
-                                        <!--begin::Content-->
-                                        <div class="fw-bold">
-                                            <div class="fs-6 text-gray-600">{% trans %}Une permission définis comme permanente est bloqué 
-                                            et reste non éditable dans le future{% endtrans %}</div>
-                                        </div>
-                                        <!--end::Content-->
-                                    </div>
-                                    <!--end::Wrapper-->
-                                </div>
-                                <!--end::Notice-->
                                 <!--begin::Actions-->
                                 <div class="text-center pt-15">
                                     <button type="reset" class="btn btn-light me-3" data-kt-permissions-modal-action="cancel">{{'Annuler'| trans}}</button>

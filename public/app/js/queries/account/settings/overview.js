@@ -4,20 +4,27 @@ var KTAccountSettingsOverview= {
     init:function() {
         var initer = true;
         const detail_section = $('#kt_profile_details_view');
-        const param_section  = $('#kt_profile_details_setting');
+        const profile_setting_section  = $('#kt_profile_details_setting');
         const desactivate_section              = $('#kt_profile_desactivate_account');
         const signin_method_section            = $('#kt_profile_sign_in_methods');
-        const solde_notification_section       = $('#kt_profile_desactivate_account');
-        const _section       = $('#kt_profile_desactivate_account');
+        const solde_notification_section       = $('#kt_profile_notification');
+        const company_section                  = $('#kt_profile_company');
         
         var initButton       = $('#kt_profile_details_edit_button')
         var initNoticeButton = $('#kt_profile_details_edit_button_for_notice')
         var discardButton    = $('#kt_profile_details_discard_button')
         var reviewButton     = $('#kt_profile_details_review_button')
+        
+        const overviewButton           = $('#overview_link')
+        const companyButton            = $('#company_link')
+        const soldeNotificationButton  = $('#solde_notification_link')
+        const signinMethodButton       = $('#signin_link')
+        const desactivateButton        = $('#desactivate_link')
+
         $(initButton).click(function() {
             load.removeClass('sr-only'); 
             setTimeout(() => {
-                param_section.removeClass('d-none')
+                profile_setting_section.removeClass('d-none')
                 detail_section.addClass('d-none')
                 load.addClass('sr-only'); 
             }, 100);
@@ -25,7 +32,7 @@ var KTAccountSettingsOverview= {
         $(initNoticeButton).click(function() {
             load.removeClass('sr-only'); 
             setTimeout(() => {
-                param_section.removeClass('d-none')
+                profile_setting_section.removeClass('d-none')
                 detail_section.addClass('d-none')
                 load.addClass('sr-only'); 
             }, 100);
@@ -33,7 +40,7 @@ var KTAccountSettingsOverview= {
         $(discardButton).click(function() {
             load.removeClass('sr-only'); 
             setTimeout(() => {
-                param_section.addClass('d-none')
+                profile_setting_section.addClass('d-none')
                 detail_section.removeClass('d-none')
                 load.addClass('sr-only'); 
             }, 100);
@@ -42,8 +49,104 @@ var KTAccountSettingsOverview= {
         $(reviewButton).click(function() {
             load.removeClass('sr-only'); 
             setTimeout(() => {
-                param_section.addClass('d-none')
+                profile_setting_section.addClass('d-none')
                 detail_section.removeClass('d-none')
+                load.addClass('sr-only'); 
+            }, 100);
+        });
+
+        $(overviewButton).click(function() {
+            load.removeClass('sr-only'); 
+            setTimeout(() => {
+                companyButton.removeClass('active');
+                soldeNotificationButton.removeClass('active');
+                signinMethodButton.removeClass('active');
+                desactivateButton.removeClass('active');
+                $(this).addClass('active');
+
+                profile_setting_section.addClass('d-none')
+                company_section.addClass('d-none')
+                detail_section.removeClass('d-none')
+                desactivate_section.addClass('d-none')
+                load.addClass('sr-only'); 
+            }, 100);
+        });
+
+        $(companyButton).click(function() {
+            load.removeClass('sr-only'); 
+            overviewButton.removeClass('active');
+            $(this).addClass('active');
+            setTimeout(() => {
+                overviewButton.removeClass('active');
+                companyButton.removeClass('active')
+                soldeNotificationButton.removeClass('active')
+                signinMethodButton.removeClass('active')
+                desactivateButton.removeClass('active')
+
+                company_section.removeClass('d-none')
+                profile_setting_section.addClass('d-none')
+                detail_section.addClass('d-none')
+                desactivate_section.addClass('d-none')
+                load.addClass('sr-only'); 
+            }, 100);
+        });
+
+        $(signinMethodButton).click(function() {
+            load.removeClass('sr-only'); 
+            $(this).addClass('active');
+            setTimeout(() => {
+                
+                overviewButton.removeClass('active');
+                companyButton.removeClass('active')
+                soldeNotificationButton.removeClass('active')
+                desactivateButton.removeClass('active')
+
+                signin_method_section.removeClass('d-none');
+                desactivate_section.addClass('d-none')
+                company_section.addClass('d-none')
+                profile_setting_section.addClass('d-none')
+                solde_notification_section.addClass('d-none')
+                detail_section.addClass('d-none')
+                load.addClass('sr-only'); 
+            }, 100);
+        });
+
+        $(soldeNotificationButton).click(function() {
+            load.removeClass('sr-only'); 
+            $(this).addClass('active');
+            
+            setTimeout(() => {
+                overviewButton.removeClass('active');
+                companyButton.removeClass('active')
+                signinMethodButton.removeClass('active')
+                companyButton.removeClass('active')
+                desactivateButton.removeClass('active')
+
+                solde_notification_section.removeClass('d-none')
+                desactivate_section.addClass('d-none')
+                signin_method_section.addClass('d-none');
+                company_section.addClass('d-none')
+                profile_setting_section.addClass('d-none')
+                detail_section.addClass('d-none')
+                load.addClass('sr-only'); 
+            }, 100);
+        });
+
+        $(desactivateButton).click(function() {
+            load.removeClass('sr-only'); 
+            $(this).addClass('active');
+            
+            setTimeout(() => {
+                overviewButton.removeClass('active');
+                companyButton.removeClass('active')
+                signinMethodButton.removeClass('active')
+                soldeNotificationButton.removeClass('active')
+
+                desactivate_section.removeClass('d-none')
+                signin_method_section.addClass('d-none');
+                company_section.addClass('d-none')
+                profile_setting_section.addClass('d-none')
+                detail_section.addClass('d-none')
                 load.addClass('sr-only'); 
             }, 100);
         });

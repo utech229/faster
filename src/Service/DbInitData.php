@@ -277,14 +277,14 @@ class DbInitData extends AbstractController
             $statusCodes = [0,1,2,3,4,5,6,7];
             $statusNames = [ "Programmé","En cours", "En attente", "Actif", "Désactivé", "Suspendu", "Approuvé", "Annulé"];
             $statusDescription = [
-                "Status programmé sur une entité",
-                "Status en cours  d'une entité",
-                "Status en attente d'une entité",
-                "Status actif d'une entité",
-                "Status désactivé d'une entité",
-                "Status suspendu d'une entité",
-                "Status approuvé d'une entité",
-                "Status annulé d'une entité"
+                "Statut programmé sur une entité",
+                "Statut en cours  d'une entité",
+                "Statut en attente d'une entité",
+                "Statut actif d'une entité",
+                "Statut désactivé d'une entité",
+                "Statut suspendu d'une entité",
+                "Statut approuvé d'une entité",
+                "Statut annulé d'une entité"
             ];
             for ($i=0; $i < (count($statusCodes)); $i++) { 
                 $status  = $this->statusRepository->findOneBy(['code' => $statusCodes[$i]]);

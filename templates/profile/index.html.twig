@@ -34,7 +34,7 @@
                 <!--begin::Hero body-->
                 <div class="card-body flex-column p-2">
                     <!--begin::Hero nav-->
-                    <div class="card-rounded bg-light d-flex flex-stack flex-wrap bg-primary p-5">
+                    <div class="card-rounded bg-light d-flex flex-stack flex-wrap p-5">
                         <!--begin::Nav-->
                         <ul class="nav flex-wrap border-transparent fw-bolder ">
                             <!--begin::Nav item-->
@@ -303,7 +303,7 @@
                                         <!--begin::Col-->
                                         <div class="col-lg-6 fv-row">
                                             <select name="country" id="kt_user_add_select2_country" aria-label="Select a Country" data-control="select2" data-placeholder="{{'Choisir un pays'|trans}}..." 
-                                                class="form-select form-select-solid form-select-lg fw-bold" data-kt-user-settings-type="select2_flags">
+                                                class="form-select form-select-solid form-select-lg fw-bold" data-kt-user-settings-type="select2_flags" disabled>
                                                 <option value="">{{'Choisir un pays'|trans}}</option>
                                                 <option value="BJ" data-kt-select2-country="{{ asset('app/media/flags/benin.svg')}}">{% trans %}Benin{% endtrans %}</option>
                                                 <option value="TG" data-kt-select2-country="{{ asset('app/media/flags/togo.svg')}}">{% trans %}Togo{% endtrans %}</option>
@@ -373,6 +373,566 @@
                 <!--end::Content-->
             </div>
             <!--end::Basic info-->
+
+            <!--begin::Company-->
+            <div class="card mb-5 mb-xl-10 d-none" id="kt_profile_company">
+                <!--begin::Card header-->
+                <div class="card-header">
+                    <!--begin::Title-->
+                    <div class="card-title">
+                        <h3> {% trans %}Profil entreprise{% endtrans %}</h3>
+                    </div>
+                    <!--end::Title-->
+                </div>
+                <!--end::Card header-->
+                <!--begin::Card body-->
+                <div class="card-body">
+                    <!--begin::Addresses-->
+                    <div class="row gx-9 gy-6">
+                        <!--begin::Col-->
+                        <div class="col-xl-6">
+                            <!--begin::Address-->
+                            <div class="card card-dashed h-xl-100 flex-row flex-stack flex-wrap p-6">
+                                {% if app.user.company %}
+                                <!--begin::company details-->
+                                <div class="d-flex flex-column gap-2">
+                                    <!--begin::Name-->
+                                    <h3 class="mb-0">{{app.user.company.name}}</h3>
+                                    <!--end::Name-->
+                                    <!--begin::Email-->
+                                    <div class="d-flex align-items-center gap-2">
+                                        <!--begin::Svg Icon | path: icons/duotune/communication/com011.svg-->
+                                       {% trans %}EMAIL {% endtrans %}:
+                                        <!--end::Svg Icon-->
+                                        <a href="javascript:;" class="text-muted text-hover-primary">{{app.user.company.email}}</a>
+                                    </div>
+                                    <!--end::Email-->
+                                    <!--begin::Phone-->
+                                    <div class="d-flex align-items-center gap-2">
+                                        <!--begin::Svg Icon | path: icons/duotune/electronics/elc003.svg-->
+                                       {% trans %}TELEPHONE{% endtrans %}:
+                                        <!--end::Svg Icon-->
+                                        <a href="javascript:;" class="text-muted text-hover-primary">{{app.user.company.phone}}</a> 
+                                    </div>
+                                    <!--end::Phone-->
+                                    <!--begin::Phone-->
+                                    <div class="d-flex align-items-center gap-2">
+                                        <!--begin::Svg Icon | path: icons/duotune/electronics/elc003.svg-->
+                                        {% trans %}NUMERO IFU {% endtrans %}: 
+                                        <!--end::Svg Icon-->
+                                        <a href="javascript:;" class="text-muted text-hover-primary">{{app.user.company.ifu}}</a>
+                                       </span>
+                                    </div>
+                                    <!--end::Phone-->
+                                    <!--begin::Phone-->
+                                    <div class="d-flex align-items-center gap-2">
+                                        <!--begin::Svg Icon | path: icons/duotune/electronics/elc003.svg-->
+                                        {% trans %}RCCM {% endtrans %}:
+                                        <!--end::Svg Icon-->
+                                        <a href="javascript:;" class="text-muted text-hover-primary">{{app.user.company.rccm}}</a>
+                                    </div>
+                                    <!--end::Phone-->
+                                </div>
+                                <!--end::company details-->
+                                {% else %}
+                                    <div class="d-flex align-items-center  text-danger py-2">
+                                        <span class="bullet bg-danger me-3"></span>{% trans %}Profil entreprise non configuré{% endtrans %}</div>
+                                {% endif %}
+                                <!--begin::Actions-->
+                                <div class="d-flex align-items-center py-2">
+                                    <button class="btn btn-sm btn-light btn-active-light-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_profile_company">{% if app.user.company is defined %}Modifier {% else %} Ajouter {% endif %}</button>
+                                </div>
+                                <!--end::Actions-->
+                            </div>
+                            <!--end::Address-->
+                        </div>
+                        <!--end::Col-->
+                        <!--begin::Col-->
+                        <div class="col-xl-6">
+                            <!--begin::Notice-->
+                            <div class="notice d-flex bg-light-danger rounded border-danger border border-dashed flex-stack h-xl-100 mb-10 p-6">
+                                <!--begin::Wrapper-->
+                                <div class="d-flex flex-stack flex-grow-1 flex-wrap flex-md-nowrap">
+                                    <!--begin::Content-->
+                                    <div class="mb-3 mb-md-0 fw-bold">
+                                        <h4 class="text-gray-900 fw-bolder">{% trans %}A votre attention{% endtrans %}</h4>
+                                        <div class="fs-6 text-gray-700 pe-7">{% trans %}En éditant le profile entreprise, vous renseignez vos données de facturation pour votre entreprise{% endtrans %}</div>
+                                    </div>
+                                    <!--end::Content-->
+                                </div>
+                                <!--end::Wrapper-->
+                            </div>
+                            <!--end::Notice-->
+                        </div>
+                        <!--end::Col-->
+                    </div>
+                    <!--end::Addresses-->
+                </div>
+                <!--end::Card body-->
+            </div>
+            <!--end::Company-->
+            <!--begin::Modal - New Company-->
+             <!--begin::Modal - New Company-->
+            <div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="kt_modal_profile_company" tabindex="-1" aria-hidden="true">
+                <!--begin::Modal dialog-->
+                <div class="modal-dialog modal-dialog-centered mw-800px">
+                    <!--begin::Modal content-->
+                    <div class="modal-content">
+                        <!--begin::Form-->
+                        {{ form_start(companyform, {'attr':{'id':'kt_modal_profile_company_form', novalidate:'novalidate'}}) }}
+                            <!--begin::Modal header-->
+                            <div class="modal-header" id="kt_modal_profile_company_header">
+                                <!--begin::Modal title-->
+                                <h2>{% trans %}Mon entreprise{% endtrans %}</h2>
+                                <!--end::Modal title-->
+                                <!--begin::Close-->
+                                <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
+                                    <!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
+                                    <span class="svg-icon svg-icon-1">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                            <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor" />
+                                            <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor" />
+                                        </svg>
+                                    </span>
+                                    <!--end::Svg Icon-->
+                                </div>
+                                <!--end::Close-->
+                            </div>
+                            <!--end::Modal header-->
+                            <!--begin::Modal body-->
+                            <div class="modal-body py-10 px-lg-17">
+                                <!--begin::Scroll-->
+                                <div class="scroll-y me-n7 pe-7" id="kt_modal_profile_company_scroll" data-kt-scroll="true" data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-max-height="auto" data-kt-scroll-dependencies="#kt_modal_profile_company_header" data-kt-scroll-wrappers="#kt_modal_profile_company_scroll" data-kt-scroll-offset="300px">
+                                    <!--begin::Notice-->
+                                    <!--begin::Notice-->
+                                    <div class="notice d-flex bg-light-info rounded border-info border border-dashed mb-9 p-6">
+                                        <!--begin::Icon-->
+                                        <!--begin::Svg Icon | path: icons/duotune/general/gen044.svg-->
+                                        <span class="svg-icon svg-icon-2tx svg-icon-info me-4" data-kt-company-modal-action="close">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor" />
+                                                <rect x="11" y="14" width="7" height="2" rx="1" transform="rotate(-90 11 14)" fill="currentColor" />
+                                                <rect x="11" y="17" width="2" height="2" rx="1" transform="rotate(-90 11 17)" fill="currentColor" />
+                                            </svg>
+                                        </span>
+                                        <!--end::Svg Icon-->
+                                        <!--end::Icon-->
+                                        <!--begin::Wrapper-->
+                                        <div class="d-flex flex-stack flex-grow-1">
+                                            <!--begin::Content-->
+                                            <div class="fw-bold">
+                                                <h4 class="text-gray-900 fw-bolder">{% trans %}Information{% endtrans %}</h4>
+                                                <div class="fs-6 text-gray-700">{% trans %}Gérez votre profil entreprise{% endtrans %}</div>
+                                            </div>
+                                            <!--end::Content-->
+                                        </div>
+                                        <!--end::Wrapper-->
+                                    </div>
+                                    <!--end::Notice-->
+                                    <!--end::Notice-->
+                                    <!--begin::Input group-->
+                                    <div class="row mb-5">
+                                        <!--begin::Col-->
+                                        <div class="col-md-12 fv-row">
+                                            <!--begin::Label-->
+                                            <label class="required fs-5 fw-bold mb-2">{% trans %}Nom de l'entreprise{% endtrans %}</label>
+                                            <!--end::Label-->
+                                            <!--begin::Input-->
+                                            {{ form_row(companyform.name, {'attr': {'class': 'form-control form-control-solid','maxlength': 50,
+                                                    'placeholder': "Nom de l'entreprise"|trans, "value": ( app.user.company ?  app.user.company.name) }}) }}
+                                            <!--end::Input-->
+                                        </div>
+                                        <!--end::Col-->
+                                    </div>
+                                    <!--end::Input group-->
+                                     <!--begin::Input group-->
+                                    <div class="row mb-5">
+                                        <!--begin::Col-->
+                                        <div class="col-md-6 fv-row">
+                                            <!--begin::Label-->
+                                            <label class="required fs-5 fw-bold mb-2">{% trans %}Email{% endtrans %}</label>
+                                            <!--end::Label-->
+                                            <!--begin::Input-->
+                                            {{ form_row(companyform.email, {'attr': {'class': 'form-control form-control-solid','maxlength': 50,
+                                                        'placeholder': 'monentreprise@gmail.com', "value": ( app.user.company ?  app.user.company.email)}}) }}
+                                            <!--end::Input-->
+                                        </div>
+                                        <!--end::Col-->
+                                        <!--begin::Col-->
+                                        <div class="col-md-6 fv-row">
+                                            <!--end::Label-->
+                                            <label class="required fs-5 fw-bold mb-2">{% trans %}Téléphone{% endtrans %}</label>
+                                            <!--end::Label-->
+                                            <!--end::Input-->
+                                            {{ form_row(companyform.phone, {'attr': {'class': 'form-control form-control-solid mb-3 mb-lg-0',"value": ( app.user.company ?  app.user.company.phone)  }}) }}
+                                            <!--end::Input-->
+                                        </div>
+                                        <!--end::Col-->
+                                    </div>
+                                    <!--end::Input group-->
+                                     <!--begin::Input group-->
+                                    <div class="row mb-5">
+                                        <!--begin::Col-->
+                                        <div class="col-md-6 fv-row">
+                                            <!--begin::Label-->
+                                            <label class="required fs-5 fw-bold mb-2">{% trans %}Ifu{% endtrans %}</label>
+                                            <!--end::Label-->
+                                            <!--begin::Input-->
+                                            {{ form_row(companyform.ifu, {'attr': {'class': 'form-control form-control-solid','maxlength': 13,
+                                                                'placeholder': brand.author.ifu,"value": ( app.user.company ?  app.user.company.ifu) }}) }}
+                                            <!--end::Input-->
+                                        </div>
+                                        <!--end::Col-->
+                                        <!--begin::Col-->
+                                        <div class="col-md-6 fv-row">
+                                            <!--end::Label-->
+                                            <label class="required fs-5 fw-bold mb-2">{% trans %}Rccm{% endtrans %}</label>
+                                            <!--end::Label-->
+                                            <!--end::Input-->
+                                            {{ form_row(companyform.rccm, {'attr': {'class': 'form-control form-control-solid mb-3 mb-lg-0', 'maxlength': 20,
+                                                                "placeholder" : brand.author.rccm, "value": ( app.user.company ?  app.user.company.rccm) }}) }}
+                                            <!--end::Input-->
+                                        </div>
+                                        <!--end::Col-->
+                                    </div>
+                                    <!--end::Input group-->
+                                    <!--begin::Input group-->
+                                   
+                                    <!--begin::Input group-->
+                                    <div class="d-flex flex-column mb-5 fv-row">
+                                        <!--begin::Label-->
+                                        <label class="required fs-5 fw-bold mb-2">{% trans %}Adresse{% endtrans %}</label>
+                                        <!--end::Label-->
+                                        <!--begin::Input-->
+                                        <textarea class="form-control form-control-solid" name="adress" id="address" min="15" placeholder="{{"Renseignez l'adresse de votre entreprise"}}" style="height: 50px">{% if app.user.company %}{{app.user.company.address}}{% endif %}</textarea>
+                                        <!--end::Input-->
+                                    </div>
+                                    <!--end::Input group-->
+                                </div>
+                                <!--end::Scroll-->
+                            </div>
+                            <!--end::Modal body-->
+                            <!--begin::Modal footer-->
+                            <div class="modal-footer flex-center">
+                                <!--begin::Button-->
+                                <button type="reset" id="kt_modal_profile_company_cancel" data-kt-company-modal-action="cancel" class="btn btn-light me-3">{% trans %} Fermer {% endtrans %}</button>
+                                <!--end::Button-->
+                                <!--begin::Button-->
+                                <button type="submit" id="kt_modal_profile_company_submit" data-kt-company-modal-action="submit" class="btn btn-primary">
+                                    <span class="indicator-label">{% trans %}Enregistrer{% endtrans %}</span>
+                                    <span class="indicator-progress">{% trans %}Patientez{% endtrans %}
+                                    <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                                </button>
+                                <!--end::Button-->
+                            </div>
+                            <!--end::Modal footer-->
+                        {{ form_end(companyform) }}
+                        <!--end::Form-->
+                    </div>
+                </div>
+            </div>
+            <!--end::Modal - New Company-->
+            <!--end::Modal - New Company-->
+
+            <!--begin::Solde Notification-->
+            <div class="card mb-5 mb-xl-10 d-none" id="kt_profile_notification">
+                <!--begin::Card header-->
+                <div class="card-header">
+                    <!--begin::Title-->
+                    <div class="card-title">
+                        <h3> {% trans %}Notification de solde{% endtrans %}</h3>
+                    </div>
+                    <!--end::Title-->
+                </div>
+                <!--end::Card header-->
+                <!--begin::Card body-->
+                <div class="card-body">
+                    <!--begin::Addresses-->
+                    <div class="row gx-9 gy-6">
+                        <!--begin::Col-->
+                        <div class="col-xl-6">
+                            <!--begin::Address-->
+                            <div class="card card-dashed h-xl-100 flex-row flex-stack flex-wrap p-6">
+                                {% if app.user.company %}
+                                <!--begin::Solde Notification details-->
+                                <div class="d-flex flex-column gap-2">
+                                    <!--begin::Name-->
+                                    <h3 class="mb-0">{{app.user.company.name}}</h3>
+                                    <!--end::Name-->
+                                    <!--begin::Email-->
+                                    <div class="d-flex align-items-center gap-2">
+                                        <!--begin::Svg Icon | path: icons/duotune/communication/com011.svg-->
+                                       {% trans %}EMAIL {% endtrans %}:
+                                        <!--end::Svg Icon-->
+                                        <a href="javascript:;" class="text-muted text-hover-primary">{{app.user.company.email}}</a>
+                                    </div>
+                                    <!--end::Email-->
+                                    <!--begin::Phone-->
+                                    <div class="d-flex align-items-center gap-2">
+                                        <!--begin::Svg Icon | path: icons/duotune/electronics/elc003.svg-->
+                                       {% trans %}TELEPHONE{% endtrans %}:
+                                        <!--end::Svg Icon-->
+                                        <a href="javascript:;" class="text-muted text-hover-primary">{{app.user.company.phone}}</a> 
+                                    </div>
+                                    <!--end::Phone-->
+                                    <!--begin::Phone-->
+                                    <div class="d-flex align-items-center gap-2">
+                                        <!--begin::Svg Icon | path: icons/duotune/electronics/elc003.svg-->
+                                        {% trans %}NUMERO IFU {% endtrans %}: 
+                                        <!--end::Svg Icon-->
+                                        <a href="javascript:;" class="text-muted text-hover-primary">{{app.user.company.ifu}}</a>
+                                       </span>
+                                    </div>
+                                    <!--end::Phone-->
+                                    <!--begin::Phone-->
+                                    <div class="d-flex align-items-center gap-2">
+                                        <!--begin::Svg Icon | path: icons/duotune/electronics/elc003.svg-->
+                                        {% trans %}RCCM {% endtrans %}:
+                                        <!--end::Svg Icon-->
+                                        <a href="javascript:;" class="text-muted text-hover-primary">{{app.user.company.rccm}}</a>
+                                    </div>
+                                    <!--end::Phone-->
+                                </div>
+                                <!--end::Solde Notification details-->
+                                {% else %}
+                                    <div class="d-flex align-items-center  text-danger py-2">
+                                        <span class="bullet bg-danger me-3"></span>{% trans %}Profil entreprise non configuré{% endtrans %}</div>
+                                {% endif %}
+                                <!--begin::Actions-->
+                                <div class="d-flex align-items-center py-2">
+                                    <button class="btn btn-sm btn-light btn-active-light-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_profile_notification">{% if app.user.company is defined %}Modifier {% else %} Ajouter {% endif %}</button>
+                                </div>
+                                <!--end::Actions-->
+                            </div>
+                            <!--end::Address-->
+                        </div>
+                        <!--end::Col-->
+                        <!--begin::Col-->
+                        <div class="col-xl-6">
+                            <!--begin::Notice-->
+                            <div class="notice d-flex bg-light-danger rounded border-danger border border-dashed flex-stack h-xl-100 mb-10 p-6">
+                                <!--begin::Wrapper-->
+                                <div class="d-flex flex-stack flex-grow-1 flex-wrap flex-md-nowrap">
+                                    <!--begin::Content-->
+                                    <div class="mb-3 mb-md-0 fw-bold">
+                                        <h4 class="text-gray-900 fw-bolder">{% trans %}A votre attention{% endtrans %}</h4>
+                                        <div class="fs-6 text-gray-700 pe-7">{% trans %}En éditant le profile entreprise, vous renseignez vos données de facturation pour votre entreprise{% endtrans %}</div>
+                                    </div>
+                                    <!--end::Content-->
+                                </div>
+                                <!--end::Wrapper-->
+                            </div>
+                            <!--end::Notice-->
+                        </div>
+                        <!--end::Col-->
+                    </div>
+                    <!--end::Addresses-->
+                </div>
+                <!--end::Card body-->
+            </div>
+            <!--end::Solde Notification-->
+            <!--begin::Modal - New Company-->
+            <div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="kt_modal_profile_notification" tabindex="-1" aria-hidden="true">
+                <!--begin::Modal dialog-->
+                <div class="modal-dialog modal-dialog-centered mw-800px">
+                    <!--begin::Modal content-->
+                    <div class="modal-content">
+                        <!--begin::Form-->
+                        <form class="form" action="#" id="kt_modal_profile_notification_form">
+                            <!--begin::Modal header-->
+                            <div class="modal-header" id="kt_modal_profile_notification_header">
+                                <!--begin::Modal title-->
+                                <h2>Add New Address</h2>
+                                <!--end::Modal title-->
+                                <!--begin::Close-->
+                                <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
+                                    <!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
+                                    <span class="svg-icon svg-icon-1">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                            <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor" />
+                                            <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor" />
+                                        </svg>
+                                    </span>
+                                    <!--end::Svg Icon-->
+                                </div>
+                                <!--end::Close-->
+                            </div>
+                            <!--end::Modal header-->
+                            <!--begin::Modal body-->
+                            <div class="modal-body py-10 px-lg-17">
+                                <!--begin::Scroll-->
+                                <div class="scroll-y me-n7 pe-7" id="kt_modal_profile_notification_scroll" data-kt-scroll="true" data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-max-height="auto" data-kt-scroll-dependencies="#kt_modal_profile_notification_header" data-kt-scroll-wrappers="#kt_modal_profile_notification_scroll" data-kt-scroll-offset="300px">
+                                    <!--begin::Notice-->
+                                    <!--begin::Notice-->
+                                    <div class="notice d-flex bg-light-warning rounded border-warning border border-dashed mb-9 p-6">
+                                        <!--begin::Icon-->
+                                        <!--begin::Svg Icon | path: icons/duotune/general/gen044.svg-->
+                                        <span class="svg-icon svg-icon-2tx svg-icon-warning me-4">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor" />
+                                                <rect x="11" y="14" width="7" height="2" rx="1" transform="rotate(-90 11 14)" fill="currentColor" />
+                                                <rect x="11" y="17" width="2" height="2" rx="1" transform="rotate(-90 11 17)" fill="currentColor" />
+                                            </svg>
+                                        </span>
+                                        <!--end::Svg Icon-->
+                                        <!--end::Icon-->
+                                        <!--begin::Wrapper-->
+                                        <div class="d-flex flex-stack flex-grow-1">
+                                            <!--begin::Content-->
+                                            <div class="fw-bold">
+                                                <h4 class="text-gray-900 fw-bolder">Warning</h4>
+                                                <div class="fs-6 text-gray-700">Updating address may affter to your
+                                                <a href="#">Tax Location</a></div>
+                                            </div>
+                                            <!--end::Content-->
+                                        </div>
+                                        <!--end::Wrapper-->
+                                    </div>
+                                    <!--end::Notice-->
+                                    <!--end::Notice-->
+                                    <!--begin::Input group-->
+                                    <div class="row mb-5">
+                                        <!--begin::Col-->
+                                        <div class="col-md-6 fv-row">
+                                            <!--begin::Label-->
+                                            <label class="required fs-5 fw-bold mb-2">First name</label>
+                                            <!--end::Label-->
+                                            <!--begin::Input-->
+                                            <input type="text" class="form-control form-control-solid" placeholder="" name="first-name" />
+                                            <!--end::Input-->
+                                        </div>
+                                        <!--end::Col-->
+                                        <!--begin::Col-->
+                                        <div class="col-md-6 fv-row">
+                                            <!--end::Label-->
+                                            <label class="required fs-5 fw-bold mb-2">Last name</label>
+                                            <!--end::Label-->
+                                            <!--end::Input-->
+                                            <input type="text" class="form-control form-control-solid" placeholder="" name="last-name" />
+                                            <!--end::Input-->
+                                        </div>
+                                        <!--end::Col-->
+                                    </div>
+                                    <!--end::Input group-->
+                                    <!--begin::Input group-->
+                                    <div class="d-flex flex-column mb-5 fv-row">
+                                        <!--begin::Label-->
+                                        <label class="d-flex align-items-center fs-5 fw-bold mb-2">
+                                            <span class="required">Country</span>
+                                            <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="Your payment statements may very based on selected country"></i>
+                                        </label>
+                                        <!--end::Label-->
+                                        <!--begin::Select-->
+                                        
+                                        <!--end::Select-->
+                                    </div>
+                                    <!--end::Input group-->
+                                    <!--begin::Input group-->
+                                    <div class="d-flex flex-column mb-5 fv-row">
+                                        <!--begin::Label-->
+                                        <label class="required fs-5 fw-bold mb-2">Address Line 1</label>
+                                        <!--end::Label-->
+                                        <!--begin::Input-->
+                                        <input class="form-control form-control-solid" placeholder="" name="address1" />
+                                        <!--end::Input-->
+                                    </div>
+                                    <!--end::Input group-->
+                                    <!--begin::Input group-->
+                                    <div class="d-flex flex-column mb-5 fv-row">
+                                        <!--begin::Label-->
+                                        <label class="required fs-5 fw-bold mb-2">Address Line 2</label>
+                                        <!--end::Label-->
+                                        <!--begin::Input-->
+                                        <input class="form-control form-control-solid" placeholder="" name="address2" />
+                                        <!--end::Input-->
+                                    </div>
+                                    <!--end::Input group-->
+                                    <!--begin::Input group-->
+                                    <div class="d-flex flex-column mb-5 fv-row">
+                                        <!--begin::Label-->
+                                        <label class="fs-5 fw-bold mb-2">Town</label>
+                                        <!--end::Label-->
+                                        <!--begin::Input-->
+                                        <input class="form-control form-control-solid" placeholder="" name="city" />
+                                        <!--end::Input-->
+                                    </div>
+                                    <!--end::Input group-->
+                                    <!--begin::Input group-->
+                                    <div class="row g-9 mb-5">
+                                        <!--begin::Col-->
+                                        <div class="col-md-6 fv-row">
+                                            <!--begin::Label-->
+                                            <label class="fs-5 fw-bold mb-2">State / Province</label>
+                                            <!--end::Label-->
+                                            <!--begin::Input-->
+                                            <input class="form-control form-control-solid" placeholder="" name="state" />
+                                            <!--end::Input-->
+                                        </div>
+                                        <!--end::Col-->
+                                        <!--begin::Col-->
+                                        <div class="col-md-6 fv-row">
+                                            <!--begin::Label-->
+                                            <label class="fs-5 fw-bold mb-2">Post Code</label>
+                                            <!--end::Label-->
+                                            <!--begin::Input-->
+                                            <input class="form-control form-control-solid" placeholder="" name="postcode" />
+                                            <!--end::Input-->
+                                        </div>
+                                        <!--end::Col-->
+                                    </div>
+                                    <!--end::Input group-->
+                                    <!--begin::Input group-->
+                                    <div class="fv-row mb-5">
+                                        <!--begin::Wrapper-->
+                                        <div class="d-flex flex-stack">
+                                            <!--begin::Label-->
+                                            <div class="me-5">
+                                                <!--begin::Label-->
+                                                <label class="fs-5 fw-bold">Use as a billing adderess?</label>
+                                                <!--end::Label-->
+                                                <!--begin::Input-->
+                                                <div class="fs-7 fw-bold text-muted">If you need more info, please check budget planning</div>
+                                                <!--end::Input-->
+                                            </div>
+                                            <!--end::Label-->
+                                            <!--begin::Switch-->
+                                            <label class="form-check form-switch form-check-custom form-check-solid">
+                                                <!--begin::Input-->
+                                                <input class="form-check-input" name="billing" type="checkbox" value="1" checked="checked" />
+                                                <!--end::Input-->
+                                                <!--begin::Label-->
+                                                <span class="form-check-label fw-bold text-muted">Yes</span>
+                                                <!--end::Label-->
+                                            </label>
+                                            <!--end::Switch-->
+                                        </div>
+                                        <!--begin::Wrapper-->
+                                    </div>
+                                    <!--end::Input group-->
+                                </div>
+                                <!--end::Scroll-->
+                            </div>
+                            <!--end::Modal body-->
+                            <!--begin::Modal footer-->
+                            <div class="modal-footer flex-center">
+                                <!--begin::Button-->
+                                <button type="reset" id="kt_modal_profile_notification_cancel" class="btn btn-light me-3">Discard</button>
+                                <!--end::Button-->
+                                <!--begin::Button-->
+                                <button type="submit" id="kt_modal_profile_notification_submit" class="btn btn-primary">
+                                    <span class="indicator-label">Submit</span>
+                                    <span class="indicator-progress">Please wait...
+                                    <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                                </button>
+                                <!--end::Button-->
+                            </div>
+                            <!--end::Modal footer-->
+                        </form>
+                        <!--end::Form-->
+                    </div>
+                </div>
+            </div>
+            <!--end::Modal - New Company-->
 
             <!--begin::Sign-in Method-->
             <div class="card mb-5 mb-xl-10 d-none" id="kt_profile_sign_in_methods">
@@ -504,10 +1064,10 @@
                         </div>
                         <!--end::Password-->
                         <!--begin::Notice-->
-                        <div class="notice d-flex bg-light-primary rounded border-primary border border-dashed p-6">
+                        <div class="notice d-flex bg-light-danger rounded border-danger border border-dashed p-6">
                             <!--begin::Icon-->
                             <!--begin::Svg Icon | path: icons/duotune/general/gen048.svg-->
-                            <span class="svg-icon svg-icon-2tx svg-icon-primary me-4">
+                            <span class="svg-icon svg-icon-2tx svg-icon-danger me-4">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
                                     <path opacity="0.3" d="M20.5543 4.37824L12.1798 2.02473C12.0626 1.99176 11.9376 1.99176 11.8203 2.02473L3.44572 4.37824C3.18118 4.45258 3 4.6807 3 4.93945V13.569C3 14.6914 3.48509 15.8404 4.4417 16.984C5.17231 17.8575 6.18314 18.7345 7.446 19.5909C9.56752 21.0295 11.6566 21.912 11.7445 21.9488C11.8258 21.9829 11.9129 22 12.0001 22C12.0872 22 12.1744 21.983 12.2557 21.9488C12.3435 21.912 14.4326 21.0295 16.5541 19.5909C17.8169 18.7345 18.8277 17.8575 19.5584 16.984C20.515 15.8404 21 14.6914 21 13.569V4.93945C21 4.6807 20.8189 4.45258 20.5543 4.37824Z" fill="black" />
                                     <path d="M10.5606 11.3042L9.57283 10.3018C9.28174 10.0065 8.80522 10.0065 8.51412 10.3018C8.22897 10.5912 8.22897 11.0559 8.51412 11.3452L10.4182 13.2773C10.8099 13.6747 11.451 13.6747 11.8427 13.2773L15.4859 9.58051C15.771 9.29117 15.771 8.82648 15.4859 8.53714C15.1948 8.24176 14.7183 8.24176 14.4272 8.53714L11.7002 11.3042C11.3869 11.6221 10.874 11.6221 10.5606 11.3042Z" fill="black" />
@@ -520,12 +1080,9 @@
                                 <!--begin::Content-->
                                 <div class="mb-3 mb-md-0 fw-bold">
                                     <h4 class="text-gray-900 fw-bolder">{% trans %}Sécurisé votre compte{% endtrans %}</h4>
-                                    <div class="fs-6 text-gray-700 pe-7">{% trans %}L'authentification à deux facteurs ajoute une couche supplémentaire de sécurité à votre compte. Pour vous connecter, vous devrez en outre fournir un code à 6 chiffres{% endtrans %} </div>
+                                    <div class="fs-6 text-gray-700 pe-7">{% trans %}La modification régulière de votre mot de passe une couche supplémentaire de sécurité à votre compte.{% endtrans %} </div>
                                 </div>
                                 <!--end::Content-->
-                                <!--begin::Action-->
-                                <a href="#" class="btn btn-primary px-6 align-self-center text-nowrap" data-bs-toggle="modal" data-bs-target="#kt_modal_two_factor_authentication">Enable</a>
-                                <!--end::Action-->
                             </div>
                             <!--end::Wrapper-->
                         </div>
@@ -536,6 +1093,7 @@
                 <!--end::Content-->
             </div>
             <!--end::Sign-in Method-->
+
             <!--begin::Desactivate Account-->
             <div class="card d-none"  id="kt_profile_desactivate_account">
                 <!--begin::Card header-->
@@ -612,18 +1170,21 @@
     const profile_details_link = "{{path('app_user_profile_edit', {'uid': app.user.uid } )}}";
     const csrfToken            = "{{ csrf_token(app.user.uid) }}";
     var input                  = document.querySelector('#user_phone');
+    var input2                = document.querySelector('#company_phone');
     const countrySelecter      = document.querySelector('#kt_user_add_select2_country');
     const email_edit_link      = "{{path('app_user_email_edit' )}}";
     const password_edit_link   = "{{path('app_user_password_edit' )}}";
     const account_disable_link = "{{path('app_user_account_disable' )}}";
-    var input2                 = document.querySelector('#newphone');
+    const company_manage_link  = "{{path('app_company_manage' )}}";
     const userCountryCode      = "{{ app.user.country.code }}";
 </script>
 <script src="{{ asset('app/js/queries/public-app/country-flag-input.js') }}"></script>
-<script type="module" src="{{ asset('app/js/modules/country_choice/switcher.js') }}"></script>
+<script type="module" src="{{ asset('app/js/modules/country_choice/switchjer.js') }}"></script>
 {% include 'intl.input.html.twig' %}
 <script src="{{ asset('app/js/queries/account/settings/overview.js') }}"></script>
 <script src="{{ asset('app/js/queries/account/settings/profile-details.js') }}"></script>
+<script src="{{ asset('app/js/queries/company/add.js') }}"></script>
+<script src="{{ asset('app/js/queries/company/update.js') }}"></script>
 <script src="{{ asset('app/js/queries/account/settings/signin-methods.js') }}"></script>
 <script src="{{ asset('app/js/queries/account/settings/deactivate-account.js') }}"></script>
 

@@ -171,7 +171,7 @@
                             {% if pDeleteRole is defined and pDeleteRole == true %}
                                 <div class="col-md-6 col-sm-6">
                                     <button type="button" data-kt-role-modal-action="deletion-submit" 
-                                    class="btn delete-role-button btn-light btn-active-light-primary my-1" data-type="1" data-id="{{role.uid}}" >
+                                    class="btn delete-role-button btn-light btn-active-light-primary my-1" data-type="1" data-id="{{role.code}}" >
                                     <i class="fa fa-trash-alt text-danger"></i></button>
                                 </div>
                             {% endif %}
@@ -242,17 +242,6 @@
                                             <div class="fv-row mb-10">
                                                 <!--begin::Row-->
                                                 <div class="row">
-                                                    <div class="col-lg-6 fv-row">
-                                                        <!--begin::Label-->
-                                                        <label class="fs-5 fw-bolder form-label mb-2">
-                                                            <span class="required">{% trans %}Texte du rôle{% endtrans %}</span>
-                                                        </label>
-                                                        <!--end::Label-->
-                                                        <!--begin::Input-->
-                                                        {{ form_row(roleform.text, {'attr': {'class': 'form-control form-control-solid','maxlength': 25,'placeholder': 'Entrer le nom français du rôle'|trans }}) }}
-                                                        <input type="hidden" id="role_id" name="role_id" value="0">
-                                                        <!--end::Input-->
-                                                    </div>
                                                     <div class="col-lg-6 fv-row">
                                                         <!--begin::Label-->
                                                         <label class="fs-5 fw-bolder form-label mb-2">
