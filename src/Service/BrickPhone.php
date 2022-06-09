@@ -14,6 +14,20 @@ class BrickPhone
         $this->countryExtract = [];
     }
 
+    public function getCountryByCode($code)
+    {
+       $countries = $this->countries();
+       $search     = array_search(strtoupper($code), array_column($countries, 'code'));
+        if ($search) {
+            return  [
+                'name' => $countries[$search]['name'],
+                'code' => $countries[$search]['code'],
+                'dial_code' => $countries[$search]['dial_code'],
+            ]; 
+        } else 
+            return false;
+    }
+
     public function getCountryFromCode($codeCountry)
     {
         if(strlen($codeCountry) > 3) $codeCountry = $this->getRegionCode($codeCountry);

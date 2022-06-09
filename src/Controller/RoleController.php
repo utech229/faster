@@ -75,7 +75,7 @@ class RoleController extends AbstractController
 
     #[Route('/', name: 'app_user_role', methods: ['GET'])]
     #[Route('/add_role', name: 'app_user_role_add', methods: ['POST'])]
-    #[Route('/{uid}/update_role', name: 'app_user_role_update', methods: ['POST'])]
+    #[Route('/{code}/update_role', name: 'app_user_role_update', methods: ['POST'])]
     public function index(Request $request, Role $newRole = null, bool $isRoleAdd = false): Response
     {
         if(!$this->pAccessRole)  {
@@ -143,9 +143,8 @@ class RoleController extends AbstractController
                 'controller_name' => 'RoleController',
                 'title'           => $this->intl->trans('Mon Role').' - '. $this->brand->get()['name'],
                 'pageTitle'       => [
-                    'one'   => $this->intl->trans('Role'),
-                    'two'   => $role->getName(),
-                    'none'  => $this->intl->trans('Gestion du role '),
+                    [$this->intl->trans('Gestion rôles'), $this->urlGenerator->generate('app_user_role') ],
+                    [$this->intl->trans('Rôle')],
                 ],
                 'roleform'         => $form->createView(),
                 'brand'            => $this->brand->get(),
@@ -172,7 +171,6 @@ class RoleController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             $description = $request->request->get('description');
-            $role->setUid($this->services->idgenerate(11));
             $role->setStatus($this->services->status(3));
             $role->setDescription($description);
             $role->setCreatedAt(new \DatetimeImmutable());
@@ -219,7 +217,7 @@ class RoleController extends AbstractController
     }
 
 
-    #[Route('/{uid}/delete', name: 'app_user_role_delete', methods: ['POST'])]
+    #[Route('/{code}/delete', name: 'app_user_role_delete', methods: ['POST'])]
     public function delete(Request $request, Role $role): Response
     {
         if (!$this->pDeleteRole)  return $this->services->no_access($this->intl->trans('Suppression du rôle').' : '.$role->getName());
@@ -251,7 +249,7 @@ class RoleController extends AbstractController
 
         $role        = $this->roleRepository->findOneByCode($request->request->get('code_name'));
         $permissions = $this->permissionRepository->findAll();
-        $tempRole    = [$role->getId(), $role->getCode(), $role->getName(),$role->getDescription(), $role->getUid(), $role->getLevel()];
+        $tempRole    = [$role->getId(), $role->getCode(), $role->getName(),$role->getDescription(), $role->getLevel()];
         foreach($role->getAuthorizations() as $autorization  )
         {
             if ($autorization->getStatus()->getCode() == 3) 
@@ -288,7 +286,7 @@ class RoleController extends AbstractController
         foreach($roles as $index => $role)
         {
             $temp = [];
-            $tempRole = [$role->getId(), $role->getCode(), $role->getName(),$role->getDescription(), $role->getUid(), $role->getLevel()];
+            $tempRole = [$role->getId(), $role->getCode(), $role->getName(),$role->getDescription(), $role->getLevel()];
             foreach($role->getAuthorizations() as $autorization )
             {
                 if ($autorization->getStatus()->getCode() == 3) 

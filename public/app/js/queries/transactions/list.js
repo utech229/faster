@@ -1,5 +1,3 @@
-"use strict";
-
 
 /*var KTTransactionsList = function() {
     var e, t, n, r, o = document.getElementById("kt_table_transactions"),
@@ -460,9 +458,10 @@ var KTTransactionsList = function() {
                             $(document).trigger('toastr.onAjaxError');
                         }
                     },
-                    info: !1,
+                    // info: !1,
                     order: [[ 12, "desc" ]],
-                    columnDefs: [{
+                    'columnDefs': [
+                    {
                         orderable: !1,
                         targets: 0, 
                         render: function (data, type, full, meta) {
@@ -495,73 +494,76 @@ var KTTransactionsList = function() {
                                     </div>`;
                         }
                     },
-                    {
-                        targets: 4,
-                        render: function(data, type, full, meta) {
-                            return '<img src="'+window.location.origin+'/app/media/svg/card-logos/'+data+'.svg" class="w-50px me-3" alt="'+data+' eContacts"/>';
-                        },
+                    // {
+                    //     targets: 4,
+                    //     render: function(data, type, full, meta) {
+                    //         return '<img src="'+window.location.origin+'/app/media/svg/card-logos/'+data+'.svg" class="w-50px me-3" alt="'+data+' eContacts"/>';
+                    //     },
     
-                    },
-                    {
-                        targets: 10,
-                        render: function(data, type, full, meta) {
-                            var status = {
-                                'pending' : { 'title': _Pending, 'class': 'warning' },
-                                'approved' : { 'title': _Validated, 'class': 'success' },
-                                'canceled' : { 'title': _Canceled, 'class': 'primary' },
-                                'rejected' : { 'title': _Rejected, 'class': 'info' },
-                            };
-                            if (typeof status[data] === 'undefined') {
-                                return data;
-                            }
-                            return '<span class="badge badge-light-' + status[data].class + '">' + status[data].title + '</span>';
-                        },
+                    // },
+                    // {
+                    //     targets: 10,
+                    //     render: function(data, type, full, meta) {
+                    //         var status = {
+                    //             'pending' : { 'title': _Pending, 'class': 'warning' },
+                    //             'approved' : { 'title': _Validated, 'class': 'success' },
+                    //             'canceled' : { 'title': _Canceled, 'class': 'primary' },
+                    //             'rejected' : { 'title': _Rejected, 'class': 'info' },
+                    //         };
+                    //         if (typeof status[data] === 'undefined') {
+                    //             return data;
+                    //         }
+                    //         return '<span class="badge badge-light-' + status[data].class + '">' + status[data].title + '</span>';
+                    //     },
     
-                    },
+                    // },
+                    // {
+                    //     orderable: 1,
+                    //     targets: 1,
+                    //     render: function(data, type, full, meta) {
+                    //         return  dateFormat(moment(data, "YYYY-MM-DDTHH:mm:ssZZ").format());
+                    //     }
+                    // },
                     {
-                        orderable: 1,
-                        targets: 1,
-                        render: function(data, type, full, meta) {
-                            return  dateFormat(moment(data, "YYYY-MM-DDTHH:mm:ssZZ").format());
-                        }
-                    },
-                    {
-                        orderable: 1,
                         targets: 12,
                         render: function(data, type, full, meta) {
                             return  dateFormat(moment(data, "YYYY-MM-DDTHH:mm:ssZZ").format());
                         }
                     }],
-                    columns: [
+                    // columns: [
     
-                        { data: 'orderId' },
+                    //     { data: 'orderId' },
     
-                        { data: 'user', responsivePriority: -10},
+                    //     { data: 'user', responsivePriority: -10},
     
-                        { data: 'transactionId' },
+                    //     { data: 'transactionId' },
     
-                        { data: 'reference' },
+                    //     { data: 'reference' },
     
-                        { data: 'method' ,responsivePriority: -7  },
+                    //     { data: 'method' ,responsivePriority: -7  },
                         
-                        { data: 'agregator' },
+                    //     { data: 'agregator' },
                         
-                        { data: 'canal' },
+                    //     { data: 'canal' },
 
-                        { data: 'email' },
+                    //     { data: 'email' },
 
-                        { data: 'amount',responsivePriority: -8  },
+                    //     { data: 'amount',responsivePriority: -8  },
 
-                        { data: 'country'  },
+                    //     { data: 'country'  },
     
-                        { data: 'status',responsivePriority: -8 },
+                    //     { data: 'status',responsivePriority: -8 },
     
-                        { data: 'updatedAt' },
+                    //     { data: 'updatedAt' },
 
-                        { data: 'createdAt' , responsivePriority: 0},
-                    ],
-                    pageLength: 5,
+                    //     { data: 'createdAt' , responsivePriority: 0},
+                    // ],
+                    pageLength: 6,
                     lengthChange: !1,
+                    // order: [[ 13, "desc" ]],
+                    "info": true,
+                    lengthMenu: [10, 25, 100, 250, 500, 1000],
+                    // pageLength: 10,
                    
                 }),
                 $('#kt_modal_add_transaction_reload_button').on('click', function() {
@@ -594,6 +596,7 @@ var KTTransactionsList = function() {
         }
     }
 }();
+
 KTUtil.onDOMContentLoaded((function() {
     KTTransactionsList.init();
 }));

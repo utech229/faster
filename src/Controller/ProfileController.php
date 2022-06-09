@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use App\Form\UserType;
+use App\Entity\Company;
 use App\Service\uBrand;
 use App\Service\BaseUrl;
+use App\Form\CompanyType;
 use App\Service\Services;
 use App\Service\AddEntity;
 use App\Service\BrickPhone;
@@ -73,6 +75,8 @@ class ProfileController extends AbstractController
             return $this->redirectToRoute("app_home");
         }
 
+        $company     = new Company;
+        $companyform = $this->createForm(CompanyType::class, $company);
         $this->services->addLog($this->intl->trans('Accès au menu profils'));
         return $this->render('profile/index.html.twig', [
             'controller_name' => 'ProfileController',
@@ -85,6 +89,8 @@ class ProfileController extends AbstractController
             'pCreateUser'     => $this->pCreate,
             'pEditUser'       => $this->pEdit,
             'pDeleteUser'     => $this->pDelete,
+            'companyform'      => $companyform->createView(),
+            'form'      => $companyform->createView(),
         ]);
     }
 
