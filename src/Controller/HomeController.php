@@ -10,6 +10,7 @@ use App\Repository\StatusRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -19,13 +20,14 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class HomeController extends AbstractController
 {
     public function __construct(TranslatorInterface $intl, uBrand $brand, BaseUrl $baseUrl, Services $services,
-    StatusRepository $statusRepository)
+    StatusRepository $statusRepository, UrlGeneratorInterface $urlGenerator)
 	{
        $this->intl    = $intl;
        $this->brand   = $brand;
        $this->baseUrl = $baseUrl->init();
        $this->services = $services;
        $this->statusRepository  = $statusRepository;
+       $this->urlGenerator  = $urlGenerator;
     }
 
     #[Route('/dashboard', name: 'app_home')]
@@ -34,14 +36,10 @@ class HomeController extends AbstractController
         $this->services->addLog($this->intl->trans('Accès au tableau de bord'));
         return $this->render('home/index.html.twig', [
             'controller_name' => 'HomeController',
-            'title'           => $this->intl->trans('Tableau de bord') .' - '. $this->brand->index()['name'],
-            'pageTitle'       => [
-                'one'   => $this->brand->index()['name'],
-                'two'   => $this->brand->index()['name'],
-                'none'  => $this->intl->trans('Analyse'),
-            ],
-            'menu_text'       => $this->intl->trans('Tableau de bord') .' - '. $this->brand->index()['name'],
-            'brand'           => $this->brand->index(),
+            'title'           => $this->intl->trans('Tableau de bord') .' - '. $this->brand->get()['name'],
+            'pageTitle'     => [ ],
+            'menu_text'       => $this->intl->trans('Tableau de bord') .' - '. $this->brand->get()['name'],
+            'brand'           => $this->brand->get(),
             'baseUrl'         => $this->baseUrl,
         ]);
     }

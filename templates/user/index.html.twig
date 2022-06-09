@@ -176,7 +176,7 @@
                                         <select class="form-select form-select-solid fw-bolder" data-kt-select2="true" data-placeholder="Select option" data-allow-clear="true" data-kt-user-table-filter="role" data-hide-search="true">
                                             <option></option>
                                             {% for theRole in role %}
-                                                <option value="{{ theRole.text }}">{{ theRole.text }}</option>
+                                                <option value="{{ theRole.name }}">{{ theRole.name }}</option>
                                             {% endfor %}
                                         </select>
                                     </div>
@@ -492,35 +492,13 @@
                                                                     <!--begin::Label-->
                                                                     <label class="required fw-bold fs-6 mb-2">{{ 'Status' | trans }}</label>
                                                                     <!--end::Label-->
-                                                                    {{ form_row(userform.status, {'attr': {'class': 'form-select form-select-solid mb-3 mb-lg-0',
+                                                                    {#{{ form_row(userform.status, {'attr': {'class': 'form-select form-select-solid mb-3 mb-lg-0',
                                                                     'data-control':"select2", 'data-placeholder': 'Selectionner'| trans, 'data-allow-clear':"true"
-                                                                    ,'data-kt-select2':"true", 'data-dropdown-parent':"#kt_modal_add_user" }}) }}
+                                                                    ,'data-kt-select2':"true", 'data-dropdown-parent':"#kt_modal_add_user" }}) }}#}
                                                                 </div>
                                                                 <!--end::Col-->
                                                             </div>
                                                             <!--end::Row-->
-                                                            </div>
-                                                            <!--end::Col-->
-                                                        </div>
-                                                        <!--end::Row-->
-                                                    </div>
-                                                    <!--end::Col-->
-                                                </div>
-                                                <!--end::Input group-->
-                                                 <!--begin::Input group-->
-                                                <div class="fv-row mb-7">
-                                                    <!--begin::Col-->
-                                                    <div class="col-lg-12">
-                                                        <!--begin::Row-->
-                                                        <div class="row">
-                                                            <!--begin::Col-->
-                                                            <div class="col-lg-12 fv-row">
-                                                                <!--begin::Label-->
-                                                                <label class="required fw-bold fs-6 mb-2">{{ 'Genre' | trans }}</label>
-                                                                <!--end::Label-->
-                                                                {{ form_row(userform.gender, {'attr': {'class': 'form-select form-select-solid mb-3 mb-lg-0',
-                                                                'data-control':"select2", 'data-placeholder': 'Selectionner'| trans, 'data-allow-clear':"true"
-                                                                ,'data-kt-select2':"true", 'data-dropdown-parent':"#kt_modal_add_user" }}) }}
                                                             </div>
                                                             <!--end::Col-->
                                                         </div>
@@ -546,7 +524,7 @@
                                                             <!--end::Input-->
                                                             <!--begin::Label-->
                                                             <label class="form-check-label" for="kt_modal_update_role_option_{{ myrole.id }}">
-                                                                <div class="fw-bolder text-gray-800">{{ myrole.text }}</div>
+                                                                <div class="fw-bolder text-gray-800">{{ myrole.name }}</div>
                                                                 <div class="text-gray-600">{{ myrole.description }}</div>
                                                             </label>
                                                             <!--end::Label-->

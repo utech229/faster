@@ -1,11 +1,12 @@
 
 {% extends 'base.app.html.twig' %}
 
-{% block title %}{{ title }}{% endblock %}
+{% block title %}{{ title|default("") }}{% endblock %}
 
 {% block stylesheets %} {% endblock %}
 
 {% block body %}
+
 <!--begin::Content-->
 <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
     <!--begin::Toolbar-->
@@ -410,15 +411,12 @@
                                 <th class="min-w-125px">{{'Utilisateur'| trans}}</th>
                                 <th class="min-w-125px">{{'ID Transaction'| trans}}</th>
                                 <th class="min-w-125px">{{'Réference'| trans}}</th>
-                                <th class="min-w-125px">{{'Méthode'| trans}}</th>
-                                <th class="min-w-125px">{{'Agrégateur'| trans}}</th>
-                                <th class="min-w-125px">{{'Canal'| trans}}</th>
-                                <th class="min-w-125px">{{'Email'| trans}}</th>
+                                <th class="min-w-125px">{{'Balance Avant'| trans}}</th>
                                 <th class="min-w-125px">{{'Montant'| trans}}</th>
-                                <th class="min-w-125px">{{'Pays'| trans}}</th>
-                                <th class="min-w-125px">{{'Status'| trans}}</th>
-                                <th class="min-w-125px">{{'Date de modification'| trans}}</th>
+                                <th class="min-w-125px">{{'Balance Après'| trans}}</th>
+                                <th class="min-w-125px">{{'Statut'| trans}}</th>
                                 <th class="min-w-125px">{{'Date de création'| trans}}</th>
+                                <th class="min-w-125px">{{'Date de modification'| trans}}</th>
                             </tr>
                             <!--end::Table row-->
                         </thead>
@@ -446,8 +444,6 @@
 
 {% block javascripts %} 
 <script type="text/javascript">
-    const pEdit     = {{pEdit}};
-	const pDelete   = {{ pDelete}};
 
     const transaction_list_link  = "{{path('app_transaction_list')}}";
     const csrfToken              = "{{ csrf_token(app.user.uid) }}";
@@ -458,19 +454,8 @@
 <script src="{{ asset('app/js/queries/public-app/country-flag-input.js') }}"></script>
 <!--begin::Page Custom Javascript(used by this page)-->
 <script src="{{ asset('app/plugins/custom/datatables/datatables.bundle.js') }}"></script>
-{% if pAccess is defined and pAccess == true %}
-{#<script src="{{ asset('app/js/queries/transactions/add.js') }}"></script>
-<script src="{{ asset('app/js/queries/transactions/delete.js') }}"></script>
-<script src="{{ asset('app/js/queries/transactions/update.js') }}"></script>#}
+{# {% if pAccess is defined and pAccess == true %} #}
 <script src="{{ asset('app/js/queries/transactions/list.js') }}"></script>
-{% endif %}
+{# {% endif %} #}
 
-
-{#<script src="{{ asset('app/js/widgets.bundle.js') }}"></script>
-<script src="{{ asset('app/js/custom/widgets.js') }}"></script>
-<script src="{{ asset('app/js/custom/apps/chat/chat.js') }}"></script>
-<script src="{{ asset('app/js/custom/utilities/modals/upgrade-plan.js') }}"></script>
-<script src="{{ asset('app/js/custom/utilities/modals/create-app.js') }}"></script>
-<script src="{{ asset('app/js/custom/utilities/modals/transactions-search.js') }}"></script>#}
-<!--end::Page Custom Javascript-->
 {% endblock %}

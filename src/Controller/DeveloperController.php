@@ -67,13 +67,13 @@ class DeveloperController extends AbstractController
         $this->services->addLog($this->intl->trans('Accès au menu clé api'));
         return $this->render('developer/apikey.html.twig', [
             'controller_name' => 'DeveloperController',
-            'title'           => $this->intl->trans('Clé api').' - '. $this->brand->index()['name'],
+            'title'           => $this->intl->trans('Clé api').' - '. $this->brand->get()['name'],
             'pageTitle'       => [
                 'one'   => $this->intl->trans('Clé'),
                 'two'   => $this->intl->trans('Ma clé api'),
                 'none'  => $this->intl->trans('Gestion profil'),
             ],
-            'brand'           => $this->brand->index(),
+            'brand'           => $this->brand->get(),
             'baseUrl'         => $this->baseUrl->init(),
             'pCreateUser'     => $this->pCreate,
             'pEditUser'       => $this->pEdit,
@@ -89,7 +89,7 @@ class DeveloperController extends AbstractController
         if ($request->request->count() > 0) 
         {
             if ((!$this->isCsrfTokenValid($user->getUid(), $request->request->get('_token'))) or ($user->getRole()->getCode() == 'AFF')) 
-                return $this->services->ajax_ressources_no_access($this->intl->trans("Régénération de la clé api"));
+                return $this->services->no_access($this->intl->trans("Régénération de la clé api"));
 
             $newapikey = $this->services->idgenerate(30);           
             $user->setApiKey($newapikey);
@@ -101,7 +101,7 @@ class DeveloperController extends AbstractController
                 $affiliate->setUpdatedAt(new \DatetimeImmutable());
                 $this->userRepository->add($affiliate);
             }
-            return $this->services->ajax_success_crud(
+            return $this->services->msg_success(
                 $this->intl->trans("Régénération de la clé api"),
                 $this->intl->trans("Clé api regénéré avec succès!"),
                 $newapikey

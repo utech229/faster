@@ -22,6 +22,18 @@ if (typeof input2 != 'undefined') {
     onlyCountries: ["bj", "ci", "tg", "sn", "ne"],
     });
 }
-    
-    
+
+if (typeof input3 != 'undefined') {
+    const intl3 = window.intlTelInput(input3, {
+    initialCountry: 'bj',
+    hiddenInput: "full_number",
+    separateDialCode : true,
+    nationalMode: true,
+    placeholder: true,
+    formatOnDisplay: true,
+    utilsScript: "{{asset('librairies/intl/build/js/utils.js?1638200991544') }}", // just for formatting/placeholders etc
+    onlyCountries: ["bj", "ci", "tg", "sn", "ne"],
+    });
+}
+
 </script>

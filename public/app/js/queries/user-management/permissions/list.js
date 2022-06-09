@@ -39,26 +39,26 @@ var KTUsersPermissionsList = function() {
 
                 }, {
                     orderable: !1,
-                    targets: 6,
+                    targets: 5,
                     render: function(data, type, full, meta) {
                         return  dateFormat(moment(data, "YYYY-MM-DDTHH:mm:ssZZ").format());
                     }
                 },
                 {
                     orderable: !1,
-                    targets: 7,
+                    targets: 6,
                     render: function(data, type, full, meta) {
                         return  dateFormat(moment(data, "YYYY-MM-DDTHH:mm:ssZZ").format());
                     }
                 },
                 {
-                    targets: 8,
+                    targets: 7,
                     render: function(data, type, full, meta) {
                         var status = {
-                            0 : { 'title': _Pending, 'class': 'warning' },
-                            1 : { 'title': _Actif, 'class': 'success' },
-                            2 : { 'title': _Disabled, 'class': 'danger' },
-                            3 : { 'title': _Rejected, 'class': 'info' },
+                            2 : { 'title': _Pending, 'class': 'warning' },
+                            3 : { 'title': _Actif, 'class': 'success' },
+                            5 : { 'title': _Disabled, 'class': 'danger' },
+                            7 : { 'title': _Rejected, 'class': 'info' },
                         };
                         if (typeof status[data] === 'undefined') {
                             return data;
@@ -68,7 +68,7 @@ var KTUsersPermissionsList = function() {
 
                 },{
                     orderable: !1,
-                    targets: 9,
+                    targets: 8,
                     visible: (!pEditPermission && !pDeletePermission) ? false : true,
                     render : function (data,type, full, meta) {
                         var updaterIcon =  `<!--begin::Update-->
@@ -95,8 +95,6 @@ var KTUsersPermissionsList = function() {
                     { data: 'Name', responsivePriority: -5},
 
                     { data: 'Code', responsivePriority: -2 },
-
-                    { data: 'IsCore', responsivePriority: -1 },
 
                     { data: 'Description', responsivePriority: -4  },
 

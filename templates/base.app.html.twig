@@ -104,14 +104,6 @@
                                     <span class="menu-title">{{ 'Mon profil' | trans }} </span>
                                 </a>
                             </div>
-                            <div class="menu-item">
-                                <a class="menu-link  {{ menu(uri, path('app_profile_setting')) }}" href="{{ path('app_profile_setting') }}">
-                                    <span class="menu-icon">
-                                        <i class="bi bi-person-bounding-box fs-3"></i>
-                                    </span>
-                                    <span class="menu-title">{% trans %}Paramètre de compte{% endtrans %}</span>
-                                </a>
-                            </div>
                             {% endif %}
                             {% if permission(["AFFL0"], app.user) %}
                             <div class="menu-item">
@@ -486,11 +478,6 @@
                                                 <!--end::Menu item-->
                                             </div>
                                             <!--end::Menu sub-->
-                                        </div>
-                                        <!--end::Menu item-->
-                                        <!--begin::Menu item-->
-                                        <div class="menu-item px-5 my-1">
-                                            <a href="{{path("app_profile_setting")}}" class="menu-link px-5">{% trans %}Paramètre de compte{% endtrans %}</a>
                                         </div>
                                         <!--end::Menu item-->
                                         <!--begin::Menu item-->

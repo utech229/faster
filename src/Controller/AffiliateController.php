@@ -98,13 +98,13 @@ class AffiliateController extends AbstractController
         return $this->render('user/affiliate.html.twig', [
             'controller_name' => 'UserController',
             'role'            => $this->roleRepository->findAll(),
-            'title'           => $this->intl->trans('Mes affiliés').' - '. $this->brand->index()['name'],
+            'title'           => $this->intl->trans('Mes affiliés').' - '. $this->brand->get()['name'],
             'pageTitle'       => [
                 'one'   => $this->intl->trans('affiliés'),
                 'two'   => $this->intl->trans('Mes affiliés'),
                 'none'  => $this->intl->trans('Gestion affilié'),
             ],
-            'brand'           => $this->brand->index(),
+            'brand'           => $this->brand->get(),
             'baseUrl'         => $this->baseUrl->init(),
             'users'           => $this->userRepository->findAll(),
             'userform'        => $form->createView(),
@@ -155,7 +155,7 @@ class AffiliateController extends AbstractController
             $affiliate->setProfilePhoto($avatarProcess);
             $this->userRepository->add($affiliate);
             $this->addEntity->defaultUsetting($affiliate);
-            return $this->services->ajax_success_crud(
+            return $this->services->msg_success(
                 $this->intl->trans("Création d'un nouvel affilié"),
                 $this->intl->trans("Affilié ajouté avec succès")
             );
@@ -194,7 +194,7 @@ class AffiliateController extends AbstractController
             $affiliate->setUpdatedAt(new \DatetimeImmutable());
        
             $this->userRepository->add($affiliate);
-            return $this->services->ajax_success_crud(
+            return $this->services->msg_success(
                 $this->intl->trans("Modification de l'affilié ").$affiliate->getEmail(),
                 $this->intl->trans("Affilié modifié avec succès").' : '.$affiliate->getEmail()
             );
@@ -273,7 +273,7 @@ class AffiliateController extends AbstractController
 
         $affiliate->setStatus(4);
         $this->userRepository->add($affiliate);
-        return $this->services->ajax_success_crud(
+        return $this->services->msg_success(
             $this->intl->trans("Suppression de l'affilié ").$affiliate->getEmail(),
             $this->intl->trans("Affilié supprimé avec succès").' : '.$affiliate->getEmail(),
         );
