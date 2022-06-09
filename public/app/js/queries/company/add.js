@@ -103,7 +103,15 @@ var KTUsersAddCompany = function() {
                                         if (response.type === 'success') {
                                             t.isConfirmed && e.reset();
                                             e.reset(), n.hide()
-                                            if(response.)
+                                            if(response.data.isAdd == true){
+                                                window.location.reload()
+                                            }else{
+                                                $('#c_email').text(response.data.email)
+                                                $('#c_phone').text(response.data.phone)
+                                                $('#c_ifu').text(response.data.ifu)
+                                                $('#c_rccm').text(response.data.rccm)
+                                                $('#c_name').text(response.data.name)
+                                            }
                                         }
                                     }))
                             },

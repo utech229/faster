@@ -58,6 +58,7 @@ var KTAccountSettingsDeactivateAccount=function() {
                                         }
                                         
                                     }).then((function(t) {
+                                        load.addClass('sr-only'); 
                                         if (response.status == 'success'){
                                             $('#kt_account_deactivate_form')[0].reset();
                                             setTimeout(() => {
@@ -68,6 +69,7 @@ var KTAccountSettingsDeactivateAccount=function() {
                                 },
                                 error: function (response) {
                                     $(document).trigger('onAjaxError');
+                                    load.addClass('sr-only'); 
                                 }
                             })}else t.isDenied&&Swal.fire({
                             text: _Not_Disable_Account, 

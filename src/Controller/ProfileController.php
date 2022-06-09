@@ -268,14 +268,14 @@ class ProfileController extends AbstractController
             if (!$this->isCsrfTokenValid($user->getUid(), $request->request->get('_token'))) 
             return $this->services->no_access($this->intl->trans("Désactivation du compte").': '.$user->getPhone());
 
-            $user->setStatus(2);
+            $user->setStatus($this->services->status(4));
             $user->setUpdatedAt(new \DatetimeImmutable());
             $this->userRepository->add($user);
             $this->addFlash('warning', $this->intl->trans("Votre compte à été désactivé"));
             return $this->services->msg_success(
                 $this->intl->trans("Désactivation du compte"),
                 $this->intl->trans("Compte désactivé, vous allez nous manquer; revenez vite !"), 
-                $this->baseUrl->init().$this->urlGenerator->generate("app_logout")
+                $this->urlGenerator->generate("app_logout")
             );
         }
         return $this->services->failedcrud(

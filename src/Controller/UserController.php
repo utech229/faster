@@ -217,8 +217,8 @@ class UserController extends AbstractController
         return $this->services->ajax_ressources_no_access($this->intl->trans("Récupération de l'utilisateur").': '.$user->getEmail());
         $usetting = $user->getUsetting();
         $row['orderId']      = $user->getUid();
-        $row['firstname']    = $usetting->getFirstname();
-        $row['lastname']     = $usetting->getLastname();
+        $row['firstname']    = ($usetting->getFirstname()) ? $usetting->getFirstname() : '';
+        $row['lastname']     = ($usetting->getLastname()) ? $usetting->getLastname() : '';
         $row['email']        = $user->getEmail();
         $row['photo']        = $user->getProfilePhoto();
         $row['phone']        = $user->getPhone();
@@ -252,7 +252,7 @@ class UserController extends AbstractController
             $usetting            = $user->getUsetting();
             $country             = $user->getCountry();
             $row['orderId']      = $user->getUid();
-            $row['user']         = ['name'  =>$usetting->getFirstname().' '.$usetting->getLastname(), 
+            $row['user']         = ['name'  => $usetting->getFirstname().' '.$usetting->getLastname(), 
                                     'email' => $user->getEmail(), 
                                     'photo' => $user->getProfilePhoto()];
             $row['phone']        = $user->getPhone();

@@ -59,7 +59,7 @@ class UserAuthenticator extends AbstractLoginFormAuthenticator
             throw new CustomUserMessageAuthenticationException($this->intl->trans("Vos informations de connexion sont 
             inexistantes, veuillez vérifier et réessayer"));
         }
-        elseif ($user->getStatus()->getCode() == 4)  // Sinon si l'utilisateur est supprimé
+        elseif ($user->getStatus()->getCode() == 7)  // Sinon si l'utilisateur est supprimé
         {
             throw new CustomUserMessageAuthenticationException($this->intl->trans('Vos identifiants ont été banis du système, 
             vous devez créer un nouveau compte avec de nouvel identifiant'));
@@ -69,7 +69,7 @@ class UserAuthenticator extends AbstractLoginFormAuthenticator
             throw new CustomUserMessageAuthenticationException($this->intl->trans('Oups ! Votre compte est suspendu pour le moment. 
             Veuillez contacter l\'administrateur du système.'));
         }
-        elseif ($user->getStatus()->getCode() == 2 )  // Sinon si l'utilisateur existe et que son statut est 2, retourne une exception
+        elseif ($user->getStatus()->getCode() == 4 )  // Sinon si l'utilisateur existe et que son statut est 2, retourne une exception
         {
             throw new CustomUserMessageAuthenticationException($this->intl->trans('Oups ! Vous avez désactivé votre compte,
              veuillez lancer le processus de réactivation du compte'));

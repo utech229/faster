@@ -6,7 +6,7 @@
             <!--begin: Pic-->
             <div class="me-7 mb-4">
                 <div class="symbol symbol-100px symbol-lg-160px symbol-fixed position-relative">
-                    <img id="profile_avatar" src="{{ asset('app/uploads/avatars/'~ app.user.profilePhoto ~'') }}" alt="{{ app.user.usetting.firstname }}" />
+                    <img id="profile_avatar" src="{{ asset('app/uploads/avatars/'~ app.user.profilePhoto ~'') }}" alt="{{ app.user.brand.name}}" />
                     <div class="position-absolute translate-middle bottom-0 start-100 mb-6 bg-success rounded-circle border border-4 border-white h-20px w-20px"></div>
                 </div>
             </div>
@@ -19,7 +19,8 @@
                     <div class="d-flex flex-column">
                         <!--begin::Name-->
                         <div class="d-flex align-items-center mb-2">
-                            <a href="javascript:;" class="text-gray-900 text-hover-primary fs-2 fw-bolder me-1">{{ app.user.usetting.firstname }} {{ app.user.usetting.lastname | upper }}</a>
+                            <a href="javascript:;" class="text-gray-900 text-hover-primary fs-2 fw-bolder me-1"> {% if app.user.usetting %} {{ app.user.usetting.firstname }} {{ app.user.usetting.lastname | upper }} {% else %} {{ app.user.email}}
+                                 {% endif %} </a>
                             {% if app.user.role.level > 3 and  app.user.role.level > 3 %}
                             <a href="javascript:;">
                                 <!--begin::Svg Icon | path: icons/duotune/general/gen026.svg-->
