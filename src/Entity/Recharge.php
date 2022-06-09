@@ -37,6 +37,15 @@ class Recharge
     #[ORM\JoinColumn(nullable: false)]
     private $status;
 
+    #[ORM\Column(type: 'float')]
+    private $beforeCommission;
+
+    #[ORM\Column(type: 'float')]
+    private $commission;
+
+    #[ORM\Column(type: 'float')]
+    private $afterCommission;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -125,4 +134,41 @@ class Recharge
 
         return $this;
     }
+
+    public function getBeforeCommission(): ?float
+    {
+        return $this->beforeCommission;
+    }
+
+    public function setBeforeCommission(float $beforeCommission): self
+    {
+        $this->beforeCommission = $beforeCommission;
+
+        return $this;
+    }
+
+    public function getCommission(): ?float
+    {
+        return $this->commission;
+    }
+
+    public function setCommission(float $commission): self
+    {
+        $this->commission = $commission;
+
+        return $this;
+    }
+
+    public function getAfterCommission(): ?float
+    {
+        return $this->afterCommission;
+    }
+
+    public function setAfterCommission(float $afterCommission): self
+    {
+        $this->afterCommission = $afterCommission;
+
+        return $this;
+    }
+
 }
