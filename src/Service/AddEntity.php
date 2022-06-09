@@ -26,16 +26,16 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class AddEntity extends AbstractController
-{    
+{
     private $urlGenerator;
     private $router;
     private $translator;
     private $placeAvatar;
     private $filename;
-    
 
-    public function __construct(RouterInterface $router, UrlGeneratorInterface $urlGenerator,  TranslatorInterface $Translator, 
-    EntityManagerInterface $entityManager, UsettingRepository $usettingRepository, Services $services, sBrand $brand, 
+
+    public function __construct(RouterInterface $router, UrlGeneratorInterface $urlGenerator,  TranslatorInterface $Translator,
+    EntityManagerInterface $entityManager, UsettingRepository $usettingRepository, Services $services, sBrand $brand,
     BrandRepository $brandRepository, CompanyRepository $companyRepository, StatusRepository $statusRepository ){
         $this->router = $router;
         $this->urlGenerator = $urlGenerator;
@@ -48,7 +48,7 @@ class AddEntity extends AbstractController
         $this->companyRepository = $companyRepository;
         $this->brand   = $brand;
     }
-    
+
     public function profilePhotoSetter($request , $user , $isUpdating = false)
 	{
         $response = new Response();
@@ -56,7 +56,7 @@ class AddEntity extends AbstractController
         $placeAvatar  = $this->getParameter('avatar_directory');
         $filename     = $user->getUid().'_'.date('Y');
         $filepath     = $placeAvatar.$user->getProfilePhoto();
-        
+
 		$response->headers->set('Content-Type', 'application/json');
 		$response->headers->set('Access-Control-Allow-Origin', '*');
 
@@ -70,14 +70,14 @@ class AddEntity extends AbstractController
                 if (file_exists($filepath)) {
                     if(strpos($user->getProfilePhoto(), 'default_') === false) $this->services->removeFile($placeAvatar, $user->getProfilePhoto());
                 }
-                return $this->services->renameFile($SETTINGFILE, $placeAvatar, true, $placeAvatar, $filename);     
-            }else 
+                return $this->services->renameFile($SETTINGFILE, $placeAvatar, true, $placeAvatar, $filename);
+            }else
                 return [
                     'error' => true,
                     'info'  => $return['info'],
                 ];
 
-        } else 
+        } else
         return $image;
 	}
 
@@ -119,7 +119,7 @@ class AddEntity extends AbstractController
     public function defaultBrand()
     {
         if (count($this->brandRepository->findAll()) > 0) return false;
-        $defaultbrand  = $this->brand->index();
+        $defaultbrand  = $this->brand->get();
         $brand = new Brand();
         $brand->setUid($this->services->idgenerate(10))
                     ->setStatus($this->statusRepository->findOneByCode(3))
@@ -139,7 +139,7 @@ class AddEntity extends AbstractController
     //usetting datas for new user
     public function defaultCompany()
     {
-        $defaultBrand = $this->brand->index();
+        $defaultBrand = $this->brand->get();
         if (count($this->companyRepository->findAll()) > 0) return false;
         $company      = new Company();
         $company->setUid($this->services->idgenerate(11))
@@ -156,6 +156,6 @@ class AddEntity extends AbstractController
     }
 
 
-    
+
 
 }
