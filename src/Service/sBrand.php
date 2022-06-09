@@ -10,14 +10,14 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class sBrand extends AbstractController
 {
     protected $brand;
-   
+
 	public function __construct(TranslatorInterface $intl, BaseUrl $baseUrl)
 	{
        $this->intl    = $intl;
        $this->baseUrl = $baseUrl;
     }
 
-    public function index(){
+    public function get(){
        $brandData = [
            'name'               => 'FASTERMESSAGE',
            'base_url'           =>  $this->baseUrl->init(),
@@ -59,11 +59,11 @@ class sBrand extends AbstractController
                'address' => $this->intl->trans('Abomey-Calavi - Bénin'),
            ],
            'year'               => date('Y')
-           
+
        ];
 
        return $brandData;
     }
 
-    
+
 }
