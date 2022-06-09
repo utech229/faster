@@ -6,7 +6,7 @@ function update(code)
     $(document).trigger('roleUpBegin', [code]);
     document.getElementById('role_name').value = roleProperty[code][2] ;
     document.getElementById('role_code').value = roleProperty[code][1] ;
-    document.getElementById('role_level').value = roleProperty[code][5] ;
+    document.getElementById('role_level').value = roleProperty[code][4] ;
     document.getElementById('description').value = roleProperty[code][3];
     unselect_permissions();
     jsonToArray(authorizationByRoles[code]).forEach(select_permissions); 

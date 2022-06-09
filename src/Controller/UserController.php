@@ -306,7 +306,7 @@ class UserController extends AbstractController
                 $data = $this->userRepository->findAllUserNoStatus(4);
                 break;
             case 6 :
-                $data = $this->userRepository->findAllUserNoStatus(4);
+                $data = $this->userRepository->findAll();
                 break;
             default:
                 $data = [];

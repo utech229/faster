@@ -30,7 +30,7 @@
                 {% if roles is defined and  roles | length > 0 %}
                     {% for role in roles %}
                     <!--begin::Col-->
-                    <div class="col-md-4" id="{{role.uid}}">
+                    <div class="col-md-4" id="{{role.code}}">
                         <!--begin::Card-->
                         <div class="card card-flush h-md-100">
                             <!--begin::Card header-->
@@ -93,7 +93,7 @@
                                 {% if pDeleteRole is defined and pDeleteRole == true %}
                                     <div class="col-md-4 col-sm-4">
                                         <button type="button" data-kt-role-modal-action="deletion-submit" data-type="0" 
-                                        class="btn delete-role-button btn-light btn-active-light-primary my-1" data-id="{{role.uid}}" >
+                                        class="btn delete-role-button btn-light btn-active-light-primary my-1" data-id="{{role.code}}" >
                                         <i class="fa fa-trash-alt text-danger"></i></button>
                                     </div>
                                 {% endif %}
@@ -314,7 +314,4 @@
 <script src="{{ asset('app/js/widgets.bundle.js') }}"></script>
 <script src="{{ asset('app/js/custom/widgets.js') }}"></script>
 <script src="{{ asset('app/js/custom/apps/chat/chat.js') }}"></script>
-<script src="{{ asset('app/js/custom/utilities/modals/upgrade-plan.js') }}"></script>
-<script src="{{ asset('app/js/custom/utilities/modals/create-app.js') }}"></script>
-<script src="{{ asset('app/js/custom/utilities/modals/users-search.js') }}"></script>
 {% endblock %}

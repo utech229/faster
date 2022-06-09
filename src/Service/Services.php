@@ -237,24 +237,6 @@ class Services extends AbstractController
 		return $allUser;
 	}
 
-     // Function returned First and last date  of this mouth
-     public function FirstAndLastDayOfMouth()
-     {
-         $query_date1     = date('Y-m-d');
-         list($y, $m, $d) = explode('-', $query_date1);
-         $first_day = $y . '-' . $m . '-01';
-         $three_day = $y . '-' . $m . '-03';
-         $last_day  = date("Y-m-t");
-
-         $mounthData = [
-             'first_date' => $first_day,
-             'three_date' => $three_day,
-             'last_date'  => $last_day,
-         ];
-
-         return $mounthData;
-     }
-
      //Notification function for forms errors
     public function formErrorsNotification($validator, $validationObject)
     {
