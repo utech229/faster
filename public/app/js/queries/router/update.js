@@ -18,13 +18,12 @@ $(document).on('entityUpStop', function(event, identifier, id, icon) {
 });
 
 
-$(document).on('click', "updater", function(e) {
-    alert('de')
+$(document).on('click', ".updater", function(e) {
     routerNotice.removeClass('d-none');
     var uid = $(this).data('id');
     routerIDInput.val(uid);
     $(document).trigger('entityUpBegin', ['#editOption', uid, 'fa-edit']);
-    const url = window.location.href + uid + '/get';
+    const url = window.location.href +'/'+ uid + '/get';
     $.ajax({
         url: url,
         type: "post",

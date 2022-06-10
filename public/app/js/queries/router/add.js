@@ -46,7 +46,7 @@ var KTUsersAddrouter = function() {
                         console.log("validated!"), "Valid" == t ? (i.setAttribute("data-kt-indicator", "on"), i.disabled = !0, 
                         load.removeClass('sr-only'),
                         $.ajax({
-                            url: (isUpdating == true) ? window.location.href + routerIDInput.val() + '/update_router' : add_link,
+                            url: (isUpdating == true) ? window.location.href +'/'+ routerIDInput.val() + '/update_router' : add_link,
                             type: 'post',
                             data: new FormData(e),
                             dataType: 'json',

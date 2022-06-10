@@ -253,7 +253,7 @@
                                     <div class="fw-bold">
                                         <div class="fs-6 text-gray-700">
                                         <strong class="me-1">{% trans %}Attention{% endtrans %}</strong>
-                                        {% trans %}En éditant cette router, vous pouvez porter atteinte
+                                        {% trans %}En éditant cette route, vous pouvez porter atteinte
                                         au bon fonctionnement du système. Soyez sûre avant de procéder à cette opération{% endtrans %}</div>
                                     </div>
                                     <!--end::Content-->
@@ -276,6 +276,7 @@
                                             <!--begin::Input-->
                                             {{ form_row(routerform.name, {'attr': {'class': 'form-control form-control-solid','maxlength': 50,
                                             'placeholder': 'Entrer le nom de la route'|trans }}) }}
+                                            <input type="hidden" id="router_id" name="router_id" value="0">
                                             <!--end::Input-->
                                         </div>
                                     </div>

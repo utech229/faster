@@ -322,6 +322,7 @@ class DbInitData extends AbstractController
                     $route = new Router(); 
                     $route->setUid($this->services->idgenerate(10));
                     $route->setName($routeNames[$i]);
+                    $route->setStatus($this->services->status(3));
                     $route->setDescription($routeDescription[$i]);
                     $route->setCreatedAt(new \DatetimeImmutable());
                     $this->em->persist($route);

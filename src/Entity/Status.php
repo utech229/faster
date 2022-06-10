@@ -66,6 +66,10 @@ class Status
     #[ORM\OneToMany(mappedBy: 'status', targetEntity: Router::class)]
     private $routers;
 
+    #[ORM\Column(type: 'string', length: 25)]
+    private $uid;
+
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
@@ -473,6 +477,48 @@ class Status
                 $company->setStatus(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Router>
+     */
+    public function getRouters(): Collection
+    {
+        return $this->routers;
+    }
+
+    public function addRouter(Router $router): self
+    {
+        if (!$this->routers->contains($router)) {
+            $this->routers[] = $router;
+            $router->setStatus($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRouter(Router $router): self
+    {
+        if ($this->routers->removeElement($router)) {
+            // set the owning side to null (unless already changed)
+            if ($router->getStatus() === $this) {
+                $router->setStatus(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getUid(): ?string
+    {
+        return $this->uid;
+    }
+
+    public function setUid(string $uid): self
+    {
+        $this->uid = $uid;
 
         return $this;
     }

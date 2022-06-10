@@ -5,8 +5,9 @@ namespace App\Controller;
 use App\Service\uBrand;
 use App\Service\BaseUrl;
 use App\Service\Services;
+use App\Entity\Status;
 use App\Entity\Permission;
-use App\Form\PermissionType;
+use App\Form\StatusType;
 use App\Repository\RoleRepository;
 use App\Repository\UserRepository;
 use App\Repository\StatusRepository;
@@ -24,11 +25,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[IsGranted("IS_AUTHENTICATED_FULLY")]
 #[IsGranted("ROLE_USER")]
-#[Route('/{_locale}/users/permissions')]
+#[Route('/{_locale}/home/status')]
 class StatusController extends AbstractController
 {
 	public function __construct(BaseUrl $baseUrl, Services $services, EntityManagerInterface $entityManager, TranslatorInterface $translator,
-    RoleRepository $roleRepository, UserRepository $userRepository, PermissionRepository $permissionRepository,StatusRepository $statusRepository,
+    RoleRepository $roleRepository, UserRepository $userRepository,StatusRepository $statusRepository,
     AuthorizationRepository $authorizationRepository, UrlGeneratorInterface $urlGenerator, uBrand $brand, ValidatorInterface $validator){
 		$this->baseUrl         = $baseUrl;
         $this->urlGenerator    = $urlGenerator;
@@ -39,178 +40,164 @@ class StatusController extends AbstractController
         $this->userRepository  = $userRepository;
         $this->roleRepository           = $roleRepository;
         $this->authorizationRepository  = $authorizationRepository;
-        $this->permissionRepository     = $permissionRepository;
         $this->statusRepository         = $statusRepository;
         $this->validator                = $validator;
 
         $this->permission = [
-            "PER0", "PER1",  "PER2", "PER3", "PER4"
+            "STUT0", "STUT1",  "STUT2", "STUT3", "STUT4"
         ];
-		$this->pAccessPermission	=	$this->services->checkPermission($this->permission[0]);
-		$this->pCreatePermission	=	$this->services->checkPermission($this->permission[1]);
-		$this->pListPermission	    =	$this->services->checkPermission($this->permission[2]);
-		$this->pEditPermission	    =	$this->services->checkPermission($this->permission[3]);
-		$this->pDeletePermission	=	$this->services->checkPermission($this->permission[4]);
+		$this->pAccess  =	$this->services->checkPermission($this->permission[0]);
+		$this->pCreate  =	$this->services->checkPermission($this->permission[1]);
+		$this->pList    =	$this->services->checkPermission($this->permission[2]);
+		$this->pEdit	=	$this->services->checkPermission($this->permission[3]);
+		$this->pDelete	=	$this->services->checkPermission($this->permission[4]);
 	}
 
-    #[Route('/', name: 'app_status_index', methods: ['GET'])]
-    #[Route('/add_route', name: 'app_status_add', methods: ['POST'])]
-    #[Route('/{code}/update_route', name: 'app_status_update', methods: ['POST'])]
-    public function index(Request $request,Permission $permission = null, bool $isPermissionAdd = false): Response
+    #[Route('', name: 'app_status_index', methods: ['GET'])]
+    #[Route('/add_status', name: 'app_status_add', methods: ['POST'])]
+    #[Route('/{uid}/update_status', name: 'app_status_update', methods: ['POST'])]
+    public function index(Request $request, Status $status = null, bool $isStatusrAdd = false): Response
     {
-        if(!$this->pAccessPermission)
+        if(!$this->pAccess)
         {
             $this->addFlash('error', $this->intl->trans("Vous n'êtes pas autorisés à accéder à cette page !"));
             return $this->redirectToRoute("app_home");
         } 
             
-         /*----------MANAGE PERMISSION CRU BEGIN -----------*/
-        //define permission if method is role add 
-        (!$permission) ?  $isPermissionAdd = true : $isPermissionAdd = false;
-        (!$permission) ?  $permission   = new Permission() : $permission;
+         /*----------MANAGE Router CRU BEGIN -----------*/
+        //define Router if method is status add 
+        (!$status) ?  $isStatusrAdd = true : $isStatusrAdd = false;
+        (!$status) ?  $status   = new Status() : $status;
        
-        $form = $this->createForm(PermissionType::class, $permission);
+        $form = $this->createForm(StatusType::class, $status);
         if ($request->request->count() > 0)
         {
-            dd($request->request);
             $form->handleRequest($request);
-            if ($isPermissionAdd == true) { //method calling
-                if (!$this->pCreatePermission) return $this->services->no_access($this->intl->trans('Création de permission'));
-                return $this->addPermission($request, $form, $permission);
+            if ($isStatusrAdd == true) { //method calling
+                if (!$this->pCreate) return $this->services->no_access($this->intl->trans('Création de status'));
+                return $this->addStatus($request, $form, $status);
             }else {
-                if (!$this->pEditPermission)   return $this->services->no_access($this->intl->trans('Modification permission'));
-                return $this->updatePermission($request, $form, $permission);
+                if (!$this->pEdit)   return $this->services->no_access($this->intl->trans('Modification status'));
+                return $this->updateStatus($request, $form, $status);
             }
         }
 
-        $this->services->addLog($this->intl->trans('Accès au menu permission'));
-        return $this->render('permission/index.html.twig', [
+        $this->services->addLog($this->intl->trans('Accès au menu status'));
+        return $this->render('status/index.html.twig', [
             'controller_name' => 'RoleController',
-            'title'           => $this->intl->trans('Mes Permissions').' - '. $this->brand->get()['name'],
+            'title'           => $this->intl->trans('Status Système').' - '. $this->brand->get()['name'],
             'pageTitle'       => [
-                [$this->intl->trans('Gestion permissions')],
-                [$this->intl->trans('Permissions')],
+                [$this->intl->trans('Gestion status')],
+                [$this->intl->trans('Status')],
             ],
             'brand'              => $this->brand->get(),
             'baseUrl'            => $this->baseUrl->init(),
-            'permissionform'     => $form->createView(),
-            'pCreatePermission'  =>	$this->pCreatePermission,
-            'pEditPermission'	 =>	$this->pEditPermission,
-            'pDeletePermission'  =>	$this->pDeletePermission,
+            'statusform'         => $form->createView(),
+            'pCreate'       =>	$this->pCreate,
+            'pEdit'	     =>	$this->pEdit,
+            'pDelete'       =>	$this->pDelete,
         ]);
     }
 
     //Add role function
-    public function addpermission($request, $form, $permission): Response
+    public function addStatus($request, $form, $status): Response
     {
         if ($form->isSubmitted() && $form->isValid()) {
-        
-        $isCheck = false;
-        $isCheck = ($request->request->get('permission_core') !==  null) ? true : false;
 
         $description = $request->request->get('description');
-        $permission->setStatus(1);
-        $permission->setDescription($description);
-        $permission->setIsCore($isCheck);
-        $permission->setCreatedAt(new \DatetimeImmutable());
-        $this->permissionRepository->add($permission);
+        $status->setUid($this->services->idgenerate(15));
+       
+        $status->setDescription($description);
+        $status->setCreatedAt(new \DatetimeImmutable());
+        $this->statusRepository->add($status);
         
-        return $this->services->ajax_success_crud(
-            $this->intl->trans("Ajout d'une nouvelle permission"),
-            $this->intl->trans("Permission ajouté avec succès")
-        );
+        return $this->services->msg_success(
+            $this->intl->trans("Ajout d'une nouvelle route"),
+            $this->intl->trans("Status ajouté avec succès"));
         }
         else 
         {
             //return $this->services->invalidForm($form, $this->intl);
-            return $this->services->formErrorsNotification($this->validator, $this->intl, $permission);
+            return $this->services->formErrorsNotification($this->validator, $this->intl, $status);
         }
-        return $this->services->failedcrud($this->intl->trans("Ajout d'une nouvelle permission : "  .$request->request->get('permission_name')));
+        return $this->services->failedcrud($this->intl->trans("Ajout d'une nouvelle Status : "  .$request->request->get('status_name')));
     }
  
-    //update permission function
-    public function updatepermission($request, $form, $permission): Response
+    //update Status function
+    public function updateStatus($request, $form, $status): Response
     {
         if ($form->isSubmitted() && $form->isValid()) {
-        $key_        = $request->request->get('permission_id');
         $description = $request->request->get('description');
-        $isCheck     = ($request->request->get('permission_core')) ? 1 : 0 ;
-        $permission->setStatus(1);
-        $permission->setDescription($description);
-        $permission->setIsCore($isCheck);
-        $permission->setUpdatedAt(new \DatetimeImmutable());
-        $this->permissionRepository->add($permission);
+       
+        $status->setDescription($description);
+        $status->setUpdatedAt(new \DatetimeImmutable());
+        $this->statusRepository->add($status);
 
-        return $this->services->ajax_success_crud(
-            $this->intl->trans("Modification de la permission ").$permission->getName(),
-            $this->intl->trans("Permission modifié avec succès").' : '.$permission->getName()
+        return $this->services->msg_success(
+            $this->intl->trans("Modification de la Status ").$status->getName(),
+            $this->intl->trans("Status modifié avec succès").' : '.$status->getName()
         );
         }
         else 
         {
         //return $this->services->invalidForm($form, $this->intl);
-        return $this->services->formErrorsNotification($this->validator, $this->intl, $permission);
+        return $this->services->formErrorsNotification($this->validator, $this->intl, $status);
         }
-        return $this->services->failedcrud($this->intl->trans("Modification de la permission : "  .$request->request->get('permission_name')));
+        return $this->services->failedcrud($this->intl->trans("Modification de la Status : "  .$request->request->get('status_name')));
     }
 
-    #[Route('/list', name: 'app_route_list')]
+    #[Route('/list', name: 'app_status_list')]
     public function getUsers(TranslatorInterface $translator, Request $request, EntityManagerInterface $manager) : Response
     {
 		if (!$this->isCsrfTokenValid($this->getUser()->getUid(), $request->request->get('_token'))) //Vérification du tokken
         return $this->redirectToRoute("app_home");
 
         $data = [];
-        $permissions = (!$this->pListPermission) ? [] : $this->permissionRepository->findBy([],["createdAt"=>"DESC"]);
+        $statuss = (!$this->pList) ? [] : $this->statusRepository->findBy([],["createdAt"=>"DESC"]);
         
-        foreach ($permissions  as $permission) 
+        foreach ($statuss  as $status) 
 		{
-           
             $row                 = array();
             $row['OrderId']      = null;
-            $row['Name']         = $permission->getName();
-            $row['Code']         = $permission->getCode();
-            $row['Description']  = $permission->getDescription();
-            $row['Status']       = $permission->getStatus()->getCode();
-            $row['CreatedAt']    = $permission->getCreatedAt()->format("c");
-            $row['UpdatedAt']    = ($permission->getUpdatedAt()) ? $permission->getUpdatedAt()->format("c") : $this->intl->trans('Non mdifié');
-            $row['Roles']        = '';
-            $row['Actions']      = $permission->getId();
+            $row['Name']         = $status->getName();
+            $row['Description']  = $status->getDescription();
+            $row['CreatedAt']    = $status->getCreatedAt()->format("c");
+            $row['UpdatedAt']    = ($status->getUpdatedAt()) ? $status->getUpdatedAt()->format("c") : $this->intl->trans('Non mdifié');
+            $row['Actions']      = $status->getUid();
             $data []             = $row;
 		}
-        $this->services->addLog($translator->trans('Lecture de la liste des permissions'));
+        $this->services->addLog($translator->trans('Lecture de la liste des routes'));
         $output = array("data" => $data);
         return new JsonResponse($output);
     }
 
-    #[Route('/{code}/get', name: 'app_route_get', methods: ['POST'])]
-    public function getCurrentPermission(Request $request, Permission $permission): Response
+    #[Route('/{uid}/get', name: 'app_status_get', methods: ['POST'])]
+    public function getCurrentStatus(Request $request, Status $status): Response
     {
         if (!$this->isCsrfTokenValid($this->getUser()->getUid(), $request->request->get('_token'))) 
-        return $this->services->no_access($this->intl->trans("Récupération d'une permission"));
+        return $this->services->no_access($this->intl->trans("Récupération d'une route"));
 
-        $data['id']          = $permission->getId();
-        $data['name']        = $permission->getName();
-        $data['code']        = $permission->getCode();
-        $data['description'] = $permission->getDescription();
-        $data['iscore']      = $permission->getIsCore();
-        $data['status']      = $permission->getStatus();
+        $data['id']          = $status->getId();
+        $data['name']        = $status->getName();
+        $data['description'] = $status->getDescription();
         return new JsonResponse(['data' => $data]);
     }
 
-    #[Route('/{code}/delete', name: 'app_route_delete', methods: ['POST'])]
-    public function delete(Request $request, Permission $permission): Response
+    #[Route('/{uid}/delete', name: 'app_status_delete', methods: ['POST'])]
+    public function delete(Request $request, Status $status): Response
     {
         if (!$this->isCsrfTokenValid($this->getUser()->getUid(), $request->request->get('_token'))) 
-            return $this->services->no_access($this->intl->trans("Suppression d'une permission").': '.$permission->getCode());
-        if (count($permission->getAuthorizations()) > 0) 
-        return $this->services->ajax_error_crud(
-            $this->intl->trans("Suppression de la permission ").$permission->getName(),
-            $this->intl->trans("Vous ne pouvez pas supprimer une permission attribué").' : '.$permission->getName());
-        $this->permissionRepository->remove($permission);
-        return $this->services->ajax_success_crud(
-            $this->intl->trans("Suppression de la permission ").$permission->getName(),
-            $this->intl->trans("Permission supprimé avec succès").' : '.$permission->getName()
+            return $this->services->no_access($this->intl->trans("Suppression d'une route").': '.$status->getCode());
+
+        if (count($status->getUsers()) > 0) 
+        return $this->services->msg_error(
+            $this->intl->trans("Suppression de la Status ").$status->getName(),
+            $this->intl->trans("Vous ne pouvez pas supprimer une Status utilisé").' : '.$status->getName());
+
+        $this->statusRepository->remove($status);
+        return $this->services->msg_success(
+            $this->intl->trans("Suppression de la Status ").$status->getName(),
+            $this->intl->trans("Status supprimé avec succès").' : '.$status->getName()
         );
     }
 

@@ -138,7 +138,7 @@
                                 </svg>
                             </span>
                             <!--end::Svg Icon-->
-                            <input type="text" data-kt-permissions-table-filter="search" class="form-control form-control-solid w-250px ps-15" placeholder="Search Permissions" />
+                            <input type="text" data-kt-statuss-table-filter="search" class="form-control form-control-solid w-250px ps-15" placeholder="{{'Chercher status'| trans}}" />
                         </div>
                         <!--end::Search-->
                     </div>
@@ -146,7 +146,7 @@
                     <!--begin::Card toolbar-->
                     <div class="card-toolbar">
                         <!--begin::Button-->
-                        <button type="button" id="kt_modal_add_permission_button" class="btn btn-light-primary {% if pCreatePermission is defined and pCreatePermission  == false %}d-none{% endif %}" data-bs-toggle="modal" data-bs-target="#kt_modal_add_permission">
+                        <button type="button" id="kt_modal_add_status_button" class="btn btn-light-primary {% if pCreate is defined and pCreate  == false %}d-none{% endif %}" data-bs-toggle="modal" data-bs-target="#kt_modal_add_status">
                         <!--begin::Svg Icon | path: icons/duotune/general/gen035.svg-->
                         <span class="svg-icon svg-icon-3">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"> 
@@ -155,8 +155,9 @@
                                 <rect x="6.01041" y="10.9247" width="12" height="2" rx="1" fill="currentColor" />
                             </svg>
                         </span>
-                        <!--end::Svg Icon-->{% trans %}Nouvelle{% endtrans %}</button>
-                        <button type="button" id="kt_modal_add_permission_reload_button" class="btn btn-light-primary d-none">
+                        <!--end::Svg Icon-->{% trans %}Nouvel{% endtrans %}</button>
+
+                        <button type="button" id="kt_modal_add_status_reload_button" class="btn btn-light-primary d-none">
                         <!--begin::Svg Icon | path: icons/duotune/general/gen035.svg-->
                         <span class="svg-icon svg-icon-3">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -165,7 +166,7 @@
                                 <rect x="6.01041" y="10.9247" width="12" height="2" rx="1" fill="currentColor" />
                             </svg>
                         </span>
-                        <!--end::Svg Icon-->{% trans %}Nouvelle{% endtrans %}</button>
+                        <!--end::Svg Icon-->{% trans %}Nouvel{% endtrans %}</button>
                         <!--end::Button-->
 
                     </div>
@@ -175,23 +176,20 @@
                 <!--begin::Card body-->
                 <div class="card-body pt-0">
                     <!--begin::Table-->
-                    <table class="table align-middle table-row-dashed fs-6 gy-5 mb-0" id="kt_permissions_table">
+                    <table class="table align-middle table-row-dashed fs-6 gy-5 mb-0" id="kt_statuss_table">
                         <!--begin::Table head-->
                         <thead>
                             <!--begin::Table row-->
                             <tr class="text-start text-gray-400 fw-bolder fs-7 text-uppercase gs-0">
                                 <th class="w-10px pe-2">
                                     <div class="form-check form-check-sm form-check-custom form-check-solid me-3">
-                                    <input class="form-check-input" type="checkbox" data-kt-check="true" data-kt-check-target="#kt_permissions_table .form-check-input" value="1" />
+                                    <input class="form-check-input" type="checkbox" data-kt-check="true" data-kt-check-target="#kt_statuss_table .form-check-input" value="1" />
                                     </div>
                                 </th> 
                                 <th class="min-w-125px">{% trans %}Nom{% endtrans %}</th>
-                                <th class="min-w-125px">{% trans %}Code{% endtrans %}</th>
                                 <th class="min-w-125px">{% trans %}Description{% endtrans %}</th>
-                                <th class="min-w-125px">{% trans %}Assignez à{% endtrans %}</th>
                                 <th class="min-w-100px">{% trans %}Créé le{% endtrans %}</th>
                                 <th class="min-w-100px">{% trans %}Dernière modification{% endtrans %}</th>
-                                <th class="min-w-100px">{% trans %}Status{% endtrans %}</th>
                                 <th class="text-end min-w-100px">{% trans %}Actions{% endtrans %}</th>
                             </tr>
                             <!--end::Table row-->
@@ -209,8 +207,8 @@
             </div>
             <!--end::Card-->
             <!--begin::Modals-->
-            <!--begin::Modal - Add permissions-->
-            <div class="modal fade" id="kt_modal_add_permission" tabindex="-1" aria-hidden="true">
+            <!--begin::Modal - Add statuss-->
+            <div class="modal fade" id="kt_modal_add_status" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
                 <!--begin::Modal dialog-->
                 <div class="modal-dialog modal-dialog-centered mw-650px">
                     <!--begin::Modal content-->
@@ -218,10 +216,10 @@
                         <!--begin::Modal header-->
                         <div class="modal-header">
                             <!--begin::Modal title-->
-                            <h2 class="fw-bolder" id="kt_modal_add_permission_text">{% trans %}Nouvelle permission{% endtrans %}</h2>
+                            <h2 class="fw-bolder" id="kt_modal_add_status_text">{% trans %}Nouvel status{% endtrans %}</h2>
                             <!--end::Modal title-->
                             <!--begin::Close-->
-                            <div class="btn btn-icon btn-sm btn-active-icon-primary" data-kt-permissions-modal-action="close">
+                            <div class="btn btn-icon btn-sm btn-active-icon-primary" data-kt-statuss-modal-action="close">
                                 <!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
                                 <span class="svg-icon svg-icon-1">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -237,7 +235,7 @@
                         <!--begin::Modal body-->
                         <div class="modal-body scroll-y mx-5 mx-xl-15 my-7">
                             <!--begin::Notice-->
-                            <div id="kt_modal_add_permission_notice" class="notice d-none d-flex bg-light-danger rounded border-danger border border-dashed mb-9 p-6">
+                            <div id="kt_modal_add_status_notice" class="notice d-none d-flex bg-light-danger rounded border-danger border border-dashed mb-9 p-6">
                                 <!--begin::Icon-->
                                 <!--begin::Svg Icon | path: icons/duotune/general/gen044.svg-->
                                 <span class="svg-icon svg-icon-2tx svg-icon-danger me-4">
@@ -255,8 +253,8 @@
                                     <div class="fw-bold">
                                         <div class="fs-6 text-gray-700">
                                         <strong class="me-1">{% trans %}Attention{% endtrans %}</strong>
-                                        {% trans %}En éditant cette permission, vous pouvez porter atteinte
-                                        au bon fonctionnement du système. Soyez sure avant de procéder à cette opération{% endtrans %}</div>
+                                        {% trans %}En éditant cette status, vous pouvez porter atteinte
+                                        au bon fonctionnement du système. Soyez sûre avant de procéder à cette opération{% endtrans %}</div>
                                     </div>
                                     <!--end::Content-->
                                 </div>
@@ -264,7 +262,7 @@
                             </div>
                             <!--end::Notice-->
                             <!--begin::Form-->
-                            {{ form_start(permissionform, {'attr':{'id':'kt_modal_add_permission_form'}}) }}
+                            {{ form_start(statusform, {'attr':{'id':'kt_modal_add_status_form'}}) }}
                                 <!--begin::Input group-->
                                 <div class="fv-row mb-10">
                                     <!--begin::Row-->
@@ -272,24 +270,13 @@
                                         <div class="col-lg-6 fv-row mt-2">
                                             <!--begin::Label-->
                                             <label class="fs-5 fw-bolder form-label mb-2">
-                                                <span class="required">{% trans %}Nom de la permission{% endtrans %}</span>
+                                                <span class="required">{% trans %}Nom du status{% endtrans %}</span>
                                             </label>
                                             <!--end::Label-->
                                             <!--begin::Input-->
-                                            {{ form_row(permissionform.name, {'attr': {'class': 'form-control form-control-solid','maxlength': 50,
-                                            'placeholder': 'Entrer le nom de la permission'|trans }}) }}
-                                            <!--end::Input-->
-                                        </div>
-                                        <div class="col-lg-6 fv-row mt-2">
-                                            <!--begin::Label-->
-                                            <label class="fs-5 fw-bolder form-label mb-2">
-                                                <span class="required">{% trans %}Code de la permission{% endtrans %}</span>
-                                            </label>
-                                            <!--end::Label-->
-                                            <!--begin::Input-->
-                                            {{ form_row(permissionform.code, {'attr': {'class': 'form-control form-control-solid','maxlength': 5,
-                                            'placeholder': 'Entrer le code de la permission'|trans }}) }}
-                                            <input type="hidden" id="permission_id" name="permission_id" value="0">
+                                            {{ form_row(statusform.name, {'attr': {'class': 'form-control form-control-solid','maxlength': 50,
+                                            'placeholder': 'Entrer le nom du status'|trans }}) }}
+                                            <input type="hidden" id="status_id" name="status_id" value="0">
                                             <!--end::Input-->
                                         </div>
                                     </div>
@@ -303,22 +290,22 @@
                                     </label>
                                     <!--end::Label-->
                                     <!--begin::Input-->
-                                    <textarea class="form-control form-control-solid" minlength="10" maxlength="500" required="required"  style="resize:none" rows="3" 
+                                    <textarea class="form-control form-control-solid" minlength="5" maxlength="50" required="required"  style="resize:none" rows="3" 
                                     cols="50" placeholder="{{'Saisir la description'| trans}}" name="description" id="description"/></textarea>
                                     <!--end::Input-->
                                 </div>
                                 <!--end::Input-->
                                 <!--begin::Actions-->
                                 <div class="text-center pt-15">
-                                    <button type="reset" class="btn btn-light me-3" data-kt-permissions-modal-action="cancel">{{'Annuler'| trans}}</button>
-                                    <button type="submit" class="btn btn-primary" data-kt-permissions-modal-action="submit">
+                                    <button type="reset" class="btn btn-light me-3" data-kt-statuss-modal-action="cancel">{{'Annuler'| trans}}</button>
+                                    <button type="submit" class="btn btn-primary" data-kt-statuss-modal-action="submit">
                                         <span class="indicator-label">{{'Soumettre'| trans}}</span>
                                         <span class="indicator-progress">{{'Veuillez patienter'| trans}}...
                                         <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
                                     </button>
                                 </div>
                                 <!--end::Actions-->
-                            {{ form_end(permissionform) }}
+                            {{ form_end(statusform) }}
                             <!--end::Form-->
                         </div>
                         <!--end::Modal body-->
@@ -327,7 +314,7 @@
                 </div>
                 <!--end::Modal dialog-->
             </div>
-            <!--end::Modal - Add permissions-->
+            <!--end::Modal - Add statuss-->
             <!--end::Modals-->
         </div>
         <!--end::Container-->
@@ -340,27 +327,21 @@
 
 {% block javascripts %} 
 <script type="text/javascript">
-    const formModalButton          = $("#kt_modal_add_permission_button");
-	const pEditPermission          = {{pEditPermission}};
-	const pDeletePermission        = {{pDeletePermission}};
-    const permission_list_link     = "{{path('app_permission_list')}}";
-    const add_permission           = "{{path('app_user_permission_add')}}";
-    const csrfToken                = "{{ csrf_token(app.user.uid) }}"
+    const formModalButton    = $("#kt_modal_add_status_button");
+	const pEdit              = {{pEdit}};
+	const pDelete            = {{pDelete}};
+    const list_link          = "{{path('app_status_list')}}";
+    const add_link           = "{{path('app_status_add')}}";
+    const csrfToken          = "{{ csrf_token(app.user.uid) }}"
 </script>
 <!--begin::Page Vendors Javascript(used by this page)-->
 <script src="{{ asset('app/plugins/custom/datatables/datatables.bundle.js') }}"></script>
 <!--end::Page Vendors Javascript-->
 <!--begin::Page Custom Javascript(used by this page)-->
-<script src="{{ asset('app/js/queries/user-management/permissions/list.js') }}"></script>
-<script src="{{ asset('app/js/queries/user-management/permissions/add.js') }}"></script>
-<script src="{{ asset('app/js/queries/user-management/permissions/update.js') }}"></script>
-<script src="{{ asset('app/js/queries/user-management/permissions/delete.js') }}"></script>
-{#<script src="{{ asset('app/js/widgets.bundle.js') }}"></script>
-<script src="{{ asset('app/js/custom/widgets.js') }}"></script>
-<script src="{{ asset('app/js/custom/apps/chat/chat.js') }}"></script>
-<script src="{{ asset('app/js/custom/utilities/modals/upgrade-plan.js') }}"></script>
-<script src="{{ asset('app/js/custom/utilities/modals/create-app.js') }}"></script>
-<script src="{{ asset('app/js/custom/utilities/modals/users-search.js') }}"></script>#}
+<script src="{{ asset('app/js/queries/status/list.js') }}"></script>
+<script src="{{ asset('app/js/queries/status/add.js') }}"></script>
+<script src="{{ asset('app/js/queries/status/update.js') }}"></script>
+<script src="{{ asset('app/js/queries/status/delete.js') }}"></script>
 <!--end::Page Custom Javascript-->
 <!--end::Javascript-->
 {% endblock %}

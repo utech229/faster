@@ -18,7 +18,7 @@ $(document).on('click', ".deleter", function() {
 		if (result.value) {
 			load.removeClass('sr-only');
 			$.ajax({
-				url: window.location.href + uid + '/delete',
+				url: window.location.href +'/'+ uid + '/delete',
 				type: "post",
 				data: {uid : uid, _token : csrfToken},
 				dataType: "json",

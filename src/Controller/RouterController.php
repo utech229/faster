@@ -46,7 +46,7 @@ class RouterController extends AbstractController
         $this->validator                = $validator;
 
         $this->permission = [
-            "PER0", "PER1",  "PER2", "PER3", "PER4"
+            "ROUT0", "ROUT1",  "ROUT2", "ROUT3", "ROUT4"
         ];
 		$this->pAccess  =	$this->services->checkPermission($this->permission[0]);
 		$this->pCreate  =	$this->services->checkPermission($this->permission[1]);
@@ -56,9 +56,9 @@ class RouterController extends AbstractController
 	}
 
     #[Route('', name: 'app_router_index', methods: ['GET'])]
-    #[Route('/add_route', name: 'app_router_add', methods: ['POST'])]
-    #[Route('/{uid}/update_route', name: 'app_router_update', methods: ['POST'])]
-    public function index(Request $request,Permission $router = null, bool $isRouterAdd = false): Response
+    #[Route('/add_router', name: 'app_router_add', methods: ['POST'])]
+    #[Route('/{uid}/update_router', name: 'app_router_update', methods: ['POST'])]
+    public function index(Request $request,Router $router = null, bool $isRouterAdd = false): Response
     {
         if(!$this->pAccess)
         {
@@ -66,8 +66,8 @@ class RouterController extends AbstractController
             return $this->redirectToRoute("app_home");
         } 
             
-         /*----------MANAGE PERMISSION CRU BEGIN -----------*/
-        //define permission if method is role add 
+         /*----------MANAGE Router CRU BEGIN -----------*/
+        //define Router if method is role add 
         (!$router) ?  $isRouterAdd = true : $isRouterAdd = false;
         (!$router) ?  $router   = new Router() : $router;
        
@@ -107,12 +107,13 @@ class RouterController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
         $description = $request->request->get('description');
+        $router->setUid($this->services->idgenerate(15));
         $router->setStatus($this->services->status(3));
         $router->setDescription($description);
         $router->setCreatedAt(new \DatetimeImmutable());
         $this->routerRepository->add($router);
         
-        return $this->services->ajax_success_crud(
+        return $this->services->msg_success(
             $this->intl->trans("Ajout d'une nouvelle route"),
             $this->intl->trans("Route ajouté avec succès"));
         }
@@ -134,7 +135,7 @@ class RouterController extends AbstractController
         $router->setUpdatedAt(new \DatetimeImmutable());
         $this->routerRepository->add($router);
 
-        return $this->services->ajax_success_crud(
+        return $this->services->msg_success(
             $this->intl->trans("Modification de la route ").$router->getName(),
             $this->intl->trans("Route modifié avec succès").' : '.$router->getName()
         );
@@ -164,7 +165,7 @@ class RouterController extends AbstractController
             $row['Description']  = $router->getDescription();
             $row['CreatedAt']    = $router->getCreatedAt()->format("c");
             $row['UpdatedAt']    = ($router->getUpdatedAt()) ? $router->getUpdatedAt()->format("c") : $this->intl->trans('Non mdifié');
-            $row['Actions']      = $router->getId();
+            $row['Actions']      = $router->getUid();
             $data []             = $row;
 		}
         $this->services->addLog($translator->trans('Lecture de la liste des routes'));
@@ -173,7 +174,7 @@ class RouterController extends AbstractController
     }
 
     #[Route('/{uid}/get', name: 'app_router_get', methods: ['POST'])]
-    public function getCurrentPermission(Request $request, Permission $router): Response
+    public function getCurrentRouter(Request $request, Router $router): Response
     {
         if (!$this->isCsrfTokenValid($this->getUser()->getUid(), $request->request->get('_token'))) 
         return $this->services->no_access($this->intl->trans("Récupération d'une route"));
@@ -185,18 +186,18 @@ class RouterController extends AbstractController
     }
 
     #[Route('/{uid}/delete', name: 'app_router_delete', methods: ['POST'])]
-    public function delete(Request $request, Permission $router): Response
+    public function delete(Request $request, Router $router): Response
     {
         if (!$this->isCsrfTokenValid($this->getUser()->getUid(), $request->request->get('_token'))) 
             return $this->services->no_access($this->intl->trans("Suppression d'une route").': '.$router->getCode());
 
-        if (count($router->getUers()) > 0) 
-        return $this->services->ajax_error_crud(
+        if (count($router->getUsers()) > 0) 
+        return $this->services->msg_error(
             $this->intl->trans("Suppression de la route ").$router->getName(),
             $this->intl->trans("Vous ne pouvez pas supprimer une route utilisé").' : '.$router->getName());
 
         $this->routerRepository->remove($router);
-        return $this->services->ajax_success_crud(
+        return $this->services->msg_success(
             $this->intl->trans("Suppression de la route ").$router->getName(),
             $this->intl->trans("Route supprimé avec succès").' : '.$router->getName()
         );

@@ -36,6 +36,9 @@ class Router
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'routers')]
     private $manager;
 
+    #[ORM\ManyToOne(targetEntity: Status::class, inversedBy: 'routers')]
+    private $status;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
@@ -144,6 +147,18 @@ class Router
     public function setManager(?User $manager): self
     {
         $this->manager = $manager;
+
+        return $this;
+    }
+
+    public function getStatus(): ?Status
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?Status $status): self
+    {
+        $this->status = $status;
 
         return $this;
     }
