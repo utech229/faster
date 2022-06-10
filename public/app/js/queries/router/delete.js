@@ -1,8 +1,8 @@
 "use strict";
 
-$(document).on('click', ".permissionDeleter", function() {
+$(document).on('click', ".deleter", function() {
 	var uid = $(this).data('id');
-	$(document).trigger('entityUpBegin', ['#deletePermissionOption', uid, 'fa-trash-alt']);
+	$(document).trigger('entityUpBegin', ['#deleteOption', uid, 'fa-trash-alt']);
 	Swal.fire({
 		text: _Deletion_request,
 		icon: "warning",
@@ -23,7 +23,7 @@ $(document).on('click', ".permissionDeleter", function() {
 				data: {uid : uid, _token : csrfToken},
 				dataType: "json",
 				success: function(response) {
-					$(document).trigger('securityFirewall', [response, '#deletePermissionOption', uid, 'fa-trash-alt']);
+					$(document).trigger('securityFirewall', [response, '#deleteOption', uid, 'fa-trash-alt']);
 					if (response.status === 'success') 
 					Swal.fire({
 						text: response.message,
@@ -35,7 +35,7 @@ $(document).on('click', ".permissionDeleter", function() {
 						}
 					});
 					load.addClass('sr-only')
-					$(document).trigger('entityUpStop', ['#deletePermissionOption', uid, 'fa-trash-alt']),
+					$(document).trigger('entityUpStop', ['#deleteOption', uid, 'fa-trash-alt']),
 					tableReloadButton.click();
 				},
                 error:function(response) {
@@ -44,7 +44,7 @@ $(document).on('click', ".permissionDeleter", function() {
 				}
 			});	
 		} else if (result.dismiss === 'cancel') {
-			$(document).trigger('entityUpStop', ['#deletePermissionOption', uid, 'fa-trash-alt']),
+			$(document).trigger('entityUpStop', ['#deleteOption', uid, 'fa-trash-alt']),
 			$(document).trigger('onAjaxInfo');
 			load.addClass('sr-only')
 		}

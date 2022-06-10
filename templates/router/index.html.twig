@@ -156,6 +156,7 @@
                             </svg>
                         </span>
                         <!--end::Svg Icon-->{% trans %}Nouvelle{% endtrans %}</button>
+
                         <button type="button" id="kt_modal_add_router_reload_button" class="btn btn-light-primary d-none">
                         <!--begin::Svg Icon | path: icons/duotune/general/gen035.svg-->
                         <span class="svg-icon svg-icon-3">
@@ -189,7 +190,6 @@
                                 <th class="min-w-125px">{% trans %}Description{% endtrans %}</th>
                                 <th class="min-w-100px">{% trans %}Créé le{% endtrans %}</th>
                                 <th class="min-w-100px">{% trans %}Dernière modification{% endtrans %}</th>
-                                <th class="min-w-100px">{% trans %}Status{% endtrans %}</th>
                                 <th class="text-end min-w-100px">{% trans %}Actions{% endtrans %}</th>
                             </tr>
                             <!--end::Table row-->
@@ -208,7 +208,7 @@
             <!--end::Card-->
             <!--begin::Modals-->
             <!--begin::Modal - Add Routers-->
-            <div class="modal fade" id="kt_modal_add_router" tabindex="-1" aria-hidden="true">
+            <div class="modal fade" id="kt_modal_add_router" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
                 <!--begin::Modal dialog-->
                 <div class="modal-dialog modal-dialog-centered mw-650px">
                     <!--begin::Modal content-->
@@ -326,12 +326,12 @@
 
 {% block javascripts %} 
 <script type="text/javascript">
-    const formModalButton          = $("#kt_modal_add_router_button");
+    const formModalButton    = $("#kt_modal_add_router_button");
 	const pEdit              = {{pEdit}};
 	const pDelete            = {{pDelete}};
     const list_link          = "{{path('app_router_list')}}";
-    const add_link               = "{{path('app_router_add')}}";
-    const csrfToken                = "{{ csrf_token(app.user.uid) }}"
+    const add_link           = "{{path('app_router_add')}}";
+    const csrfToken          = "{{ csrf_token(app.user.uid) }}"
 </script>
 <!--begin::Page Vendors Javascript(used by this page)-->
 <script src="{{ asset('app/plugins/custom/datatables/datatables.bundle.js') }}"></script>

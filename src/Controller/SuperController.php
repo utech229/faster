@@ -112,7 +112,7 @@ class SuperController extends AbstractController
             $brand   = $this->brandRepository->findOneByName($this->brand->get()['name']);
             $route   = $this->routerRepository->findOneByName("Fastermessage_moov");
             $company = $this->companyRepository->findOneById(1);
-            $user->setAdmin($user)
+            $user->setAccountManager($user)
                 ->setBrand($brand)
                 ->setRouter($route);
             $this->userRepository->add($user);
@@ -127,7 +127,7 @@ class SuperController extends AbstractController
             $company = $this->companyRepository->findOneById(1);
             $company->setManager($existed_user);
             $this->companyRepository->add($company);
-            $existed_user->setAdmin($existed_user)->setBrand($brand)->setDefaultSender($sender);
+            $existed_user->setAccountManager($existed_user)->setBrand($brand)->setDefaultSender($sender);
             $this->userRepository->add($existed_user);
             return $this->services->msg_success(
                 $this->intl->trans("Mise à jour de la marque initiale"),

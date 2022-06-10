@@ -51,7 +51,7 @@ class DbInitData extends AbstractController
         $existedUser  = $this->userRepository->findAll();
         if (!$existedUser) {
             $roleCodes = ["AFF0", "USE", "AFF1", "RES", "ACC", "ADM", "SUP"];
-            $roleNames = [ "AFFILIATE_USER", "USER", "AFFILIATE_RESELLER", "RESELLER", "ACCOUNTING", "ADMINISATRATOR", "SUPER_ADMINISTRATOR"];
+            $roleNames = [ "AFFILIATE_USER", "USER", "AFFILIATE_RESELLER", "RESELLER", "ACCOUNTING", "ADMINISTRATOR", "SUPER_ADMINISTRATOR"];
             $roleDescription = [
                 "Rôle d'un affilié d'utilisateur",
                 "Rôle de l'utilisateur simple", 

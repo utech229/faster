@@ -1,5 +1,5 @@
 "use strict";
-var KTUsersPermissionsList = function() {
+var KTUsersRoutersList = function() {
     var t, e, n, r, o;
     return {
         init: function() {
@@ -52,35 +52,20 @@ var KTUsersPermissionsList = function() {
                     }
                 },
                 {
-                    targets: 5,
-                    render: function(data, type, full, meta) {
-                        var status = {
-                            2 : { 'title': _Pending, 'class': 'warning' },
-                            3 : { 'title': _Actif, 'class': 'success' },
-                            5 : { 'title': _Disabled, 'class': 'danger' },
-                            7 : { 'title': _Rejected, 'class': 'info' },
-                        };
-                        if (typeof status[data] === 'undefined') {
-                            return data;
-                        }
-                        return '<span class="badge badge-light-' + status[data].class + '">' + status[data].title + '</span>';
-                    },
-
-                },{
                     orderable: !1,
-                    targets: 6,
+                    targets: 5,
                     visible: (!pEdit && !pDelete) ? false : true,
                     render : function (data,type, full, meta) {
                         var updaterIcon =  `<!--begin::Update-->
-                        <button class="btn btn-icon btn-active-light-primary w-30px h-30px me-3 routerUpdater" 
+                        <button class="btn btn-icon btn-active-light-primary w-30px h-30px me-3 updater" 
                         data-id=`+data+`>
-                        <i id="editRouterOption`+data+`" class="fa fa-edit"></i>
+                        <i id="editOption`+data+`" class="fa fa-edit"></i>
                         </button>
                         <!--end::Update-->`;
                         var deleterIcon =  `<!--begin::Delete-->
-                        <button class="btn btn-icon btn-active-light-primary w-30px h-30px routerDeleter" 
+                        <button class="btn btn-icon btn-active-light-primary w-30px h-30px deleter" 
                             data-id=`+data+` data-kt-routers-table-filter="delete_row">
-                          <i id="deleterouterOption`+data+`" class="text-danger fa fa-trash-alt"></i>
+                          <i id="deleteOption`+data+`" class="text-danger fa fa-trash-alt"></i>
                         </button>
                         <!--end::Delete-->`;
                         updaterIcon = (pEdit) ? updaterIcon : '' ;
@@ -99,8 +84,6 @@ var KTUsersPermissionsList = function() {
                     { data: 'CreatedAt' , responsivePriority: 0},
 
                     { data: 'UpdatedAt'},
-
-                    { data: 'Status' , responsivePriority: -3},
 
                     { data: 'Actions',responsivePriority: -9 },
                 ],
@@ -155,5 +138,5 @@ var KTUsersPermissionsList = function() {
     }
 }();
 KTUtil.onDOMContentLoaded((function() {
-    KTUsersPermissionsList.init()
+    KTUsersRoutersList.init()
 }));

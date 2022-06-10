@@ -68,8 +68,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToOne(targetEntity: Role::class, inversedBy: 'users')]
     private $role;
 
-    #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'admin')]
-    private $admin;
+    #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'accountManager')]
+    private $accountManager;
 
 
     #[ORM\ManyToOne(targetEntity: Brand::class, inversedBy: 'brand')]
@@ -142,7 +142,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function __construct()
     {
-        $this->admin = new ArrayCollection();
+        $this->accountManager = new ArrayCollection();
         $this->brands = new ArrayCollection();
         $this->validator = new ArrayCollection();
         $this->routers = new ArrayCollection();
@@ -407,34 +407,34 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getAdmin(): ?self
+    public function getAccountManager(): ?self
     {
-        return $this->admin;
+        return $this->accountManager;
     }
 
-    public function setAdmin(?self $admin): self
+    public function setAccountManager(?self $accountManager): self
     {
-        $this->admin = $admin;
+        $this->accountManager = $accountManager;
 
         return $this;
     }
 
-    public function addAdmin(self $admin): self
+    public function addAccountManager(self $accountManager): self
     {
-        if (!$this->admin->contains($admin)) {
-            $this->admin[] = $admin;
-            $admin->setAdmin($this);
+        if (!$this->accountManager->contains($accountManager)) {
+            $this->accountManager[] = $accountManager;
+            $accountManager->setAccountManager($this);
         }
 
         return $this;
     }
 
-    public function removeAdmin(self $admin): self
+    public function removeAccountManager(self $accountManager): self
     {
-        if ($this->admin->removeElement($admin)) {
+        if ($this->accountManager->removeElement($accountManager)) {
             // set the owning side to null (unless already changed)
-            if ($admin->getAdmin() === $this) {
-                $admin->setAdmin(null);
+            if ($accountManager->getAccountManager() === $this) {
+                $accountManager->setAccountManager(null);
             }
         }
 

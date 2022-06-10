@@ -72,7 +72,6 @@ class PermissionController extends AbstractController
         $form = $this->createForm(PermissionType::class, $permission);
         if ($request->request->count() > 0)
         {
-            dd($request->request);
             $form->handleRequest($request);
             if ($isPermissionAdd == true) { //method calling
                 if (!$this->pCreatePermission) return $this->services->no_access($this->intl->trans('Création de permission'));

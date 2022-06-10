@@ -57,7 +57,7 @@ class RouterController extends AbstractController
 
     #[Route('', name: 'app_router_index', methods: ['GET'])]
     #[Route('/add_route', name: 'app_router_add', methods: ['POST'])]
-    #[Route('/{code}/update_route', name: 'app_router_update', methods: ['POST'])]
+    #[Route('/{uid}/update_route', name: 'app_router_update', methods: ['POST'])]
     public function index(Request $request,Permission $router = null, bool $isRouterAdd = false): Response
     {
         if(!$this->pAccess)
@@ -74,7 +74,6 @@ class RouterController extends AbstractController
         $form = $this->createForm(RouterType::class, $router);
         if ($request->request->count() > 0)
         {
-            dd($request->request);
             $form->handleRequest($request);
             if ($isRouterAdd == true) { //method calling
                 if (!$this->pCreate) return $this->services->no_access($this->intl->trans('Création de route'));
@@ -159,16 +158,12 @@ class RouterController extends AbstractController
         
         foreach ($routers  as $router) 
 		{
-           
             $row                 = array();
             $row['OrderId']      = null;
             $row['Name']         = $router->getName();
-            $row['Code']         = $router->getCode();
             $row['Description']  = $router->getDescription();
-            $row['Status']       = $router->getStatus()->getCode();
             $row['CreatedAt']    = $router->getCreatedAt()->format("c");
             $row['UpdatedAt']    = ($router->getUpdatedAt()) ? $router->getUpdatedAt()->format("c") : $this->intl->trans('Non mdifié');
-            $row['Roles']        = '';
             $row['Actions']      = $router->getId();
             $data []             = $row;
 		}
@@ -177,7 +172,7 @@ class RouterController extends AbstractController
         return new JsonResponse($output);
     }
 
-    #[Route('/{code}/get', name: 'app_router_get', methods: ['POST'])]
+    #[Route('/{uid}/get', name: 'app_router_get', methods: ['POST'])]
     public function getCurrentPermission(Request $request, Permission $router): Response
     {
         if (!$this->isCsrfTokenValid($this->getUser()->getUid(), $request->request->get('_token'))) 
@@ -186,7 +181,6 @@ class RouterController extends AbstractController
         $data['id']          = $router->getId();
         $data['name']        = $router->getName();
         $data['description'] = $router->getDescription();
-        $data['status']      = $router->getStatus()->getCode();
         return new JsonResponse(['data' => $data]);
     }
 
@@ -195,10 +189,12 @@ class RouterController extends AbstractController
     {
         if (!$this->isCsrfTokenValid($this->getUser()->getUid(), $request->request->get('_token'))) 
             return $this->services->no_access($this->intl->trans("Suppression d'une route").': '.$router->getCode());
-        if (count($router->getAuthorizations()) > 0) 
+
+        if (count($router->getUers()) > 0) 
         return $this->services->ajax_error_crud(
             $this->intl->trans("Suppression de la route ").$router->getName(),
-            $this->intl->trans("Vous ne pouvez pas supprimer une route attribué").' : '.$router->getName());
+            $this->intl->trans("Vous ne pouvez pas supprimer une route utilisé").' : '.$router->getName());
+
         $this->routerRepository->remove($router);
         return $this->services->ajax_success_crud(
             $this->intl->trans("Suppression de la route ").$router->getName(),
