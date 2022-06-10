@@ -128,6 +128,7 @@ class AddEntity extends AbstractController
                     ->setFavicon($defaultbrand['favicon_link'])
                     ->setEmail($defaultbrand['emails']['support'])
                     ->setLogo($defaultbrand['logo_link'])
+                    ->setCommission(0)
                     ->setNoreplyEmail('noreply@'.$defaultbrand['base_url'])
                     ->setPhone($defaultbrand['phone']['bj'])
                     ->setIsDefault(true)
