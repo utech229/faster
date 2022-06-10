@@ -3,14 +3,14 @@
 namespace App\Controller;
 
 use App\Service\uBrand;
-use App\Entity\Company;
+use App\Entity\SoldeNotification;
 use App\Service\BaseUrl;
-use App\Form\CompanyType;
+use App\Form\SoldeNotificationType;
 use App\Service\Services;
 use App\Service\AddEntity;
 use App\Service\BrickPhone;
 use App\Service\sUpgradeForm;
-use App\Repository\CompanyRepository;
+use App\Repository\SoldeNotificationRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,10 +24,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 #[IsGranted("IS_AUTHENTICATED_FULLY")]
 #[IsGranted("ROLE_USER")]
 #[Route('/{_locale}/home/soldenotification')]
-class CompanyController extends AbstractController
+class SoldeNotificationController extends AbstractController
 {
     public function __construct(BaseUrl $baseUrl, UrlGeneratorInterface $urlGenerator, Services $services, BrickPhone $brickPhone,  
-    EntityManagerInterface $entityManager, TranslatorInterface $translator, CompanyRepository $companyRepository, ValidatorInterface $validator,
+    EntityManagerInterface $entityManager, TranslatorInterface $translator, SoldeNotificationRepository $SoldeNotificationRepository, ValidatorInterface $validator,
     AddEntity $addEntity, uBrand $brand)
     {
         $this->baseUrl         = $baseUrl;
@@ -38,7 +38,7 @@ class CompanyController extends AbstractController
         $this->brand           = $brand;
         $this->em	           = $entityManager;
         $this->validator         = $validator;
-        $this->companyRepository = $companyRepository;
+        $this->SoldeNotificationRepository = $SoldeNotificationRepository;
 
         $this->permission      =    ["CPNY0", "CPNY1", "CPNY2", "CPNY3", "CPNY4"];
         $this->pAccess         =    $this->services->checkPermission($this->permission[0]);
@@ -48,24 +48,24 @@ class CompanyController extends AbstractController
         $this->pDelete         =    $this->services->checkPermission($this->permission[4]);
     }
 
-    #[Route('/add', name: 'app_company_manage', methods: ['POST'])]
+    #[Route('/add', name: 'app_SoldeNotification_manage', methods: ['POST'])]
     public function index(Request $request): Response
     {
         $user = $this->getUser();
         //ajax method
-        $company       = $this->getUser()->getCompany();
-        $isCompanyAdd  = (!$company) ? true : false;
-        $company       = (!$company) ?  new Company() : $company;
-        $form = $this->createForm(CompanyType::class, $company);
+        $SoldeNotification       = $this->getUser()->getSoldeNotification();
+        $isSoldeNotificationAdd  = (!$SoldeNotification) ? true : false;
+        $SoldeNotification       = (!$SoldeNotification) ?  new SoldeNotification() : $SoldeNotification;
+        $form = $this->createForm(SoldeNotificationType::class, $SoldeNotification);
         if ($request->request->count() > 0)
         {
             $form->handleRequest($request);
-            if ($isCompanyAdd == true) { //method calling
+            if ($isSoldeNotificationAdd == true) { //method calling
                 //if (!$this->pCreate) return $this->services->no_access($this->intl->trans("Enrégistrement d'une entreprise"));
-                return $this->addCompany($request, $form, $company, $user);
+                return $this->addSoldeNotification($request, $form, $SoldeNotification, $user);
             }else {
                 //if (!$this->pEdit) return $this->services->no_access($this->intl->trans("Mise à jour d'une entreprise"));
-                return $this->updateCompany($request, $form, $company, $user);
+                return $this->updateSoldeNotification($request, $form, $SoldeNotification, $user);
             }
         }
         return $this->services->msg_info(
@@ -74,75 +74,75 @@ class CompanyController extends AbstractController
         );
     }
 
-    public function addCompany($request, $form, $company, $user): JsonResponse
+    public function addSoldeNotification($request, $form, $SoldeNotification, $user): JsonResponse
     {
         if ($form->isSubmitted() && $form->isValid()) 
         {
             $phone           =  $form->get('phone')->getData();
             $address         =  $request->request->get('adress');
 
-            $company->setUid($this->services->idgenerate(15));
-            $company->setStatus($this->services->status(3));
-            $company->setPhone($phone);
-            $company->setManager($user);
-            $company->setAddress($address);;
-            $company->setCreatedAt(new \DatetimeImmutable());
-            $this->companyRepository->add($company);
+            $SoldeNotification->setUid($this->services->idgenerate(15));
+            $SoldeNotification->setStatus($this->services->status(3));
+            $SoldeNotification->setPhone($phone);
+            $SoldeNotification->setManager($user);
+            $SoldeNotification->setAddress($address);;
+            $SoldeNotification->setCreatedAt(new \DatetimeImmutable());
+            $this->SoldeNotificationRepository->add($SoldeNotification);
             return $this->services->msg_success(
-                $this->intl->trans("Ajout d'un nouveau Company"),
-                $this->intl->trans("Company ajouté avec succès"), 
-                ['name' => $company->getName(), 'phone' => $company->getPhone(), 'email' => $company->getEmail(), 
-                'ifu' => $company->getIfu(), 'rccm' => $company->getRccm(), 'address' => $company->getAddress(), 'isAdd' => true]
+                $this->intl->trans("Ajout d'un nouveau SoldeNotification"),
+                $this->intl->trans("SoldeNotification ajouté avec succès"), 
+                ['name' => $SoldeNotification->getName(), 'phone' => $SoldeNotification->getPhone(), 'email' => $SoldeNotification->getEmail(), 
+                'ifu' => $SoldeNotification->getIfu(), 'rccm' => $SoldeNotification->getRccm(), 'address' => $SoldeNotification->getAddress(), 'isAdd' => true]
             );
         }
         else 
         {
-            return $this->services->formErrorsNotification($this->validator, $this->intl, $company);
+            return $this->services->formErrorsNotification($this->validator, $this->intl, $SoldeNotification);
         }
         return $this->services->failedcrud($this->intl->trans("Enregistrement d'une nouvelle entreprise"));
     }
  
-    public function updateCompany($request, $form, $company, $user): JsonResponse
+    public function updateSoldeNotification($request, $form, $SoldeNotification, $user): JsonResponse
     {
         if ($form->isSubmitted() && $form->isValid()) 
         { 
             $phone           =  $form->get('phone')->getData();
             $address         =  $request->request->get('adress');
-            $company->setPhone($phone);
-            $company->setManager($user);
-            $company->setAddress($address);;
-            $company->setCreatedAt(new \DatetimeImmutable());
-            $company->setUpdatedAt(new \DatetimeImmutable());
-            $this->companyRepository->add($company);
+            $SoldeNotification->setPhone($phone);
+            $SoldeNotification->setManager($user);
+            $SoldeNotification->setAddress($address);;
+            $SoldeNotification->setCreatedAt(new \DatetimeImmutable());
+            $SoldeNotification->setUpdatedAt(new \DatetimeImmutable());
+            $this->SoldeNotificationRepository->add($SoldeNotification);
             return $this->services->msg_success(
-                $this->intl->trans("Modification de l'entreprise")." : ".$company->getUid(),
+                $this->intl->trans("Modification de l'entreprise")." : ".$SoldeNotification->getUid(),
                 $this->intl->trans("Profil entreprise modifié avec succès"), 
-                ['name' => $company->getName(), 'phone' => $company->getPhone(), 'email' => $company->getEmail(), 
-                'ifu' => $company->getIfu(), 'rccm' => $company->getRccm(), 'address' => $company->getAddress(), 'isAdd' => false]
+                ['name' => $SoldeNotification->getName(), 'phone' => $SoldeNotification->getPhone(), 'email' => $SoldeNotification->getEmail(), 
+                'ifu' => $SoldeNotification->getIfu(), 'rccm' => $SoldeNotification->getRccm(), 'address' => $SoldeNotification->getAddress(), 'isAdd' => false]
             );
         }
         else 
         {
-            return $this->services->formErrorsNotification($this->validator, $this->intl, $company);
+            return $this->services->formErrorsNotification($this->validator, $this->intl, $SoldeNotification);
         }
-        return $this->services->failedcrud($this->intl->trans("Modification d'une entreprise").' : '.$company->getUid());
+        return $this->services->failedcrud($this->intl->trans("Modification d'une entreprise").' : '.$SoldeNotification->getUid());
     }
 
 
    
 
-    #[Route('/{uid}/get', name: 'get_this_company', methods: ['POST'])]
-    public function get_this_company(Request $request,): Response
+    #[Route('/{uid}/get', name: 'get_this_SoldeNotification', methods: ['POST'])]
+    public function get_this_SoldeNotification(Request $request,): Response
     {
-        $company = $this->getUser()->getCompany();
+        $SoldeNotification = $this->getUser()->getSoldeNotification();
 
-        $row['orderId']      = $company->getUid();
-        $row['name']         = $company->getName();
-        $row['email']        = $company->getEmail();
-        $row['phone']        = str_replace($company->getManager->getCountry()['dial_code'], '', $company->getPhone());
-        $row['ifu']          = $company->getIfu();
-        $row['rccm']         = $company->getRccm();
-        $row['address']      = $company->getAddress();
+        $row['orderId']      = $SoldeNotification->getUid();
+        $row['name']         = $SoldeNotification->getName();
+        $row['email']        = $SoldeNotification->getEmail();
+        $row['phone']        = str_replace($SoldeNotification->getManager->getCountry()['dial_code'], '', $SoldeNotification->getPhone());
+        $row['ifu']          = $SoldeNotification->getIfu();
+        $row['rccm']         = $SoldeNotification->getRccm();
+        $row['address']      = $SoldeNotification->getAddress();
         return new JsonResponse([
             'data' => $row, 
             'message' => $this->intl->trans('Vos données sont chargés avec succès.')]);
