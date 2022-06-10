@@ -126,7 +126,9 @@ class SuperController extends AbstractController
             $sender  = $this->senderRepository->findOneById(1);
             $company = $this->companyRepository->findOneById(1);
             $company->setManager($existed_user);
+            $brand->setManager($existed_user);
             $this->companyRepository->add($company);
+            $this->brandRepository->add($brand);
             $existed_user->setAccountManager($existed_user)->setBrand($brand)->setDefaultSender($sender);
             $this->userRepository->add($existed_user);
             return $this->services->msg_success(
