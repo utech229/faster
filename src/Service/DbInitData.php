@@ -3,7 +3,7 @@
 namespace App\Service;
 
 use App\Entity\Role;
-use App\Entity\Route;
+use App\Entity\Router;
 use App\Service\User;
 use App\Entity\Sender;
 use App\Entity\Status;
@@ -319,7 +319,7 @@ class DbInitData extends AbstractController
             for ($i=0; $i < (count($routeNames)); $i++) {
                 $routex = $this->routerRepository->findOneByName($routeNames[$i]);
                 if (!$routex) {
-                    $route = new Route(); 
+                    $route = new Router(); 
                     $route->setUid($this->services->idgenerate(10));
                     $route->setName($routeNames[$i]);
                     $route->setDescription($routeDescription[$i]);

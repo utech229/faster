@@ -110,11 +110,11 @@ class SuperController extends AbstractController
 
 
             $brand   = $this->brandRepository->findOneByName($this->brand->get()['name']);
-            $route   = $this->routeRepository->findOneByName("Fastermessage_moov");
+            $route   = $this->routerRepository->findOneByName("Fastermessage_moov");
             $company = $this->companyRepository->findOneById(1);
             $user->setAdmin($user)
                 ->setBrand($brand)
-                ->setRoute($route);
+                ->setRouter($route);
             $this->userRepository->add($user);
             return $this->services->msg_success(
                 $this->intl->trans("Création du super admin : SUP-ONE"),

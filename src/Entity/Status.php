@@ -63,6 +63,9 @@ class Status
     #[ORM\OneToMany(mappedBy: 'status', targetEntity: Company::class)]
     private $companies;
 
+    #[ORM\OneToMany(mappedBy: 'status', targetEntity: Router::class)]
+    private $routers;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
@@ -76,6 +79,7 @@ class Status
         $this->senders = new ArrayCollection();
         $this->brands = new ArrayCollection();
         $this->companies = new ArrayCollection();
+        $this->routers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -472,4 +476,5 @@ class Status
 
         return $this;
     }
+
 }
