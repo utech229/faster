@@ -173,14 +173,14 @@
                                     <span class="menu-title">{% trans %}Recharge{% endtrans %}</span>
                                 </a>
                             </div>
-                            
+
                             <div class="menu-item">
                                 <div class="menu-content pt-8 pb-2">
                                     <span class="menu-section text-muted text-uppercase fs-8 ls-1">{{ 'Mon Compte' | trans }}</span>
                                 </div>
                             </div>
                             <div data-kt-menu-trigger="click" class="menu-item here menu-accordion">
-                                
+
                                 <div class="menu-sub menu-sub-accordion">
                                     <div class="menu-item">
                                         <a class="menu-link {{ menu(uri, path('app_profile')) }}" href="{{ path('app_profile') }}">
@@ -304,7 +304,7 @@
                 {% if permission(["LOG0"], app.user) %}
                 <!--begin::Footer-->
                 <div class="aside-footer flex-column-auto pt-5 pb-7 px-5" id="kt_aside_footer">
-                    <a href="{{ path('app_logs') }}" class="btn btn-custom btn-primary w-100" 
+                    <a href="{{ path('app_logs') }}" class="btn btn-custom btn-primary w-100"
                     data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss-="click" title="{{'Voir l\'activité des utilisateurs' | trans }}">
                         <span class="btn-label">{{'Logs'| trans }}</span>
                         <!--begin::Svg Icon | path: icons/duotune/general/gen005.svg-->
@@ -322,7 +322,7 @@
                 </div>
                 {% endif %}
                 <!--end::Footer-->
-                
+
             </div>
             <!--end::Aside-->
             <!--begin::Wrapper-->
@@ -440,7 +440,7 @@
                                         <div class="menu-item px-5">
                                             <a href="{{path("app_profile")}}" class="menu-link px-5">{% trans %}Mon profil{% endtrans %}</a>
                                         </div>
-                        
+
                                         <!--begin::Menu separator-->
                                         <div class="separator my-2"></div>
                                         <!--end::Menu separator-->
@@ -451,7 +451,7 @@
                                                 <span class="fs-8 rounded bg-light px-3 py-2 position-absolute translate-middle-y top-50 end-0">
                                                 {% if _locale == 'fr' %} {% trans %}Français{% endtrans %} {% else %} {% trans %}Anglais{% endtrans %} {% endif %}
 
-                                                {% if _locale == 'fr' %} 
+                                                {% if _locale == 'fr' %}
                                                     <img class="w-15px h-15px rounded-1 ms-2" src="{{ asset('app/media/flags/france.svg') }}" alt="" /></span>
                                                 {% else %}
                                                     <img class="w-15px h-15px rounded-1 ms-2" src="{{ asset('app/media/flags/united-states.svg') }}" alt="" /></span>
