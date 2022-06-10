@@ -83,55 +83,28 @@ class TransactionController extends AbstractController
         $tabTransaction = [];
         $transactions = (!$this->pView) ? [] : $this->em->getRepositoty(Transaction::class)->findAll();
         
-        // foreach ($transactions as $key => $transaction) {
+        foreach ($transactions as $key => $transaction) {
 
-        //     $tabTransaction[$key][0][0] = $transaction->getUser()->getFirstName();
-        //     $tabTransaction[$key][0][1] = $transaction->getUser()->getLastName();
-        //     $tabTransaction[$key][0][2] = $transaction->getUser()->getPhone();
+            $tabTransaction[$key][0][0] = $transaction->getUser()->getFirstName();
+            $tabTransaction[$key][0][1] = $transaction->getUser()->getLastName();
+            $tabTransaction[$key][0][2] = $transaction->getUser()->getPhone();
 
-        //     $tabTransaction[$key][1]    = $transaction->getTransactionId();
-        //     $tabTransaction[$key][2]    = $transaction->getReference();
-        //     $tabTransaction[$key][3]    = $transaction->getTransactionId();
-        //     $tabTransaction[$key][4]    = $transaction->getBeforeBalance();
-        //     $tabTransaction[$key][5]    = $transaction->getAmount();
-        //     $tabTransaction[$key][6]    = $transaction->getAfterBalance();
-        //     $tabTransaction[$key][7][0] = $transaction->getStatus();
-        //     $tabTransaction[$key][7][1] = $transaction->getStatus();
+            $tabTransaction[$key][1]    = $transaction->getTransactionId();
+            $tabTransaction[$key][2]    = $transaction->getReference();
+            $tabTransaction[$key][3]    = $transaction->getTransactionId();
+            $tabTransaction[$key][4]    = $transaction->getBeforeBalance();
+            $tabTransaction[$key][5]    = $transaction->getAmount();
+            $tabTransaction[$key][6]    = $transaction->getAfterBalance();
+            $tabTransaction[$key][7][0] = $transaction->getStatus()->getCode();
+            $tabTransaction[$key][7][1] = $transaction->getStatus()->getName();
+            $tabTransaction[$key][7][2] = $transaction->getStatus()->getDescription();
+            $tabTransaction[$key][8]    = $transaction->getCreatedAt();
+            $tabTransaction[$key][9]    = $transaction->getUpdatedAt();
 
-
-        //     $tabTransaction[$key][8]    = $transaction->getTransactionId();
-
-
-            
-
-
-        // }
-        
-        // foreach ($transactions  as $transaction) 
-		// {          
-        //     $row                 = array();
-
-        //     $transactionCreator  = $transaction->getUser();
-        //     $row['orderId']      = $transaction->getReference();
-        //     $row['user']         =  ['name'  => $transactionCreator->getFirstName().' '.$transactionCreator->getLastName(),
-        //                                 'phone' => $transaction->getPhone(),
-        //                                 'photo' => $transactionCreator->getProfilePhoto()
-        //                             ];
-        //     $row['transactionId']   = $transaction->getTransactionId();
-        //     $row['reference']       = $transaction->getReference();
-        //     $row['method']          = strtolower($transaction->getMethod());
-        //     $row['agregator']       = $transaction->getAgregator();
-        //     $row['canal']           = $transaction->getCanal();
-        //     $row['email']           = $transaction->getEmail();
-        //     $row['amount']          = $transaction->getAmount();
-        //     $row['country']         = $transaction->getUser()->getCountry()['name'];
-        //     $row['status']          = $transaction->getStatus();
-        //     $row['updatedAt']       = ($transaction->getUpdatedAt()) ? $transaction->getUpdatedAt()->format("c") : null;
-        //     $row['createdAt']       = $transaction->getCreatedAt()->format("c");
-        //     $data []                = $row;
-		// }
+        }
+       
         $this->services->addLog($this->intl->trans('Lecture de la liste des transactions'));
-        $output = array("data" => $data);
+        $output = ["data" => $data];
         return new JsonResponse($output);
     }
 
