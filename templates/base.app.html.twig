@@ -176,38 +176,30 @@
 
                             <div class="menu-item">
                                 <div class="menu-content pt-8 pb-2">
-                                    <span class="menu-section text-muted text-uppercase fs-8 ls-1">{{ 'Mon Compte' | trans }}</span>
+                                    <span class="menu-section text-muted text-uppercase fs-8 ls-1">{{ 'Congiguration' | trans }}</span>
                                 </div>
                             </div>
-                            <div data-kt-menu-trigger="click" class="menu-item here menu-accordion">
+                            {% if permission(["UTI0"], app.user) %}
+                            <div class="menu-item">
+                                <a class="menu-link {{ menu(uri, path('app_router_index')) }}" href="{{ path('app_router_index') }}">
+                                    <span class="menu-icon">
+                                       <i class="bi bi-hdd-network fs-3"></i>
+                                    </span>
+                                    <span class="menu-title">{{ "Routes" | trans }}</span>
+                                </a>
+                            </div>
+                            {% endif %}
+                            {% if permission(["ROL0"], app.user) %}
+                             <div class="menu-item">
+                                <a class="menu-link {{ menu(uri, path('app_status_index')) }}" href="{{ path('app_status_index') }}">
+                                    <span class="menu-icon">
+                                        <i class="bi bi-arrow-repeat fs-3"></i>
+                                    </span>
+                                    <span class="menu-title">{{ "Statuts" | trans }}</span>
+                                </a>
+                            </div>
+                            {% endif %}
 
-                                <div class="menu-sub menu-sub-accordion">
-                                    <div class="menu-item">
-                                        <a class="menu-link {{ menu(uri, path('app_profile')) }}" href="{{ path('app_profile') }}">
-                                            <span class="menu-bullet">
-                                                <span class="bullet bullet-dot"></span>
-                                            </span>
-                                            <span class="menu-title">{% trans %}Profil{% endtrans %}</span>
-                                        </a>
-                                    </div>
-                                    <div class="menu-item">
-                                        <a class="menu-link  {{ menu(uri, path('app_profile_setting')) }}" href="{{ path('app_profile_setting') }}">
-                                            <span class="menu-bullet">
-                                                <span class="bullet bullet-dot"></span>
-                                            </span>
-                                            <span class="menu-title">{% trans %}Paramètre{% endtrans %}</span>
-                                        </a>
-                                    </div>
-                                    <div class="menu-item">
-                                        <a class="menu-link " href="">
-                                            <span class="menu-bullet">
-                                                <span class="bullet bullet-dot"></span>
-                                            </span>
-                                            <span class="menu-title">{% trans %}Méthode de Paiement{% endtrans %}</span>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
                             {% if permission(["UTI0","PER0","ROL0"], app.user, false) %}
                             <div class="menu-item">
                                 <div class="menu-content pt-8 pb-2">
@@ -411,7 +403,7 @@
                                 <div class="d-flex align-items-center ms-1 ms-lg-3" id="kt_header_user_menu_toggle">
                                     <!--begin::Menu wrapper-->
                                     <div class="cursor-pointer symbol symbol-30px symbol-md-40px" data-kt-menu-trigger="click" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end">
-                                        <img id="menu_profile_avatar" src="{{ asset('app/uploads/avatars/'~ app.user.profilePhoto ~'') }}" alt="{{ app.user.usetting.lastname}}" />
+                                        <img id="menu_profile_avatar" src="{{ asset('app/uploads/avatars/'~ app.user.profilePhoto ~'') }}" alt="{{  app.user.brand.name}}" />
                                     </div>
                                     <!--begin::User account menu-->
                                     <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg menu-state-primary fw-bold py-4 fs-6 w-275px" data-kt-menu="true">
@@ -425,7 +417,7 @@
                                                 <!--end::Avatar-->
                                                 <!--begin::Username-->
                                                 <div class="d-flex flex-column">
-                                                    <div class="fw-bolder d-flex align-items-center fs-5">{{ app.user.usetting.firstname}}
+                                                    <div class="fw-bolder d-flex align-items-center fs-5"> {% if  app.user.usetting %} {{ app.user.usetting.firstname}} {% else %} {{ app.user.email }} {% endif %}
                                                     <span class="badge badge-light-success fw-bolder fs-8 px-2 py-1 ms-2">{{ app.user.role.name}}</span></div>
                                                     <a href="javascript:;" class="fw-bold text-muted text-hover-primary fs-7">{{ app.user.phone }}</a>
                                                 </div>

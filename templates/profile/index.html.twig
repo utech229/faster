@@ -95,7 +95,7 @@
                         <!--end::Label-->
                         <!--begin::Col-->
                         <div class="col-lg-8">
-                            <span class="fw-bolder fs-6 text-gray-800"> {% if  app.user.usetting.firstname is not null %} 
+                            <span class="fw-bolder fs-6 text-gray-800"> {% if  app.user.usetting.firstname is defined %} 
                             {{ app.user.usetting.firstname }} {{ app.user.usetting.lastname }} 
                             {% else %}
                             <span class="text-danger">Non défini</span>
@@ -283,8 +283,8 @@
                             <div class="row mb-6">
                                 <!--begin::Label-->
                                 <label class="col-lg-4 col-form-label fw-bold fs-6">
-                                    <span class="required">{{'Genre & Pays'|trans}}</span>
-                                     <i class="fas fa-exclamation-circle ms-1 fs-7" data-bs-toggle="tooltip" title="{{'Renseignez votre genre et votre pays de résidence'|trans}}"></i>
+                                    <span class="required">{{'Devise & Pays'|trans}}</span>
+                                     <i class="fas fa-exclamation-circle ms-1 fs-7" data-bs-toggle="tooltip" title="{{'Renseignez votre devise et votre pays de résidence'|trans}}"></i>
                                 </label>
                                 <!--end::Label-->
                                 <!--begin::Col-->
@@ -397,14 +397,14 @@
                                 <!--begin::company details-->
                                 <div class="d-flex flex-column gap-2">
                                     <!--begin::Name-->
-                                    <h3 class="mb-0">{{app.user.company.name}}</h3>
+                                    <h3 id="c_name" class="mb-0">{{app.user.company.name}}</h3>
                                     <!--end::Name-->
                                     <!--begin::Email-->
                                     <div class="d-flex align-items-center gap-2">
                                         <!--begin::Svg Icon | path: icons/duotune/communication/com011.svg-->
                                        {% trans %}EMAIL {% endtrans %}:
                                         <!--end::Svg Icon-->
-                                        <a href="javascript:;" class="text-muted text-hover-primary">{{app.user.company.email}}</a>
+                                        <a id="c_email" href="javascript:;" class="text-muted text-hover-primary">{{app.user.company.email}}</a>
                                     </div>
                                     <!--end::Email-->
                                     <!--begin::Phone-->
@@ -412,7 +412,7 @@
                                         <!--begin::Svg Icon | path: icons/duotune/electronics/elc003.svg-->
                                        {% trans %}TELEPHONE{% endtrans %}:
                                         <!--end::Svg Icon-->
-                                        <a href="javascript:;" class="text-muted text-hover-primary">{{app.user.company.phone}}</a> 
+                                        <a id="c_phone" href="javascript:;" class="text-muted text-hover-primary">{{app.user.company.phone}}</a> 
                                     </div>
                                     <!--end::Phone-->
                                     <!--begin::Phone-->
@@ -420,7 +420,7 @@
                                         <!--begin::Svg Icon | path: icons/duotune/electronics/elc003.svg-->
                                         {% trans %}NUMERO IFU {% endtrans %}: 
                                         <!--end::Svg Icon-->
-                                        <a href="javascript:;" class="text-muted text-hover-primary">{{app.user.company.ifu}}</a>
+                                        <a id="c_ifu" href="javascript:;" class="text-muted text-hover-primary">{{app.user.company.ifu}}</a>
                                        </span>
                                     </div>
                                     <!--end::Phone-->
@@ -429,14 +429,14 @@
                                         <!--begin::Svg Icon | path: icons/duotune/electronics/elc003.svg-->
                                         {% trans %}RCCM {% endtrans %}:
                                         <!--end::Svg Icon-->
-                                        <a href="javascript:;" class="text-muted text-hover-primary">{{app.user.company.rccm}}</a>
+                                        <a id="c_rccm" href="javascript:;" class="text-muted text-hover-primary">{{app.user.company.rccm}}</a>
                                     </div>
                                     <!--end::Phone-->
                                 </div>
                                 <!--end::company details-->
                                 {% else %}
-                                    <div class="d-flex align-items-center  text-danger py-2">
-                                        <span class="bullet bg-danger me-3"></span>{% trans %}Profil entreprise non configuré{% endtrans %}</div>
+                                    <div class="d-flex align-items-center  text-danger py-2" id="company_unconfigurated">
+                                    <span class="bullet bg-danger me-3"></span>{% trans %}Profil entreprise non configuré{% endtrans %}</div>
                                 {% endif %}
                                 <!--begin::Actions-->
                                 <div class="d-flex align-items-center py-2">
@@ -472,7 +472,6 @@
             </div>
             <!--end::Company-->
             <!--begin::Modal - New Company-->
-             <!--begin::Modal - New Company-->
             <div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="kt_modal_profile_company" tabindex="-1" aria-hidden="true">
                 <!--begin::Modal dialog-->
                 <div class="modal-dialog modal-dialog-centered mw-800px">
@@ -632,7 +631,6 @@
                 </div>
             </div>
             <!--end::Modal - New Company-->
-            <!--end::Modal - New Company-->
 
             <!--begin::Solde Notification-->
             <div class="card mb-5 mb-xl-10 d-none" id="kt_profile_notification">
@@ -653,54 +651,54 @@
                         <div class="col-xl-6">
                             <!--begin::Address-->
                             <div class="card card-dashed h-xl-100 flex-row flex-stack flex-wrap p-6">
-                                {% if app.user.company %}
+                                {% if app.user.soldeNotification %}
                                 <!--begin::Solde Notification details-->
                                 <div class="d-flex flex-column gap-2">
                                     <!--begin::Name-->
-                                    <h3 class="mb-0">{{app.user.company.name}}</h3>
+                                    <h3 class="mb-0">{{app.user.firstname}}</h3>
                                     <!--end::Name-->
                                     <!--begin::Email-->
                                     <div class="d-flex align-items-center gap-2">
                                         <!--begin::Svg Icon | path: icons/duotune/communication/com011.svg-->
-                                       {% trans %}EMAIL {% endtrans %}:
+                                       {% trans %}SOLDE MINIMUM{% endtrans %}:
                                         <!--end::Svg Icon-->
-                                        <a href="javascript:;" class="text-muted text-hover-primary">{{app.user.company.email}}</a>
+                                        <a href="javascript:;" class="text-muted text-hover-primary">{{app.user.soldeNotification.minSolde}}</a>
                                     </div>
                                     <!--end::Email-->
                                     <!--begin::Phone-->
                                     <div class="d-flex align-items-center gap-2">
                                         <!--begin::Svg Icon | path: icons/duotune/electronics/elc003.svg-->
-                                       {% trans %}TELEPHONE{% endtrans %}:
+                                       {% trans %}EMAIL 1{% endtrans %}:
                                         <!--end::Svg Icon-->
-                                        <a href="javascript:;" class="text-muted text-hover-primary">{{app.user.company.phone}}</a> 
+                                        <a href="javascript:;" class="text-muted text-hover-primary">{{app.user.soldeNotification.email1}}</a> 
                                     </div>
                                     <!--end::Phone-->
                                     <!--begin::Phone-->
                                     <div class="d-flex align-items-center gap-2">
                                         <!--begin::Svg Icon | path: icons/duotune/electronics/elc003.svg-->
-                                        {% trans %}NUMERO IFU {% endtrans %}: 
+                                        {% trans %}EMAIL 2 {% endtrans %}: 
                                         <!--end::Svg Icon-->
-                                        <a href="javascript:;" class="text-muted text-hover-primary">{{app.user.company.ifu}}</a>
+                                        <a href="javascript:;" class="text-muted text-hover-primary">{{app.user.soldeNotification.email2}}</a>
                                        </span>
                                     </div>
                                     <!--end::Phone-->
                                     <!--begin::Phone-->
                                     <div class="d-flex align-items-center gap-2">
                                         <!--begin::Svg Icon | path: icons/duotune/electronics/elc003.svg-->
-                                        {% trans %}RCCM {% endtrans %}:
+                                        {% trans %}EMAIL 3 {% endtrans %}:
                                         <!--end::Svg Icon-->
-                                        <a href="javascript:;" class="text-muted text-hover-primary">{{app.user.company.rccm}}</a>
+                                        <a href="javascript:;" class="text-muted text-hover-primary">{{app.user.soldeNotification.email3}}</a>
                                     </div>
                                     <!--end::Phone-->
                                 </div>
                                 <!--end::Solde Notification details-->
                                 {% else %}
                                     <div class="d-flex align-items-center  text-danger py-2">
-                                        <span class="bullet bg-danger me-3"></span>{% trans %}Profil entreprise non configuré{% endtrans %}</div>
+                                        <span class="bullet bg-danger me-3"></span>{% trans %}Notification solde non configuré{% endtrans %}</div>
                                 {% endif %}
                                 <!--begin::Actions-->
                                 <div class="d-flex align-items-center py-2">
-                                    <button class="btn btn-sm btn-light btn-active-light-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_profile_notification">{% if app.user.company is defined %}Modifier {% else %} Ajouter {% endif %}</button>
+                                    <button class="btn btn-sm btn-light btn-active-light-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_profile_notification">{% if app.user.soldeNotification is defined %}Modifier {% else %} Ajouter {% endif %}</button>
                                 </div>
                                 <!--end::Actions-->
                             </div>
@@ -732,17 +730,18 @@
             </div>
             <!--end::Solde Notification-->
             <!--begin::Modal - New Company-->
+            <!--begin::Modal - New Company-->
             <div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="kt_modal_profile_notification" tabindex="-1" aria-hidden="true">
                 <!--begin::Modal dialog-->
                 <div class="modal-dialog modal-dialog-centered mw-800px">
                     <!--begin::Modal content-->
                     <div class="modal-content">
                         <!--begin::Form-->
-                        <form class="form" action="#" id="kt_modal_profile_notification_form">
+                        {{ form_start(notificationsolde, {'attr':{'id':'kt_modal_profile_notification_form', novalidate:'novalidate'}}) }}
                             <!--begin::Modal header-->
                             <div class="modal-header" id="kt_modal_profile_notification_header">
                                 <!--begin::Modal title-->
-                                <h2>Add New Address</h2>
+                                <h2>{% trans %}Mon entreprise{% endtrans %}</h2>
                                 <!--end::Modal title-->
                                 <!--begin::Close-->
                                 <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
@@ -764,10 +763,10 @@
                                 <div class="scroll-y me-n7 pe-7" id="kt_modal_profile_notification_scroll" data-kt-scroll="true" data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-max-height="auto" data-kt-scroll-dependencies="#kt_modal_profile_notification_header" data-kt-scroll-wrappers="#kt_modal_profile_notification_scroll" data-kt-scroll-offset="300px">
                                     <!--begin::Notice-->
                                     <!--begin::Notice-->
-                                    <div class="notice d-flex bg-light-warning rounded border-warning border border-dashed mb-9 p-6">
+                                    <div class="notice d-flex bg-light-info rounded border-info border border-dashed mb-9 p-6">
                                         <!--begin::Icon-->
                                         <!--begin::Svg Icon | path: icons/duotune/general/gen044.svg-->
-                                        <span class="svg-icon svg-icon-2tx svg-icon-warning me-4">
+                                        <span class="svg-icon svg-icon-2tx svg-icon-info me-4" data-kt-company-modal-action="close">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
                                                 <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor" />
                                                 <rect x="11" y="14" width="7" height="2" rx="1" transform="rotate(-90 11 14)" fill="currentColor" />
@@ -780,9 +779,8 @@
                                         <div class="d-flex flex-stack flex-grow-1">
                                             <!--begin::Content-->
                                             <div class="fw-bold">
-                                                <h4 class="text-gray-900 fw-bolder">Warning</h4>
-                                                <div class="fs-6 text-gray-700">Updating address may affter to your
-                                                <a href="#">Tax Location</a></div>
+                                                <h4 class="text-gray-900 fw-bolder">{% trans %}Information{% endtrans %}</h4>
+                                                <div class="fs-6 text-gray-700">{% trans %}Gérez vos notification soldee{% endtrans %}</div>
                                             </div>
                                             <!--end::Content-->
                                         </div>
@@ -790,125 +788,59 @@
                                     </div>
                                     <!--end::Notice-->
                                     <!--end::Notice-->
-                                    <!--begin::Input group-->
+                                     <!--begin::Input group-->
                                     <div class="row mb-5">
                                         <!--begin::Col-->
                                         <div class="col-md-6 fv-row">
                                             <!--begin::Label-->
-                                            <label class="required fs-5 fw-bold mb-2">First name</label>
+                                            <label class="required fs-5 fw-bold mb-2">{% trans %}Solde minimum{% endtrans %}</label>
                                             <!--end::Label-->
                                             <!--begin::Input-->
-                                            <input type="text" class="form-control form-control-solid" placeholder="" name="first-name" />
+                                            {{ form_row(notificationsolde.minSolde, {'attr': {'class': 'form-control form-control-solid','maxlength': 100,
+                                                        'placeholder': '1000', "value": ( app.user.soldeNotification ?  app.user.soldeNotification.minSolde)}}) }}
                                             <!--end::Input-->
                                         </div>
                                         <!--end::Col-->
-                                        <!--begin::Col-->
-                                        <div class="col-md-6 fv-row">
-                                            <!--end::Label-->
-                                            <label class="required fs-5 fw-bold mb-2">Last name</label>
-                                            <!--end::Label-->
-                                            <!--end::Input-->
-                                            <input type="text" class="form-control form-control-solid" placeholder="" name="last-name" />
-                                            <!--end::Input-->
-                                        </div>
-                                        <!--end::Col-->
-                                    </div>
-                                    <!--end::Input group-->
-                                    <!--begin::Input group-->
-                                    <div class="d-flex flex-column mb-5 fv-row">
-                                        <!--begin::Label-->
-                                        <label class="d-flex align-items-center fs-5 fw-bold mb-2">
-                                            <span class="required">Country</span>
-                                            <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="Your payment statements may very based on selected country"></i>
-                                        </label>
-                                        <!--end::Label-->
-                                        <!--begin::Select-->
-                                        
-                                        <!--end::Select-->
-                                    </div>
-                                    <!--end::Input group-->
-                                    <!--begin::Input group-->
-                                    <div class="d-flex flex-column mb-5 fv-row">
-                                        <!--begin::Label-->
-                                        <label class="required fs-5 fw-bold mb-2">Address Line 1</label>
-                                        <!--end::Label-->
-                                        <!--begin::Input-->
-                                        <input class="form-control form-control-solid" placeholder="" name="address1" />
-                                        <!--end::Input-->
-                                    </div>
-                                    <!--end::Input group-->
-                                    <!--begin::Input group-->
-                                    <div class="d-flex flex-column mb-5 fv-row">
-                                        <!--begin::Label-->
-                                        <label class="required fs-5 fw-bold mb-2">Address Line 2</label>
-                                        <!--end::Label-->
-                                        <!--begin::Input-->
-                                        <input class="form-control form-control-solid" placeholder="" name="address2" />
-                                        <!--end::Input-->
-                                    </div>
-                                    <!--end::Input group-->
-                                    <!--begin::Input group-->
-                                    <div class="d-flex flex-column mb-5 fv-row">
-                                        <!--begin::Label-->
-                                        <label class="fs-5 fw-bold mb-2">Town</label>
-                                        <!--end::Label-->
-                                        <!--begin::Input-->
-                                        <input class="form-control form-control-solid" placeholder="" name="city" />
-                                        <!--end::Input-->
-                                    </div>
-                                    <!--end::Input group-->
-                                    <!--begin::Input group-->
-                                    <div class="row g-9 mb-5">
-                                        <!--begin::Col-->
+                                         <!--begin::Col-->
                                         <div class="col-md-6 fv-row">
                                             <!--begin::Label-->
-                                            <label class="fs-5 fw-bold mb-2">State / Province</label>
+                                            <label class="required fs-5 fw-bold mb-2">{% trans %}Email 1{% endtrans %}</label>
                                             <!--end::Label-->
                                             <!--begin::Input-->
-                                            <input class="form-control form-control-solid" placeholder="" name="state" />
+                                            {{ form_row(notificationsolde.email1, {'attr': {'class': 'form-control form-control-solid','maxlength': 50,
+                                                        'placeholder': 'monemal1@gmail.com', "value": ( app.user.soldeNotification ?  app.user.soldeNotification.email1)}}) }}
                                             <!--end::Input-->
                                         </div>
                                         <!--end::Col-->
-                                        <!--begin::Col-->
+                                    </div>
+                                    <!--end::Input group-->
+                                     <!--begin::Input group-->
+                                    <div class="row mb-5">
+                                         <!--begin::Col-->
                                         <div class="col-md-6 fv-row">
                                             <!--begin::Label-->
-                                            <label class="fs-5 fw-bold mb-2">Post Code</label>
+                                            <label class="required fs-5 fw-bold mb-2">{% trans %}Email 2{% endtrans %}</label>
                                             <!--end::Label-->
                                             <!--begin::Input-->
-                                            <input class="form-control form-control-solid" placeholder="" name="postcode" />
+                                            {{ form_row(notificationsolde.email2, {'attr': {'class': 'form-control form-control-solid','maxlength': 50,
+                                                        'placeholder': 'monemail2@gmail.com', "value": ( app.user.soldeNotification ?  app.user.soldeNotification.email2)}}) }}
+                                            <!--end::Input-->
+                                        </div>
+                                        <!--end::Col-->
+                                         <!--begin::Col-->
+                                        <div class="col-md-6 fv-row">
+                                            <!--begin::Label-->
+                                            <label class="required fs-5 fw-bold mb-2">{% trans %}Email 3{% endtrans %}</label>
+                                            <!--end::Label-->
+                                            <!--begin::Input-->
+                                            {{ form_row(notificationsolde.email3, {'attr': {'class': 'form-control form-control-solid','maxlength': 50,
+                                                        'placeholder': 'monemail3@gmail.com', "value": ( app.user.soldeNotification ?  app.user.soldeNotification.email3)}}) }}
                                             <!--end::Input-->
                                         </div>
                                         <!--end::Col-->
                                     </div>
                                     <!--end::Input group-->
                                     <!--begin::Input group-->
-                                    <div class="fv-row mb-5">
-                                        <!--begin::Wrapper-->
-                                        <div class="d-flex flex-stack">
-                                            <!--begin::Label-->
-                                            <div class="me-5">
-                                                <!--begin::Label-->
-                                                <label class="fs-5 fw-bold">Use as a billing adderess?</label>
-                                                <!--end::Label-->
-                                                <!--begin::Input-->
-                                                <div class="fs-7 fw-bold text-muted">If you need more info, please check budget planning</div>
-                                                <!--end::Input-->
-                                            </div>
-                                            <!--end::Label-->
-                                            <!--begin::Switch-->
-                                            <label class="form-check form-switch form-check-custom form-check-solid">
-                                                <!--begin::Input-->
-                                                <input class="form-check-input" name="billing" type="checkbox" value="1" checked="checked" />
-                                                <!--end::Input-->
-                                                <!--begin::Label-->
-                                                <span class="form-check-label fw-bold text-muted">Yes</span>
-                                                <!--end::Label-->
-                                            </label>
-                                            <!--end::Switch-->
-                                        </div>
-                                        <!--begin::Wrapper-->
-                                    </div>
-                                    <!--end::Input group-->
                                 </div>
                                 <!--end::Scroll-->
                             </div>
@@ -916,22 +848,23 @@
                             <!--begin::Modal footer-->
                             <div class="modal-footer flex-center">
                                 <!--begin::Button-->
-                                <button type="reset" id="kt_modal_profile_notification_cancel" class="btn btn-light me-3">Discard</button>
+                                <button type="reset" id="kt_modal_profile_notification_cancel" data-kt-company-modal-action="cancel" class="btn btn-light me-3">{% trans %} Fermer {% endtrans %}</button>
                                 <!--end::Button-->
                                 <!--begin::Button-->
-                                <button type="submit" id="kt_modal_profile_notification_submit" class="btn btn-primary">
-                                    <span class="indicator-label">Submit</span>
-                                    <span class="indicator-progress">Please wait...
+                                <button type="submit" id="kt_modal_profile_notification_submit" data-kt-company-modal-action="submit" class="btn btn-primary">
+                                    <span class="indicator-label">{% trans %}Enregistrer{% endtrans %}</span>
+                                    <span class="indicator-progress">{% trans %}Patientez{% endtrans %}
                                     <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
                                 </button>
                                 <!--end::Button-->
                             </div>
                             <!--end::Modal footer-->
-                        </form>
+                        {{ form_end(notificationsolde) }}
                         <!--end::Form-->
                     </div>
                 </div>
             </div>
+            <!--end::Modal - New Company-->
             <!--end::Modal - New Company-->
 
             <!--begin::Sign-in Method-->

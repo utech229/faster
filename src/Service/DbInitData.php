@@ -3,7 +3,7 @@
 namespace App\Service;
 
 use App\Entity\Role;
-use App\Entity\Route;
+use App\Entity\Router;
 use App\Service\User;
 use App\Entity\Sender;
 use App\Entity\Status;
@@ -15,7 +15,7 @@ use App\Entity\Permission;
 use App\Entity\Authorization;
 use App\Repository\RoleRepository;
 use App\Repository\UserRepository;
-use App\Repository\RouteRepository;
+use App\Repository\RouterRepository;
 use App\Repository\SenderRepository;
 use App\Repository\StatusRepository;
 use App\Repository\PermissionRepository;
@@ -32,7 +32,7 @@ class DbInitData extends AbstractController
 	public function __construct(TranslatorInterface $intl, sBrand $brand, Services $services,
     EntityManagerInterface $entityManager,UserRepository $userRepository,  PermissionRepository $permissionRepository, 
     RoleRepository $roleRepository, AuthorizationRepository $authorizationRepository, StatusRepository $statusRepository,
-    RouteRepository $routeRepository, SenderRepository $senderRepository)
+    RouterRepository $routerRepository, SenderRepository $senderRepository)
     {
         $this->services      = $services;
         $this->em	         = $entityManager;
@@ -42,7 +42,7 @@ class DbInitData extends AbstractController
         $this->roleRepository = $roleRepository;
         $this->authorizationRepository = $authorizationRepository;
         $this->statusRepository = $statusRepository;
-        $this->routeRepository = $routeRepository;
+        $this->routerRepository = $routerRepository;
         $this->senderRepository = $senderRepository;
     }
 
@@ -51,7 +51,7 @@ class DbInitData extends AbstractController
         $existedUser  = $this->userRepository->findAll();
         if (!$existedUser) {
             $roleCodes = ["AFF0", "USE", "AFF1", "RES", "ACC", "ADM", "SUP"];
-            $roleNames = [ "AFFILIATE_USER", "USER", "AFFILIATE_RESELLER", "RESELLER", "ACCOUNTING", "ADMINISATRATOR", "SUPER_ADMINISTRATOR"];
+            $roleNames = [ "AFFILIATE_USER", "USER", "AFFILIATE_RESELLER", "RESELLER", "ACCOUNTING", "ADMINISTRATOR", "SUPER_ADMINISTRATOR"];
             $roleDescription = [
                 "Rôle d'un affilié d'utilisateur",
                 "Rôle de l'utilisateur simple", 
@@ -290,6 +290,7 @@ class DbInitData extends AbstractController
                 $status  = $this->statusRepository->findOneBy(['code' => $statusCodes[$i]]);
                 if (!$status) {
                     $status = new Status();
+                    $status->setUid($this->services->idgenerate(15));
                     $status->setCode($statusCodes[$i]);
                     $status->setName($statusNames[$i]);
                     $status->setDescription($statusDescription[$i]);
@@ -306,7 +307,7 @@ class DbInitData extends AbstractController
 
     public function addRoute():void 
     {
-        $existed_route  = $this->routeRepository->findAll();
+        $existed_route  = $this->routerRepository->findAll();
         if (!$existed_route) {
             $routeNames = [ "Fastermessage_moov", "Fastermessage_mtn", "Zekin_moov", "Zekin_mtn"];
             $routeDescription = [
@@ -317,11 +318,12 @@ class DbInitData extends AbstractController
             ];
             $status = $this->statusRepository->findOneByCode(3);
             for ($i=0; $i < (count($routeNames)); $i++) {
-                $routex = $this->routeRepository->findOneByName($routeNames[$i]);
+                $routex = $this->routerRepository->findOneByName($routeNames[$i]);
                 if (!$routex) {
-                    $route = new Route(); 
+                    $route = new Router(); 
                     $route->setUid($this->services->idgenerate(10));
                     $route->setName($routeNames[$i]);
+                    $route->setStatus($this->services->status(3));
                     $route->setDescription($routeDescription[$i]);
                     $route->setCreatedAt(new \DatetimeImmutable());
                     $this->em->persist($route);

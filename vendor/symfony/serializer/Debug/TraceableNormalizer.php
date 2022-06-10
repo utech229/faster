@@ -57,16 +57,12 @@ class TraceableNormalizer implements NormalizerInterface, DenormalizerInterface,
 
     /**
      * {@inheritDoc}
-     *
-     * @param array $context
      */
-    public function supportsNormalization(mixed $data, string $format = null /*, array $context = [] */): bool
+    public function supportsNormalization(mixed $data, string $format = null, array $context = []): bool
     {
         if (!$this->normalizer instanceof NormalizerInterface) {
             return false;
         }
-
-        $context = \func_num_args() > 2 ? func_get_arg(2) : [];
 
         return $this->normalizer->supportsNormalization($data, $format, $context);
     }
@@ -93,16 +89,12 @@ class TraceableNormalizer implements NormalizerInterface, DenormalizerInterface,
 
     /**
      * {@inheritDoc}
-     *
-     * @param array $context
      */
-    public function supportsDenormalization(mixed $data, string $type, string $format = null /*, array $context = [] */): bool
+    public function supportsDenormalization(mixed $data, string $type, string $format = null, array $context = []): bool
     {
         if (!$this->normalizer instanceof DenormalizerInterface) {
             return false;
         }
-
-        $context = \func_num_args() > 3 ? func_get_arg(3) : [];
 
         return $this->normalizer->supportsDenormalization($data, $type, $format, $context);
     }
@@ -149,5 +141,13 @@ class TraceableNormalizer implements NormalizerInterface, DenormalizerInterface,
     public function hasCacheableSupportsMethod(): bool
     {
         return $this->normalizer instanceof CacheableSupportsMethodInterface && $this->normalizer->hasCacheableSupportsMethod();
+    }
+
+    /**
+     * Proxies all method calls to the original normalizer.
+     */
+    public function __call(string $method, array $arguments): mixed
+    {
+        return $this->normalizer->{$method}(...$arguments);
     }
 }
