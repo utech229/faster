@@ -15,7 +15,7 @@ use App\Entity\Permission;
 use App\Entity\Authorization;
 use App\Repository\RoleRepository;
 use App\Repository\UserRepository;
-use App\Repository\RouteRepository;
+use App\Repository\RouterRepository;
 use App\Repository\SenderRepository;
 use App\Repository\StatusRepository;
 use App\Repository\PermissionRepository;
@@ -32,7 +32,7 @@ class DbInitData extends AbstractController
 	public function __construct(TranslatorInterface $intl, sBrand $brand, Services $services,
     EntityManagerInterface $entityManager,UserRepository $userRepository,  PermissionRepository $permissionRepository, 
     RoleRepository $roleRepository, AuthorizationRepository $authorizationRepository, StatusRepository $statusRepository,
-    RouteRepository $routeRepository, SenderRepository $senderRepository)
+    RouterRepository $routerRepository, SenderRepository $senderRepository)
     {
         $this->services      = $services;
         $this->em	         = $entityManager;
@@ -42,7 +42,7 @@ class DbInitData extends AbstractController
         $this->roleRepository = $roleRepository;
         $this->authorizationRepository = $authorizationRepository;
         $this->statusRepository = $statusRepository;
-        $this->routeRepository = $routeRepository;
+        $this->routerRepository = $routerRepository;
         $this->senderRepository = $senderRepository;
     }
 
@@ -306,7 +306,7 @@ class DbInitData extends AbstractController
 
     public function addRoute():void 
     {
-        $existed_route  = $this->routeRepository->findAll();
+        $existed_route  = $this->routerRepository->findAll();
         if (!$existed_route) {
             $routeNames = [ "Fastermessage_moov", "Fastermessage_mtn", "Zekin_moov", "Zekin_mtn"];
             $routeDescription = [
@@ -317,7 +317,7 @@ class DbInitData extends AbstractController
             ];
             $status = $this->statusRepository->findOneByCode(3);
             for ($i=0; $i < (count($routeNames)); $i++) {
-                $routex = $this->routeRepository->findOneByName($routeNames[$i]);
+                $routex = $this->routerRepository->findOneByName($routeNames[$i]);
                 if (!$routex) {
                     $route = new Route(); 
                     $route->setUid($this->services->idgenerate(10));

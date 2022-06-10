@@ -5,11 +5,12 @@ namespace App\Controller;
 use App\Service\uBrand;
 use App\Service\BaseUrl;
 use App\Service\Services;
-use App\Entity\Permission;
-use App\Form\PermissionType;
+use App\Entity\Router;
+use App\Form\RouterType;
 use App\Repository\RoleRepository;
 use App\Repository\UserRepository;
 use App\Repository\StatusRepository;
+use App\Repository\RouterRepository;
 use App\Repository\PermissionRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\AuthorizationRepository;
@@ -24,8 +25,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[IsGranted("IS_AUTHENTICATED_FULLY")]
 #[IsGranted("ROLE_USER")]
-#[Route('/{_locale}/users/permissions')]
-class StatusController extends AbstractController
+#[Route('/{_locale}/home/router')]
+class RouterController extends AbstractController
 {
 	public function __construct(BaseUrl $baseUrl, Services $services, EntityManagerInterface $entityManager, TranslatorInterface $translator,
     RoleRepository $roleRepository, UserRepository $userRepository, PermissionRepository $permissionRepository,StatusRepository $statusRepository,
@@ -53,9 +54,9 @@ class StatusController extends AbstractController
 		$this->pDeletePermission	=	$this->services->checkPermission($this->permission[4]);
 	}
 
-    #[Route('/', name: 'app_user_route_index', methods: ['GET'])]
-    #[Route('/add_route', name: 'app_user_route_add', methods: ['POST'])]
-    #[Route('/{code}/update_route', name: 'app_user_route_update', methods: ['POST'])]
+    #[Route('', name: 'app_route_index', methods: ['GET'])]
+    #[Route('/add_route', name: 'app_route_add', methods: ['POST'])]
+    #[Route('/{code}/update_route', name: 'app_route_update', methods: ['POST'])]
     public function index(Request $request,Permission $permission = null, bool $isPermissionAdd = false): Response
     {
         if(!$this->pAccessPermission)

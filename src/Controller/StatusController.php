@@ -25,7 +25,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 #[IsGranted("IS_AUTHENTICATED_FULLY")]
 #[IsGranted("ROLE_USER")]
 #[Route('/{_locale}/users/permissions')]
-class RouteController extends AbstractController
+class StatusController extends AbstractController
 {
 	public function __construct(BaseUrl $baseUrl, Services $services, EntityManagerInterface $entityManager, TranslatorInterface $translator,
     RoleRepository $roleRepository, UserRepository $userRepository, PermissionRepository $permissionRepository,StatusRepository $statusRepository,
@@ -53,9 +53,9 @@ class RouteController extends AbstractController
 		$this->pDeletePermission	=	$this->services->checkPermission($this->permission[4]);
 	}
 
-    #[Route('/', name: 'app_user_route_index', methods: ['GET'])]
-    #[Route('/add_route', name: 'app_user_route_add', methods: ['POST'])]
-    #[Route('/{code}/update_route', name: 'app_user_route_update', methods: ['POST'])]
+    #[Route('/', name: 'app_status_index', methods: ['GET'])]
+    #[Route('/add_route', name: 'app_status_add', methods: ['POST'])]
+    #[Route('/{code}/update_route', name: 'app_status_update', methods: ['POST'])]
     public function index(Request $request,Permission $permission = null, bool $isPermissionAdd = false): Response
     {
         if(!$this->pAccessPermission)

@@ -14,7 +14,7 @@ use App\Service\DbInitData;
 use App\Repository\RoleRepository;
 use App\Repository\UserRepository;
 use App\Repository\BrandRepository;
-use App\Repository\RouteRepository;
+use App\Repository\RouterRepository;
 use App\Repository\SenderRepository;
 use App\Repository\StatusRepository;
 use App\Repository\CompanyRepository;
@@ -41,7 +41,7 @@ class SuperController extends AbstractController
     RoleRepository $roleRepository, UserRepository $userRepository, PermissionRepository $permissionRepository,
     AuthorizationRepository $authorizationRepository, sBrand $brand,ValidatorInterface $validator,
     DbInitData $dbInitData, AddEntity $addEntity, StatusRepository $statusRepository, BrandRepository $brandRepository,
-    CompanyRepository $companyRepository, RouteRepository $routeRepository, SenderRepository $senderRepository)
+    CompanyRepository $companyRepository, RouterRepository $routerRepository, SenderRepository $senderRepository)
     {
         $this->baseUrl         = $baseUrl;
         $this->urlGenerator    = $urlGenerator;
@@ -53,7 +53,7 @@ class SuperController extends AbstractController
         $this->userRepository  = $userRepository;
         $this->roleRepository    = $roleRepository;
         $this->statusRepository  = $statusRepository;
-        $this->routeRepository   = $routeRepository;
+        $this->routerRepository  = $routerRepository;
         $this->brandRepository   = $brandRepository;
         $this->companyRepository = $companyRepository;
         $this->senderRepository  = $senderRepository;

@@ -176,38 +176,30 @@
                             
                             <div class="menu-item">
                                 <div class="menu-content pt-8 pb-2">
-                                    <span class="menu-section text-muted text-uppercase fs-8 ls-1">{{ 'Mon Compte' | trans }}</span>
+                                    <span class="menu-section text-muted text-uppercase fs-8 ls-1">{{ 'Congiguration' | trans }}</span>
                                 </div>
                             </div>
-                            <div data-kt-menu-trigger="click" class="menu-item here menu-accordion">
-                                
-                                <div class="menu-sub menu-sub-accordion">
-                                    <div class="menu-item">
-                                        <a class="menu-link {{ menu(uri, path('app_profile')) }}" href="{{ path('app_profile') }}">
-                                            <span class="menu-bullet">
-                                                <span class="bullet bullet-dot"></span>
-                                            </span>
-                                            <span class="menu-title">{% trans %}Profil{% endtrans %}</span>
-                                        </a>
-                                    </div>
-                                    <div class="menu-item">
-                                        <a class="menu-link  {{ menu(uri, path('app_profile_setting')) }}" href="{{ path('app_profile_setting') }}">
-                                            <span class="menu-bullet">
-                                                <span class="bullet bullet-dot"></span>
-                                            </span>
-                                            <span class="menu-title">{% trans %}Paramètre{% endtrans %}</span>
-                                        </a>
-                                    </div>
-                                    <div class="menu-item">
-                                        <a class="menu-link " href="">
-                                            <span class="menu-bullet">
-                                                <span class="bullet bullet-dot"></span>
-                                            </span>
-                                            <span class="menu-title">{% trans %}Méthode de Paiement{% endtrans %}</span>
-                                        </a>
-                                    </div>
-                                </div>
+                            {% if permission(["UTI0"], app.user) %}
+                            <div class="menu-item">
+                                <a class="menu-link {{ menu(uri, path('app_route_index')) }}" href="{{ path('app_route_index') }}">
+                                    <span class="menu-icon">
+                                       <i class="bi bi-people fs-3"></i>
+                                    </span>
+                                    <span class="menu-title">{{ "Routes" | trans }}</span>
+                                </a>
                             </div>
+                            {% endif %}
+                            {% if permission(["ROL0"], app.user) %}
+                             <div class="menu-item">
+                                <a class="menu-link {{ menu(uri, path('app_status_index')) }}" href="{{ path('app_status_index') }}">
+                                    <span class="menu-icon">
+                                        <i class="bi bi-ui-checks fs-3"></i>
+                                    </span>
+                                    <span class="menu-title">{{ "Statuts" | trans }}</span>
+                                </a>
+                            </div>
+                            {% endif %}
+                            
                             {% if permission(["UTI0","PER0","ROL0"], app.user, false) %}
                             <div class="menu-item">
                                 <div class="menu-content pt-8 pb-2">
