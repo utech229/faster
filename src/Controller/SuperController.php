@@ -154,6 +154,7 @@ class SuperController extends AbstractController
         $this->AddEntity->defaultCompany();
         $this->elsuperadmin($userPasswordHasher);
         $this->elsuperadmin($userPasswordHasher);
+        $this->elsuperadmin($userPasswordHasher);
         return $this->services->msg_success(
             $this->intl->trans("Mise à jour des données par défaut"),
             $this->intl->trans("Données par défaut mise à jour")
