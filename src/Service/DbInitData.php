@@ -290,6 +290,7 @@ class DbInitData extends AbstractController
                 $status  = $this->statusRepository->findOneBy(['code' => $statusCodes[$i]]);
                 if (!$status) {
                     $status = new Status();
+                    $status->setUid($this->services->idgenerate(15));
                     $status->setCode($statusCodes[$i]);
                     $status->setName($statusNames[$i]);
                     $status->setDescription($statusDescription[$i]);

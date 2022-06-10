@@ -78,7 +78,6 @@ var KTAccountSettingsOverview= {
             $(this).addClass('active');
             setTimeout(() => {
                 overviewButton.removeClass('active');
-                companyButton.removeClass('active')
                 soldeNotificationButton.removeClass('active')
                 signinMethodButton.removeClass('active')
                 desactivateButton.removeClass('active')
