@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Status;
 use App\Service\uBrand;
 use App\Service\BaseUrl;
 use App\Service\Services;
@@ -61,9 +62,7 @@ class TransactionController extends AbstractController
             'controller_name' => 'TransactionController',
             'title'           => $this->intl->trans('Transactions').' - '. $this->brand->get()['name'],
             'pageTitle'       => [
-                'one'   => $this->intl->trans('Transactions'),
-                'two'   => $this->intl->trans('Mes Transactions'),
-                'none'  => $this->intl->trans('Gestion transaction'),
+                [$this->intl->trans('Transactions')] 
             ],
             'brand'       => $this->brand->get(),
             'baseUrl'     => $this->baseUrl->init(),
@@ -79,33 +78,58 @@ class TransactionController extends AbstractController
 		if (!$this->isCsrfTokenValid($this->getUser()->getUid(), $request->request->get('_token')))
         return $this->services->invalid_token_ajax_list($this->intl->trans('Récupération de la liste des transactions : token invalide'));
 
-        $data           = [];
-        $tabTransaction = [];
-        $transactions = (!$this->pView) ? [] : $this->em->getRepositoty(Transaction::class)->findAll();
+        $data           =   [];
+        $tabTransaction =   [];
+        $transactions   =   [];
+        $pending        =   [];
+        $validated      =   [];
+        $canceled       =   [];
+
+        if (!$this->pView) {
+            $transactions   =   [];
+            
+        }
+        else{
+            $transactions           =   $this->em->getRepository(Transaction::class)->findAll();
+            
+            $pending    =   $this->em->getRepository(Transaction::class)->findByStatus($this->em->getRepository(Status::class)->findByCode(2));
+            $validated  =   $this->em->getRepository(Transaction::class)->findByStatus($this->em->getRepository(Status::class)->findByCode(6));
+            $canceled   =   $this->em->getRepository(Transaction::class)->findByStatus($this->em->getRepository(Status::class)->findByCode(7));
+            
+            $status= $this->em->getRepository(Status::class)->findByCode(2);
+            $sumAmountPending   =   $this->em->getRepository(Transaction::class)->sumAmountForTransaction($status);
+
+            dd($sumAmountPending);
+        }
         
         foreach ($transactions as $key => $transaction) {
 
-            $tabTransaction[$key][0][0] = $transaction->getUser()->getFirstName();
-            $tabTransaction[$key][0][1] = $transaction->getUser()->getLastName();
+            $tabTransaction[$key][0][0] = $transaction->getUser()->getUsetting()->getFirstName();
+            $tabTransaction[$key][0][1] = $transaction->getUser()->getUsetting()->getLastName();
             $tabTransaction[$key][0][2] = $transaction->getUser()->getPhone();
 
             $tabTransaction[$key][1]    = $transaction->getTransactionId();
             $tabTransaction[$key][2]    = $transaction->getReference();
-            $tabTransaction[$key][3]    = $transaction->getTransactionId();
-            $tabTransaction[$key][4]    = $transaction->getBeforeBalance();
-            $tabTransaction[$key][5]    = $transaction->getAmount();
-            $tabTransaction[$key][6]    = $transaction->getAfterBalance();
-            $tabTransaction[$key][7][0] = $transaction->getStatus()->getCode();
-            $tabTransaction[$key][7][1] = $transaction->getStatus()->getName();
-            $tabTransaction[$key][7][2] = $transaction->getStatus()->getDescription();
-            $tabTransaction[$key][8]    = $transaction->getCreatedAt();
-            $tabTransaction[$key][9]    = $transaction->getUpdatedAt();
+            $tabTransaction[$key][3]    = $transaction->getBeforeBalance();
+            $tabTransaction[$key][4]    = $transaction->getAmount();
+            $tabTransaction[$key][5]    = $transaction->getAfterBalance();
+            $tabTransaction[$key][6][0] = $transaction->getStatus()->getCode();
+            $tabTransaction[$key][6][1] = $this->intl->trans($transaction->getStatus()->getName());
+            $tabTransaction[$key][6][2] = $this->intl->trans($transaction->getStatus()->getDescription());
+            $tabTransaction[$key][7]    = $transaction->getCreatedAt()->format("c");
+            $tabTransaction[$key][8]    = $transaction->getUpdatedAt()?$transaction->getUpdatedAt()->format("c"):$this->intl->trans('Pas de modification');
 
         }
        
         $this->services->addLog($this->intl->trans('Lecture de la liste des transactions'));
-        $output = ["data" => $data];
-        return new JsonResponse($output);
+        $data = [
+                    "data"      =>   $tabTransaction,
+                    "all"       =>   count($transactions),         
+                    "pending"   =>   count($pending),      
+                    "validated" =>   count($validated),  
+                    "canceled"  =>   count($canceled)  
+                ];
+        return new JsonResponse($data);
     }
 
     public function statisticsData()

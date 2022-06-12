@@ -316,6 +316,10 @@ KTUtil.onDOMContentLoaded((function() {
 
 "use strict";
 
+var spanTrAll			=	document.getElementById("stat_all");
+var spanTrValide		=	document.getElementById("stat_validated");
+var spanTrPending		=	document.getElementById("stat_pending");
+var spanTrCancel	    =	document.getElementById("stat_canceled");
 
 var KTTransactionsList = function() {
     var e, t, n, r, o = document.getElementById("kt_table_transactions"),
@@ -416,7 +420,7 @@ var KTTransactionsList = function() {
                     }))
                 }))
         };
-    const a = () => {
+        const a = () => {
         const e = o.querySelectorAll('tbody [type="checkbox"]');
         let c = !1,
             l = 0;
@@ -456,115 +460,97 @@ var KTTransactionsList = function() {
                         },
                         error: function () { 
                             $(document).trigger('toastr.onAjaxError');
+                        },
+                        dataSrc: function(json) {
+
+                            spanTrAll.textContent			=	json.all;
+                            spanTrValide.textContent		=	json.validated;
+                            spanTrPending.textContent		=	json.pending;
+                            spanTrCancel.textContent	    =	json.canceled;
+
+                            return json.data;
                         }
+                        
                     },
-                    // info: !1,
-                    order: [[ 12, "desc" ]],
+                    order: [[ 7, "desc" ]],
                     'columnDefs': [
-                    {
-                        orderable: !1,
-                        targets: 0, 
-                        render: function (data, type, full, meta) {
-                            return  `<div class="form-check form-check-sm form-check-custom form-check-solid">
-                                        <input class="form-check-input" type="checkbox" value="`+data+`" />
-                                    </div>`;
-                        }
-                    },
-                    {
-                        orderable: !1,
-                        targets: 1, 
-                        render: function (data, type, full, meta) {
-                            return `<!--begin::User details=-->
-									<div class="d-flex align-items-center">
-                                        <!--begin:: Avatar -->
-                                        <div class="symbol symbol-circle symbol-50px overflow-hidden me-3">
-                                            <a href="javascript:;">
-                                                <div class="symbol-label">
-                                                    <img src="`+window.location.origin+`/app/uploads/avatars/`+data.photo+`" alt="`+data.name+`" class="w-100" />
-                                                </div>
-                                            </a>
-                                        </div>
-                                        <!--end::Avatar-->
-                                        <!--begin::User details-->
-                                        <div class="d-flex flex-column">
-                                            <a href="javascript:;" class="text-gray-800 text-hover-primary mb-1">`+data.name+`</a>
-                                            <span>`+data.phone+`</span>
-                                        </div>
-                                        <!--begin::User details-->
-                                    </div>`;
-                        }
-                    },
-                    // {
-                    //     targets: 4,
-                    //     render: function(data, type, full, meta) {
-                    //         return '<img src="'+window.location.origin+'/app/media/svg/card-logos/'+data+'.svg" class="w-50px me-3" alt="'+data+' eContacts"/>';
-                    //     },
-    
-                    // },
-                    // {
-                    //     targets: 10,
-                    //     render: function(data, type, full, meta) {
-                    //         var status = {
-                    //             'pending' : { 'title': _Pending, 'class': 'warning' },
-                    //             'approved' : { 'title': _Validated, 'class': 'success' },
-                    //             'canceled' : { 'title': _Canceled, 'class': 'primary' },
-                    //             'rejected' : { 'title': _Rejected, 'class': 'info' },
-                    //         };
-                    //         if (typeof status[data] === 'undefined') {
-                    //             return data;
-                    //         }
-                    //         return '<span class="badge badge-light-' + status[data].class + '">' + status[data].title + '</span>';
-                    //     },
-    
-                    // },
-                    // {
-                    //     orderable: 1,
-                    //     targets: 1,
-                    //     render: function(data, type, full, meta) {
-                    //         return  dateFormat(moment(data, "YYYY-MM-DDTHH:mm:ssZZ").format());
-                    //     }
-                    // },
-                    {
-                        targets: 12,
-                        render: function(data, type, full, meta) {
+                       
+                        // Utilisateur
+                        {
+                            targets: 0, 
+                            render: function (data, type, full, meta) {
+                                return  data[0];
+                            }
+                        },
+                        // ID Transaction
+                        {
+                            targets: 1, 
+                            render: function (data, type, full, meta) {
+                                return data;
+                            }
+                        },
+                        // Réference
+                        {
+                            targets: 2, 
+                            render: function (data, type, full, meta) {
+                                return data;
+                            }
+                        },
+                        // Balance Avant
+                        {
+                            targets: 3, 
+                            render: function (data, type, full, meta) {
+                                return data;
+                            }
+                        },
+                        // Montant
+                        {
+                            targets: 4, 
+                            render: function (data, type, full, meta) {
+                                return data;
+                            }
+                        },
+                        // Balance Après
+                        {
+                            targets: 5, 
+                            render: function (data, type, full, meta) {
+                                return data;
+                            }
+                        },
+                        // Statut
+                        {
+                            targets: 6, 
+                            render: function (data, type, full, meta) {
+                                var status = {
+                                                '2' : { 'class': 'warning' },
+                                                '6' : { 'class': 'success' },
+                                                '7' : { 'class': 'primary' },
+                                            };
+                                            if (typeof status[data[0]] === 'undefined') {
+                                                return data[1];
+                                            }
+                                            return '<span class="badge badge-light-' + status[data[0]].class + '">' + data[1] + '</span>';
+                            }
+                        },
+                        // Date de création
+                        {
+                            targets: 7, 
+                            render: function (data, type, full, meta) {
                             return  dateFormat(moment(data, "YYYY-MM-DDTHH:mm:ssZZ").format());
+                            }
+                        },
+                        // Date de modification
+                        {
+                            targets: 8, 
+                            render: function (data, type, full, meta) {
+                                return  dateFormat(moment(data, "YYYY-MM-DDTHH:mm:ssZZ").format());
+                            }
                         }
-                    }],
-                    // columns: [
-    
-                    //     { data: 'orderId' },
-    
-                    //     { data: 'user', responsivePriority: -10},
-    
-                    //     { data: 'transactionId' },
-    
-                    //     { data: 'reference' },
-    
-                    //     { data: 'method' ,responsivePriority: -7  },
-                        
-                    //     { data: 'agregator' },
-                        
-                    //     { data: 'canal' },
-
-                    //     { data: 'email' },
-
-                    //     { data: 'amount',responsivePriority: -8  },
-
-                    //     { data: 'country'  },
-    
-                    //     { data: 'status',responsivePriority: -8 },
-    
-                    //     { data: 'updatedAt' },
-
-                    //     { data: 'createdAt' , responsivePriority: 0},
-                    // ],
-                    pageLength: 6,
-                    lengthChange: !1,
-                    // order: [[ 13, "desc" ]],
+                    ],
+                    pageLength: 10,
+                    lengthChange: true,
                     "info": true,
-                    lengthMenu: [10, 25, 100, 250, 500, 1000],
-                    // pageLength: 10,
-                   
+                    lengthMenu: [10, 25, 100, 250, 500, 1000],                   
                 }),
                 $('#kt_modal_add_transaction_reload_button').on('click', function() {
                     e.ajax.reload(null, false);

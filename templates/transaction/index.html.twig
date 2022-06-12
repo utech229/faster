@@ -140,14 +140,12 @@
                             <div class="d-flex flex-column my-7">
                                 <!--begin::Number-->
                                 <span id="stat_all" class="fw-bold fs-2x text-gray-800 lh-1 ls-n2">
-                                {% if stats is defined %}
-                                {{ stats.all }}
-                                {% endif %}
+                                0
                                 </span>
                                 <!--end::Number-->
                                 <!--begin::Follower-->
                                 <div class="m-0">
-                                    <span class="fw-bold fs-6 text-gray-400">{{ 'Transactions' | trans }}</span>
+                                    <span class="fw-bold fs-6 text-gray-400">{{ 'Transaction(s)' | trans }}</span>
                                 </div>
                                 <!--end::Follower-->
                             </div>
@@ -161,7 +159,9 @@
                                     <path d="M12.5657 8.56569L16.75 12.75C17.1642 13.1642 17.8358 13.1642 18.25 12.75C18.6642 12.3358 18.6642 11.6642 18.25 11.25L12.7071 5.70711C12.3166 5.31658 11.6834 5.31658 11.2929 5.70711L5.75 11.25C5.33579 11.6642 5.33579 12.3358 5.75 12.75C6.16421 13.1642 6.83579 13.1642 7.25 12.75L11.4343 8.56569C11.7467 8.25327 12.2533 8.25327 12.5657 8.56569Z" fill="black" />
                                 </svg>
                             </span>
-                            <!--end::Svg Icon-->10 000 000 XOF</span>
+                            <!--end::Svg Icon-->
+                            <span class="stat" id="tr_all">0 </span>&nbsp;XOF
+                            </span>
                             <!--end::Badge-->
                         </div>
                         <!--end::Body-->
@@ -184,9 +184,8 @@
                             <div class="d-flex flex-column my-7">
                                 <!--begin::Number-->
                                 <span id="stat_validated" class="fw-bold fs-2x text-gray-800 lh-1 ls-n2">
-                                {% if stats is defined %}
-                                {{ stats.validated }}
-                                {% endif %}</span>
+                                0
+                                </span>
                                 <!--end::Number-->
                                 <!--begin::Follower-->
                                 <div class="m-0">
@@ -204,7 +203,9 @@
                                     <path d="M12.5657 8.56569L16.75 12.75C17.1642 13.1642 17.8358 13.1642 18.25 12.75C18.6642 12.3358 18.6642 11.6642 18.25 11.25L12.7071 5.70711C12.3166 5.31658 11.6834 5.31658 11.2929 5.70711L5.75 11.25C5.33579 11.6642 5.33579 12.3358 5.75 12.75C6.16421 13.1642 6.83579 13.1642 7.25 12.75L11.4343 8.56569C11.7467 8.25327 12.2533 8.25327 12.5657 8.56569Z" fill="black" />
                                 </svg>
                             </span>
-                            <!--end::Svg Icon-->2.500.000 XOF</span>
+                            <!--end::Svg Icon-->
+                            <span class="stat" id="tr_validated">0 </span>&nbsp;XOF
+                            </span>
                             <!--end::Badge-->
                         </div>
                         <!--end::Body-->
@@ -227,9 +228,7 @@
                             <div class="d-flex flex-column my-7">
                                 <!--begin::Number-->
                                 <span id="stat_pending" class="fw-bold fs-2x text-gray-800 lh-1 ls-n2">
-                                 {% if stats is defined %}
-                                {{ stats.pending }}
-                                {% endif %}
+                                0
                                 </span>
                                 <!--end::Number-->
                                 <!--begin::Follower-->
@@ -248,7 +247,9 @@
                                     <path d="M11.4343 15.4343L7.25 11.25C6.83579 10.8358 6.16421 10.8358 5.75 11.25C5.33579 11.6642 5.33579 12.3358 5.75 12.75L11.2929 18.2929C11.6834 18.6834 12.3166 18.6834 12.7071 18.2929L18.25 12.75C18.6642 12.3358 18.6642 11.6642 18.25 11.25C17.8358 10.8358 17.1642 10.8358 16.75 11.25L12.5657 15.4343C12.2533 15.7467 11.7467 15.7467 11.4343 15.4343Z" fill="black" />
                                 </svg>
                             </span>
-                            <!--end::Svg Icon-->6.254.821 XOF</span>
+                            <!--end::Svg Icon-->
+                            <span class="stat" id="tr_pending">0 </span>&nbsp;XOF
+                            </span>
                             <!--end::Badge-->
                         </div>
                         <!--end::Body-->
@@ -271,9 +272,7 @@
                             <div class="d-flex flex-column my-7">
                                 <!--begin::Number-->
                                 <span id="stat_canceled" class="fw-bold fs-2x text-gray-800 lh-1 ls-n2">
-                                 {% if stats is defined %}
-                                {{ stats.canceled}}
-                                {% endif %}
+                                0
                                 </span>
                                 <!--end::Number-->
                                 <!--begin::Follower-->
@@ -285,14 +284,16 @@
                             <!--end::Section-->
                             <!--begin::Badge-->
                             <span class="badge badge-danger fs-base">
-                            <!--begin::Svg Icon | path: icons/duotune/arrows/arr066.svg-->
-                            <span class="svg-icon svg-icon-5 svg-icon-white ms-n1">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                    <rect opacity="0.5" x="13" y="6" width="13" height="2" rx="1" transform="rotate(90 13 6)" fill="black" />
-                                    <path d="M12.5657 8.56569L16.75 12.75C17.1642 13.1642 17.8358 13.1642 18.25 12.75C18.6642 12.3358 18.6642 11.6642 18.25 11.25L12.7071 5.70711C12.3166 5.31658 11.6834 5.31658 11.2929 5.70711L5.75 11.25C5.33579 11.6642 5.33579 12.3358 5.75 12.75C6.16421 13.1642 6.83579 13.1642 7.25 12.75L11.4343 8.56569C11.7467 8.25327 12.2533 8.25327 12.5657 8.56569Z" fill="black" />
-                                </svg>
+                                <!--begin::Svg Icon | path: icons/duotune/arrows/arr066.svg-->
+                                <span class="svg-icon svg-icon-5 svg-icon-white ms-n1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                        <rect opacity="0.5" x="13" y="6" width="13" height="2" rx="1" transform="rotate(90 13 6)" fill="black" />
+                                        <path d="M12.5657 8.56569L16.75 12.75C17.1642 13.1642 17.8358 13.1642 18.25 12.75C18.6642 12.3358 18.6642 11.6642 18.25 11.25L12.7071 5.70711C12.3166 5.31658 11.6834 5.31658 11.2929 5.70711L5.75 11.25C5.33579 11.6642 5.33579 12.3358 5.75 12.75C6.16421 13.1642 6.83579 13.1642 7.25 12.75L11.4343 8.56569C11.7467 8.25327 12.2533 8.25327 12.5657 8.56569Z" fill="black" />
+                                    </svg>
+                                </span>
+                                <!--end::Svg Icon-->
+                                <span class="stat">0 </span>&nbsp;XOF
                             </span>
-                            <!--end::Svg Icon-->2.254.821 XOF</span>
                             <!--end::Badge-->
                         </div>
                         <!--end::Body-->
@@ -403,11 +404,11 @@
                         <thead>
                             <!--begin::Table row-->
                             <tr class="text-start text-muted fw-bolder fs-7 text-uppercase gs-0">
-                                <th class="w-10px pe-2">
+                                {# <th class="w-10px pe-2">
                                     <div class="form-check form-check-sm form-check-custom form-check-solid me-3">
                                         <input class="form-check-input" type="checkbox" data-kt-check="true" data-kt-check-target="#kt_table_transactions .form-check-input" value="1" />
                                     </div>
-                                </th>
+                                </th> #}
                                 <th class="min-w-125px">{{'Utilisateur'| trans}}</th>
                                 <th class="min-w-125px">{{'ID Transaction'| trans}}</th>
                                 <th class="min-w-125px">{{'Réference'| trans}}</th>
@@ -453,9 +454,10 @@
 </script>
 <script src="{{ asset('app/js/queries/public-app/country-flag-input.js') }}"></script>
 <!--begin::Page Custom Javascript(used by this page)-->
-<script src="{{ asset('app/plugins/custom/datatables/datatables.bundle.js') }}"></script>
 {# {% if pAccess is defined and pAccess == true %} #}
 <script src="{{ asset('app/js/queries/transactions/list.js') }}"></script>
 {# {% endif %} #}
+<script src="{{ asset('app/plugins/custom/datatables/datatables.bundle.js') }}"></script>
+
 
 {% endblock %}
