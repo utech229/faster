@@ -1,31 +1,24 @@
 "use strict";
-var KTUsersAddPermission = function() {
-    const t = document.getElementById("kt_modal_add_permission"),
-        e = t.querySelector("#kt_modal_add_permission_form"),
+var KTUsersAddrouter = function() {
+    const t = document.getElementById("kt_modal_add_router"),
+        e = t.querySelector("#kt_modal_add_router_form"),
         n = new bootstrap.Modal(t);
     return {
         init: function() {
             (() => {
                 var o = FormValidation.formValidation(e, {
                     fields: {
-                        'permission[name]': {
+                        'router[name]': {
                             validators: {
                                 notEmpty: {
-                                    message: _PermissionName_Required 
-                                }
-                            }
-                        },
-                        'permission[code]': {
-                            validators: {
-                                notEmpty: {
-                                    message: _PermissionCode_Required 
+                                    message: _Required_Field
                                 }
                             }
                         },
                         description: {
                             validators: {
                                 notEmpty: {
-                                    message: _PermissionDesc_Required 
+                                    message: _Required_Field 
                                 }
                             }
                         }
@@ -39,52 +32,21 @@ var KTUsersAddPermission = function() {
                         })
                     }
                 });
-                t.querySelector('[data-kt-permissions-modal-action="close"]').addEventListener("click", (t => {
-                    t.preventDefault(), Swal.fire({
-                        text: _modal_close,
-                        icon: "warning",
-                        showCancelButton: !0,
-                        buttonsStyling: !1,
-                        confirmButtonText: _Yes,
-                        cancelButtonText: _No,
-                        customClass: {
-                            confirmButton: "btn btn-primary",
-                            cancelButton: "btn btn-active-light"
-                        }
-                    }).then((function(t) {
-                        t.value && n.hide()
-                    }))
-                })), t.querySelector('[data-kt-permissions-modal-action="cancel"]').addEventListener("click", (t => {
-                    t.preventDefault(), Swal.fire({
-                        text:  _Cancel_Question,
-                        icon: "warning",
-                        showCancelButton: !0,
-                        buttonsStyling: !1,
-                        confirmButtonText: _Yes,
-                        cancelButtonText: _No,
-                        customClass: {
-                            confirmButton: "btn btn-primary",
-                            cancelButton: "btn btn-active-light"
-                        }
-                    }).then((function(t) {
-                        t.value ? (e.reset(), n.hide()) : "cancel" === t.dismiss && Swal.fire({
-                            text: _no_cancel_form,
-                            icon: "error",
-                            buttonsStyling: !1,
-                            confirmButtonText:  _Form_Ok_Swal_Button_Text_Notification,
-                            customClass: {
-                                confirmButton: "btn btn-primary"
-                            }
-                        })
-                    }))
+                t.querySelector('[data-kt-routers-modal-action="close"]').addEventListener("click", (t => {
+                    t.preventDefault(),
+                        t.value , n.hide()
+                  
+                })), t.querySelector('[data-kt-routers-modal-action="cancel"]').addEventListener("click", (t => {
+                    t.preventDefault()
+                    (e.reset(), n.hide())
                 }));
-                const i = t.querySelector('[data-kt-permissions-modal-action="submit"]');
+                const i = t.querySelector('[data-kt-routers-modal-action="submit"]');
                 i.addEventListener("click", (function(t) {
                     t.preventDefault(), o && o.validate().then((function(t) {
                         console.log("validated!"), "Valid" == t ? (i.setAttribute("data-kt-indicator", "on"), i.disabled = !0, 
                         load.removeClass('sr-only'),
                         $.ajax({
-                            url: (isPermissionUpdating == true) ? window.location.href + permissionIDInput.val() + '/update_permission' : add_permission,
+                            url: (isUpdating == true) ? window.location.href +'/'+ routerIDInput.val() + '/update_router' : add_link,
                             type: 'post',
                             data: new FormData(e),
                             dataType: 'json',
@@ -107,7 +69,7 @@ var KTUsersAddPermission = function() {
                                         if (response.type === 'success') {
                                             t.isConfirmed && e.reset();
                                             e.reset(),tableReloadButton.click();
-                                            (isPermissionUpdating == true) ? n.hide() : null;
+                                            (isUpdating == true) ? n.hide() : null;
                                         }
                                     }))
                             },
@@ -126,5 +88,5 @@ var KTUsersAddPermission = function() {
     }
 }();
 KTUtil.onDOMContentLoaded((function() {
-    KTUsersAddPermission.init()
+    KTUsersAddrouter.init()
 }));

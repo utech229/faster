@@ -2,13 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\RouteRepository;
+use App\Repository\RouterRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: RouteRepository::class)]
-class Route
+#[ORM\Entity(repositoryClass: RouterRepository::class)]
+class Router
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -30,11 +30,14 @@ class Route
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     private $updatedAt;
 
-    #[ORM\OneToMany(mappedBy: 'route', targetEntity: User::class)]
+    #[ORM\OneToMany(mappedBy: 'router', targetEntity: User::class)]
     private $users;
 
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'routes')]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'routers')]
     private $manager;
+
+    #[ORM\ManyToOne(targetEntity: Status::class, inversedBy: 'routers')]
+    private $status;
 
     public function __construct()
     {
@@ -118,7 +121,7 @@ class Route
     {
         if (!$this->users->contains($user)) {
             $this->users[] = $user;
-            $user->setRoute($this);
+            $user->setRouter($this);
         }
 
         return $this;
@@ -128,8 +131,8 @@ class Route
     {
         if ($this->users->removeElement($user)) {
             // set the owning side to null (unless already changed)
-            if ($user->getRoute() === $this) {
-                $user->setRoute(null);
+            if ($user->getRouter() === $this) {
+                $user->setRouter(null);
             }
         }
 
@@ -147,4 +150,18 @@ class Route
 
         return $this;
     }
+
+    public function getStatus(): ?Status
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?Status $status): self
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+
 }

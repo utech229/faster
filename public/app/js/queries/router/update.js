@@ -1,9 +1,9 @@
 "use strict";
-var mdHTMLTitle            = $("#kt_modal_add_permission_text")
-const permissionIDInput    = $('#permission_id');
-var isPermissionUpdating   = false;
-const permissionNotice     = $('#kt_modal_add_permission_notice');
-const tableReloadButton    = $('#kt_modal_add_permission_reload_button');
+var mdHTMLTitle        = $("#kt_modal_add_router_text")
+const routerIDInput    = $('#router_id');
+var isUpdating         = false;
+const routerNotice     = $('#kt_modal_add_router_notice');
+const tableReloadButton    = $('#kt_modal_add_router_reload_button');
 
 $(document).on('entityUpBegin', function(e, identifier, id, icon) {
     $(identifier + id).removeClass("fa");
@@ -18,25 +18,23 @@ $(document).on('entityUpStop', function(event, identifier, id, icon) {
 });
 
 
-$(document).on('click', ".permissionUpdater", function(e) {
-    permissionNotice.removeClass('d-none');
+$(document).on('click', ".updater", function(e) {
+    routerNotice.removeClass('d-none');
     var uid = $(this).data('id');
-    permissionIDInput.val(uid);
-    $(document).trigger('entityUpBegin', ['#editPermissionOption', uid, 'fa-edit']);
-    const url = window.location.href + uid + '/get';
+    routerIDInput.val(uid);
+    $(document).trigger('entityUpBegin', ['#editOption', uid, 'fa-edit']);
+    const url = window.location.href +'/'+ uid + '/get';
     $.ajax({
         url: url,
         type: "post",
         data: {uid : uid, _token : csrfToken},
         dataType: "json",
         success: function(r) {
-            $(document).trigger('securityFirewall', [r, '#editPermissionOption', uid, 'fa-edit']);
+            $(document).trigger('securityFirewall', [r, '#editOption', uid, 'fa-edit']);
             mdHTMLTitle.html(_Edit);
-            isPermissionUpdating = true;
-            $('#permission_code').val(r.data.code);
-            $('#permission_name').val(r.data.name);
+            isUpdating = true;
+            $('#router_name').val(r.data.name);
             $('#description').val(r.data.description);
-            document.getElementById('kt_permissions_core').checked = r.data.iscore;
             formModalButton.click();
         },
         error: function () { 
@@ -45,12 +43,12 @@ $(document).on('click', ".permissionUpdater", function(e) {
     });
 });
 
-$('#kt_modal_add_permission').on('hidden.bs.modal', function(e) {
-    $(document).trigger('entityUpStop', ['#editPermissionOption', permissionIDInput.val(), 'fa-edit']);
+$('#kt_modal_add_router').on('hidden.bs.modal', function(e) {
+    $(document).trigger('entityUpStop', ['#editOption', routerIDInput.val(), 'fa-edit']);
     mdHTMLTitle.html(_Add);
-    isPermissionUpdating = false;
-    permissionIDInput.val(0);
-    permissionNotice.addClass('d-none');
+    isUpdating = false;
+    routerIDInput.val(0);
+    routerNotice.addClass('d-none');
 });
 
 $(document).on('securityFirewall', function(e, r, identifier, rowData, icon) {

@@ -68,8 +68,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToOne(targetEntity: Role::class, inversedBy: 'users')]
     private $role;
 
-    #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'admin')]
-    private $admin;
+    #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'accountManager')]
+    private $accountManager;
 
 
     #[ORM\ManyToOne(targetEntity: Brand::class, inversedBy: 'brand')]
@@ -82,9 +82,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\JoinColumn(nullable: false)]
     private $status;
 
-    #[ORM\ManyToOne(targetEntity: Route::class, inversedBy: 'users')]
+    #[ORM\ManyToOne(targetEntity: Router::class, inversedBy: 'users')]
     #[ORM\JoinColumn(nullable: false)]
-    private $route;
+    private $router;
 
     #[ORM\OneToMany(mappedBy: 'manager', targetEntity: Brand::class)]
     private $brands;
@@ -92,8 +92,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'validator', targetEntity: Brand::class)]
     private $validator;
 
-    #[ORM\OneToMany(mappedBy: 'manager', targetEntity: Route::class)]
-    private $routes;
+    #[ORM\OneToMany(mappedBy: 'manager', targetEntity: Router::class)]
+    private $routers;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Log::class)]
     private $logs;
@@ -142,10 +142,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function __construct()
     {
-        $this->admin = new ArrayCollection();
+        $this->accountManager = new ArrayCollection();
         $this->brands = new ArrayCollection();
         $this->validator = new ArrayCollection();
-        $this->routes = new ArrayCollection();
+        $this->routers = new ArrayCollection();
         $this->logs = new ArrayCollection();
         $this->manageringRoles = new ArrayCollection();
         $this->extraAuthorizations = new ArrayCollection();
@@ -407,34 +407,34 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getAdmin(): ?self
+    public function getAccountManager(): ?self
     {
-        return $this->admin;
+        return $this->accountManager;
     }
 
-    public function setAdmin(?self $admin): self
+    public function setAccountManager(?self $accountManager): self
     {
-        $this->admin = $admin;
+        $this->accountManager = $accountManager;
 
         return $this;
     }
 
-    public function addAdmin(self $admin): self
+    public function addAccountManager(self $accountManager): self
     {
-        if (!$this->admin->contains($admin)) {
-            $this->admin[] = $admin;
-            $admin->setAdmin($this);
+        if (!$this->accountManager->contains($accountManager)) {
+            $this->accountManager[] = $accountManager;
+            $accountManager->setAccountManager($this);
         }
 
         return $this;
     }
 
-    public function removeAdmin(self $admin): self
+    public function removeAccountManager(self $accountManager): self
     {
-        if ($this->admin->removeElement($admin)) {
+        if ($this->accountManager->removeElement($accountManager)) {
             // set the owning side to null (unless already changed)
-            if ($admin->getAdmin() === $this) {
-                $admin->setAdmin(null);
+            if ($accountManager->getAccountManager() === $this) {
+                $accountManager->setAccountManager(null);
             }
         }
 
@@ -465,14 +465,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getRoute(): ?Route
+    public function getRouter(): ?Router
     {
-        return $this->route;
+        return $this->router;
     }
 
-    public function setRoute(?Route $route): self
+    public function setRouter(?Router $router): self
     {
-        $this->route = $route;
+        $this->router = $router;
 
         return $this;
     }
@@ -538,29 +538,29 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection<int, Route>
+     * @return Collection<int, Router>
      */
-    public function getRoutes(): Collection
+    public function getRouters(): Collection
     {
-        return $this->routes;
+        return $this->Routers;
     }
 
-    public function addRoute(Route $route): self
+    public function addRouter(Router $router): self
     {
-        if (!$this->routes->contains($route)) {
-            $this->routes[] = $route;
-            $route->setManager($this);
+        if (!$this->routers->contains($router)) {
+            $this->routers[] = $router;
+            $router->setManager($this);
         }
 
         return $this;
     }
 
-    public function removeRoute(Route $route): self
+    public function removeRouter(Router $router): self
     {
-        if ($this->routes->removeElement($route)) {
+        if ($this->routers->removeElement($router)) {
             // set the owning side to null (unless already changed)
-            if ($route->getManager() === $this) {
-                $route->setManager(null);
+            if ($router->getManager() === $this) {
+                $router->setManager(null);
             }
         }
 

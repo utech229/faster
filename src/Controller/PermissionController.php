@@ -72,7 +72,6 @@ class PermissionController extends AbstractController
         $form = $this->createForm(PermissionType::class, $permission);
         if ($request->request->count() > 0)
         {
-            dd($request->request);
             $form->handleRequest($request);
             if ($isPermissionAdd == true) { //method calling
                 if (!$this->pCreatePermission) return $this->services->no_access($this->intl->trans('Création de permission'));
@@ -115,7 +114,7 @@ class PermissionController extends AbstractController
         $permission->setCreatedAt(new \DatetimeImmutable());
         $this->permissionRepository->add($permission);
         
-        return $this->services->ajax_success_crud(
+        return $this->services->msg_success(
             $this->intl->trans("Ajout d'une nouvelle permission"),
             $this->intl->trans("Permission ajouté avec succès")
         );
@@ -141,7 +140,7 @@ class PermissionController extends AbstractController
         $permission->setUpdatedAt(new \DatetimeImmutable());
         $this->permissionRepository->add($permission);
 
-        return $this->services->ajax_success_crud(
+        return $this->services->msg_success(
             $this->intl->trans("Modification de la permission ").$permission->getName(),
             $this->intl->trans("Permission modifié avec succès").' : '.$permission->getName()
         );
@@ -204,11 +203,11 @@ class PermissionController extends AbstractController
         if (!$this->isCsrfTokenValid($this->getUser()->getUid(), $request->request->get('_token'))) 
             return $this->services->no_access($this->intl->trans("Suppression d'une permission").': '.$permission->getCode());
         if (count($permission->getAuthorizations()) > 0) 
-        return $this->services->ajax_error_crud(
+        return $this->services->msg_error(
             $this->intl->trans("Suppression de la permission ").$permission->getName(),
             $this->intl->trans("Vous ne pouvez pas supprimer une permission attribué").' : '.$permission->getName());
         $this->permissionRepository->remove($permission);
-        return $this->services->ajax_success_crud(
+        return $this->services->msg_success(
             $this->intl->trans("Suppression de la permission ").$permission->getName(),
             $this->intl->trans("Permission supprimé avec succès").' : '.$permission->getName()
         );

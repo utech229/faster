@@ -1,15 +1,15 @@
 "use strict";
-var KTUsersPermissionsList = function() {
+var KTUsersRoutersList = function() {
     var t, e, n, r, o;
     return {
         init: function() {
-            (e = document.querySelector("#kt_permissions_table")) && (e.querySelectorAll("tbody tr").forEach((t => {
+            (e = document.querySelector("#kt_routers_table")) && (e.querySelectorAll("tbody tr").forEach((t => {
                 const e = t.querySelectorAll("td"), n = moment(e[2].innerHTML, "DD MMM YYYY, LT").format();
                 e[2].setAttribute("data-order", n)
             })), t = $(e).DataTable({
                 responsive: true,
                 ajax: {
-                    "url": permission_list_link,
+                    "url": list_link,
                     "type": "POST",
                     data: {
                         _token: function(){ return csrfToken; }
@@ -19,13 +19,13 @@ var KTUsersPermissionsList = function() {
                     }
                 },
                 info: !1,
-                order: [[ 7, "desc" ]],
+                order: [[ 4, "desc" ]],
                 columnDefs: [{
                     orderable: !1,
                     targets: 0, 
                 },
                 {
-                    targets: 3,
+                    targets: 2,
                     render: function(data, type, full, meta) {
                         var status = {
                             true : { 'title': _Actif, 'class': 'success' },
@@ -39,52 +39,37 @@ var KTUsersPermissionsList = function() {
 
                 }, {
                     orderable: !1,
+                    targets: 3,
+                    render: function(data, type, full, meta) {
+                        return  dateFormat(moment(data, "YYYY-MM-DDTHH:mm:ssZZ").format());
+                    }
+                },
+                {
+                    orderable: !1,
+                    targets: 4,
+                    render: function(data, type, full, meta) {
+                        return  dateFormat(moment(data, "YYYY-MM-DDTHH:mm:ssZZ").format());
+                    }
+                },
+                {
+                    orderable: !1,
                     targets: 5,
-                    render: function(data, type, full, meta) {
-                        return  dateFormat(moment(data, "YYYY-MM-DDTHH:mm:ssZZ").format());
-                    }
-                },
-                {
-                    orderable: !1,
-                    targets: 6,
-                    render: function(data, type, full, meta) {
-                        return  dateFormat(moment(data, "YYYY-MM-DDTHH:mm:ssZZ").format());
-                    }
-                },
-                {
-                    targets: 7,
-                    render: function(data, type, full, meta) {
-                        var status = {
-                            2 : { 'title': _Pending, 'class': 'warning' },
-                            3 : { 'title': _Actif, 'class': 'success' },
-                            5 : { 'title': _Disabled, 'class': 'danger' },
-                            7 : { 'title': _Rejected, 'class': 'info' },
-                        };
-                        if (typeof status[data] === 'undefined') {
-                            return data;
-                        }
-                        return '<span class="badge badge-light-' + status[data].class + '">' + status[data].title + '</span>';
-                    },
-
-                },{
-                    orderable: !1,
-                    targets: 8,
-                    visible: (!pEditPermission && !pDeletePermission) ? false : true,
+                    visible: (!pEdit && !pDelete) ? false : true,
                     render : function (data,type, full, meta) {
                         var updaterIcon =  `<!--begin::Update-->
-                        <button class="btn btn-icon btn-active-light-primary w-30px h-30px me-3 permissionUpdater" 
+                        <button class="btn btn-icon btn-active-light-primary w-30px h-30px me-3 updater" 
                         data-id=`+data+`>
-                        <i id="editPermissionOption`+data+`" class="fa fa-edit"></i>
+                        <i id="editOption`+data+`" class="fa fa-edit"></i>
                         </button>
                         <!--end::Update-->`;
                         var deleterIcon =  `<!--begin::Delete-->
-                        <button class="btn btn-icon btn-active-light-primary w-30px h-30px permissionDeleter" 
-                            data-id=`+data+` data-kt-permissions-table-filter="delete_row">
-                          <i id="deletePermissionOption`+data+`" class="text-danger fa fa-trash-alt"></i>
+                        <button class="btn btn-icon btn-active-light-primary w-30px h-30px deleter" 
+                            data-id=`+data+` data-kt-routers-table-filter="delete_row">
+                          <i id="deleteOption`+data+`" class="text-danger fa fa-trash-alt"></i>
                         </button>
                         <!--end::Delete-->`;
-                        updaterIcon = (pEditPermission) ? updaterIcon : '' ;
-                        deleterIcon = (pDeletePermission) ?deleterIcon : '' ;
+                        updaterIcon = (pEdit) ? updaterIcon : '' ;
+                        deleterIcon = (pDelete) ?deleterIcon : '' ;
                         return updaterIcon + deleterIcon;
                     }
                 }],
@@ -94,29 +79,23 @@ var KTUsersPermissionsList = function() {
 
                     { data: 'Name', responsivePriority: -5},
 
-                    { data: 'Code', responsivePriority: -2 },
-
                     { data: 'Description', responsivePriority: -4  },
-
-                    { data: 'Roles' },
 
                     { data: 'CreatedAt' , responsivePriority: 0},
 
                     { data: 'UpdatedAt'},
-
-                    { data: 'Status' , responsivePriority: -3},
 
                     { data: 'Actions',responsivePriority: -9 },
                 ],
                 lengthMenu: [10, 25, 100, 250, 500, 1000],
                 pageLength: 5,
             }), 
-            $('#kt_modal_add_permission_reload_button').on('click', function() {
+            $('#kt_modal_add_router_reload_button').on('click', function() {
                 t.ajax.reload(null, false);
             }),
-            document.querySelector('[data-kt-permissions-table-filter="search"]').addEventListener("keyup", (function(e) {
+            document.querySelector('[data-kt-routers-table-filter="search"]').addEventListener("keyup", (function(e) {
                 t.search(e.target.value).draw()
-            })), e.querySelectorAll('[data-kt-permissions-table-filter="delete_row"]').forEach((e => {
+            })), e.querySelectorAll('[data-kt-routers-table-filter="delete_row"]').forEach((e => {
                 e.addEventListener("click", (function(e) {
                     e.preventDefault();
                     const n = e.target.closest("tr"),
@@ -159,5 +138,5 @@ var KTUsersPermissionsList = function() {
     }
 }();
 KTUtil.onDOMContentLoaded((function() {
-    KTUsersPermissionsList.init()
+    KTUsersRoutersList.init()
 }));

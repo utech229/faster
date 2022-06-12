@@ -2,26 +2,26 @@
 
 namespace App\Repository;
 
-use App\Entity\Route;
+use App\Entity\Router;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Route>
+ * @extends ServiceEntityRepository<Router>
  *
- * @method Route|null find($id, $lockMode = null, $lockVersion = null)
- * @method Route|null findOneBy(array $criteria, array $orderBy = null)
- * @method Route[]    findAll()
- * @method Route[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Router|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Router|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Router[]    findAll()
+ * @method Router[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class RouteRepository extends ServiceEntityRepository
+class RouterRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Route::class);
+        parent::__construct($registry, Router::class);
     }
 
-    public function add(Route $entity, bool $flush = false): void
+    public function add(Router $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
 
@@ -30,7 +30,7 @@ class RouteRepository extends ServiceEntityRepository
         }
     }
 
-    public function remove(Route $entity, bool $flush = false): void
+    public function remove(Router $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
 
@@ -40,7 +40,7 @@ class RouteRepository extends ServiceEntityRepository
     }
 
 //    /**
-//     * @return Route[] Returns an array of Route objects
+//     * @return Router[] Returns an array of Router objects
 //     */
 //    public function findByExampleField($value): array
 //    {
@@ -54,7 +54,7 @@ class RouteRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?Route
+//    public function findOneBySomeField($value): ?Router
 //    {
 //        return $this->createQueryBuilder('r')
 //            ->andWhere('r.exampleField = :val')

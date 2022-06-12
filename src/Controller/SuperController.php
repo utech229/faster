@@ -14,7 +14,7 @@ use App\Service\DbInitData;
 use App\Repository\RoleRepository;
 use App\Repository\UserRepository;
 use App\Repository\BrandRepository;
-use App\Repository\RouteRepository;
+use App\Repository\RouterRepository;
 use App\Repository\SenderRepository;
 use App\Repository\StatusRepository;
 use App\Repository\CompanyRepository;
@@ -41,7 +41,7 @@ class SuperController extends AbstractController
     RoleRepository $roleRepository, UserRepository $userRepository, PermissionRepository $permissionRepository,
     AuthorizationRepository $authorizationRepository, sBrand $brand,ValidatorInterface $validator,
     DbInitData $dbInitData, AddEntity $addEntity, StatusRepository $statusRepository, BrandRepository $brandRepository,
-    CompanyRepository $companyRepository, RouteRepository $routeRepository, SenderRepository $senderRepository)
+    CompanyRepository $companyRepository, RouterRepository $routerRepository, SenderRepository $senderRepository)
     {
         $this->baseUrl         = $baseUrl;
         $this->urlGenerator    = $urlGenerator;
@@ -53,7 +53,7 @@ class SuperController extends AbstractController
         $this->userRepository  = $userRepository;
         $this->roleRepository    = $roleRepository;
         $this->statusRepository  = $statusRepository;
-        $this->routeRepository   = $routeRepository;
+        $this->routerRepository  = $routerRepository;
         $this->brandRepository   = $brandRepository;
         $this->companyRepository = $companyRepository;
         $this->senderRepository  = $senderRepository;
@@ -110,11 +110,11 @@ class SuperController extends AbstractController
 
 
             $brand   = $this->brandRepository->findOneByName($this->brand->get()['name']);
-            $route   = $this->routeRepository->findOneByName("Fastermessage_moov");
+            $route   = $this->routerRepository->findOneByName("Fastermessage_moov");
             $company = $this->companyRepository->findOneById(1);
-            $user->setAdmin($user)
+            $user->setAccountManager($user)
                 ->setBrand($brand)
-                ->setRoute($route);
+                ->setRouter($route);
             $this->userRepository->add($user);
             return $this->services->msg_success(
                 $this->intl->trans("Création du super admin : SUP-ONE"),
@@ -126,8 +126,10 @@ class SuperController extends AbstractController
             $sender  = $this->senderRepository->findOneById(1);
             $company = $this->companyRepository->findOneById(1);
             $company->setManager($existed_user);
+            $brand->setManager($existed_user);
             $this->companyRepository->add($company);
-            $existed_user->setAdmin($existed_user)->setBrand($brand)->setDefaultSender($sender);
+            $this->brandRepository->add($brand);
+            $existed_user->setAccountManager($existed_user)->setBrand($brand)->setDefaultSender($sender);
             $this->userRepository->add($existed_user);
             return $this->services->msg_success(
                 $this->intl->trans("Mise à jour de la marque initiale"),
