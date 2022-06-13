@@ -316,10 +316,8 @@ KTUtil.onDOMContentLoaded((function() {
 
 "use strict";
 
-var spanTrAll			=	document.getElementById("stat_all");
-var spanTrValide		=	document.getElementById("stat_validated");
-var spanTrPending		=	document.getElementById("stat_pending");
-var spanTrCancel	    =	document.getElementById("stat_canceled");
+var spanStatAll =	document.getElementById("stat_all"),spanStatValidated = document.getElementById("stat_validated"), spanStatPending	= document.getElementById("stat_pending"), spanStatCanceled	= document.getElementById("stat_canceled");
+var spanAmountAll =	document.getElementById("tr_all"),spanAmountValidated = document.getElementById("tr_validated"), spanAmountPending	= document.getElementById("tr_pending"), spanAmountCanceled	= document.getElementById("tr_canceled");
 
 var KTTransactionsList = function() {
     var e, t, n, r, o = document.getElementById("kt_table_transactions"),
@@ -463,20 +461,19 @@ var KTTransactionsList = function() {
                         },
                         dataSrc: function(json) {
 
-                            spanTrAll.textContent			=	json.all;
-                            spanTrValide.textContent		=	json.validated;
-                            spanTrPending.textContent		=	json.pending;
-                            spanTrCancel.textContent	    =	json.canceled;
-
+                            spanStatAll.textContent = json.all, spanStatValidated.textContent = json.validated, spanStatPending.textContent	= json.pending, spanStatCanceled.textContent = json.canceled
+                            spanAmountAll.textContent = json.sumAmount, spanAmountValidated.textContent = json.sumAmountValidated, spanAmountPending.textContent	= json.sumAmountPending, spanAmountCanceled.textContent = json.sumAmountCanceled
+                            
                             return json.data;
                         }
                         
                     },
-                    order: [[ 7, "desc" ]],
+                    order: [[ 8, "desc" ]],
                     'columnDefs': [
                        
                         // Utilisateur
                         {
+                            responsivePriority: 0,
                             targets: 0, 
                             render: function (data, type, full, meta) {
                                 return  data[0];
@@ -484,6 +481,7 @@ var KTTransactionsList = function() {
                         },
                         // ID Transaction
                         {
+                            responsivePriority: 1,
                             targets: 1, 
                             render: function (data, type, full, meta) {
                                 return data;
@@ -491,6 +489,7 @@ var KTTransactionsList = function() {
                         },
                         // Réference
                         {
+                            responsivePriority: 2,
                             targets: 2, 
                             render: function (data, type, full, meta) {
                                 return data;
@@ -498,6 +497,7 @@ var KTTransactionsList = function() {
                         },
                         // Balance Avant
                         {
+                            responsivePriority: 8,
                             targets: 3, 
                             render: function (data, type, full, meta) {
                                 return data;
@@ -505,6 +505,7 @@ var KTTransactionsList = function() {
                         },
                         // Montant
                         {
+                            responsivePriority: 3,
                             targets: 4, 
                             render: function (data, type, full, meta) {
                                 return data;
@@ -512,6 +513,7 @@ var KTTransactionsList = function() {
                         },
                         // Balance Après
                         {
+                            responsivePriority: 8,
                             targets: 5, 
                             render: function (data, type, full, meta) {
                                 return data;
@@ -519,6 +521,7 @@ var KTTransactionsList = function() {
                         },
                         // Statut
                         {
+                            responsivePriority: 4,
                             targets: 6, 
                             render: function (data, type, full, meta) {
                                 var status = {
@@ -532,16 +535,26 @@ var KTTransactionsList = function() {
                                             return '<span class="badge badge-light-' + status[data[0]].class + '">' + data[1] + '</span>';
                             }
                         },
+                        // Brand
+                        {
+                            responsivePriority: 6,
+                            targets: 7, 
+                            render: function (data, type, full, meta) {
+                                return  data;
+                            }
+                        },
                         // Date de création
                         {
-                            targets: 7, 
+                            responsivePriority: 5,
+                            targets: 8, 
                             render: function (data, type, full, meta) {
                             return  dateFormat(moment(data, "YYYY-MM-DDTHH:mm:ssZZ").format());
                             }
                         },
                         // Date de modification
                         {
-                            targets: 8, 
+                            responsivePriority: 9,
+                            targets: 9, 
                             render: function (data, type, full, meta) {
                                 return  dateFormat(moment(data, "YYYY-MM-DDTHH:mm:ssZZ").format());
                             }
@@ -558,12 +571,46 @@ var KTTransactionsList = function() {
                 })), l(),
                 document.querySelector('[data-kt-transaction-table-filter="search"]').addEventListener("keyup", (function(t) {
                     e.search(t.target.value).draw()
+
+                    let sum_amount_all =   0, sum_amount_pending = 0, sum_amount_validated = 0, sum_amount_canceled = 0, filtre_tab = e['context'][0]['oPreviousSearch']['sSearch'].replace(/\s+/g, '').toLowerCase()
+                    let sum_tr_all = 0, sum_tr_pending = 0, sum_tr_validated = 0, sum_tr_canceled = 0
+                   
+                    e['context'][0]['aoData'].forEach(function(item){
+                        
+                        if ( item['_aFilterData'].find(el => el.toLowerCase().includes(filtre_tab) ) != undefined) 
+                        {
+                            sum_amount_all  += item['_aData'][4]
+                            sum_tr_all      +=  1
+                
+                            if (item['_aData'][6][0] = 6) {
+                                sum_amount_validated += item['_aData'][4];
+                                sum_tr_validated      +=  1
+                
+                            }
+                            else if(item['_aData'][6][0] = 2){
+                                sum_amount_pending += item['_aData'][4];
+                                sum_tr_pending      +=  1
+                                
+                            }
+                            else{
+                                sum_amount_canceled += item['_aData'][4];
+                                sum_tr_canceled      +=  1
+                
+                            }
+                        }
+                        
+                    });
+                
+                    spanStatAll.textContent = sum_tr_all, spanStatPending.textContent = sum_tr_pending, spanStatValidated.textContent = sum_tr_validated, spanStatCanceled.textContent = sum_tr_canceled
+                    spanAmountAll.textContent = sum_amount_all, spanAmountPending.textContent = sum_amount_pending, spanAmountValidated.textContent = sum_amount_validated, spanAmountCanceled.textContent = sum_amount_canceled
+                
                 })),
                 document.querySelector('[data-kt-transaction-table-filter="reset"]').addEventListener("click", (function() {
                     document.querySelector('[data-kt-transaction-table-filter="form"]').querySelectorAll("select").forEach((e => {
-                            $(e).val("").trigger("change")
+                            $(e).val("").trigger("change");
                         })),
                         e.search("").draw()
+                        UpdateStat(e)
                 })),
                 c(), (() => {
                     const t = document.querySelector('[data-kt-transaction-table-filter="form"]'),
@@ -574,8 +621,11 @@ var KTTransactionsList = function() {
                         r.forEach(((e, n) => {
                                 e.value && "" !== e.value && (0 !== n && (t += " "),
                                     t += e.value)
+                                    
                             })),
+                            
                             e.search(t).draw()
+                            UpdateStat(e)
                     }))
                 })
                 ())
@@ -586,4 +636,40 @@ var KTTransactionsList = function() {
 KTUtil.onDOMContentLoaded((function() {
     KTTransactionsList.init();
 }));
+
+function UpdateStat(e) {
+    // console.log(e['context'][0])
+    let sum_amount_all =   0, sum_amount_pending = 0, sum_amount_validated = 0, sum_amount_canceled = 0, filtre_tab = e['context'][0]['oPreviousSearch']['sSearch'].replace(/\s+/g, '').toLowerCase()
+    let sum_tr_all = 0, sum_tr_pending = 0, sum_tr_validated = 0, sum_tr_canceled = 0
+    e['context'][0]['aoData'].forEach(function(item){
+        
+        if (filtre_tab  == (item['_aData'][7]+item['_aData'][6][1]).replace(/\s+/g, '').toLowerCase() || filtre_tab ==  item['_aData'][7].replace(/\s+/g, '').toLowerCase() || filtre_tab == item['_aData'][6][1].replace(/\s+/g, '').toLowerCase() || filtre_tab == "" ) {
+            
+            sum_amount_all  += item['_aData'][4]
+            sum_tr_all      +=  1
+
+            if (item['_aData'][6][0] = 6) {
+                sum_amount_validated += item['_aData'][4];
+                sum_tr_validated      +=  1
+
+            }
+            else if(item['_aData'][6][0] = 2){
+                sum_amount_pending += item['_aData'][4];
+                sum_tr_pending      +=  1
+                
+            }
+            else{
+                sum_amount_canceled += item['_aData'][4];
+                sum_tr_canceled      +=  1
+
+            }
+        }
+        
+        
+    });
+
+    spanStatAll.textContent = sum_tr_all, spanStatPending.textContent = sum_tr_pending, spanStatValidated.textContent = sum_tr_validated, spanStatCanceled.textContent = sum_tr_canceled
+    spanAmountAll.textContent = sum_amount_all, spanAmountPending.textContent = sum_amount_pending, spanAmountValidated.textContent = sum_amount_validated, spanAmountCanceled.textContent = sum_amount_canceled
+
+}
 

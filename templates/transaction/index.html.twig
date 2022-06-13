@@ -7,118 +7,7 @@
 
 {% block body %}
 
-<!--begin::Content-->
-<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
-    <!--begin::Toolbar-->
-    <div class="toolbar" id="kt_toolbar"> 
-        <!--begin::Container-->
-        <div id="kt_toolbar_container" class="container-fluid d-flex flex-stack">
-            <!--begin::Page title-->
-           {% include 'app.title.html.twig' %}
-            <!--end::Page title-->
-            <!--begin::Actions-->
-            <div class="d-flex align-items-center gap-2 gap-lg-3">
-                <!--begin::Filter menu-->
-                <div class="m-0">
-                    <!--begin::Menu toggle-->
-                    <a href="#" class="btn btn-sm btn-flex btn-light btn-active-primary fw-bolder" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
-                    <!--begin::Svg Icon | path: icons/duotune/general/gen031.svg-->
-                    <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                            <path d="M19.0759 3H4.72777C3.95892 3 3.47768 3.83148 3.86067 4.49814L8.56967 12.6949C9.17923 13.7559 9.5 14.9582 9.5 16.1819V19.5072C9.5 20.2189 10.2223 20.7028 10.8805 20.432L13.8805 19.1977C14.2553 19.0435 14.5 18.6783 14.5 18.273V13.8372C14.5 12.8089 14.8171 11.8056 15.408 10.964L19.8943 4.57465C20.3596 3.912 19.8856 3 19.0759 3Z" fill="black" />
-                        </svg>
-                    </span>
-                    <!--end::Svg Icon-->{% trans %}Filtrer{% endtrans %}</a>
-                    <!--end::Menu toggle-->
-                    <!--begin::Menu 1-->
-                    <div class="menu menu-sub menu-sub-dropdown w-250px w-md-300px" data-kt-menu="true" id="kt_menu_6220ed9a76bfe">
-                        <!--begin::Header-->
-                        <div class="px-7 py-5">
-                            <div class="fs-5 text-dark fw-bolder">{{ 'Options' | trans }}</div>
-                        </div>
-                        <!--end::Header-->
-                        <!--begin::Menu separator-->
-                        <div class="separator border-gray-200"></div>
-                        <!--end::Menu separator-->
-                        <!--begin::Form-->
-                        <div class="px-7 py-5">
-                            <!--begin::Input group-->
-                            <div class="mb-10">
-                                <!--begin::Label-->
-                                <label class="form-label fw-bold">Status:</label>
-                                <!--end::Label-->
-                                <!--begin::Input-->
-                                <div>
-                                    <select class="form-select form-select-solid" data-kt-select2="true" data-placeholder="Select option" data-dropdown-parent="#kt_menu_6220ed9a76bfe" data-allow-clear="true">
-                                        <option></option>
-                                        <option value="1">Approved</option>
-                                        <option value="2">Pending</option>
-                                        <option value="2">In Process</option>
-                                        <option value="2">Rejected</option>
-                                    </select>
-                                </div>
-                                <!--end::Input-->
-                            </div>
-                            <!--end::Input group-->
-                            <!--begin::Input group-->
-                            <div class="mb-10">
-                                <!--begin::Label-->
-                                <label class="form-label fw-bold">Member Type:</label>
-                                <!--end::Label-->
-                                <!--begin::Options-->
-                                <div class="d-flex">
-                                    <!--begin::Options-->
-                                    <label class="form-check form-check-sm form-check-custom form-check-solid me-5">
-                                        <input class="form-check-input" type="checkbox" value="1" />
-                                        <span class="form-check-label">Author</span>
-                                    </label>
-                                    <!--end::Options-->
-                                    <!--begin::Options-->
-                                    <label class="form-check form-check-sm form-check-custom form-check-solid">
-                                        <input class="form-check-input" type="checkbox" value="2" checked="checked" />
-                                        <span class="form-check-label">Customer</span>
-                                    </label>
-                                    <!--end::Options-->
-                                </div>
-                                <!--end::Options-->
-                            </div>
-                            <!--end::Input group-->
-                            <!--begin::Input group-->
-                            <div class="mb-10">
-                                <!--begin::Label-->
-                                <label class="form-label fw-bold">Notifications:</label>
-                                <!--end::Label-->
-                                <!--begin::Switch-->
-                                <div class="form-check form-switch form-switch-sm form-check-custom form-check-solid">
-                                    <input class="form-check-input" type="checkbox" value="" name="notifications" checked="checked" />
-                                    <label class="form-check-label">Enabled</label>
-                                </div>
-                                <!--end::Switch-->
-                            </div>
-                            <!--end::Input group-->
-                            <!--begin::Actions-->
-                            <div class="d-flex justify-content-end">
-                                <button type="reset" class="btn btn-sm btn-light btn-active-light-primary me-2" data-kt-menu-dismiss="true">Reset</button>
-                                <button type="submit" class="btn btn-sm btn-primary" data-kt-menu-dismiss="true">Apply</button>
-                            </div>
-                            <!--end::Actions-->
-                        </div>
-                        <!--end::Form-->
-                    </div>
-                    <!--end::Menu 1-->
-                </div>
-                <!--end::Filter menu-->
-                <!--begin::Secondary button-->
-                <!--end::Secondary button-->
-                <!--begin::Primary button-->
-                <a href="../../demo1/dist/.html" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_create_app">Create</a>
-                <!--end::Primary button-->
-            </div>
-            <!--end::Actions-->
-        </div>
-        <!--end::Container-->
-    </div>
-    <!--end::Toolbar-->
+   
     <!--begin::Post-->
     <div class="post d-flex flex-column-fluid" id="kt_post">
         <!--begin::Container-->
@@ -292,7 +181,7 @@
                                     </svg>
                                 </span>
                                 <!--end::Svg Icon-->
-                                <span class="stat">0 </span>&nbsp;XOF
+                                <span class="stat" id="tr_canceled">0 </span>&nbsp;XOF
                             </span>
                             <!--end::Badge-->
                         </div>
@@ -336,7 +225,7 @@
                                     <path d="M19.0759 3H4.72777C3.95892 3 3.47768 3.83148 3.86067 4.49814L8.56967 12.6949C9.17923 13.7559 9.5 14.9582 9.5 16.1819V19.5072C9.5 20.2189 10.2223 20.7028 10.8805 20.432L13.8805 19.1977C14.2553 19.0435 14.5 18.6783 14.5 18.273V13.8372C14.5 12.8089 14.8171 11.8056 15.408 10.964L19.8943 4.57465C20.3596 3.912 19.8856 3 19.0759 3Z" fill="black" />
                                 </svg>
                             </span>
-                            <!--end::Svg Icon-->{{ 'Filter' | trans }}</button>
+                            <!--end::Svg Icon-->{{ 'Filtre' | trans }}</button>
                             <!--begin::Menu 1-->
                             <div class="menu menu-sub menu-sub-dropdown w-300px w-md-325px" data-kt-menu="true">
                                 <!--begin::Header-->
@@ -351,31 +240,30 @@
                                 <div class="px-7 py-5" data-kt-transaction-table-filter="form">
                                     <!--begin::Input group-->
                                     <div class="mb-10">
-                                        <label class="form-label fs-6 fw-bold">{{ 'Role' | trans }}:</label>
-                                        <select class="form-select form-select-solid fw-bolder" data-kt-select2="true" data-placeholder="Select option" data-allow-clear="true" data-kt-transaction-table-filter="role" data-hide-search="true">
-                                            <option></option>
-                                           
+                                        <label class="form-label fs-6 fw-bold">{{ 'Marque' | trans }}:</label>
+                                        <select class="form-select form-select-solid fw-bolder" data-kt-select2="true" data-placeholder="Selectionnez une marque" data-allow-clear="true" data-kt-transaction-table-filter="Marque" data-hide-search="true">
+                                             {% for brand in sBrand %}
+                                                <option value="{{brand.name}}" >{{brand.name}}</option>
+                                            {% endfor %}
+
                                         </select>
                                     </div>
                                     <!--end::Input group-->
                                     <!--begin::Input group-->
                                     <div class="mb-10">
-                                        <label class="form-label fs-6 fw-bold">{% trans %}Pays{% endtrans %}</label>
-                                        <select id="kt_user_filter_select2_country" data-allow-clear="true" data-control="select2" data-kt-transaction-table-filter="two-step"
-                                            class="form-select form-select-solid fw-bolder" data-placeholder="{{'Filter par pays' | trans}}" 
-                                            data-kt-user-settings-type="select2_flags"/>
-                                            <option value="BJ" data-kt-select2-country="{{ asset('app/media/flags/benin.svg')}}">{% trans %}Benin{% endtrans %}</option>
-                                            <option value="TG" data-kt-select2-country="{{ asset('app/media/flags/togo.svg')}}">{% trans %}Togo{% endtrans %}</option>
-                                            <option value="CI" data-kt-select2-country="{{ asset('app/media/flags/ivory-coast.svg')}}">{% trans %}Cote d'Ivoire{% endtrans %}</option>
-                                            <option value="NE" data-kt-select2-country="{{ asset('app/media/flags/niger.svg')}}">{% trans %}Niger{% endtrans %}</option>
-                                            <option value="SN" data-kt-select2-country="{{ asset('app/media/flags/senegal.svg')}}">{% trans %}Senegal{% endtrans %}</option>
+                                        <label class="form-label fs-6 fw-bold">{% trans %}Statut{% endtrans %}</label>
+                                        <select  data-allow-clear="true" data-control="select2" data-kt-transaction-table-filter="Statut"
+                                            class="form-select form-select-solid fw-bolder" data-placeholder="{{'Filtrer par statut' | trans}}"/>
+                                            {% for status in sStatus %}
+                                                <option value="{{status.name}}" >{{status.name}}</option>
+                                            {% endfor %}
                                         </select>
                                     </div>
                                     <!--end::Input group-->
                                     <!--begin::Actions-->
                                     <div class="d-flex justify-content-end">
-                                        <button type="reset" class="btn btn-light btn-active-light-primary fw-bold me-2 px-6" data-kt-menu-dismiss="true" data-kt-transaction-table-filter="reset">Reset</button>
-                                        <button type="submit" class="btn btn-primary fw-bold px-6" data-kt-menu-dismiss="true" data-kt-transaction-table-filter="filter">Apply</button>
+                                        <button type="reset" class="btn btn-light btn-active-light-primary fw-bold me-2 px-6" data-kt-menu-dismiss="true" data-kt-transaction-table-filter="reset">{{'Annuler'|trans}}</button>
+                                        <button type="submit" class="btn btn-primary fw-bold px-6" data-kt-menu-dismiss="true" data-kt-transaction-table-filter="filter">{{'Valider'|trans}}</button>
                                     </div>
                                     <!--end::Actions-->
                                 </div>
@@ -416,6 +304,7 @@
                                 <th class="min-w-125px">{{'Montant'| trans}}</th>
                                 <th class="min-w-125px">{{'Balance Après'| trans}}</th>
                                 <th class="min-w-125px">{{'Statut'| trans}}</th>
+                                <th class="min-w-125px">{{'Marque'| trans}}</th>
                                 <th class="min-w-125px">{{'Date de création'| trans}}</th>
                                 <th class="min-w-125px">{{'Date de modification'| trans}}</th>
                             </tr>
@@ -439,7 +328,6 @@
         <!--end::Container-->
     </div>
     <!--end::Post-->
-</div>
 {% endblock %}
 
 

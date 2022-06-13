@@ -76,11 +76,19 @@ class TransactionRepository extends ServiceEntityRepository
        ;
    }
 
-    public function sumAmountForTransaction($status)
+    public function sumAmountForStatus($status)
     {
         return $this->createQueryBuilder('t')
         ->andWhere('t.status = :status')
         ->setParameter('status', $status)
+        ->select('SUM(t.amount) as amount')
+        ->getQuery()
+        ->getSingleScalarResult();
+    }
+
+    public function sumAmount()
+    {
+        return $this->createQueryBuilder('t')
         ->select('SUM(t.amount) as amount')
         ->getQuery()
         ->getSingleScalarResult();

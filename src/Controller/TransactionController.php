@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Brand;
 use App\Entity\Status;
 use App\Service\uBrand;
 use App\Service\BaseUrl;
@@ -65,7 +66,9 @@ class TransactionController extends AbstractController
                 [$this->intl->trans('Transactions')] 
             ],
             'brand'       => $this->brand->get(),
+            'sBrand'      => $this->em->getRepository(Brand::class)->findByStatus($this->services->status(3)),
             'baseUrl'     => $this->baseUrl->init(),
+            'sStatus'     => $this->em->getRepository(Status::class)->findByCode([6,2,7]),
             'pAccess'     => $this->pAccess,
         ]);
     }
@@ -84,6 +87,7 @@ class TransactionController extends AbstractController
         $pending        =   [];
         $validated      =   [];
         $canceled       =   [];
+        $sumAmount      =   0; $sumAmountPending    =   0;  $sumAmountValidated =   0;  $sumAmountCanceled  =   0;
 
         if (!$this->pView) {
             $transactions   =   [];
@@ -92,14 +96,15 @@ class TransactionController extends AbstractController
         else{
             $transactions           =   $this->em->getRepository(Transaction::class)->findAll();
             
-            $pending    =   $this->em->getRepository(Transaction::class)->findByStatus($this->em->getRepository(Status::class)->findByCode(2));
-            $validated  =   $this->em->getRepository(Transaction::class)->findByStatus($this->em->getRepository(Status::class)->findByCode(6));
-            $canceled   =   $this->em->getRepository(Transaction::class)->findByStatus($this->em->getRepository(Status::class)->findByCode(7));
+            $pending    =   $this->em->getRepository(Transaction::class)->findByStatus($this->services->status(2));
+            $validated  =   $this->em->getRepository(Transaction::class)->findByStatus($this->services->status(6));
+            $canceled   =   $this->em->getRepository(Transaction::class)->findByStatus($this->services->status(7));
             
-            $status= $this->em->getRepository(Status::class)->findByCode(2);
-            $sumAmountPending   =   $this->em->getRepository(Transaction::class)->sumAmountForTransaction($status);
+            $sumAmount              =   $this->em->getRepository(Transaction::class)->sumAmount();
+            $sumAmountPending       =   $this->em->getRepository(Transaction::class)->sumAmountForStatus($this->services->status(2));
+            $sumAmountValidated     =   $this->em->getRepository(Transaction::class)->sumAmountForStatus($this->services->status(6));
+            $sumAmountCanceled      =   $this->em->getRepository(Transaction::class)->sumAmountForStatus($this->services->status(7));
 
-            dd($sumAmountPending);
         }
         
         foreach ($transactions as $key => $transaction) {
@@ -107,6 +112,7 @@ class TransactionController extends AbstractController
             $tabTransaction[$key][0][0] = $transaction->getUser()->getUsetting()->getFirstName();
             $tabTransaction[$key][0][1] = $transaction->getUser()->getUsetting()->getLastName();
             $tabTransaction[$key][0][2] = $transaction->getUser()->getPhone();
+
 
             $tabTransaction[$key][1]    = $transaction->getTransactionId();
             $tabTransaction[$key][2]    = $transaction->getReference();
@@ -116,18 +122,24 @@ class TransactionController extends AbstractController
             $tabTransaction[$key][6][0] = $transaction->getStatus()->getCode();
             $tabTransaction[$key][6][1] = $this->intl->trans($transaction->getStatus()->getName());
             $tabTransaction[$key][6][2] = $this->intl->trans($transaction->getStatus()->getDescription());
-            $tabTransaction[$key][7]    = $transaction->getCreatedAt()->format("c");
-            $tabTransaction[$key][8]    = $transaction->getUpdatedAt()?$transaction->getUpdatedAt()->format("c"):$this->intl->trans('Pas de modification');
+            $tabTransaction[$key][7]    = $transaction->getUser()->getBrand()->getName();
+            $tabTransaction[$key][8]    = $transaction->getCreatedAt()->format("c");
+            $tabTransaction[$key][9]    = $transaction->getUpdatedAt()?$transaction->getUpdatedAt()->format("c"):$this->intl->trans('Pas de modification');
 
         }
        
         $this->services->addLog($this->intl->trans('Lecture de la liste des transactions'));
         $data = [
-                    "data"      =>   $tabTransaction,
-                    "all"       =>   count($transactions),         
-                    "pending"   =>   count($pending),      
-                    "validated" =>   count($validated),  
-                    "canceled"  =>   count($canceled)  
+                    "data"              =>   $tabTransaction,
+                    "all"               =>   count($transactions),         
+                    "pending"           =>   count($pending),      
+                    "validated"         =>   count($validated),  
+                    "canceled"          =>   count($canceled),
+                    "sumAmount"         =>   $sumAmount != null ? $sumAmount : 0,
+                    "sumAmountPending"  =>   $sumAmountPending != null ? $sumAmountPending : 0,
+                    "sumAmountValidated"=>   $sumAmountValidated != null ? $sumAmountValidated : 0,  
+                    "sumAmountCanceled" =>   $sumAmountCanceled != null ? $sumAmountCanceled : 0 
+
                 ];
         return new JsonResponse($data);
     }
