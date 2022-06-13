@@ -69,6 +69,9 @@ class Status
     #[ORM\Column(type: 'string', length: 25)]
     private $uid;
 
+    #[ORM\Column(type: 'string', length: 25)]
+    private $label;
+
 
     public function __construct()
     {
@@ -519,6 +522,18 @@ class Status
     public function setUid(string $uid): self
     {
         $this->uid = $uid;
+
+        return $this;
+    }
+
+    public function getLabel(): ?string
+    {
+        return $this->label;
+    }
+
+    public function setLabel(string $label): self
+    {
+        $this->label = $label;
 
         return $this;
     }

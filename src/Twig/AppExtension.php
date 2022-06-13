@@ -112,14 +112,6 @@ class AppExtension extends AbstractExtension
         return $master;
 	}
 
-	/*public function basePath(){
-		$manifest = file_exists("./build/manifest.json") ? "./build/manifest.json" : "./public/build/manifest.json";
-
-        $data = json_decode(file_get_contents($manifest), true);
-
-        return $data["asset"] ? $data["asset"] : "/";
-	}*/
-
 	public function menu(string $uri, $path){
 		if(is_array($path) )
 			return  (in_array($uri, $path, true)) ? ' active' : '';

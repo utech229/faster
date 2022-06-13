@@ -1,0 +1,11 @@
+<script type="text/javascript">
+    function loading(status = false){
+        const load = $("#loading-container");
+        if(status) load.removeClass("sr-only"); else load.addClass("sr-only");
+    }
+    function viewTime(dtz){
+        moment.locale(_local);
+        tz = moment.tz.guess(true);
+        return moment(dtz).tz(tz).format('llll');
+    }
+</script>

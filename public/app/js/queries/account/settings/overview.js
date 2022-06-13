@@ -22,41 +22,41 @@ var KTAccountSettingsOverview= {
         const desactivateButton        = $('#desactivate_link')
 
         $(initButton).click(function() {
-            load.removeClass('sr-only'); 
+            loading(true)
             setTimeout(() => {
                 profile_setting_section.removeClass('d-none')
                 detail_section.addClass('d-none')
-                load.addClass('sr-only'); 
+                loading()
             }, 100);
         });
         $(initNoticeButton).click(function() {
-            load.removeClass('sr-only'); 
+            loading(true)
             setTimeout(() => {
                 profile_setting_section.removeClass('d-none')
                 detail_section.addClass('d-none')
-                load.addClass('sr-only'); 
+                loading()
             }, 100);
         });
         $(discardButton).click(function() {
-            load.removeClass('sr-only'); 
+            loading(true)
             setTimeout(() => {
                 profile_setting_section.addClass('d-none')
                 detail_section.removeClass('d-none')
-                load.addClass('sr-only'); 
+                loading()
             }, 100);
             
         });
         $(reviewButton).click(function() {
-            load.removeClass('sr-only'); 
+            loading(true)
             setTimeout(() => {
                 profile_setting_section.addClass('d-none')
                 detail_section.removeClass('d-none')
-                load.addClass('sr-only'); 
+                loading()
             }, 100);
         });
 
         $(overviewButton).click(function() {
-            load.removeClass('sr-only'); 
+            loading(true)
             setTimeout(() => {
                 companyButton.removeClass('active');
                 soldeNotificationButton.removeClass('active');
@@ -64,16 +64,16 @@ var KTAccountSettingsOverview= {
                 desactivateButton.removeClass('active');
                 $(this).addClass('active');
 
-                profile_setting_section.addClass('d-none')
-                company_section.addClass('d-none')
+                profile_setting_section.addClass('d-none');
+                company_section.addClass('d-none');
                 detail_section.removeClass('d-none')
                 desactivate_section.addClass('d-none')
-                load.addClass('sr-only'); 
+                loading()
             }, 100);
         });
 
         $(companyButton).click(function() {
-            load.removeClass('sr-only'); 
+            loading(true)
             overviewButton.removeClass('active');
             $(this).addClass('active');
             setTimeout(() => {
@@ -86,12 +86,12 @@ var KTAccountSettingsOverview= {
                 profile_setting_section.addClass('d-none')
                 detail_section.addClass('d-none')
                 desactivate_section.addClass('d-none')
-                load.addClass('sr-only'); 
+                loading()
             }, 100);
         });
 
         $(signinMethodButton).click(function() {
-            load.removeClass('sr-only'); 
+            loading(true)
             $(this).addClass('active');
             setTimeout(() => {
                 
@@ -106,12 +106,12 @@ var KTAccountSettingsOverview= {
                 profile_setting_section.addClass('d-none')
                 solde_notification_section.addClass('d-none')
                 detail_section.addClass('d-none')
-                load.addClass('sr-only'); 
+                loading()
             }, 100);
         });
 
         $(soldeNotificationButton).click(function() {
-            load.removeClass('sr-only'); 
+            loading(true)
             $(this).addClass('active');
             
             setTimeout(() => {
@@ -127,12 +127,12 @@ var KTAccountSettingsOverview= {
                 company_section.addClass('d-none')
                 profile_setting_section.addClass('d-none')
                 detail_section.addClass('d-none')
-                load.addClass('sr-only'); 
+                loading()
             }, 100);
         });
 
         $(desactivateButton).click(function() {
-            load.removeClass('sr-only'); 
+            loading(true)
             $(this).addClass('active');
             
             setTimeout(() => {
@@ -146,7 +146,7 @@ var KTAccountSettingsOverview= {
                 company_section.addClass('d-none')
                 profile_setting_section.addClass('d-none')
                 detail_section.addClass('d-none')
-                load.addClass('sr-only'); 
+                loading()
             }, 100);
         });
 
