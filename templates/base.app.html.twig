@@ -79,38 +79,6 @@
                                     <span class="menu-title">{{ 'Tableau de bord' | trans }} </span>
                                 </a>
                             </div>
-                            {% if permission(["PFIL0","AFFL0"], app.user, false) %}
-                            <div class="menu-item">
-                                <div class="menu-content pt-8 pb-2">
-                                    <span class="menu-section text-muted text-uppercase fs-8 ls-1">{{ 'Mon compte' | trans }}</span>
-                                </div>
-                            </div>
-                            {% endif %}
-                            {% if permission(["PFIL0"], app.user) %}
-                            <div class="menu-item">
-                                <a class="menu-link {{menu(uri, path('app_profile')) }}" href="{{ path('app_profile') }}">
-                                    <span class="menu-icon">
-                                        <!--begin::Svg Icon | path: icons/stockholm/Design/PenAndRuller.svg-->
-                                        <i class="bi bi-person-circle fs-3"></i>
-                                        <!--end::Svg Icon-->
-                                    </span>
-                                    <span class="menu-title">{{ 'Mon profil' | trans }} </span>
-                                </a>
-                            </div>
-                            {% endif %}
-                            {% if permission(["AFFL0"], app.user) %}
-                            <div class="menu-item">
-                                <a class="menu-link {{menu(uri, path('app_affiliate_index')) }}" href="{{ path('app_affiliate_index') }}">
-                                    <span class="menu-icon">
-                                        <!--begin::Svg Icon | path: icons/stockholm/Design/PenAndRuller.svg-->
-                                        <i class="bi bi-people fs-3"></i>
-                                        <!--end::Svg Icon-->
-                                    </span>
-                                    <span class="menu-title">{{ 'Comptes affiliés' | trans }} </span>
-                                </a>
-                            </div>
-                            {% endif %}
-
                             {% if permission(["MET0"], app.user, false) %}
                             <div class="menu-item">
                                 <div class="menu-content pt-8 pb-2">
@@ -230,14 +198,11 @@
                                 </a>
                             </div>
                             {% endif %}
-                            
-                            {% if permission(["UTI0","PER0","ROL0"], app.user, false) %}
                             <div class="menu-item">
                                 <div class="menu-content pt-8 pb-2">
                                     <span class="menu-section text-muted text-uppercase fs-8 ls-1">{{ 'Gestion Utilisateurs' | trans }}</span>
                                 </div>
                             </div>
-                            {% endif %}
                             {% if permission(["UTI0"], app.user) %}
                             <div class="menu-item">
                                 <a class="menu-link {{ menu(uri, path('app_user_index')) }}" href="{{ path('app_user_index') }}">
@@ -245,6 +210,18 @@
                                        <i class="bi bi-people fs-3"></i>
                                     </span>
                                     <span class="menu-title">{{ "Utilisateurs" | trans }}</span>
+                                </a>
+                            </div>
+                            {% endif %}
+                            {% if permission(["AFFL0"], app.user) %}
+                            <div class="menu-item">
+                                <a class="menu-link {{menu(uri, path('app_affiliate_index')) }}" href="{{ path('app_affiliate_index') }}">
+                                    <span class="menu-icon">
+                                        <!--begin::Svg Icon | path: icons/stockholm/Design/PenAndRuller.svg-->
+                                        <i class="bi bi-person-plus fs-3"></i>
+                                        <!--end::Svg Icon-->
+                                    </span>
+                                    <span class="menu-title">{{ 'Affiliés' | trans }} </span>
                                 </a>
                             </div>
                             {% endif %}
@@ -460,10 +437,16 @@
                                         <div class="separator my-2"></div>
                                         <!--end::Menu separator-->
                                         <!--begin::Menu item-->
+                                        {% if permission(["PFIL0"], app.user) %}
                                         <div class="menu-item px-5">
                                             <a href="{{path("app_profile")}}" class="menu-link px-5">{% trans %}Mon profil{% endtrans %}</a>
                                         </div>
-                        
+                                        {% endif %}
+                                        {% if permission(["AFFL0"], app.user) %}
+                                        <div class="menu-item px-5">
+                                            <a href="{{path("app_affiliate_index")}}" class="menu-link px-5">{% trans %}Affiliés{% endtrans %}</a>
+                                        </div>
+                                        {% endif %}
                                         <!--begin::Menu separator-->
                                         <div class="separator my-2"></div>
                                         <!--end::Menu separator-->

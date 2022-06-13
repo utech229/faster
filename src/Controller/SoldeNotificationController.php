@@ -80,21 +80,22 @@ class SoldeNotificationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) 
         {
             $SoldeNotification->setUid($this->services->idgenerate(15));
+            $SoldeNotification->setUser($user);
             $SoldeNotification->setStatus($this->services->status(3));
             $SoldeNotification->setCreatedAt(new \DatetimeImmutable());
             $this->SoldeNotificationRepository->add($SoldeNotification);
             return $this->services->msg_success(
                 $this->intl->trans("Création de solde de notification"),
                 $this->intl->trans("Solde de notification ajouté avec succès"), 
-                ['amount' => $SoldeNotification->getName(),'email' => $SoldeNotification->getEma1l(),  
-                'email2' => $SoldeNotification->getEma1l2(), 'email3' => $SoldeNotification->getEma1l3(), 'isAdd' => true]
+                ['amount' => $SoldeNotification->getMinSolde(),'email1' => $SoldeNotification->getEmail1(),  
+                'email2' => $SoldeNotification->getEmail2(), 'email3' => $SoldeNotification->getEmail3(), 'isAdd' => true]
             );
         }
         else 
         {
             return $this->services->formErrorsNotification($this->validator, $this->intl, $SoldeNotification);
         }
-        return $this->services->failedcrud($this->intl->trans("Enregistrement d'une nouvelle entreprise"));
+        return $this->services->failedcrud($this->intl->trans("Enregistrement du solde de notification"));
     }
  
     public function updateSoldeNotification($request, $form, $SoldeNotification, $user): JsonResponse
@@ -104,32 +105,34 @@ class SoldeNotificationController extends AbstractController
             $SoldeNotification->setUpdatedAt(new \DatetimeImmutable());
             $this->SoldeNotificationRepository->add($SoldeNotification);
             return $this->services->msg_success(
-                $this->intl->trans("Modification de l'entreprise")." : ".$SoldeNotification->getUid(),
-                $this->intl->trans("Profil entreprise modifié avec succès"), 
-                ['amount' => $SoldeNotification->getName(),'email' => $SoldeNotification->getEma1l(),  
-                'email2' => $SoldeNotification->getEma1l2(), 'email3' => $SoldeNotification->getEma1l3(), 'isAdd' => false]
+                $this->intl->trans("Modification du solde de notification"),
+                $this->intl->trans("Solde de notification  modifié avec succès"), 
+                ['amount' => $SoldeNotification->getMinSolde(),'email1' => $SoldeNotification->getEmail1(),  
+                'email2' => $SoldeNotification->getEmail2(), 'email3' => $SoldeNotification->getEmail3(), 'isAdd' => false]
             );
         }
         else 
         {
             return $this->services->formErrorsNotification($this->validator, $this->intl, $SoldeNotification);
         }
-        return $this->services->failedcrud($this->intl->trans("Modification d'une entreprise").' : '.$SoldeNotification->getUid());
+        return $this->services->failedcrud($this->intl->trans("Modification du solde de notification"));
     }
 
 
    
 
-    #[Route('/{uid}/get', name: 'get_this_SoldeNotification', methods: ['POST'])]
+    #[Route('get', name: 'app_get_this_soldeNotification', methods: ['POST'])]
     public function get_this_SoldeNotification(Request $request,): Response
     {
         $SoldeNotification = $this->getUser()->getSoldeNotification();
-
-        $row['orderId']      = $SoldeNotification->getUid();
-        $row['amount']         = $SoldeNotification->getMinSolde();
-        $row['email1']        = $SoldeNotification->getEmail1();
-        $row['email2']        = $SoldeNotification->getEmail2();
-        $row['email3']        = $SoldeNotification->getEmail3();
+        if ($SoldeNotification) {
+            $row['orderId']       = $SoldeNotification->getUid();
+            $row['amount']        = $SoldeNotification->getMinSolde();
+            $row['email1']        = $SoldeNotification->getEmail1();
+            $row['email2']        = $SoldeNotification->getEmail2();
+            $row['email3']        = $SoldeNotification->getEmail3();
+        }
+        $row['is']            = ($SoldeNotification) ? true : false;
         return new JsonResponse([
             'data' => $row, 
             'message' => $this->intl->trans('Vos données sont chargés avec succès.')]);

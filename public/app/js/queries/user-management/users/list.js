@@ -181,10 +181,12 @@ var KTUsersList = function() {
                         targets: 3,
                         render: function(data, type, full, meta) {
                             var status = {
-                                'ROLE_AFFILIATE': { 'title': 'Affilié', 'class': 'warning' },
+                                'ROLE_AFFILIATE_USER': { 'title': 'Affilié revendeur', 'class': 'warning' },
+                                'ROLE_AFFILIATE_RESELLER': { 'title': 'Affilié revendeur', 'class': 'warning' },
+                                'ROLE_RESSELER': { 'title': 'Revendeur', 'class': 'warning' },
                                 'ROLE_USER': { 'title': 'Utilisateur', 'class': 'danger' },
-                                'ROLE_ADMIN': { 'title': 'Administrateur', 'class': 'secondary' },
-                                'ROLE_SUPER_ADMIN': { 'title': 'Super administrateur', 'class': 'info' },
+                                'ROLE_ADMINISTRATOR': { 'title': 'Administrateur', 'class': 'secondary' },
+                                'ROLE_SUPER_ADMINISTRATOR': { 'title': 'Super administrateur', 'class': 'info' },
                             };
                             if (typeof status[data] === 'undefined') {
                                 return data;
@@ -286,11 +288,11 @@ var KTUsersList = function() {
     
                         { data: 'phone' },
     
-                        { data: 'role' },
+                        { data: 'role', responsivePriority: -8},
     
-                        { data: 'country', responsivePriority: 0 },
+                        { data: 'country', responsivePriority: 10 },
     
-                        { data: 'balance'  },
+                        { data: 'balance' , responsivePriority: -7 },
     
                         { data: 'status' },
     

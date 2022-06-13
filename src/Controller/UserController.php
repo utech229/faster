@@ -288,24 +288,24 @@ class UserController extends AbstractController
     {
         $cuser     = $this->getUser();
         $userRole  = $cuser->getRole();
-        $roleLevel = $userRole->getLevel();
-        switch ($roleLevel) {
-            case 1 :
+        $roleName = $userRole->getName();
+        switch ($roleName) {
+            case 'USER' :
                 $data = [];
                 break;
-            case 2 :
+            case 'AFFILIATE_USER':
                 $data = [];
                 break;
-            case 3 :
+            case 'AFFILIATE_RESELLER':
                 $data = $this->userRepository->findUserByCountryCode($cuser->getCountry()['code']);
                 break;
-            case 4 :
+            case 'RESELLER' :
                 $data = $this->userRepository->findUserByCountryCode($cuser->getCountry()['code']);
                 break;
-            case 5 :
-                $data = $this->userRepository->findAllUserNoStatus(4);
+            case 'ADMINISTRATOR' :
+                $data = $this->userRepository->findAll();
                 break;
-            case 6 :
+            case 'SUPER_ADMINISTRATOR' :
                 $data = $this->userRepository->findAll();
                 break;
             default:
