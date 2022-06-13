@@ -72,8 +72,8 @@ var KTAccountSettingsProfileDetails=function() {
                 a.preventDefault(), t && t.validate().then((function(v) {
                     "Valid" == v ? 
                     (i.setAttribute("data-kt-indicator", "on"), i.disabled = !0, 
-                        $('#user_phone').val(intl.getNumber()),
-                        load.removeClass('sr-only'),
+                        $('[name=phone]').val(intl["user_phone"].getNumber()),
+                        loading(true),
                         $.ajax({
                             url: profile_details_link,
                             type: 'post',
@@ -100,14 +100,14 @@ var KTAccountSettingsProfileDetails=function() {
                                         $('#menu_x_profile_avatar').attr('src', cover);
                                     }
                                 }));
-                                load.addClass('sr-only');
+                                 loading();
                             },
                             error: function (response) {
                                 i.removeAttribute("data-kt-indicator"), i.disabled = !1
                                 $(document).trigger('onAjaxError');
-                                load.addClass('sr-only');
+                                 loading();
                             }
-                        })) : $(document).trigger('onFormError'), load.addClass('sr-only');;
+                        })) : $(document).trigger('onFormError'),  loading();;
                 }))
             }));
             

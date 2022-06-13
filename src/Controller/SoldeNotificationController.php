@@ -40,7 +40,7 @@ class SoldeNotificationController extends AbstractController
         $this->validator         = $validator;
         $this->SoldeNotificationRepository = $SoldeNotificationRepository;
 
-        $this->permission      =    ["CPNY0", "CPNY1", "CPNY2", "CPNY3", "CPNY4"];
+        $this->permission      =    ["PFIL0", "PFIL1", "PFIL2", "PFIL3", "PFIL4"];
         $this->pAccess         =    $this->services->checkPermission($this->permission[0]);
         $this->pCreate         =    $this->services->checkPermission($this->permission[1]);
         $this->pView           =    $this->services->checkPermission($this->permission[2]);
@@ -48,7 +48,8 @@ class SoldeNotificationController extends AbstractController
         $this->pDelete         =    $this->services->checkPermission($this->permission[4]);
     }
 
-    #[Route('/add', name: 'app_SoldeNotification_manage', methods: ['POST'])]
+    #[Route('/add', name: 'app_notification_manage', methods: ['POST'])]
+    #[Route('/{uid}/update', name: 'app_notification_update', methods: ['POST'])]
     public function index(Request $request): Response
     {
         $user = $this->getUser();
@@ -61,16 +62,16 @@ class SoldeNotificationController extends AbstractController
         {
             $form->handleRequest($request);
             if ($isSoldeNotificationAdd == true) { //method calling
-                //if (!$this->pCreate) return $this->services->no_access($this->intl->trans("Enrégistrement d'une entreprise"));
+                if (!$this->pCreate) return $this->services->no_access($this->intl->trans("Enrégistrement d'un solde d'alerte"));
                 return $this->addSoldeNotification($request, $form, $SoldeNotification, $user);
             }else {
-                //if (!$this->pEdit) return $this->services->no_access($this->intl->trans("Mise à jour d'une entreprise"));
+                if (!$this->pEdit) return $this->services->no_access($this->intl->trans("Mise à jour d'un solde d'alerte"));
                 return $this->updateSoldeNotification($request, $form, $SoldeNotification, $user);
             }
         }
         return $this->services->msg_info(
-            $this->intl->trans("Enregistrement d'une entreprise"),
-            $this->intl->trans("La configuration de l'entreprise n'est pas requis")
+            $this->intl->trans("Enregistrement d'un solde d'alerte"),
+            $this->intl->trans("La configuration du un solde d'alerte n'est pas requis")
         );
     }
 
@@ -78,21 +79,15 @@ class SoldeNotificationController extends AbstractController
     {
         if ($form->isSubmitted() && $form->isValid()) 
         {
-            $phone           =  $form->get('phone')->getData();
-            $address         =  $request->request->get('adress');
-
             $SoldeNotification->setUid($this->services->idgenerate(15));
             $SoldeNotification->setStatus($this->services->status(3));
-            $SoldeNotification->setPhone($phone);
-            $SoldeNotification->setManager($user);
-            $SoldeNotification->setAddress($address);;
             $SoldeNotification->setCreatedAt(new \DatetimeImmutable());
             $this->SoldeNotificationRepository->add($SoldeNotification);
             return $this->services->msg_success(
-                $this->intl->trans("Ajout d'un nouveau SoldeNotification"),
-                $this->intl->trans("SoldeNotification ajouté avec succès"), 
-                ['name' => $SoldeNotification->getName(), 'phone' => $SoldeNotification->getPhone(), 'email' => $SoldeNotification->getEmail(), 
-                'ifu' => $SoldeNotification->getIfu(), 'rccm' => $SoldeNotification->getRccm(), 'address' => $SoldeNotification->getAddress(), 'isAdd' => true]
+                $this->intl->trans("Création de solde de notification"),
+                $this->intl->trans("Solde de notification ajouté avec succès"), 
+                ['amount' => $SoldeNotification->getName(),'email' => $SoldeNotification->getEma1l(),  
+                'email2' => $SoldeNotification->getEma1l2(), 'email3' => $SoldeNotification->getEma1l3(), 'isAdd' => true]
             );
         }
         else 
@@ -106,19 +101,13 @@ class SoldeNotificationController extends AbstractController
     {
         if ($form->isSubmitted() && $form->isValid()) 
         { 
-            $phone           =  $form->get('phone')->getData();
-            $address         =  $request->request->get('adress');
-            $SoldeNotification->setPhone($phone);
-            $SoldeNotification->setManager($user);
-            $SoldeNotification->setAddress($address);;
-            $SoldeNotification->setCreatedAt(new \DatetimeImmutable());
             $SoldeNotification->setUpdatedAt(new \DatetimeImmutable());
             $this->SoldeNotificationRepository->add($SoldeNotification);
             return $this->services->msg_success(
                 $this->intl->trans("Modification de l'entreprise")." : ".$SoldeNotification->getUid(),
                 $this->intl->trans("Profil entreprise modifié avec succès"), 
-                ['name' => $SoldeNotification->getName(), 'phone' => $SoldeNotification->getPhone(), 'email' => $SoldeNotification->getEmail(), 
-                'ifu' => $SoldeNotification->getIfu(), 'rccm' => $SoldeNotification->getRccm(), 'address' => $SoldeNotification->getAddress(), 'isAdd' => false]
+                ['amount' => $SoldeNotification->getName(),'email' => $SoldeNotification->getEma1l(),  
+                'email2' => $SoldeNotification->getEma1l2(), 'email3' => $SoldeNotification->getEma1l3(), 'isAdd' => false]
             );
         }
         else 
@@ -137,12 +126,10 @@ class SoldeNotificationController extends AbstractController
         $SoldeNotification = $this->getUser()->getSoldeNotification();
 
         $row['orderId']      = $SoldeNotification->getUid();
-        $row['name']         = $SoldeNotification->getName();
-        $row['email']        = $SoldeNotification->getEmail();
-        $row['phone']        = str_replace($SoldeNotification->getManager->getCountry()['dial_code'], '', $SoldeNotification->getPhone());
-        $row['ifu']          = $SoldeNotification->getIfu();
-        $row['rccm']         = $SoldeNotification->getRccm();
-        $row['address']      = $SoldeNotification->getAddress();
+        $row['amount']         = $SoldeNotification->getMinSolde();
+        $row['email1']        = $SoldeNotification->getEmail1();
+        $row['email2']        = $SoldeNotification->getEmail2();
+        $row['email3']        = $SoldeNotification->getEmail3();
         return new JsonResponse([
             'data' => $row, 
             'message' => $this->intl->trans('Vos données sont chargés avec succès.')]);

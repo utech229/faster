@@ -10,18 +10,11 @@
         </script>
         <!--end::Javascript-->
         <meta charset="UTF-8">
-        <title>{% block title %}{{title}}{% endblock %}</title>
+        <title>{% block title %}{{title|default(brand.name)}}{% endblock %}</title>
         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="author" content="{{ brand.name }}">
-		<meta property="og:locale" content="{{ _locale }}" />
-		<meta property="og:type" content="article" />
-		<meta property="og:title" content="{{title}}" />
-		<meta property="og:url" content="{{ baseUrl }}" />
-		<meta property="og:site_name" content="{{ brand.name }} |{{ brand.name }}" />
-		<link rel="canonical" href="" />
-		<!-- Favicons -->
         <link href="{{ brand.favicon }}" rel="icon">
         <link href="{{ brand.apple_touch_icon }}" rel="apple-touch-icon">
 		<!--begin::Fonts-->
@@ -118,14 +111,12 @@
                             </div>
                             {% endif %}
 
-                            {% if permission(["MET0"], app.user, false) and app.user.role.level >= 3 %}
+                            {% if permission(["MET0"], app.user, false) %}
                             <div class="menu-item">
                                 <div class="menu-content pt-8 pb-2">
                                     <span class="menu-section text-muted text-uppercase fs-8 ls-1">{{ 'Retrait de fonds' | trans }}</span>
                                 </div>
                             </div>
-                            {% endif %}
-                            {% if permission(["MET0"], app.user) and app.user.role.level >= 3 %}
                             <div class="menu-item">
                                 <a class="menu-link {{menu(uri, path('app_profile')) }}" href="{{ path('app_profile') }}">
                                     <span class="menu-icon">
@@ -133,7 +124,7 @@
                                         <i class="bi bi-coin fs-3"></i>
                                         <!--end::Svg Icon-->
                                     </span>
-                                    <span class="menu-title">{{ 'Méthodes de paiement' | trans }} </span>
+                                    <span class="menu-title">{{ 'Paiement' | trans }} </span>
                                 </a>
                             </div>
                             {% endif %}
@@ -155,6 +146,46 @@
                             <!--end::Menu-->
                             <div class="menu-item">
                                 <div class="menu-content pt-8 pb-2">
+                                    <span class="menu-section text-muted text-uppercase fs-8 ls-1">{{ "Campagnes" | trans }}</span>
+                                </div>
+                            </div>
+                            <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
+									<span class="menu-link">
+										<span class="menu-icon">
+											<!--begin::Svg Icon | path: icons/duotune/electronics/elc002.svg-->
+											<span class="svg-icon svg-icon-2">
+												<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+													<path d="M6 21C6 21.6 6.4 22 7 22H17C17.6 22 18 21.6 18 21V20H6V21Z" fill="currentColor" />
+													<path opacity="0.3" d="M17 2H7C6.4 2 6 2.4 6 3V20H18V3C18 2.4 17.6 2 17 2Z" fill="currentColor" />
+													<path d="M12 4C11.4 4 11 3.6 11 3V2H13V3C13 3.6 12.6 4 12 4Z" fill="currentColor" />
+												</svg>
+											</span>
+											<!--end::Svg Icon-->
+										</span>
+										<span class="menu-title">{{ "SMS" | trans }}</span>
+										<span class="menu-arrow"></span>
+									</span>
+									<div class="menu-sub menu-sub-accordion">
+										<div class="menu-item">
+											<a class="menu-link" href="../../demo1/dist/apps/contacts/getting-started.html">
+												<span class="menu-bullet">
+													<span class="bullet bullet-dot"></span>
+												</span>
+												<span class="menu-title">{{ "Campagnes" | trans }}</span>
+											</a>
+										</div>
+										<div class="menu-item">
+											<a class="menu-link" href="../../demo1/dist/apps/contacts/view-contact.html">
+												<span class="menu-bullet">
+													<span class="bullet bullet-dot"></span>
+												</span>
+												<span class="menu-title">{{ "Messages API" | trans }}</span>
+											</a>
+										</div>
+									</div>
+								</div>
+                            <div class="menu-item">
+                                <div class="menu-content pt-8 pb-2">
                                     <span class="menu-section text-muted text-uppercase fs-8 ls-1">{{ 'Transactions' | trans }}</span>
                                 </div>
                             </div>
@@ -173,7 +204,7 @@
                                     <span class="menu-title">{% trans %}Recharge{% endtrans %}</span>
                                 </a>
                             </div>
-
+                            
                             <div class="menu-item">
                                 <div class="menu-content pt-8 pb-2">
                                     <span class="menu-section text-muted text-uppercase fs-8 ls-1">{{ 'Congiguration' | trans }}</span>
@@ -199,7 +230,7 @@
                                 </a>
                             </div>
                             {% endif %}
-
+                            
                             {% if permission(["UTI0","PER0","ROL0"], app.user, false) %}
                             <div class="menu-item">
                                 <div class="menu-content pt-8 pb-2">
@@ -296,7 +327,7 @@
                 {% if permission(["LOG0"], app.user) %}
                 <!--begin::Footer-->
                 <div class="aside-footer flex-column-auto pt-5 pb-7 px-5" id="kt_aside_footer">
-                    <a href="{{ path('app_logs') }}" class="btn btn-custom btn-primary w-100"
+                    <a href="{{ path('app_logs') }}" class="btn btn-custom btn-primary w-100" 
                     data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss-="click" title="{{'Voir l\'activité des utilisateurs' | trans }}">
                         <span class="btn-label">{{'Logs'| trans }}</span>
                         <!--begin::Svg Icon | path: icons/duotune/general/gen005.svg-->
@@ -314,7 +345,7 @@
                 </div>
                 {% endif %}
                 <!--end::Footer-->
-
+                
             </div>
             <!--end::Aside-->
             <!--begin::Wrapper-->
@@ -400,10 +431,10 @@
                             <!--begin::Toolbar wrapper-->
                             <div class="d-flex align-items-stretch flex-shrink-0">
                                 <!--begin::User menu-->
-                                <div class="d-flex align-items-center ms-1 ms-lg-3" id="kt_header_user_menu_toggle">
+                                <div class="d-flex align-items-center ms-1 ms-lg-3" id="kt_header_user_menu_toggle"> 
                                     <!--begin::Menu wrapper-->
                                     <div class="cursor-pointer symbol symbol-30px symbol-md-40px" data-kt-menu-trigger="click" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end">
-                                        <img id="menu_profile_avatar" src="{{ asset('app/uploads/avatars/'~ app.user.profilePhoto ~'') }}" alt="{{  app.user.brand.name}}" />
+                                        <img id="menu_profile_avatar" src="{{ asset('app/uploads/avatars/'~ app.user.profilePhoto ~'') }}" alt="{{ app.user.brand ? app.user.brand.name}}" />
                                     </div>
                                     <!--begin::User account menu-->
                                     <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg menu-state-primary fw-bold py-4 fs-6 w-275px" data-kt-menu="true">
@@ -432,7 +463,7 @@
                                         <div class="menu-item px-5">
                                             <a href="{{path("app_profile")}}" class="menu-link px-5">{% trans %}Mon profil{% endtrans %}</a>
                                         </div>
-
+                        
                                         <!--begin::Menu separator-->
                                         <div class="separator my-2"></div>
                                         <!--end::Menu separator-->
@@ -443,7 +474,7 @@
                                                 <span class="fs-8 rounded bg-light px-3 py-2 position-absolute translate-middle-y top-50 end-0">
                                                 {% if _locale == 'fr' %} {% trans %}Français{% endtrans %} {% else %} {% trans %}Anglais{% endtrans %} {% endif %}
 
-                                                {% if _locale == 'fr' %}
+                                                {% if _locale == 'fr' %} 
                                                     <img class="w-15px h-15px rounded-1 ms-2" src="{{ asset('app/media/flags/france.svg') }}" alt="" /></span>
                                                 {% else %}
                                                     <img class="w-15px h-15px rounded-1 ms-2" src="{{ asset('app/media/flags/united-states.svg') }}" alt="" /></span>
@@ -519,9 +550,63 @@
                 </div>
                 <!--end::Header-->
                 <!--begin::Content-->
-                {% block body %}{% endblock %}
+                <!--begin::Content-->
+                <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+                    <!--begin::Toolbar-->
+                    <div class="toolbar" id="kt_toolbar"> 
+                        <!--begin::Container-->
+                        <div id="kt_toolbar_container" class="container-fluid d-flex flex-stack">
+                            <!--begin::Page title-->
+                             <!--begin::Page title-->
+                            <div data-kt-swapper="true" data-kt-swapper-mode="prepend" data-kt-swapper-parent="{default: '#kt_content_container', 'lg': '#kt_toolbar_container'}" class="page-title d-flex align-items-center flex-wrap me-3 mb-5 mb-lg-0">
+                                <!--begin::Title-->
+                                <h1 class="d-flex text-dark fw-bolder fs-3 align-items-center my-1">{{ brand.name }}</h1>
+                                <!--end::Title-->
+                                <!--begin::Separator-->
+                                <span class="h-20px border-gray-300 border-start mx-4"></span>
+                                <!--end::Separator-->
+                                <!--begin::Breadcrumb-->
+                                <ul class="breadcrumb breadcrumb-separatorless fw-bold fs-7 my-1">
+                                    <!--begin::Item-->
+                                    <li class="breadcrumb-item text-muted">
+                                        <a href="{{ path('app_home')}}" class="text-muted text-hover-primary">{{'Tableau de bord' | trans }}</a>
+                                    </li>
+                                    <!--end::Item-->
+                                    {% for title in pageTitle %}
+                                        <li class="breadcrumb-item">
+                                            <span class="bullet bg-gray-300 w-5px h-2px"></span>
+                                        </li>
+                                        {% if title|length > 1 %}
+                                        <li class="breadcrumb-item text-muted">
+                                            <a href="{{title[1]}}" class="text-muted text-hover-primary">{{title[0]}}</a>
+                                        </li>
+                                        {% else %}
+                                        <!--begin::Item-->
+                                        <li class="breadcrumb-item text-dark">{{title[0]}}</li>
+                                        <!--end::Item-->
+                                        {% endif %}
+                                    {% endfor %}
+                                </ul>
+                                <!--end::Breadcrumb-->
+                            </div>
+                            <!--end::Page title-->
+                            <!--begin::Actions-->
+                            <div class="d-flex align-items-center gap-2 gap-lg-3">
+                                <!--begin::Filter menu-->
+                                <div class="m-0">
+                                    <a href="javascript:history.back()" class="btn btn-sm btn-secondary px-6"><span class="fas fa-chevron-circle-left"> {% trans %} Retour{% endtrans %}</span></a>
+                                </div>
+                                <!--end::Filter menu-->
+                            </div>
+                            <!--end::Actions-->
+                        </div>
+                        <!--end::Container-->
+                    </div>
+                    <!--end::Toolbar-->
+                    {% block body %}{% endblock %}
+                </div>
                 <!--end::Content-->
-
+                
                 <!-- Toaster for notify accepted cookies -->
                 <div class="position-fixed top-300 end-0 p-3 z-index-3">
                     <div id="kt_docs_toast_cookies" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
@@ -575,7 +660,7 @@
     <!--end::Drawers-->
     <!--end::Main-->
     <!--begin::Engage toolbar-->
-    {% include 'loading.html.twig' %}
+    {% include 'section/loading.html.twig' %}
     <!--end::Engage toolbar-->
     <!--begin::Scrolltop-->
     <div id="kt_scrolltop" class="scrolltop" data-kt-scrolltop="true">
@@ -598,11 +683,11 @@
     <script src="{{asset('librairies/intl/build/js/intlTelInput.min.js') }}"></script>
     <script src="{{ asset('app/js/queries/app-theme-mode.js') }}"></script>
     <script src="{{ asset('app/js/queries/general.js') }}"></script>
-    <script>
-    var load	             =	$("#loading-container");
-    </script>
     <!--end::Global Javascript Bundle-->
-    {% include 'toastr.flash.html.twig' %}
+   
+    {% include 'section/intl.input.html.twig' %}
+     {% include 'section/additionnal.html.twig' %}
+    {% include 'section/toastr.flash.html.twig' %}
     {% include 'translations/global.html.twig' %}
     <!--end::Javascript-->
     {% block javascripts %}{% endblock %}

@@ -28,8 +28,9 @@ class Log
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'logs')]
     private $user;
 
-    #[ORM\ManyToOne(targetEntity: Status::class, inversedBy: 'logs')]
+    #[ORM\Column(type: 'string', length: 10)]
     private $status;
+
 
     public function getId(): ?int
     {
@@ -96,12 +97,12 @@ class Log
         return $this;
     }
 
-    public function getStatus(): ?Status
+    public function getStatus(): ?string
     {
         return $this->status;
     }
 
-    public function setStatus(?Status $status): self
+    public function setStatus(string $status): self
     {
         $this->status = $status;
 
