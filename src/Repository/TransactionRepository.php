@@ -63,4 +63,34 @@ class TransactionRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+
+    public function findByExampleField($value): array
+    {
+       return $this->createQueryBuilder('t')
+           ->andWhere('t.exampleField = :val')
+           ->setParameter('val', $value)
+           ->orderBy('t.id', 'ASC')
+           ->setMaxResults(10)
+           ->getQuery()
+           ->getResult()
+       ;
+   }
+
+    public function sumAmountForStatus($status)
+    {
+        return $this->createQueryBuilder('t')
+        ->andWhere('t.status = :status')
+        ->setParameter('status', $status)
+        ->select('SUM(t.amount) as amount')
+        ->getQuery()
+        ->getSingleScalarResult();
+    }
+
+    public function sumAmount()
+    {
+        return $this->createQueryBuilder('t')
+        ->select('SUM(t.amount) as amount')
+        ->getQuery()
+        ->getSingleScalarResult();
+    }
 }
