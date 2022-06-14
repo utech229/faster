@@ -19,6 +19,9 @@ var KTUsersAddCompany = function() {
                             validators: {
                                 notEmpty: {
                                     message: _Required_Field
+                                },
+                                emailAddress: {
+                                    message: _Email_EmailAddress
                                 }
                             }
                         },
@@ -50,7 +53,7 @@ var KTUsersAddCompany = function() {
                                 }
                             }
                         },
-                        address: {
+                        adress: {
                             validators: {
                                 notEmpty: {
                                     message: _PermissionDesc_Required 
@@ -78,7 +81,7 @@ var KTUsersAddCompany = function() {
                 i.addEventListener("click", (function(t) {
                     t.preventDefault(), o && o.validate().then((function(t) {
                         console.log("validated!"), "Valid" == t ? (i.setAttribute("data-kt-indicator", "on"), i.disabled = !0, 
-                        load.removeClass('sr-only'),
+                        loading(true),
                         $.ajax({
                             url: company_manage_link,
                             type: 'post',
@@ -89,7 +92,7 @@ var KTUsersAddCompany = function() {
                             cache: false,
                             success: function(response) {
                                     i.removeAttribute("data-kt-indicator"), i.disabled = !1;
-                                    load.addClass('sr-only')
+                                    loading()
                                     Swal.fire({
                                         title: _Swal_success,
                                         text: response.message,
@@ -99,32 +102,62 @@ var KTUsersAddCompany = function() {
                                         customClass: {
                                             confirmButton: "btn btn-primary"
                                         }
-                                    }).then((function(t) {
-                                        if (response.type === 'success') {
-                                            t.isConfirmed && e.reset();
-                                            e.reset(), n.hide()
-                                            if(response.data.isAdd == true){
-                                                window.location.reload()
-                                            }else{
-                                                $('#c_email').text(response.data.email)
-                                                $('#c_phone').text(response.data.phone)
-                                                $('#c_ifu').text(response.data.ifu)
-                                                $('#c_rccm').text(response.data.rccm)
-                                                $('#c_name').text(response.data.name)
-                                            }
+                                    })
+
+                                    if (response.type === 'success') {
+                                        t.isConfirmed && e.reset();
+                                        e.reset(), n.hide()
+                                        if(response.data.isAdd == true){
+                                            $('#company_unconfigurated').addClass('d-none')
+                                            $('#company_is_section').removeClass('d-none');
                                         }
-                                    }))
+                                        $('#c_email').text(response.data.email)
+                                        $('#c_phone').text(response.data.phone)
+                                        $('#c_ifu').text(response.data.ifu)
+                                        $('#c_rccm').text(response.data.rccm)
+                                        $('#c_name').text(response.data.name)
+                                    }
                             },
                             error: function () { 
                                 $(document).trigger('onAjaxError');
                                 i.removeAttribute("data-kt-indicator"), i.disabled = !1;
-                                load.addClass('sr-only')
+                                loading()
                             },
                         })) : 
                         $(document).trigger('onFormError'),
-                        load.addClass('sr-only');
+                        loading();
                     }))
                 }))
+
+                $("#companyManageButton").click(function(){
+                    reloader()
+                });
+
+                function reloader()
+                {
+                    $.ajax({
+                        url: user_company_link,
+                        type: 'post',
+                        data: {_token : csrfToken},
+                        dataType: 'json',
+                        success: function(response) {
+                            if (response.data.is == true) {
+                                $('#company_name').val(response.data.name)
+                                $('#company_email').val(response.data.email)
+                                $('#company_phone').val(response.data.phone)
+                                $('#company_ifu').val(response.data.ifu)
+                                $('#company_rccm').val(response.data.rccm)
+                                $('#address').val(response.data.address)
+                            }
+                        },
+                        error: function () { 
+                            $(document).trigger('onAjaxError');
+                            i.removeAttribute("data-kt-indicator"), i.disabled = !1;
+                            loading()
+                        },
+                    })
+                };
+
             })()
         }
     }

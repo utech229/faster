@@ -7,21 +7,6 @@
 
 {% block body %}
 <!--begin::Content-->
-<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
-    <!--begin::Toolbar-->
-    <div class="toolbar" id="kt_toolbar"> 
-        <!--begin::Container-->
-        <div id="kt_toolbar_container" class="container-fluid d-flex flex-stack">
-            <!--begin::Page title-->
-           {% include 'app.title.html.twig' %}
-            <!--end::Page title-->
-            <!--begin::Actions-->
-            {% include 'section/header.action.html.twig' %}
-            <!--end::Actions-->
-        </div>
-        <!--end::Container-->
-    </div>
-    <!--end::Toolbar-->
     <!--begin::Post-->
     <div class="post d-flex flex-column-fluid" id="kt_post">
         <!--begin::Container-->
@@ -587,6 +572,8 @@
                                 <th class="min-w-125px">{{'Status'| trans}}</th>
                                 <th class="min-w-125px">{{'D connexion'| trans}}</th>
                                 <th class="min-w-125px">{{'Date d\'inscription'| trans}}</th>
+                                <th class="min-w-125px">{{'Accusé'| trans}}</th>
+                                <th class="min-w-125px">{{'Prépayé'| trans}}</th>
                                 <th class="text-end min-w-100px">{{'Actions'| trans}}</th>
                             </tr>
                             <!--end::Table row-->
@@ -609,7 +596,7 @@
         <!--end::Container-->
     </div>
     <!--end::Post-->
-</div>
+
 {% endblock %}
 
 

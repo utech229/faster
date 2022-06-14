@@ -133,7 +133,7 @@ class ProfileController extends AbstractController
             //profil photo setting begin
             $avatarProcess = $this->addEntity->profilePhotoSetter($request , $user, true);
             if (isset($avatarProcess['error']) && $avatarProcess['error'] == true){
-            return $this->services->ajax_error_crud($this->intl->trans('Traitement du fichier image de profile'), $avatarProcess['info']);
+            return $this->services->msg_error($this->intl->trans('Traitement du fichier image de profile'), $avatarProcess['info']);
             } else
             $avatarProcess;
             //profil photo setting end

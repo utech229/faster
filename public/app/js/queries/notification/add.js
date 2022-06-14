@@ -77,20 +77,18 @@ var KTNotificationAddCompany = function() {
                                         customClass: {
                                             confirmButton: "btn btn-primary"
                                         }
-                                    }).then((function(t) {
-                                        if (response.type === 'success') {
-                                            t.isConfirmed && e.reset();
-                                            e.reset(), n.hide()
-                                            if(response.data.isAdd == true){
-                                                $('#notification_null_section').hide()
-                                                $('#notification_is_section').removeClass('d-none');
-                                            }
-                                            $('#n_s_amount').text(response.data.amount)
-                                            $('#n_s_email1').text(response.data.email1)
-                                            $('#n_s_email2').text(response.data.email2)
-                                            $('#n_s_email3').text(response.data.email3)
+                                    })
+                                    if (response.type === 'success') {
+                                        e.reset(), n.hide()
+                                        if(response.data.isAdd == true){
+                                            $('#notification_null_section').addClass('d-none')
+                                            $('#notification_is_section').removeClass('d-none');
                                         }
-                                    }))
+                                        $('#n_s_amount').text(response.data.amount)
+                                        $('#n_s_email1').text(response.data.email1)
+                                        $('#n_s_email2').text(response.data.email2)
+                                        $('#n_s_email3').text(response.data.email3)
+                                    }
                             },
                             error: function () { 
                                 $(document).trigger('onAjaxError');
@@ -102,6 +100,33 @@ var KTNotificationAddCompany = function() {
                         loading();
                     }))
                 }))
+
+                $("#notificationManageButton").click(function(){
+                    reloader()
+                });
+
+                function reloader()
+                {
+                    $.ajax({
+                        url: user_notification_link,
+                        type: 'post',
+                        data: {_token : csrfToken},
+                        dataType: 'json',
+                        success: function(response) {
+                            if (response.data.is == true) {
+                                $('#solde_notification_minSolde').val(response.data.amount)
+                                $('#solde_notification_email1').val(response.data.email1)
+                                $('#solde_notification_email2').val(response.data.email2)
+                                $('#solde_notification_email3').vam(response.data.email3)
+                            }
+                        },
+                        error: function () { 
+                            $(document).trigger('onAjaxError');
+                            i.removeAttribute("data-kt-indicator"), i.disabled = !1;
+                            loading()
+                        },
+                    })
+                };
             })()
         }
     }
