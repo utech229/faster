@@ -5,9 +5,6 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <script type="text/javascript">
-            var ajaxBaseUrl = "{{ baseUrl }}/{{ _locale }}";
-        </script>
         <!--end::Javascript-->
         <meta charset="UTF-8">
         <title>{% block title %}{{title|default(brand.name)}}{% endblock %}</title>
@@ -172,7 +169,7 @@
                                     <span class="menu-title">{% trans %}Recharge{% endtrans %}</span>
                                 </a>
                             </div>
-                            
+
                             <div class="menu-item">
                                 <div class="menu-content pt-8 pb-2">
                                     <span class="menu-section text-muted text-uppercase fs-8 ls-1">{{ 'Congiguration' | trans }}</span>
@@ -304,7 +301,7 @@
                 {% if permission(["LOG0"], app.user) %}
                 <!--begin::Footer-->
                 <div class="aside-footer flex-column-auto pt-5 pb-7 px-5" id="kt_aside_footer">
-                    <a href="{{ path('app_logs') }}" class="btn btn-custom btn-primary w-100" 
+                    <a href="{{ path('app_logs') }}" class="btn btn-custom btn-primary w-100"
                     data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss-="click" title="{{'Voir l\'activité des utilisateurs' | trans }}">
                         <span class="btn-label">{{'Logs'| trans }}</span>
                         <!--begin::Svg Icon | path: icons/duotune/general/gen005.svg-->
@@ -322,7 +319,7 @@
                 </div>
                 {% endif %}
                 <!--end::Footer-->
-                
+
             </div>
             <!--end::Aside-->
             <!--begin::Wrapper-->
@@ -408,7 +405,7 @@
                             <!--begin::Toolbar wrapper-->
                             <div class="d-flex align-items-stretch flex-shrink-0">
                                 <!--begin::User menu-->
-                                <div class="d-flex align-items-center ms-1 ms-lg-3" id="kt_header_user_menu_toggle"> 
+                                <div class="d-flex align-items-center ms-1 ms-lg-3" id="kt_header_user_menu_toggle">
                                     <!--begin::Menu wrapper-->
                                     <div class="cursor-pointer symbol symbol-30px symbol-md-40px" data-kt-menu-trigger="click" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end">
                                         <img id="menu_profile_avatar" src="{{ asset('app/uploads/avatars/'~ app.user.profilePhoto ~'') }}" alt="{{ app.user.brand ? app.user.brand.name}}" />
@@ -457,7 +454,7 @@
                                                 <span class="fs-8 rounded bg-light px-3 py-2 position-absolute translate-middle-y top-50 end-0">
                                                 {% if _locale == 'fr' %} {% trans %}Français{% endtrans %} {% else %} {% trans %}Anglais{% endtrans %} {% endif %}
 
-                                                {% if _locale == 'fr' %} 
+                                                {% if _locale == 'fr' %}
                                                     <img class="w-15px h-15px rounded-1 ms-2" src="{{ asset('app/media/flags/france.svg') }}" alt="" /></span>
                                                 {% else %}
                                                     <img class="w-15px h-15px rounded-1 ms-2" src="{{ asset('app/media/flags/united-states.svg') }}" alt="" /></span>
@@ -536,7 +533,7 @@
                 <!--begin::Content-->
                 <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
                     <!--begin::Toolbar-->
-                    <div class="toolbar" id="kt_toolbar"> 
+                    <div class="toolbar" id="kt_toolbar">
                         <!--begin::Container-->
                         <div id="kt_toolbar_container" class="container-fluid d-flex flex-stack">
                             <!--begin::Page title-->
@@ -589,7 +586,7 @@
                     {% block body %}{% endblock %}
                 </div>
                 <!--end::Content-->
-                
+
                 <!-- Toaster for notify accepted cookies -->
                 <div class="position-fixed top-300 end-0 p-3 z-index-3">
                     <div id="kt_docs_toast_cookies" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
@@ -664,14 +661,18 @@
     <script src="{{ asset('app/plugins/global/plugins.bundle.js') }}"></script>
     <script src="{{ asset('app/js/scripts.bundle.js') }}"></script>
     <script src="{{ asset('librairies/intl/build/js/intlTelInput.min.js') }}"></script>
+    <!-- begin::moment -->
+    <script defer src="{{ asset('app/plugins/custom/moment/moment-with-locales.min.js') }}"></script>
+    <script defer src="{{ asset('app/plugins/custom/moment/moment-timezone-with-data.min.js') }}"></script>
+    <!-- end::moment -->
     <script src="{{ asset('app/js/queries/app-theme-mode.js') }}"></script>
     <script src="{{ asset('app/js/queries/general.js') }}"></script>
     <!--end::Global Javascript Bundle-->
-   
-    {% include 'section/intl.input.html.twig' %}
-     {% include 'section/additionnal.html.twig' %}
-    {% include 'section/toastr.flash.html.twig' %}
+
     {% include 'translations/global.html.twig' %}
+    {% include 'section/intl.input.html.twig' %}
+    {% include 'section/additionnal.html.twig' %}
+    {% include 'section/toastr.flash.html.twig' %}
     <!--end::Javascript-->
     {% block javascripts %}{% endblock %}
     </body>
