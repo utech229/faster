@@ -250,18 +250,46 @@ var KTUsersList = function() {
                         orderable: 1,
                         targets: 7,
                         render: function(data, type, full, meta) {
-                            return  dateFormat(moment(data, "YYYY-MM-DDTHH:mm:ssZZ").format());
+                            return viewTime(data);
+                            //return  dateFormat(moment(data, "YYYY-MM-DDTHH:mm:ssZZ").format());
                         }
                     },
                     {
                         orderable: 1,
                         targets: 8,
                         render: function(data, type, full, meta) {
-                            return  dateFormat(moment(data, "YYYY-MM-DDTHH:mm:ssZZ").format());
+                            return viewTime(data);
+                            //return  dateFormat(moment(data, "YYYY-MM-DDTHH:mm:ssZZ").format());
                         }
                     },{
-                        orderable: !1,
                         targets: 9,
+                        render: function(data, type, full, meta) {
+                            var status = {
+                                true : { 'title': _Activated, 'class': 'success' },
+                                false : { 'title': _Disabled, 'class': 'danger' },
+                            };
+                            if (typeof status[data] === 'undefined') {
+                                return data;
+                            }
+                            return '<span class="badge badge-light-' + status[data].class + '">' + status[data].title + '</span>';
+                        },
+    
+                    },{
+                        targets: 10,
+                        render: function(data, type, full, meta) {
+                            var status = {
+                                true : { 'title': _Activated, 'class': 'success' },
+                                false : { 'title': _Disabled, 'class': 'danger' },
+                            };
+                            if (typeof status[data] === 'undefined') {
+                                return data;
+                            }
+                            return '<span class="badge badge-light-' + status[data].class + '">' + status[data].title + '</span>';
+                        },
+    
+                    },{
+                        orderable: !1,
+                        targets: 11,
                         visible: (!pEditUser && !pDeleteUser) ? false : true,
                         render : function (data,type, full, meta) {
                             var updaterIcon =  `<!--begin::Update-->
@@ -299,11 +327,19 @@ var KTUsersList = function() {
                         { data: 'lastLogin' },
 
                         { data: 'createdAt' , responsivePriority: 0},
-    
+
+                        { data: 'isDlr',responsivePriority: -6 },
+
+                        { data: 'postPay',responsivePriority: -5 },
+
                         { data: 'action',responsivePriority: -9 },
                     ],
-                    pageLength: 5,
+                    pageLength: 10,
                     lengthChange: !1,
+                    language: {
+                        url: _language_datatables,
+                    },
+                    dom: '<"top text-end bt-export d-none"B>rtF<"row"<"col-sm-6"l><"col-sm-6"p>>',
                    
                 }),
                 $('#kt_modal_add_user_reload_button').on('click', function() {

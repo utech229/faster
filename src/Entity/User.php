@@ -140,6 +140,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     private $lastLoginAt;
 
+    #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'affiliates')]
+    private $affiliateManager;
+
+    #[ORM\OneToMany(mappedBy: 'affiliateManager', targetEntity: self::class)]
+    private $affiliates;
+
     public function __construct()
     {
         $this->accountManager = new ArrayCollection();
@@ -157,6 +163,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->contactGroups = new ArrayCollection();
         $this->sMSCampaigns = new ArrayCollection();
         $this->sMSMessages = new ArrayCollection();
+        $this->affiliates = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -955,6 +962,48 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setLastLoginAt(?\DateTimeImmutable $lastLoginAt): self
     {
         $this->lastLoginAt = $lastLoginAt;
+
+        return $this;
+    }
+
+    public function getAffiliateManager(): ?self
+    {
+        return $this->affiliateManager;
+    }
+
+    public function setAffiliateManager(?self $affiliateManager): self
+    {
+        $this->affiliateManager = $affiliateManager;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, self>
+     */
+    public function getAffiliates(): Collection
+    {
+        return $this->affiliates;
+    }
+
+    public function addAffiliate(self $affiliate): self
+    {
+        if (!$this->affiliates->contains($affiliate)) {
+            $this->affiliates[] = $affiliate;
+            $affiliate->setAffiliateManager($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAffiliate(self $affiliate): self
+    {
+        if ($this->affiliates->removeElement($affiliate)) {
+            // set the owning side to null (unless already changed)
+            if ($affiliate->getAffiliateManager() === $this) {
+                $affiliate->setAffiliateManager(null);
+            }
+        }
 
         return $this;
     }

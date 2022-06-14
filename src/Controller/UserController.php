@@ -215,13 +215,25 @@ class UserController extends AbstractController
     {
         if (!$this->isCsrfTokenValid($this->getUser()->getUid(), $request->request->get('_token'))) 
         return $this->services->ajax_ressources_no_access($this->intl->trans("Récupération de l'utilisateur").': '.$user->getEmail());
-        $usetting = $user->getUsetting();
+        $usetting            = $user->getUsetting();
+        $role                = $user->getRole();
+        $brand               =  $user->getBrand();
+        $route               =  $user->getRouter();
+        $sender              =  $user->getDefaultSender();
+
+
         $row['orderId']      = $user->getUid();
-        $row['firstname']    = ($usetting->getFirstname()) ? $usetting->getFirstname() : '';
-        $row['lastname']     = ($usetting->getLastname()) ? $usetting->getLastname() : '';
+        $row['user']         = [   'name'  => $usetting->getFirstname().' '.$usetting->getLastname(),'firstname' => $usetting->getFirstname(),
+                                   'lastname'  => $usetting->getLastname(), 'email' => $user->getEmail(), 'photo' => $user->getProfilePhoto()];
+        $row['role']         =  ['name'  => $role->getName(),'level' => $role->getLevel()];
+        $row['brand']        = $brand->getName();
+        $row['route']        = $user->getRouter()->getName();
         $row['email']        = $user->getEmail();
         $row['photo']        = $user->getProfilePhoto();
         $row['phone']        = $user->getPhone();
+        $row['apikey']       = $user->getApikey();
+        $row['postPay']      = $user->getPostPay();
+        $row['isDlr']        = $user->getIsDlr();
         $row['language']     = $usetting->getLanguage()['code'];
         $row['currency']     = $usetting->getCurrency()['code'];
         $row['timezone']     = $usetting->getTimezone();
@@ -252,12 +264,16 @@ class UserController extends AbstractController
             $usetting            = $user->getUsetting();
             $country             = $user->getCountry();
             $row['orderId']      = $user->getUid();
-            $row['user']         = ['name'  => $usetting->getFirstname().' '.$usetting->getLastname(), 
-                                    'email' => $user->getEmail(), 
-                                    'photo' => $user->getProfilePhoto()];
+            $row['user']         =  [   'name'  => $usetting->getFirstname().' '.$usetting->getLastname(),
+                                        'firstname' => $usetting->getFirstname(),
+                                        'lastname'  => $usetting->getLastname(), 
+                                        'email' => $user->getEmail(), 
+                                        'photo' => $user->getProfilePhoto()];
             $row['phone']        = $user->getPhone();
             $row['role']         = $user->getRoles()[0];
             $row['country']      = $user->getCountry()['name'];
+            $row['postPay']      = $user->IsPostPay();
+            $row['isDlr']        = $user->getIsDlr();
             $row['balance']      = $user->getBalance();
             $row['status']       = $user->getStatus();
             $row['lastLogin']    = ($user->getLastLoginAt()) ? $user->getLastLoginAt()->format("c") : null;
