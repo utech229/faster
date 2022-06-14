@@ -1,0 +1,172 @@
+{
+    "emptyTable": "Aucune donn&eacute;e disponible dans le tableau",
+    "lengthMenu": "Afficher _MENU_ &eacute;l&eacute;ments",
+    "loadingRecords": "Chargement...",
+    "processing": "Traitement...",
+    "zeroRecords": "Aucun &eacute;l&eacute;ment correspondant trouv&eacute;",
+    "paginate": {
+        "first": "Premier",
+        "last": "Dernier",
+        "previous": "Pr&eacute;c&eacute;dent",
+        "next": "Suivant"
+    },
+    "aria": {
+        "sortAscending": ": activer pour trier la colonne par ordre croissant",
+        "sortDescending": ": activer pour trier la colonne par ordre d&eacute;croissant"
+    },
+    "select": {
+        "rows": {
+            "_": "%d lignes s&eacute;lectionn&eacute;es",
+            "1": "1 ligne s&eacute;lectionn&eacute;e"
+        },
+        "cells": {
+            "1": "1 cellule s&eacute;lectionn&eacute;e",
+            "_": "%d cellules s&eacute;lectionn&eacute;es"
+        },
+        "columns": {
+            "1": "1 colonne s&eacute;lectionn&eacute;e",
+            "_": "%d colonnes s&eacute;lectionn&eacute;es"
+        }
+    },
+    "autoFill": {
+        "cancel": "Annuler",
+        "fill": "Remplir toutes les cellules avec <i>%d<\/i>",
+        "fillHorizontal": "Remplir les cellules horizontalement",
+        "fillVertical": "Remplir les cellules verticalement"
+    },
+    "searchBuilder": {
+        "conditions": {
+            "date": {
+                "after": "Apr&egrave;s le",
+                "before": "Avant le",
+                "between": "Entre",
+                "empty": "Vide",
+                "equals": "Egal &agrave;",
+                "not": "Diff&eacute;rent de",
+                "notBetween": "Pas entre",
+                "notEmpty": "Non vide"
+            },
+            "number": {
+                "between": "Entre",
+                "empty": "Vide",
+                "equals": "Egal &agrave;",
+                "gt": "Sup&eacute;rieur &agrave;",
+                "gte": "Sup&eacute;rieur ou &eacute;gal &agrave;",
+                "lt": "Inf&eacute;rieur &agrave;",
+                "lte": "Inf&eacute;rieur ou &eacute;gal &agrave;",
+                "not": "Diff&eacute;rent de",
+                "notBetween": "Pas entre",
+                "notEmpty": "Non vide"
+            },
+            "string": {
+                "contains": "Contient",
+                "empty": "Vide",
+                "endsWith": "Se termine par",
+                "equals": "Egal &agrave;",
+                "not": "Diff&eacute;rent de",
+                "notEmpty": "Non vide",
+                "startsWith": "Commence par"
+            },
+            "array": {
+                "equals": "Egal &agrave;",
+                "empty": "Vide",
+                "contains": "Contient",
+                "not": "Diff&eacute;rent de",
+                "notEmpty": "Non vide",
+                "without": "Sans"
+            }
+        },
+        "add": "Ajouter une condition",
+        "button": {
+            "0": "Recherche avanc&eacute;e",
+            "_": "Recherche avanc&eacute;e (%d)"
+        },
+        "clearAll": "Effacer tout",
+        "condition": "Condition",
+        "data": "Donn&eacute;e",
+        "deleteTitle": "Supprimer la r&egrave;gle de filtrage",
+        "logicAnd": "Et",
+        "logicOr": "Ou",
+        "title": {
+            "0": "Recherche avanc&eacute;e",
+            "_": "Recherche avanc&eacute;e (%d)"
+        },
+        "value": "Valeur"
+    },
+    "searchPanes": {
+        "clearMessage": "Effacer tout",
+        "count": "{total}",
+        "title": "Filtres actifs - %d",
+        "collapse": {
+            "0": "Volet de recherche",
+            "_": "Volet de recherche (%d)"
+        },
+        "countFiltered": "{shown} ({total})",
+        "emptyPanes": "Pas de volet de recherche",
+        "loadMessage": "Chargement du volet de recherche..."
+    },
+    "buttons": {
+        "copyKeys": "Appuyer sur ctrl ou u2318 + C pour copier les donn&eacute;es du tableau dans votre presse-papier.",
+        "collection": "Collection",
+        "colvis": "Visibilit&eacute; colonnes",
+        "colvisRestore": "R&eacute;tablir visibilit&eacute;",
+        "copy": "Copier",
+        "copySuccess": {
+            "1": "1 ligne copi&eacute;e dans le presse-papier",
+            "_": "%ds lignes copi&eacute;es dans le presse-papier"
+        },
+        "copyTitle": "Copier dans le presse-papier",
+        "csv": "CSV",
+        "excel": "Excel",
+        "pageLength": {
+            "-1": "Afficher toutes les lignes",
+            "_": "Afficher %d lignes"
+        },
+        "pdf": "PDF",
+        "print": "Imprimer"
+    },
+    "decimal": ",",
+    "info": "Affichage de _START_ &agrave; _END_ sur _TOTAL_ &eacute;l&eacute;ments",
+    "infoEmpty": "Affichage de 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
+    "infoThousands": ".",
+    "search": "Rechercher:",
+    "thousands": ".",
+    "infoFiltered": "(filtr&eacute;s depuis un total de _MAX_ &eacute;l&eacute;ments)",
+    "datetime": {
+        "previous": "Pr&eacute;c&eacute;dent",
+        "next": "Suivant",
+        "hours": "Heures",
+        "minutes": "Minutes",
+        "seconds": "Secondes",
+        "unknown": "-",
+        "amPm": [
+            "am",
+            "pm"
+        ]
+    },
+    "editor": {
+        "close": "Fermer",
+        "create": {
+            "button": "Nouveaux",
+            "title": "Cr&eacute;er une nouvelle entr&eacute;e",
+            "submit": "Envoyer"
+        },
+        "edit": {
+            "button": "Editer",
+            "title": "Editer Entr&eacute;e",
+            "submit": "Modifier"
+        },
+        "remove": {
+            "button": "Supprimer",
+            "title": "Supprimer",
+            "submit": "Supprimer"
+        },
+        "error": {
+            "system": "Une erreur syst&egrave;me s'est produite"
+        },
+        "multi": {
+            "title": "Valeurs Multiples",
+            "restore": "R&eacute;tablir Modification"
+        }
+    }
+}

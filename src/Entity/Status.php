@@ -69,7 +69,7 @@ class Status
     #[ORM\Column(type: 'string', length: 25)]
     private $uid;
 
-    #[ORM\Column(type: 'string', length: 25)]
+    #[ORM\Column(type: 'string', length: 25, nullable: true)]
     private $label;
 
 
