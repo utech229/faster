@@ -32,7 +32,7 @@ class SenderController extends AbstractController
        $this->ug            = $ug;
        $this->em            = $em;
        $this->permission    = [
-           "SEND0", "SEND1",  "SEND2", "SEND3", "SEND4", "BRND1"
+           "SEND0", "SEND1",  "SEND2", "SEND3", "SEND4", "BRND1", "MAN"
        ];
        $this->pAccess   =	$this->src->checkPermission($this->permission[0]);
        $this->pCreate   =	$this->src->checkPermission($this->permission[1]);
@@ -40,6 +40,7 @@ class SenderController extends AbstractController
        $this->pEdit	    =	$this->src->checkPermission($this->permission[3]);
        $this->pDelete	=	$this->src->checkPermission($this->permission[4]);
        $this->pBrand	=	$this->src->checkPermission($this->permission[5]);
+       $this->pManag	=	$this->src->checkPermission($this->permission[6]);
     }
 
     #[Route('', name: 'sender', methods: ['GET'])]
@@ -110,43 +111,58 @@ class SenderController extends AbstractController
         if (!$this->isCsrfTokenValid('sender', $request->request->get('_token')))
             return $this->src->no_access($this->intl->trans("Récupération des senders bloquée. (Erreur de requête)"));
 
-        if(!$this->pAccess)
-            return $this->src->no_access($this->intl->trans("Acces refusé à la récupération des senders"));
+        if(!$this->pAccess) return $this->src->no_access($this->intl->trans("Acces refusé à la récupération des senders"));
 
-        $manager = null;
         $senders = [];
         $request_sender = [];
         $request_user = [];
 
-        // if($request->request->get('manager') != "") $manager
-        //
-        //
-        // $request_user["accounManager"=>$request->request->get('manager')];
-        //
-        // if($this->pBrand) $request_user[""=>$this->getUser()];
-
-        if(!$this->pList)
-
-        {
-            $manager = $this->em->getRepository(User::class)->findOneByUid($request->request->get('manager'));
-            if(!$manager) return $this->src->msg_error(
-                $this->intl->trans("Utilisateur inconnu : uid=".$request->request->get('manager')),
-                $this->intl->trans("Utilisateur inconnu"),
-                [
-                    "table"=>[],
-                    "permission"=>[
-                        'pAccess'   => $this->pAccess,
-                        'pCreate'   => $this->pCreate,
-                        'pList'     => $this->pList,
-                        'pEdit'     => $this->pEdit,
-                        'pDelete'   => $this->pDelete,
-                    ]
+        $manager = ($request->request->get('manager') !== "") ? $this->em->getRepository(User::class)->findOneByUid($request->request->get('manager')) : null;
+        if ($request->request->get('manager', null) && !$manager) return $this->src->msg_error(
+            $this->intl->trans("Utilisateur inconnu : uid=".$request->request->get('manager')),
+            $this->intl->trans("Utilisateur inconnu"),
+            [
+                "table"=>[],
+                "permission"=>[
+                    'pAccess'   => $this->pAccess,
+                    'pCreate'   => $this->pCreate,
+                    'pList'     => $this->pList,
+                    'pEdit'     => $this->pEdit,
+                    'pDelete'   => $this->pDelete,
                 ]
-            );
-        }
+            ]
+        );
 
-        if($manager) $senders = $this->em->getRepository(Sender::class)->findByManager($manager);
-        else $senders = $this->em->getRepository(Sender::class)->findAll();
+        if($manager) $request_sender["manager"] = $manager;
+
+        // if($this->pList) $senders = $this->em->getRepository(Sender::class)->findBy($request_sender);
+        // else if($this->pManag) $this->getUser()->
+        // else if(!$this->pBrand) $senders = $this->getUser()->getSenders()
+        //
+        //
+        // if($manager) $request_sender["manager"=>$manager];
+        //
+        // (pList) super => all || selectionné
+        // (MAN) manageraccount => allAccount (user->getAccountManager == this) || selectionné (user->getAccountManager == this)
+        // (BRND1) reseller => allMyUser (user->getBrand->getManager == this) || selectionné (user->getBrand->getManager == this)
+        // (!BRND1) reseller aff => allAdnUser (this->getAffiliateManager = true && (BRND1)this->getAffiliateManager && user->getBrand->getManager == this->getAffiliateManager) || selectionné (this->getAffiliateManager = true && user->getBrand->getManager == this->getAffiliateManager)
+        // (!BRND1) user => allMyData (this->getAffiliateManager = false)
+        // (!BRND1) user aff => allAdnData (this->getAffiliateManager = true  && (!BRND1)this->getAffiliateManager)
+        //
+        //
+        //
+        // if($this->pList && !$manager) $senders = $this->em->getRepository(Sender::class)->findAll();
+        // else
+        // if($this->pBrand && $manager) $request_user["accountManager"=>$manager];
+        //
+        // if(!$this->pList)
+        // {
+        //     $manager = $this->em->getRepository(User::class)->findOneByUid($request->request->get('manager'));
+        //     if(!$manager)
+        // }
+        //
+        // if($manager) $senders = $this->em->getRepository(Sender::class)->findByManager($manager);
+        // else
 
         $data = [];
 

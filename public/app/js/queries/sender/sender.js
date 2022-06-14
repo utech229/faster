@@ -1,7 +1,8 @@
 "use strict";
 const SenderManager = function(){
+    // t : datatable; e : permission edit; d : permission delete; l
     var t, e = pEdit, d = pDelete, l = pList, g, h = [];
-    const el = document.querySelector("#tb_sender"),
+    const el = document.querySelector("#tb_sender"), // el : selecteur de la table html
     cls = [
         { // order
             targets: 0,
@@ -96,16 +97,16 @@ const SenderManager = function(){
                 return icons;
             }
         }
-    ],
-    a = document.querySelector("#add_sender"),
-    m = document.querySelector("#modal_sender"),
-    f = m.querySelector("#form"),
-    c = f.querySelector("#cancel"),
-    i = f.querySelector("#submit"),
-    k = m.querySelector("#close"),
-    s = document.querySelector("#search"),
-    x = document.querySelector("#export"),
-    y = ".bt-export",
+    ], // cls : colonnes de datatable
+    a = document.querySelector("#add_sender"), // a : selecteur bouton ajout de sender
+    m = document.querySelector("#modal_sender"), // m : selecteur du div ayant la class "modal"
+    f = m.querySelector("#form"), // f : selecteur du formulaire dans le modal
+    c = f.querySelector("#cancel"), // c : selecteur du bouton quitter dans le formulaire
+    i = f.querySelector("#submit"), // i : selecteur du bouton envoyer dans le formulaire
+    k = m.querySelector("#close"), // k : selecteur de l'icon fermé dans le modal
+    s = document.querySelector("#search"), // s : selecteur de l'input recherche
+    x = document.querySelector("#export"), // x : selecteur du bouton affiche/cache des boutons d'exportation
+    y = ".bt-export", // y : selecteur de l'ensemble des boutons d'exportation
     u = "#update",
     v = "#enable",
     w = "#disable",
