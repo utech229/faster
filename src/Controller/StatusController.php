@@ -160,9 +160,10 @@ class StatusController extends AbstractController
             $row                 = array();
             $row['OrderId']      = null;
             $row['Name']         = $status->getName();
+            $row['Code']         = $status->getCode();
             $row['Description']  = $status->getDescription();
-            $row['CreatedAt']    = $status->getCreatedAt()->format("c");
-            $row['UpdatedAt']    = ($status->getUpdatedAt()) ? $status->getUpdatedAt()->format("c") : $this->intl->trans('Non mdifié');
+            $row['CreatedAt']    = $status->getCreatedAt()->format("Y-m-d H:i:sP");
+            $row['UpdatedAt']    = ($status->getUpdatedAt()) ? $status->getUpdatedAt()->format("Y-m-d H:i:sP") : $this->intl->trans('Non mdifié');
             $row['Actions']      = $status->getUid();
             $data []             = $row;
 		}

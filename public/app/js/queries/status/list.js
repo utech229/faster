@@ -19,13 +19,13 @@ var KTUsersstatussList = function() {
                     }
                 },
                 info: !1,
-                order: [[ 4, "desc" ]],
+                order: [[ 5, "desc" ]],
                 columnDefs: [{
                     orderable: !1,
                     targets: 0, 
                 },
                 {
-                    targets: 2,
+                    targets: 3,
                     render: function(data, type, full, meta) {
                         var status = {
                             true : { 'title': _Actif, 'class': 'success' },
@@ -39,21 +39,21 @@ var KTUsersstatussList = function() {
 
                 }, {
                     orderable: !1,
-                    targets: 3,
-                    render: function(data, type, full, meta) {
-                        return  dateFormat(moment(data, "YYYY-MM-DDTHH:mm:ssZZ").format());
-                    }
-                },
-                {
-                    orderable: !1,
                     targets: 4,
                     render: function(data, type, full, meta) {
-                        return  dateFormat(moment(data, "YYYY-MM-DDTHH:mm:ssZZ").format());
+                        return  viewTime(data);
                     }
                 },
                 {
                     orderable: !1,
                     targets: 5,
+                    render: function(data, type, full, meta) {
+                        return  viewTime(data);
+                    }
+                },
+                {
+                    orderable: !1,
+                    targets: 6,
                     visible: (!pEdit && !pDelete) ? false : true,
                     render : function (data,type, full, meta) {
                         var updaterIcon =  `<!--begin::Update-->
@@ -79,6 +79,8 @@ var KTUsersstatussList = function() {
 
                     { data: 'Name', responsivePriority: -5},
 
+                    { data: 'Code', responsivePriority: -5},
+
                     { data: 'Description', responsivePriority: -4  },
 
                     { data: 'CreatedAt' , responsivePriority: 0},
@@ -88,7 +90,11 @@ var KTUsersstatussList = function() {
                     { data: 'Actions',responsivePriority: -9 },
                 ],
                 lengthMenu: [10, 25, 100, 250, 500, 1000],
-                pageLength: 5,
+                pageLength: 10,
+                language: {
+                    url: _language_datatables,
+                },
+                dom: '<"top text-end bt-export d-none"B>rtF<"row"<"col-sm-6"l><"col-sm-6"p>>',
             }), 
             $('#kt_modal_add_status_reload_button').on('click', function() {
                 t.ajax.reload(null, false);

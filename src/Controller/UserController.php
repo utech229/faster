@@ -225,14 +225,14 @@ class UserController extends AbstractController
         $row['orderId']      = $user->getUid();
         $row['user']         = [   'name'  => $usetting->getFirstname().' '.$usetting->getLastname(),'firstname' => $usetting->getFirstname(),
                                    'lastname'  => $usetting->getLastname(), 'email' => $user->getEmail(), 'photo' => $user->getProfilePhoto()];
-        $row['role']         =  ['name'  => $role->getName(),'level' => $role->getLevel()];
+        $row['role']         =  ['name'  => $role->getName(),'level' => $role->getLevel(),'code' => $role->getCode()];
         $row['brand']        = $brand->getName();
         $row['route']        = $user->getRouter()->getName();
         $row['email']        = $user->getEmail();
         $row['photo']        = $user->getProfilePhoto();
         $row['phone']        = $user->getPhone();
         $row['apikey']       = $user->getApikey();
-        $row['postPay']      = $user->getPostPay();
+        $row['postPay']      = $user->IsPostPay();
         $row['isDlr']        = $user->getIsDlr();
         $row['language']     = $usetting->getLanguage()['code'];
         $row['currency']     = $usetting->getCurrency()['code'];
@@ -240,7 +240,7 @@ class UserController extends AbstractController
         $row['countryCode']  = $user->getCountry()['code'];
         $row['countryName']  = $user->getCountry()['name'];
         $row['balance']      = $user->getBalance();
-        $row['status']       = $user->getStatus();
+        $row['status']       = $user->getStatus()->getUid();
         $row['lastLogin']    = ($user->getLastLoginAt()) ? $user->getLastLoginAt()->format("c") : null;
         $row['createdAt']    = $user->getCreatedAt()->format("c");
 
@@ -275,9 +275,9 @@ class UserController extends AbstractController
             $row['postPay']      = $user->IsPostPay();
             $row['isDlr']        = $user->getIsDlr();
             $row['balance']      = $user->getBalance();
-            $row['status']       = $user->getStatus();
-            $row['lastLogin']    = ($user->getLastLoginAt()) ? $user->getLastLoginAt()->format("c") : null;
-            $row['createdAt']    = $user->getCreatedAt()->format("c");
+            $row['status']       = $user->getStatus()->getCode();
+            $row['lastLogin']    = ($user->getLastLoginAt()) ? $user->getLastLoginAt()->format("Y-m-d H:i:sP") : null;
+            $row['createdAt']    = $user->getCreatedAt()->format("Y-m-d H:i:sP");
             $row['action']       = $user->getUid();
             $data []             = $row;
 		}

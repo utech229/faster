@@ -2,7 +2,7 @@
 
 
 var KTUsersList = function() {
-    var e, t, n, r, o = document.getElementById("kt_table_users"),
+    var e, t, n, r, x = document.querySelector("#export"), y = ".bt-export", o = document.getElementById("kt_table_users"),
         c = () => {
             o.querySelectorAll('[data-kt-users-table-filter="delete_row"]').forEach((t => {
                 t.addEventListener("click", (function(t) {
@@ -233,11 +233,10 @@ var KTUsersList = function() {
                         targets: 6,
                         render: function(data, type, full, meta) {
                             var status = {
-                                0 : { 'title': _Pending, 'class': 'warning' },
-                                1 : { 'title': _Actif, 'class': 'success' },
-                                2 : { 'title': _Disabled, 'class': 'primary' },
-                                3 : { 'title': _Rejected, 'class': 'info' },
-                                4 : { 'title': _Deleted, 'class': 'danger' },
+                                2 : { 'title': _Pending, 'class': 'warning' },
+                                3 : { 'title': _Actif, 'class': 'success' },
+                                4 : { 'title': _Disabled, 'class': 'primary' },
+                                6 : { 'title': _Suspended, 'class': 'primary' },
                             };
                             if (typeof status[data] === 'undefined') {
                                 return data;
@@ -342,6 +341,8 @@ var KTUsersList = function() {
                     dom: '<"top text-end bt-export d-none"B>rtF<"row"<"col-sm-6"l><"col-sm-6"p>>',
                    
                 }),
+                // Action sur bouton export
+                $(x).on('click', ($this)=>{ $this.preventDefault(); return $(y).hasClass('d-none')?$(y).removeClass('d-none'):$(y).addClass('d-none'); }),
                 $('#kt_modal_add_user_reload_button').on('click', function() {
                     e.ajax.reload(null, false);
                 })).on("draw", (function() { l(), c(), a()

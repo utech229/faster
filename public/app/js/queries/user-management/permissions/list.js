@@ -109,7 +109,11 @@ var KTUsersPermissionsList = function() {
                     { data: 'Actions',responsivePriority: -9 },
                 ],
                 lengthMenu: [10, 25, 100, 250, 500, 1000],
-                pageLength: 5,
+                pageLength: 10,
+                language: {
+                    url: _language_datatables,
+                },
+                dom: '<"top text-end bt-export d-none"B>rtF<"row"<"col-sm-6"l><"col-sm-6"p>>',
             }), 
             $('#kt_modal_add_permission_reload_button').on('click', function() {
                 t.ajax.reload(null, false);

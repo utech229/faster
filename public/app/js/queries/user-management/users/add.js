@@ -1,8 +1,4 @@
 "use strict";
-
-$('#kt_user_add_select2_country').val(intl.getSelectedCountryData()
-['iso2'].toUpperCase()).trigger('change'); //define default selection for country select
-
 var KTUsersAddUser = function() {
     const t = document.getElementById("kt_modal_add_user"),
         e = t.querySelector("#kt_modal_add_user_form"),
@@ -138,51 +134,9 @@ var KTUsersAddUser = function() {
                     }))
                 })), 
                 t.querySelector('[data-kt-users-modal-action="cancel"]').addEventListener("click", (t => {
-                    t.preventDefault(), Swal.fire({
-                        text: _Cancel_Question,
-                        icon: "warning",
-                        showCancelButton: !0,
-                        buttonsStyling: !1,
-                        confirmButtonText: _Yes,
-                        cancelButtonText: _No,
-                        customClass: {
-                            confirmButton: "btn btn-primary",
-                            cancelButton: "btn btn-active-light"
-                        }
-                    }).then((function(t) {
-                        t.value ? (e.reset(), n.hide()) : "cancel" === t.dismiss && Swal.fire({
-                            text: _no_cancel_form,
-                            icon: "error",
-                            buttonsStyling: !1,
-                            confirmButtonText: _Form_Ok_Swal_Button_Text_Notification,
-                            customClass: {
-                                confirmButton: "btn btn-primary"
-                            }
-                        })
-                    }))
+                    t.preventDefault(), e.reset(), n.hide()
                 })), t.querySelector('[data-kt-users-modal-action="close"]').addEventListener("click", (t => {
-                    t.preventDefault(), Swal.fire({
-                        text:  _Cancel_Question,
-                        icon: "warning",
-                        showCancelButton: !0,
-                        buttonsStyling: !1,
-                        confirmButtonText: _Yes,
-                        cancelButtonText: _No,
-                        customClass: {
-                            confirmButton: "btn btn-primary",
-                            cancelButton: "btn btn-active-light"
-                        }
-                    }).then((function(t) {
-                        t.value ? (e.reset(), n.hide()) : "cancel" === t.dismiss && Swal.fire({
-                            text: _no_cancel_form,
-                            icon: "error",
-                            buttonsStyling: !1,
-                            confirmButtonText: _Form_Ok_Swal_Button_Text_Notification,
-                            customClass: {
-                                confirmButton: "btn btn-primary"
-                            }
-                        })
-                    }))
+                    t.preventDefault(), e.reset(), n.hide()
                 }))
             })()
         }

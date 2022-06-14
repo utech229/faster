@@ -2,9 +2,12 @@
 
 namespace App\Form;
 use App\Entity\User;
+use App\Entity\Status;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\Form\Extension\Core\Type\TelType;
@@ -32,7 +35,31 @@ class UserType extends AbstractType
             ->add('lastname',TextType::class,array('label' => false, 'mapped' => false, "required"=>true))
             ->add('email',EmailType::class,array('label' => false ,"required"=>true))
             ->add('phone',TelType::class,array('label' => false, 'mapped' => true, "required"=>true))
-            ->add('uid',HiddenType::class,  array('mapped' => false));
+            ->add('uid',HiddenType::class,  array('mapped' => false))
+            ->add('isDlr', ChoiceType::class, ['label' => false,
+                'choices'  => [
+                    $this->intl->trans("Activé")   => true,
+                    $this->intl->trans("Désactivé") => false
+                ]
+            ])
+            ->add('postPay', ChoiceType::class, ['label' => false,
+            'choices'  => [
+                $this->intl->trans("Activé")   => true,
+                $this->intl->trans("Désactivé") => false
+            ]
+            ])
+            ->add('status', EntityType::class, [
+                'label' => false,
+                'class'=>Status::class,
+                'query_builder'=>function(EntityRepository $er){
+                        return $er->createQueryBuilder('s')
+                            ->where('s.code >= 2')
+                            ->andwhere('s.code <= 5')
+                            ->orderBy('s.code', 'ASC');
+                },
+                'choice_label'=>'name',
+                'choice_value'=>'uid',
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
