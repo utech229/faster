@@ -27,9 +27,9 @@ class SoldeNotificationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add('minSolde',TextType::class,array('label' => false, "required"=>true))
-                ->add('email1',TextType::class,array('label' => false,  "required"=>true))
-                ->add('email2',TextType::class,array('label' => false,  "required"=>true))
-                ->add('email3',EmailType::class,array('label' => false ,"required"=>true));
+                ->add('email1',TextType::class,array('label' => false))
+                ->add('email2',TextType::class,array('label' => false))
+                ->add('email3',EmailType::class,array('label' => false));
     }
 
     public function configureOptions(OptionsResolver $resolver): void

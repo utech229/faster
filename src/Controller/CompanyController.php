@@ -131,18 +131,21 @@ class CompanyController extends AbstractController
 
    
 
-    #[Route('/{uid}/get', name: 'get_this_company', methods: ['POST'])]
+    #[Route('/get', name: 'app_get_this_company', methods: ['POST'])]
     public function get_this_company(Request $request,): Response
     {
         $company = $this->getUser()->getCompany();
-
-        $row['orderId']      = $company->getUid();
-        $row['name']         = $company->getName();
-        $row['email']        = $company->getEmail();
-        $row['phone']        = str_replace($company->getManager->getCountry()['dial_code'], '', $company->getPhone());
-        $row['ifu']          = $company->getIfu();
-        $row['rccm']         = $company->getRccm();
-        $row['address']      = $company->getAddress();
+        if ($company) 
+        {
+            $row['orderId']      = $company->getUid();
+            $row['name']         = $company->getName();
+            $row['email']        = $company->getEmail();
+            $row['phone']        = str_replace($company->getManager()->getCountry()['dial_code'], '', $company->getPhone());
+            $row['ifu']          = $company->getIfu();
+            $row['rccm']         = $company->getRccm();
+            $row['address']      = $company->getAddress();
+        }
+        $row['is']            = ($company) ? true : false;
         return new JsonResponse([
             'data' => $row, 
             'message' => $this->intl->trans('Vos données sont chargés avec succès.')]);

@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Entity\Brand;
+use App\Entity\Status;
 use App\Service\uBrand;
 use App\Service\BaseUrl;
 use App\Service\Services;
@@ -61,12 +63,12 @@ class TransactionController extends AbstractController
             'controller_name' => 'TransactionController',
             'title'           => $this->intl->trans('Transactions').' - '. $this->brand->get()['name'],
             'pageTitle'       => [
-                'one'   => $this->intl->trans('Transactions'),
-                'two'   => $this->intl->trans('Mes Transactions'),
-                'none'  => $this->intl->trans('Gestion transaction'),
+                [$this->intl->trans('Transactions')] 
             ],
             'brand'       => $this->brand->get(),
+            'sBrand'      => $this->em->getRepository(Brand::class)->findByStatus($this->services->status(3)),
             'baseUrl'     => $this->baseUrl->init(),
+            'sStatus'     => $this->em->getRepository(Status::class)->findByCode([6,2,7]),
             'pAccess'     => $this->pAccess,
         ]);
     }
@@ -79,60 +81,67 @@ class TransactionController extends AbstractController
 		if (!$this->isCsrfTokenValid($this->getUser()->getUid(), $request->request->get('_token')))
         return $this->services->invalid_token_ajax_list($this->intl->trans('Récupération de la liste des transactions : token invalide'));
 
-        $data           = [];
-        $tabTransaction = [];
-        $transactions = (!$this->pView) ? [] : $this->em->getRepositoty(Transaction::class)->findAll();
-        
-        // foreach ($transactions as $key => $transaction) {
+        $data           =   [];
+        $tabTransaction =   [];
+        $transactions   =   [];
+        $pending        =   [];
+        $validated      =   [];
+        $canceled       =   [];
+        $sumAmount      =   0; $sumAmountPending    =   0;  $sumAmountValidated =   0;  $sumAmountCanceled  =   0;
 
-        //     $tabTransaction[$key][0][0] = $transaction->getUser()->getFirstName();
-        //     $tabTransaction[$key][0][1] = $transaction->getUser()->getLastName();
-        //     $tabTransaction[$key][0][2] = $transaction->getUser()->getPhone();
-
-        //     $tabTransaction[$key][1]    = $transaction->getTransactionId();
-        //     $tabTransaction[$key][2]    = $transaction->getReference();
-        //     $tabTransaction[$key][3]    = $transaction->getTransactionId();
-        //     $tabTransaction[$key][4]    = $transaction->getBeforeBalance();
-        //     $tabTransaction[$key][5]    = $transaction->getAmount();
-        //     $tabTransaction[$key][6]    = $transaction->getAfterBalance();
-        //     $tabTransaction[$key][7][0] = $transaction->getStatus();
-        //     $tabTransaction[$key][7][1] = $transaction->getStatus();
-
-
-        //     $tabTransaction[$key][8]    = $transaction->getTransactionId();
-
-
+        if (!$this->pView) {
+            $transactions   =   [];
             
+        }
+        else{
+            $transactions           =   $this->em->getRepository(Transaction::class)->findAll();
+            
+            $pending    =   $this->em->getRepository(Transaction::class)->findByStatus($this->services->status(2));
+            $validated  =   $this->em->getRepository(Transaction::class)->findByStatus($this->services->status(6));
+            $canceled   =   $this->em->getRepository(Transaction::class)->findByStatus($this->services->status(7));
+            
+            $sumAmount              =   $this->em->getRepository(Transaction::class)->sumAmount();
+            $sumAmountPending       =   $this->em->getRepository(Transaction::class)->sumAmountForStatus($this->services->status(2));
+            $sumAmountValidated     =   $this->em->getRepository(Transaction::class)->sumAmountForStatus($this->services->status(6));
+            $sumAmountCanceled      =   $this->em->getRepository(Transaction::class)->sumAmountForStatus($this->services->status(7));
 
-
-        // }
+        }
         
-        // foreach ($transactions  as $transaction) 
-		// {          
-        //     $row                 = array();
+        foreach ($transactions as $key => $transaction) {
 
-        //     $transactionCreator  = $transaction->getUser();
-        //     $row['orderId']      = $transaction->getReference();
-        //     $row['user']         =  ['name'  => $transactionCreator->getFirstName().' '.$transactionCreator->getLastName(),
-        //                                 'phone' => $transaction->getPhone(),
-        //                                 'photo' => $transactionCreator->getProfilePhoto()
-        //                             ];
-        //     $row['transactionId']   = $transaction->getTransactionId();
-        //     $row['reference']       = $transaction->getReference();
-        //     $row['method']          = strtolower($transaction->getMethod());
-        //     $row['agregator']       = $transaction->getAgregator();
-        //     $row['canal']           = $transaction->getCanal();
-        //     $row['email']           = $transaction->getEmail();
-        //     $row['amount']          = $transaction->getAmount();
-        //     $row['country']         = $transaction->getUser()->getCountry()['name'];
-        //     $row['status']          = $transaction->getStatus();
-        //     $row['updatedAt']       = ($transaction->getUpdatedAt()) ? $transaction->getUpdatedAt()->format("c") : null;
-        //     $row['createdAt']       = $transaction->getCreatedAt()->format("c");
-        //     $data []                = $row;
-		// }
+            $tabTransaction[$key][0][0] = $transaction->getUser()->getUsetting()->getFirstName();
+            $tabTransaction[$key][0][1] = $transaction->getUser()->getUsetting()->getLastName();
+            $tabTransaction[$key][0][2] = $transaction->getUser()->getPhone();
+
+
+            $tabTransaction[$key][1]    = $transaction->getTransactionId();
+            $tabTransaction[$key][2]    = $transaction->getReference();
+            $tabTransaction[$key][3]    = $transaction->getBeforeBalance();
+            $tabTransaction[$key][4]    = $transaction->getAmount();
+            $tabTransaction[$key][5]    = $transaction->getAfterBalance();
+            $tabTransaction[$key][6][0] = $transaction->getStatus()->getCode();
+            $tabTransaction[$key][6][1] = $this->intl->trans($transaction->getStatus()->getName());
+            $tabTransaction[$key][6][2] = $this->intl->trans($transaction->getStatus()->getDescription());
+            $tabTransaction[$key][7]    = $transaction->getUser()->getBrand()->getName();
+            $tabTransaction[$key][8]    = $transaction->getCreatedAt()->format("c");
+            $tabTransaction[$key][9]    = $transaction->getUpdatedAt()?$transaction->getUpdatedAt()->format("c"):$this->intl->trans('Pas de modification');
+
+        }
+       
         $this->services->addLog($this->intl->trans('Lecture de la liste des transactions'));
-        $output = array("data" => $data);
-        return new JsonResponse($output);
+        $data = [
+                    "data"              =>   $tabTransaction,
+                    "all"               =>   count($transactions),         
+                    "pending"           =>   count($pending),      
+                    "validated"         =>   count($validated),  
+                    "canceled"          =>   count($canceled),
+                    "sumAmount"         =>   $sumAmount != null ? $sumAmount : 0,
+                    "sumAmountPending"  =>   $sumAmountPending != null ? $sumAmountPending : 0,
+                    "sumAmountValidated"=>   $sumAmountValidated != null ? $sumAmountValidated : 0,  
+                    "sumAmountCanceled" =>   $sumAmountCanceled != null ? $sumAmountCanceled : 0 
+
+                ];
+        return new JsonResponse($data);
     }
 
     public function statisticsData()

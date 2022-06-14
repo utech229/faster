@@ -1,8 +1,11 @@
 <script type='text/javascript'>
 	'use strict';
 		const _avatar_default         = `{{ avatar_default|default('') }}`;
-		const _base_path              = `{{asset("")}}`;
-		const _locale              	  = "{{ _locale|default('fr') }}";
+		const _base_path              = `{{ asset("") }}`;
+		const _locale              	  = "{{ app.request.locale|default('fr') }}";
+		const _route              	  = "{{ app.request.attributes.get('_route') }}";
+		const _uri              	  = "{{ app.request.requestUri }}";
+		
 		// Ajax Error
 		const _AjaxError          =  `{{ "Une erreur est survenu, veuillez réessayer plus tard"|trans }}`;
 		const _AjaxTableListIToken       =  `{{ "Une erreur s'est produite pour l'accès au données du tableau, veuillez réessayer"|trans }}`;
@@ -13,7 +16,7 @@
 		const _Email_EmailAddress		=	`{{ "La valeur n'est pas une adresse e-mail valide"|trans|raw }}`;
 
 		// Traduction dans DataTables.js
-		const _language_datatables    = `{{ _language_datatables|default('') }}`;
+		const _language_datatables    = `{{ asset("app/plugins/custom/datatables/dataTables.`+ _locale +`.json") }}`;
 		// Traduction dans List.js
 		const _Delete                 = `{{ "Supprimer"|trans }}`;
 		const _Edit                   = `{{ "Modifier"|trans }}`;
@@ -49,7 +52,7 @@
 		const _Suspended = `{{ "Suspendu"|trans }}`;
 		const _Information = `{{ "information"|trans }}`;
 		const _Validation_request = `{{ "Vous êtes sûr de vouloir faire cette validation ?"|trans }}`;
-		
+
 		const _Rejected = `{{ "Rejeté"|trans }}`;
 		const _Terminated = `{{ "Terminé"|trans }}`;
 		const _Pending = `{{ "En attente"|trans }}`;
@@ -76,8 +79,8 @@
 		const _PermissionName_Required  = `{{ "Le nom de la permission est requis"|trans }}`;
 		const _PermissionCode_Required  = `{{ "Le code de la permission est requis"|trans }}`;
 		const _PermissionDesc_Required  = `{{ "Le description de la permission est requis"|trans }}`;
-		
-		// Forms Profile 
+
+		// Forms Profile
 		const _Form_Error_Swal		=	`{{ "Désolé, il semble que des erreurs aient été détectées, veuillez réessayer."|trans}}`;
 		const _Form_Reset_Code      =   `{{ "Réinitialisation du mot de passe envoyé. Veuillez vérifier votre boite mail."|trans}}`;
 		const _Form_Error_Confirm   =   `{{ "Le mot de passe et sa confirmation ne sont pas les mêmes."|trans}}`;
@@ -90,17 +93,19 @@
 		const _Regenerate_Apikey_Confirm          =   `{{ "Êtes-vous sûr de vouloir régénerer votre clé api ?"|trans}}`;
 		const _disabled_question          =   `{{ "Êtes-vous sûr de vouloir désactiver ce compte ?"|trans}}`;
 		const _enabled_question          =   `{{ "Êtes-vous sûr de vouloir activer ce compte ?"|trans}}`;
+		const _disabled_data          =   `{{ "Êtes-vous sûr de vouloir désactiver cette donnée ?"|trans}}`;
+		const _enabled_data          =   `{{ "Êtes-vous sûr de vouloir activer cette donnée ?"|trans}}`;
 		const _Yes                      =   `{{ "Oui"|trans}}`;
 		const _No                       =   `{{ "Non"|trans}}`;
 		const _Ok                       =   `{{ "OK"|trans}}`;
 		const _Confirm_Disable_Account  =   `{{ "Votre compte est désactivé."|trans}}`;
 		const _Confirm_Active_Account  =   `{{ "Votre compte est activé avec succès."|trans}}`;
 		const _Confirm_Active_Account_Already	=	`{{ "Votre compte est déjà activé."|trans}}`;
-		const _confirm_disable  =   `{{ "Oui, désactivé."|trans}}`; 
-		const _confirm_enable  =   `{{ "Oui, activé."|trans}}`; 
+		const _confirm_disable  =   `{{ "Oui, désactivé."|trans}}`;
+		const _confirm_enable  =   `{{ "Oui, activé."|trans}}`;
 		const _Not_Disable_Account      =   `{{ "Le compte n'est pas désactivé !"|trans|raw}}`;
 		const _Not_Regenerate_Apikey      =   `{{ "La clé api n'est pas régénéré !"|trans|raw}}`;
-		
+
 		// Payment methods
 		const _Payment_Holder_Required  =   `{{ "Le nom du titulaire est requis"|trans}}`;
 		const _Payment_Bank_Required  =   `{{ "Le nom de la banque est requis"|trans}}`;
@@ -174,7 +179,7 @@
 		const _Min_Max_Characters_20          =   `{{ "Ce champ doit comporter plus de 3 et moins de 20 caractères"|trans|raw}}`;
 		const _Min_Max_Characters_250          =   `{{ "Ce champ doit comporter plus de 3 et moins de 250 caractères"|trans|raw}}`;
 		const _Only_Alphabetics        =   `{{ "Ce champ ne peut comporter que de lettre alphabétiques."|trans|raw}}`;
- 
+
 		const _intl_invalid_number	=	`{{ "Numéro invalide"|trans}}`;
 		const _intl_invalid_country_code	=	`{{ "Code pays invalide"|trans}}`;
 		const _intl_short	=	`{{ "Numéro de téléphone trop court"|trans}}`;

@@ -316,6 +316,8 @@ KTUtil.onDOMContentLoaded((function() {
 
 "use strict";
 
+var spanStatAll =	document.getElementById("stat_all"),spanStatValidated = document.getElementById("stat_validated"), spanStatPending	= document.getElementById("stat_pending"), spanStatCanceled	= document.getElementById("stat_canceled");
+var spanAmountAll =	document.getElementById("tr_all"),spanAmountValidated = document.getElementById("tr_validated"), spanAmountPending	= document.getElementById("tr_pending"), spanAmountCanceled	= document.getElementById("tr_canceled");
 
 var KTTransactionsList = function() {
     var e, t, n, r, o = document.getElementById("kt_table_transactions"),
@@ -416,7 +418,7 @@ var KTTransactionsList = function() {
                     }))
                 }))
         };
-    const a = () => {
+        const a = () => {
         const e = o.querySelectorAll('tbody [type="checkbox"]');
         let c = !1,
             l = 0;
@@ -456,115 +458,112 @@ var KTTransactionsList = function() {
                         },
                         error: function () { 
                             $(document).trigger('toastr.onAjaxError');
+                        },
+                        dataSrc: function(json) {
+
+                            spanStatAll.textContent = json.all, spanStatValidated.textContent = json.validated, spanStatPending.textContent	= json.pending, spanStatCanceled.textContent = json.canceled
+                            spanAmountAll.textContent = json.sumAmount, spanAmountValidated.textContent = json.sumAmountValidated, spanAmountPending.textContent	= json.sumAmountPending, spanAmountCanceled.textContent = json.sumAmountCanceled
+                            
+                            return json.data;
                         }
+                        
                     },
-                    // info: !1,
-                    order: [[ 12, "desc" ]],
+                    order: [[ 8, "desc" ]],
                     'columnDefs': [
-                    {
-                        orderable: !1,
-                        targets: 0, 
-                        render: function (data, type, full, meta) {
-                            return  `<div class="form-check form-check-sm form-check-custom form-check-solid">
-                                        <input class="form-check-input" type="checkbox" value="`+data+`" />
-                                    </div>`;
-                        }
-                    },
-                    {
-                        orderable: !1,
-                        targets: 1, 
-                        render: function (data, type, full, meta) {
-                            return `<!--begin::User details=-->
-									<div class="d-flex align-items-center">
-                                        <!--begin:: Avatar -->
-                                        <div class="symbol symbol-circle symbol-50px overflow-hidden me-3">
-                                            <a href="javascript:;">
-                                                <div class="symbol-label">
-                                                    <img src="`+window.location.origin+`/app/uploads/avatars/`+data.photo+`" alt="`+data.name+`" class="w-100" />
-                                                </div>
-                                            </a>
-                                        </div>
-                                        <!--end::Avatar-->
-                                        <!--begin::User details-->
-                                        <div class="d-flex flex-column">
-                                            <a href="javascript:;" class="text-gray-800 text-hover-primary mb-1">`+data.name+`</a>
-                                            <span>`+data.phone+`</span>
-                                        </div>
-                                        <!--begin::User details-->
-                                    </div>`;
-                        }
-                    },
-                    // {
-                    //     targets: 4,
-                    //     render: function(data, type, full, meta) {
-                    //         return '<img src="'+window.location.origin+'/app/media/svg/card-logos/'+data+'.svg" class="w-50px me-3" alt="'+data+' eContacts"/>';
-                    //     },
-    
-                    // },
-                    // {
-                    //     targets: 10,
-                    //     render: function(data, type, full, meta) {
-                    //         var status = {
-                    //             'pending' : { 'title': _Pending, 'class': 'warning' },
-                    //             'approved' : { 'title': _Validated, 'class': 'success' },
-                    //             'canceled' : { 'title': _Canceled, 'class': 'primary' },
-                    //             'rejected' : { 'title': _Rejected, 'class': 'info' },
-                    //         };
-                    //         if (typeof status[data] === 'undefined') {
-                    //             return data;
-                    //         }
-                    //         return '<span class="badge badge-light-' + status[data].class + '">' + status[data].title + '</span>';
-                    //     },
-    
-                    // },
-                    // {
-                    //     orderable: 1,
-                    //     targets: 1,
-                    //     render: function(data, type, full, meta) {
-                    //         return  dateFormat(moment(data, "YYYY-MM-DDTHH:mm:ssZZ").format());
-                    //     }
-                    // },
-                    {
-                        targets: 12,
-                        render: function(data, type, full, meta) {
+                       
+                        // Utilisateur
+                        {
+                            responsivePriority: 0,
+                            targets: 0, 
+                            render: function (data, type, full, meta) {
+                                return  data[0];
+                            }
+                        },
+                        // ID Transaction
+                        {
+                            responsivePriority: 1,
+                            targets: 1, 
+                            render: function (data, type, full, meta) {
+                                return data;
+                            }
+                        },
+                        // Réference
+                        {
+                            responsivePriority: 2,
+                            targets: 2, 
+                            render: function (data, type, full, meta) {
+                                return data;
+                            }
+                        },
+                        // Balance Avant
+                        {
+                            responsivePriority: 8,
+                            targets: 3, 
+                            render: function (data, type, full, meta) {
+                                return data;
+                            }
+                        },
+                        // Montant
+                        {
+                            responsivePriority: 3,
+                            targets: 4, 
+                            render: function (data, type, full, meta) {
+                                return data;
+                            }
+                        },
+                        // Balance Après
+                        {
+                            responsivePriority: 8,
+                            targets: 5, 
+                            render: function (data, type, full, meta) {
+                                return data;
+                            }
+                        },
+                        // Statut
+                        {
+                            responsivePriority: 4,
+                            targets: 6, 
+                            render: function (data, type, full, meta) {
+                                var status = {
+                                                '2' : { 'class': 'warning' },
+                                                '6' : { 'class': 'success' },
+                                                '7' : { 'class': 'primary' },
+                                            };
+                                            if (typeof status[data[0]] === 'undefined') {
+                                                return data[1];
+                                            }
+                                            return '<span class="badge badge-light-' + status[data[0]].class + '">' + data[1] + '</span>';
+                            }
+                        },
+                        // Brand
+                        {
+                            responsivePriority: 6,
+                            targets: 7, 
+                            render: function (data, type, full, meta) {
+                                return  data;
+                            }
+                        },
+                        // Date de création
+                        {
+                            responsivePriority: 5,
+                            targets: 8, 
+                            render: function (data, type, full, meta) {
                             return  dateFormat(moment(data, "YYYY-MM-DDTHH:mm:ssZZ").format());
+                            }
+                        },
+                        // Date de modification
+                        {
+                            responsivePriority: 9,
+                            targets: 9, 
+                            render: function (data, type, full, meta) {
+                                return  dateFormat(moment(data, "YYYY-MM-DDTHH:mm:ssZZ").format());
+                            }
                         }
-                    }],
-                    // columns: [
-    
-                    //     { data: 'orderId' },
-    
-                    //     { data: 'user', responsivePriority: -10},
-    
-                    //     { data: 'transactionId' },
-    
-                    //     { data: 'reference' },
-    
-                    //     { data: 'method' ,responsivePriority: -7  },
-                        
-                    //     { data: 'agregator' },
-                        
-                    //     { data: 'canal' },
-
-                    //     { data: 'email' },
-
-                    //     { data: 'amount',responsivePriority: -8  },
-
-                    //     { data: 'country'  },
-    
-                    //     { data: 'status',responsivePriority: -8 },
-    
-                    //     { data: 'updatedAt' },
-
-                    //     { data: 'createdAt' , responsivePriority: 0},
-                    // ],
-                    pageLength: 6,
-                    lengthChange: !1,
-                    // order: [[ 13, "desc" ]],
+                    ],
+                    pageLength: 10,
+                    lengthChange: true,
                     "info": true,
-                    lengthMenu: [10, 25, 100, 250, 500, 1000],
-                    // pageLength: 10,
-                   
+                    lengthMenu: [10, 25, 100, 250, 500, 1000],                   
                 }),
                 $('#kt_modal_add_transaction_reload_button').on('click', function() {
                     e.ajax.reload(null, false);
@@ -572,12 +571,46 @@ var KTTransactionsList = function() {
                 })), l(),
                 document.querySelector('[data-kt-transaction-table-filter="search"]').addEventListener("keyup", (function(t) {
                     e.search(t.target.value).draw()
+
+                    let sum_amount_all =   0, sum_amount_pending = 0, sum_amount_validated = 0, sum_amount_canceled = 0, filtre_tab = e['context'][0]['oPreviousSearch']['sSearch'].replace(/\s+/g, '').toLowerCase()
+                    let sum_tr_all = 0, sum_tr_pending = 0, sum_tr_validated = 0, sum_tr_canceled = 0
+                   
+                    e['context'][0]['aoData'].forEach(function(item){
+                        
+                        if ( item['_aFilterData'].find(el => el.toLowerCase().includes(filtre_tab) ) != undefined) 
+                        {
+                            sum_amount_all  += item['_aData'][4]
+                            sum_tr_all      +=  1
+                
+                            if (item['_aData'][6][0] = 6) {
+                                sum_amount_validated += item['_aData'][4];
+                                sum_tr_validated      +=  1
+                
+                            }
+                            else if(item['_aData'][6][0] = 2){
+                                sum_amount_pending += item['_aData'][4];
+                                sum_tr_pending      +=  1
+                                
+                            }
+                            else{
+                                sum_amount_canceled += item['_aData'][4];
+                                sum_tr_canceled      +=  1
+                
+                            }
+                        }
+                        
+                    });
+                
+                    spanStatAll.textContent = sum_tr_all, spanStatPending.textContent = sum_tr_pending, spanStatValidated.textContent = sum_tr_validated, spanStatCanceled.textContent = sum_tr_canceled
+                    spanAmountAll.textContent = sum_amount_all, spanAmountPending.textContent = sum_amount_pending, spanAmountValidated.textContent = sum_amount_validated, spanAmountCanceled.textContent = sum_amount_canceled
+                
                 })),
                 document.querySelector('[data-kt-transaction-table-filter="reset"]').addEventListener("click", (function() {
                     document.querySelector('[data-kt-transaction-table-filter="form"]').querySelectorAll("select").forEach((e => {
-                            $(e).val("").trigger("change")
+                            $(e).val("").trigger("change");
                         })),
                         e.search("").draw()
+                        UpdateStat(e)
                 })),
                 c(), (() => {
                     const t = document.querySelector('[data-kt-transaction-table-filter="form"]'),
@@ -588,8 +621,11 @@ var KTTransactionsList = function() {
                         r.forEach(((e, n) => {
                                 e.value && "" !== e.value && (0 !== n && (t += " "),
                                     t += e.value)
+                                    
                             })),
+                            
                             e.search(t).draw()
+                            UpdateStat(e)
                     }))
                 })
                 ())
@@ -600,4 +636,40 @@ var KTTransactionsList = function() {
 KTUtil.onDOMContentLoaded((function() {
     KTTransactionsList.init();
 }));
+
+function UpdateStat(e) {
+    // console.log(e['context'][0])
+    let sum_amount_all =   0, sum_amount_pending = 0, sum_amount_validated = 0, sum_amount_canceled = 0, filtre_tab = e['context'][0]['oPreviousSearch']['sSearch'].replace(/\s+/g, '').toLowerCase()
+    let sum_tr_all = 0, sum_tr_pending = 0, sum_tr_validated = 0, sum_tr_canceled = 0
+    e['context'][0]['aoData'].forEach(function(item){
+        
+        if (filtre_tab  == (item['_aData'][7]+item['_aData'][6][1]).replace(/\s+/g, '').toLowerCase() || filtre_tab ==  item['_aData'][7].replace(/\s+/g, '').toLowerCase() || filtre_tab == item['_aData'][6][1].replace(/\s+/g, '').toLowerCase() || filtre_tab == "" ) {
+            
+            sum_amount_all  += item['_aData'][4]
+            sum_tr_all      +=  1
+
+            if (item['_aData'][6][0] = 6) {
+                sum_amount_validated += item['_aData'][4];
+                sum_tr_validated      +=  1
+
+            }
+            else if(item['_aData'][6][0] = 2){
+                sum_amount_pending += item['_aData'][4];
+                sum_tr_pending      +=  1
+                
+            }
+            else{
+                sum_amount_canceled += item['_aData'][4];
+                sum_tr_canceled      +=  1
+
+            }
+        }
+        
+        
+    });
+
+    spanStatAll.textContent = sum_tr_all, spanStatPending.textContent = sum_tr_pending, spanStatValidated.textContent = sum_tr_validated, spanStatCanceled.textContent = sum_tr_canceled
+    spanAmountAll.textContent = sum_amount_all, spanAmountPending.textContent = sum_amount_pending, spanAmountValidated.textContent = sum_amount_validated, spanAmountCanceled.textContent = sum_amount_canceled
+
+}
 

@@ -3,6 +3,11 @@
 namespace App\Repository;
 
 use App\Entity\User;
+use App\Entity\Brand;
+use App\Entity\Permission;
+use App\Entity\Authorization;
+use App\Entity\Role;
+use App\Entity\Status;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
@@ -191,30 +196,33 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     /**
     * @return User[] Returns an array of User objects
     */
-    public function getUsersByPermission($codePermission, $promoter_id)
+    public function getUsersByPermission($codePermission, $manager_id)
     {
         $qb = $this->createQueryBuilder('u');
 
         $qb->from(Permission::class, "p")
             ->from(Role::class, "r")
             ->from(Authorization::class, "a")
+            ->from(Status::class, "s")
+            ->from(Brand::class, "b")
             ->where("p.code = :code")
+            ->andWhere('s.code = 3')
             ->andWhere('u.role = r')
             ->andWhere('a.role = r')
             ->andWhere('a.permission = p')
-            ->andWhere('a.status = 1')
-            ->andWhere('u.status = 1')
-            ->setParameter('code', $codePermission)
-        ;
+            ->andWhere('p.status = s')
+            ->andWhere('r.status = s')
+            ->andWhere('a.status = s')
+            ->andWhere('u.status = s')
+            ->andWhere('u.brand = b')
+            ->setParameter('code', $codePermission);
 
-        if($promoter_id)
-        {
-            $qb->andWhere('u.promoter = :promoter')->setParameter('promoter', $promoter_id);
-        }
-
-        $query = $qb->getQuery();
-
-        return $query->execute();
+            if($manager_id)
+            {
+                $qb->andWhere('b.manager = :manager')->setParameter('manager', $manager_id);
+            }
+            $query = $qb->getQuery();
+            return $query->execute();
     }
 
 //    /**

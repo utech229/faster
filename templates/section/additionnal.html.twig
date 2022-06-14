@@ -1,0 +1,43 @@
+<script type="text/javascript">
+    function loading(status = false){
+        const load = $("#loading-container");
+        if(status) load.removeClass("sr-only"); else load.addClass("sr-only");
+    }
+    function viewTime(dtz){
+        moment.locale(_locale);
+        tz = moment.tz.guess(true);
+        return dtz ? moment(dtz).tz(tz).format('llll') : "";
+    }
+    function btnAnimation(el, enable = false){
+        if($(el).length > 0 && enable) {
+            $(el).attr("data-kt-indicator", "on");
+            el.disabled = true;
+        }else if($(el).length > 0){
+            $(el).attr("data-kt-indicator", "off");
+            el.disabled = false;
+        }
+    }
+    function swalSimple(icon, message){
+        Swal.fire({
+            html: message,
+            icon: icon,
+            buttonsStyling: false,
+            confirmButtonText: _confirm_success,
+            customClass: {
+                confirmButton: "btn fw-bold btn-secondary",
+            }
+        });
+    }
+    function swalConfirm(icon, message, callback, cancel = null){
+        Swal.fire({
+            html: message,
+            icon: icon,
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: _confirm_success
+        }).then((result) => {
+            if (result.isConfirmed) callback(); else if (cancel) cancel();
+        });
+    }
+</script>

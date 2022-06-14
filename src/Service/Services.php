@@ -181,16 +181,16 @@ class Services extends AbstractController
     }
 
 	/** Function for add logs */
-    public function addLog($task, $status = 200, $email = null)
+    public function addLog($task, $status = 200)
     {
-        $currentUser = $this->getUser();
+        $user = $this->getUser();
         $log = new Log();
-        $log->setUser($currentUser);
+        $log->setUser($user);
         $log->setCreatedAt(new \DateTimeImmutable());
         $log->setIp($_SERVER['REMOTE_ADDR']);
         $log->setAgent($_SERVER['HTTP_USER_AGENT']);
 		$log->setTask($task);
-        $log->setStatus($this->statusRepository->findOneByCode(3));
+        $log->setStatus($status);
         $this->em->persist($log);
         $this->em->flush();
         return true;
@@ -218,20 +218,20 @@ class Services extends AbstractController
 	            if(is_array($codePermission))
                 {
 	                if(in_array($value->getPermission()->getCode(), $codePermission, true))
-	                    $return =   $value->getStatus()->getCode();
+	                    $return =   $value->getStatus()->getCode() === 3 ? true : false;
 	            }else{
 				    if($value->getPermission()->getCode()	==	$codePermission)
-	                    $return =   $value->getStatus()->getCode();
+	                    $return =   $value->getStatus()->getCode() === 3 ? true : false;
 	            }
 			}
 		}
         return $return;
     }
 
-	public function getUserByPermission($codePermission, $promoter_id = null)
+	public function getUserByPermission($codePermission, $resseler_id = null)
 	{
 		$allUser	=	$this->em->getRepository(User::class)->getUsersByPermission(
-			$codePermission, $promoter_id
+			$codePermission, $resseler_id
 		);
 
 		return $allUser;
@@ -343,4 +343,6 @@ class Services extends AbstractController
     {
        return $this->statusRepository->findOneByCode($code);
     }
+
+    
 }

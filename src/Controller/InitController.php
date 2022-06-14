@@ -21,6 +21,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
+
 class InitController extends AbstractController
 {
 
@@ -44,6 +45,12 @@ class InitController extends AbstractController
 
     #[Route('/{_locale}')]
     public function indexi(): Response
+    {
+        return $this->redirectToRoute('app_login');
+    }
+
+    #[Route('/{_locale}/csv')]
+    public function csv(): Response
     {
         return $this->redirectToRoute('app_login');
     }

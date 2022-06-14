@@ -163,8 +163,8 @@ class RouterController extends AbstractController
             $row['OrderId']      = null;
             $row['Name']         = $router->getName();
             $row['Description']  = $router->getDescription();
-            $row['CreatedAt']    = $router->getCreatedAt()->format("c");
-            $row['UpdatedAt']    = ($router->getUpdatedAt()) ? $router->getUpdatedAt()->format("c") : $this->intl->trans('Non mdifié');
+            $row['CreatedAt']    = $router->getCreatedAt()->format("Y-m-d H:i:sP");
+            $row['UpdatedAt']    = ($router->getUpdatedAt()) ? $router->getUpdatedAt()->format("Y-m-d H:i:sP") : $this->intl->trans('Non modifié');
             $row['Actions']      = $router->getUid();
             $data []             = $row;
 		}

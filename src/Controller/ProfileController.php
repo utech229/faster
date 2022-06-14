@@ -11,8 +11,10 @@ use App\Service\Services;
 use App\Service\AddEntity;
 use App\Service\BrickPhone;
 use App\Form\PasswordFormType;
+use App\Entity\SoldeNotification;
 use App\Repository\RoleRepository;
 use App\Repository\UserRepository;
+use App\Form\SoldeNotificationType;
 use App\Repository\StatusRepository;
 use App\Repository\UsettingRepository;
 use App\Repository\PermissionRepository;
@@ -75,8 +77,10 @@ class ProfileController extends AbstractController
             return $this->redirectToRoute("app_home");
         }
 
-        $company     = new Company;
-        $companyform = $this->createForm(CompanyType::class, $company);
+        $company          = new Company;
+        $notification     = new SoldeNotification;
+        $companyform      = $this->createForm(CompanyType::class, $company);
+        $notificationform = $this->createForm(SoldeNotificationType::class, $notification);
         $this->services->addLog($this->intl->trans('Accès au menu profils'));
         return $this->render('profile/index.html.twig', [
             'controller_name' => 'ProfileController',
@@ -90,6 +94,7 @@ class ProfileController extends AbstractController
             'pEditUser'       => $this->pEdit,
             'pDeleteUser'     => $this->pDelete,
             'companyform'      => $companyform->createView(),
+            'notificationform' => $notificationform->createView(),
             'form'      => $companyform->createView(),
         ]);
     }
@@ -128,12 +133,13 @@ class ProfileController extends AbstractController
             //profil photo setting begin
             $avatarProcess = $this->addEntity->profilePhotoSetter($request , $user, true);
             if (isset($avatarProcess['error']) && $avatarProcess['error'] == true){
-            return $this->services->ajax_error_crud($this->intl->trans('Traitement du fichier image de profile'), $avatarProcess['info']);
+            return $this->services->msg_error($this->intl->trans('Traitement du fichier image de profile'), $avatarProcess['info']);
             } else
             $avatarProcess;
             //profil photo setting end
 
             //user data setting
+            $user->setPhone($phone);
             $user->setProfilePhoto($avatarProcess);
             $user->setUpdatedAt(new \DatetimeImmutable());
             $this->userRepository->add($user);
