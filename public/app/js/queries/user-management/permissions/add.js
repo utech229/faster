@@ -82,7 +82,7 @@ var KTUsersAddPermission = function() {
                 i.addEventListener("click", (function(t) {
                     t.preventDefault(), o && o.validate().then((function(t) {
                         console.log("validated!"), "Valid" == t ? (i.setAttribute("data-kt-indicator", "on"), i.disabled = !0, 
-                        load.removeClass('sr-only'),
+                        loading(true),
                         $.ajax({
                             url: (isPermissionUpdating == true) ? window.location.href + permissionIDInput.val() + '/update_permission' : add_permission,
                             type: 'post',
@@ -93,7 +93,7 @@ var KTUsersAddPermission = function() {
                             cache: false,
                             success: function(response) {
                                     i.removeAttribute("data-kt-indicator"), i.disabled = !1;
-                                    load.addClass('sr-only')
+                                    loading()
                                     Swal.fire({
                                         title: _Swal_success,
                                         text: response.message,
@@ -114,11 +114,11 @@ var KTUsersAddPermission = function() {
                             error: function () { 
                                 $(document).trigger('onAjaxError');
                                 i.removeAttribute("data-kt-indicator"), i.disabled = !1;
-                                load.addClass('sr-only')
+                                loading()
                             },
                         })) : 
                         $(document).trigger('onFormError'),
-                        load.addClass('sr-only');
+                        loading();
                     }))
                 }))
             })()

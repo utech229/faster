@@ -1,10 +1,11 @@
 <script type='text/javascript'>
 	'use strict';
 		const _avatar_default         = `{{ avatar_default|default('') }}`;
-		const _base_path              = `{{asset("")}}`;
-		const _locale              	  = "{{ _locale }}";
-		const _route              	  = "{{ route }}";
-		const _uri              	  = "{{ uri }}";
+		const _base_path              = `{{ asset("") }}`;
+		const _locale              	  = "{{ app.request.locale|default('fr') }}";
+		const _route              	  = "{{ app.request.attributes.get('_route') }}";
+		const _uri              	  = "{{ app.request.requestUri }}";
+		
 		// Ajax Error
 		const _AjaxError          =  `{{ "Une erreur est survenu, veuillez réessayer plus tard"|trans }}`;
 		const _AjaxTableListIToken       =  `{{ "Une erreur s'est produite pour l'accès au données du tableau, veuillez réessayer"|trans }}`;
@@ -15,7 +16,7 @@
 		const _Email_EmailAddress		=	`{{ "La valeur n'est pas une adresse e-mail valide"|trans|raw }}`;
 
 		// Traduction dans DataTables.js
-		const _language_datatables    = `{{ asset("app/plugins/custom/datatables/dataTables." ~ _locale ~ ".json") }}`;
+		const _language_datatables    = `{{ asset("app/plugins/custom/datatables/dataTables.`+ _locale +`.json") }}`;
 		// Traduction dans List.js
 		const _Delete                 = `{{ "Supprimer"|trans }}`;
 		const _Edit                   = `{{ "Modifier"|trans }}`;

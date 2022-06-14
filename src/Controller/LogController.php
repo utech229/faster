@@ -108,7 +108,7 @@ class LogController extends AbstractController
             $row['Agent']     = $log->getAgent();
             $row['Role']      = ($logUser) ? $logUser->getRoles()[0] : 'Inconnu';
             $row['Status']       = $log->getStatus();
-            $row['RegisterDate'] = $log->getCreatedAt()->setTimezone(new \DateTimeZone('+01:00'))->format('c');
+            $row['RegisterDate'] = $log->getCreatedAt()->setTimezone(new \DateTimeZone('+01:00'))->format("Y-m-d H:i:sP");
             $data []          = $row;
 		}
         $this->services->addLog($this->intl->trans('Lecture du logs : activités des utilisateurs'));

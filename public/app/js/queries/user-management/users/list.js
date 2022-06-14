@@ -2,7 +2,7 @@
 
 
 var KTUsersList = function() {
-    var e, t, n, r, o = document.getElementById("kt_table_users"),
+    var e, t, n, r, x = document.querySelector("#export"), y = ".bt-export", o = document.getElementById("kt_table_users"),
         c = () => {
             o.querySelectorAll('[data-kt-users-table-filter="delete_row"]').forEach((t => {
                 t.addEventListener("click", (function(t) {
@@ -233,11 +233,10 @@ var KTUsersList = function() {
                         targets: 6,
                         render: function(data, type, full, meta) {
                             var status = {
-                                0 : { 'title': _Pending, 'class': 'warning' },
-                                1 : { 'title': _Actif, 'class': 'success' },
-                                2 : { 'title': _Disabled, 'class': 'primary' },
-                                3 : { 'title': _Rejected, 'class': 'info' },
-                                4 : { 'title': _Deleted, 'class': 'danger' },
+                                2 : { 'title': _Pending, 'class': 'warning' },
+                                3 : { 'title': _Actif, 'class': 'success' },
+                                4 : { 'title': _Disabled, 'class': 'primary' },
+                                6 : { 'title': _Suspended, 'class': 'primary' },
                             };
                             if (typeof status[data] === 'undefined') {
                                 return data;
@@ -250,18 +249,46 @@ var KTUsersList = function() {
                         orderable: 1,
                         targets: 7,
                         render: function(data, type, full, meta) {
-                            return  dateFormat(moment(data, "YYYY-MM-DDTHH:mm:ssZZ").format());
+                            return viewTime(data);
+                            //return  dateFormat(moment(data, "YYYY-MM-DDTHH:mm:ssZZ").format());
                         }
                     },
                     {
                         orderable: 1,
                         targets: 8,
                         render: function(data, type, full, meta) {
-                            return  dateFormat(moment(data, "YYYY-MM-DDTHH:mm:ssZZ").format());
+                            return viewTime(data);
+                            //return  dateFormat(moment(data, "YYYY-MM-DDTHH:mm:ssZZ").format());
                         }
                     },{
-                        orderable: !1,
                         targets: 9,
+                        render: function(data, type, full, meta) {
+                            var status = {
+                                true : { 'title': _Activated, 'class': 'success' },
+                                false : { 'title': _Disabled, 'class': 'danger' },
+                            };
+                            if (typeof status[data] === 'undefined') {
+                                return data;
+                            }
+                            return '<span class="badge badge-light-' + status[data].class + '">' + status[data].title + '</span>';
+                        },
+    
+                    },{
+                        targets: 10,
+                        render: function(data, type, full, meta) {
+                            var status = {
+                                true : { 'title': _Activated, 'class': 'success' },
+                                false : { 'title': _Disabled, 'class': 'danger' },
+                            };
+                            if (typeof status[data] === 'undefined') {
+                                return data;
+                            }
+                            return '<span class="badge badge-light-' + status[data].class + '">' + status[data].title + '</span>';
+                        },
+    
+                    },{
+                        orderable: !1,
+                        targets: 11,
                         visible: (!pEditUser && !pDeleteUser) ? false : true,
                         render : function (data,type, full, meta) {
                             var updaterIcon =  `<!--begin::Update-->
@@ -299,13 +326,23 @@ var KTUsersList = function() {
                         { data: 'lastLogin' },
 
                         { data: 'createdAt' , responsivePriority: 0},
-    
+
+                        { data: 'isDlr',responsivePriority: -6 },
+
+                        { data: 'postPay',responsivePriority: -5 },
+
                         { data: 'action',responsivePriority: -9 },
                     ],
-                    pageLength: 5,
+                    pageLength: 10,
                     lengthChange: !1,
+                    language: {
+                        url: _language_datatables,
+                    },
+                    dom: '<"top text-end bt-export d-none"B>rtF<"row"<"col-sm-6"l><"col-sm-6"p>>',
                    
                 }),
+                // Action sur bouton export
+                $(x).on('click', ($this)=>{ $this.preventDefault(); return $(y).hasClass('d-none')?$(y).removeClass('d-none'):$(y).addClass('d-none'); }),
                 $('#kt_modal_add_user_reload_button').on('click', function() {
                     e.ajax.reload(null, false);
                 })).on("draw", (function() { l(), c(), a()
