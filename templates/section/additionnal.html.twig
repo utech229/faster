@@ -17,7 +17,7 @@
             el.disabled = false;
         }
     }
-    function swalSimple(icon, message){
+    function swalSimple(icon, message, callback = null){
         Swal.fire({
             html: message,
             icon: icon,
@@ -26,6 +26,8 @@
             customClass: {
                 confirmButton: "btn fw-bold btn-secondary",
             }
+        }).then((result) => {
+            if (result.isConfirmed && callback) callback();
         });
     }
     function swalConfirm(icon, message, callback, cancel = null){
@@ -37,7 +39,7 @@
             cancelButtonColor: '#d33',
             confirmButtonText: _confirm_success
         }).then((result) => {
-            if (result.isConfirmed) callback(); else if (cancel) cancel();
+            if (result.isConfirmed && callback) callback(); else if (cancel) cancel();
         });
     }
 </script>

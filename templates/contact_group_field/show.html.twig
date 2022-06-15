@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+
+<title>ContactGroupField</title>
+
+{% block body %}
+    <h1>ContactGroupField</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ contact_group_field.id }}</td>
+            </tr>
+            <tr>
+                <th>Uid</th>
+                <td>{{ contact_group_field.uid }}</td>
+            </tr>
+            <tr>
+                <th>Field1</th>
+                <td>{{ contact_group_field.field1 }}</td>
+            </tr>
+            <tr>
+                <th>Field2</th>
+                <td>{{ contact_group_field.field2 }}</td>
+            </tr>
+            <tr>
+                <th>Field3</th>
+                <td>{{ contact_group_field.field3 }}</td>
+            </tr>
+            <tr>
+                <th>Field4</th>
+                <td>{{ contact_group_field.field4 }}</td>
+            </tr>
+            <tr>
+                <th>Field5</th>
+                <td>{{ contact_group_field.field5 }}</td>
+            </tr>
+            <tr>
+                <th>CreatedAt</th>
+                <td>{{ contact_group_field.createdAt ? contact_group_field.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>UpdatedAt</th>
+                <td>{{ contact_group_field.updatedAt ? contact_group_field.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_contact_group_field_index') }}">back to list</a>
+
+    <a href="{{ path('app_contact_group_field_edit', {'id': contact_group_field.id}) }}">edit</a>
+
+    {{ include('contact_group_field/_delete_form.html.twig') }}
+{% endblock %}

@@ -103,14 +103,9 @@ class PermissionController extends AbstractController
     public function addpermission($request, $form, $permission): Response
     {
         if ($form->isSubmitted() && $form->isValid()) {
-        
-        $isCheck = false;
-        $isCheck = ($request->request->get('permission_core') !==  null) ? true : false;
-
         $description = $request->request->get('description');
-        $permission->setStatus(1);
+        $permission->setStatus($this->services->status(3));
         $permission->setDescription($description);
-        $permission->setIsCore($isCheck);
         $permission->setCreatedAt(new \DatetimeImmutable());
         $this->permissionRepository->add($permission);
         
@@ -133,10 +128,7 @@ class PermissionController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
         $key_        = $request->request->get('permission_id');
         $description = $request->request->get('description');
-        $isCheck     = ($request->request->get('permission_core')) ? 1 : 0 ;
-        $permission->setStatus(1);
         $permission->setDescription($description);
-        $permission->setIsCore($isCheck);
         $permission->setUpdatedAt(new \DatetimeImmutable());
         $this->permissionRepository->add($permission);
 
@@ -174,7 +166,7 @@ class PermissionController extends AbstractController
             $row['CreatedAt']    = $permission->getCreatedAt()->format("c");
             $row['UpdatedAt']    = ($permission->getUpdatedAt()) ? $permission->getUpdatedAt()->format("c") : $this->intl->trans('Non mdifié');
             $row['Roles']        = '';
-            $row['Actions']      = $permission->getId();
+            $row['Actions']      = $permission->getCode();
             $data []             = $row;
 		}
         $this->services->addLog($translator->trans('Lecture de la liste des permissions'));
@@ -192,7 +184,6 @@ class PermissionController extends AbstractController
         $data['name']        = $permission->getName();
         $data['code']        = $permission->getCode();
         $data['description'] = $permission->getDescription();
-        $data['iscore']      = $permission->getIsCore();
         $data['status']      = $permission->getStatus();
         return new JsonResponse(['data' => $data]);
     }

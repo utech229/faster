@@ -52,7 +52,7 @@ class ContactController extends AbstractController
         $this->brickPhone      = $brickPhone;
         $this->brand           = $brand;
         $this->em	           = $entityManager;
-        $this->addEntity	           = $addEntity;
+        $this->addEntity	   = $addEntity;
         $this->userRepository  = $userRepository;
         $this->roleRepository    = $roleRepository;
         $this->statusRepository  = $statusRepository;
@@ -76,6 +76,56 @@ class ContactController extends AbstractController
     #[Route('/new', name: 'app_contact_add', methods: ['POST'])]
     #[Route('/{uid}/edit', name: 'app_contact_edit', methods: ['POST'])]
     public function index(Request $request, UserPasswordHasherInterface $userPasswordHasher, User $user = null, 
+    ValidatorInterface $validator): Response
+    {
+        if(!$this->pAccess)
+        {
+            $this->addFlash('error', $this->intl->trans("Vous n'êtes pas autorisés à accéder à cette page !"));
+            return $this->redirectToRoute("app_home");
+        }
+
+         /*----------MANAGE user CRU BEGIN -----------*/
+        //define if method is user add 
+        $isUserAdd = (!$user) ? true : false;
+        $user      = (!$user) ? new User() : $user;
+       
+        $form = $this->createForm(UserType::class, $user);
+        if ($request->request->count() > 0)
+        {
+            $form->handleRequest($request);
+            if ($isUserAdd == true) { //method calling
+                if (!$this->pCreate) return $this->services->ajax_ressources_no_access($this->intl->trans("Création d'un utilisateur"));
+                return $this->addUser($request, $form, $user , $userPasswordHasher);
+            }else {
+                if (!$this->pUpdate)   return $this->services->ajax_ressources_no_access($this->intl->trans("Modification d'un utilisateur"));
+                return $this->updateUser($request, $form, $user);
+            }
+        }
+        
+        $statistics =  $this->statisticsData();
+        $this->services->addLog($this->intl->trans('Accès au menu utilisateurs'));
+        return $this->render('contact/index.html.twig', [
+            'controller_name' => 'UserController',
+            'role'            => $this->roleRepository->findAll(),
+            'title'           => $this->intl->trans('Mes utilisateurs').' - '. $this->brand->get()['name'],
+            'pageTitle'       => [
+                [$this->intl->trans('Utilisateurs')],
+            ],
+            'brand'           => $this->brand->get(),
+            'baseUrl'         => $this->baseUrl->init(),
+            'users'           => $this->userRepository->findAll(),
+            'userform'        => $form->createView(),
+            'pCreateUser'     => $this->pCreate,
+            'pEditUser'       => $this->pUpdate,
+            'pDeleteUser'     => $this->pDelete,
+            'stats'           => $statistics,
+        ]);
+    }
+
+    #[Route('/cont', name: 'app_contact_indexh', methods: ['GET', 'POST'])]
+    #[Route('/contnew', name: 'app_contact_addh', methods: ['POST'])]
+    #[Route('/cont/{uid}/edit', name: 'app_contacth_edit', methods: ['POST'])]
+    public function indexi(Request $request, UserPasswordHasherInterface $userPasswordHasher, User $user = null, 
     ValidatorInterface $validator): Response
     {
         if(!$this->pAccess)
