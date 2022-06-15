@@ -33,8 +33,8 @@ class Status
     #[ORM\OneToMany(mappedBy: 'status', targetEntity: User::class)]
     private $users;
 
-    #[ORM\OneToMany(mappedBy: 'status', targetEntity: Log::class)]
-    private $logs;
+    // #[ORM\OneToMany(mappedBy: 'status', targetEntity: Log::class)]
+    // private $logs;
 
     #[ORM\OneToMany(mappedBy: 'status', targetEntity: Authorization::class)]
     private $authorizations;
@@ -76,7 +76,7 @@ class Status
     public function __construct()
     {
         $this->users = new ArrayCollection();
-        $this->logs = new ArrayCollection();
+        // $this->logs = new ArrayCollection();
         $this->authorizations = new ArrayCollection();
         $this->transactions = new ArrayCollection();
         $this->sMSMessages = new ArrayCollection();
@@ -183,37 +183,7 @@ class Status
 
         return $this;
     }
-
-    /**
-     * @return Collection<int, Log>
-     */
-    public function getLogs(): Collection
-    {
-        return $this->logs;
-    }
-
-    public function addLog(Log $log): self
-    {
-        if (!$this->logs->contains($log)) {
-            $this->logs[] = $log;
-            $log->setStatus($this);
-        }
-
-        return $this;
-    }
-
-    public function removeLog(Log $log): self
-    {
-        if ($this->logs->removeElement($log)) {
-            // set the owning side to null (unless already changed)
-            if ($log->getStatus() === $this) {
-                $log->setStatus(null);
-            }
-        }
-
-        return $this;
-    }
-
+    
     /**
      * @return Collection<int, Authorization>
      */

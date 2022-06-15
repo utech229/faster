@@ -40,6 +40,9 @@ class Sender
     #[ORM\JoinColumn(nullable: false)]
     private $status;
 
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    private $createBy;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
@@ -160,6 +163,18 @@ class Sender
     public function setStatus(?Status $status): self
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function getCreateBy(): ?User
+    {
+        return $this->createBy;
+    }
+
+    public function setCreateBy(?User $createBy): self
+    {
+        $this->createBy = $createBy;
 
         return $this;
     }

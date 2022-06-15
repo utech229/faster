@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Brand;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -37,6 +38,48 @@ class BrandRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    /**
+    * @return Brand[] Returns an array of Sender objects
+    */
+    public function findBrandBy($userType, $params): array
+    {
+        $query = $this->createQueryBuilder('b')->from(User::class, "u");
+
+        // si selection suivant un utilisateur
+        if(isset($params["manager"])) $query->andWhere('b.manager = :manager')->setParameter('manager', $params["manager"]);
+
+        switch ($userType) {
+            case 1:
+                // si this user est un manager de compte
+                $query->andWhere('b.manager = u')
+                    ->andWhere('u.accountManager = :account')
+                    ->setParameter('account', $params["managerby"]);
+                break;
+
+            case 2||3:
+                // si this user est un revender ou son Affilié
+                $query->andWhere('b.manager = :reseller')
+                    ->setParameter('reseller', $params["reselby"]);
+                break;
+
+            case 4||5:
+                // si this user est un utilisateur simple ou son Affilié
+                $query->andWhere('u.brand = b')
+                    ->andWhere('u = :user')
+                    ->setParameter('user', $params["user"]);
+                break;
+            default:
+                // si type de this user n'est pas défini données vide
+                if(!isset($params["master"])) $query->andWhere('b.manager = null');
+                break;
+        }
+
+        return $query->orderBy('b.id', 'ASC')
+           ->getQuery()
+           ->getResult()
+       ;
     }
 
 //    /**

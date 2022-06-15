@@ -5,7 +5,8 @@
 		const _locale              	  = "{{ app.request.locale|default('fr') }}";
 		const _route              	  = "{{ app.request.attributes.get('_route') }}";
 		const _uri              	  = "{{ app.request.requestUri }}";
-		
+		{#const ajaxBaseUrl			  = "{{app.request.schemeAndHttpHost ~ "/" ~ app.request.locale|default('fr') }}";#}
+
 		// Ajax Error
 		const _AjaxError          =  `{{ "Une erreur est survenu, veuillez réessayer plus tard"|trans }}`;
 		const _AjaxTableListIToken       =  `{{ "Une erreur s'est produite pour l'accès au données du tableau, veuillez réessayer"|trans }}`;
