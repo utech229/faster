@@ -215,8 +215,8 @@ class ComposerStaticInit327b9fe4054104934313bc7a690a5f49
         'phpDocumentor\\Reflection\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpdocumentor/reflection-common/src',
-            1 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
-            2 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
+            1 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
+            2 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
         ),
         'libphonenumber\\' => 
         array (
@@ -524,8 +524,8 @@ class ComposerStaticInit327b9fe4054104934313bc7a690a5f49
         ),
         'Psr\\Http\\Message\\' => 
         array (
-            0 => __DIR__ . '/..' . '/psr/http-factory/src',
-            1 => __DIR__ . '/..' . '/psr/http-message/src',
+            0 => __DIR__ . '/..' . '/psr/http-message/src',
+            1 => __DIR__ . '/..' . '/psr/http-factory/src',
         ),
         'Psr\\Http\\Client\\' => 
         array (
@@ -577,8 +577,8 @@ class ComposerStaticInit327b9fe4054104934313bc7a690a5f49
         ),
         'League\\Uri\\' => 
         array (
-            0 => __DIR__ . '/..' . '/league/uri/src',
-            1 => __DIR__ . '/..' . '/league/uri-interfaces/src',
+            0 => __DIR__ . '/..' . '/league/uri-interfaces/src',
+            1 => __DIR__ . '/..' . '/league/uri/src',
             2 => __DIR__ . '/..' . '/league/uri-parser/src',
         ),
         'Laminas\\Code\\' => 
@@ -647,8 +647,8 @@ class ComposerStaticInit327b9fe4054104934313bc7a690a5f49
         ),
         'Doctrine\\Common\\' => 
         array (
-            0 => __DIR__ . '/..' . '/doctrine/common/lib/Doctrine/Common',
-            1 => __DIR__ . '/..' . '/doctrine/event-manager/lib/Doctrine/Common',
+            0 => __DIR__ . '/..' . '/doctrine/event-manager/lib/Doctrine/Common',
+            1 => __DIR__ . '/..' . '/doctrine/common/lib/Doctrine/Common',
         ),
         'Doctrine\\Bundle\\MigrationsBundle\\' => 
         array (
@@ -1016,6 +1016,8 @@ class ComposerStaticInit327b9fe4054104934313bc7a690a5f49
         'App\\Entity\\Usetting' => __DIR__ . '/../..' . '/src/Entity/Usetting.php',
         'App\\Form\\AffiliateType' => __DIR__ . '/../..' . '/src/Form/AffiliateType.php',
         'App\\Form\\CompanyType' => __DIR__ . '/../..' . '/src/Form/CompanyType.php',
+        'App\\Form\\ContactGroupFieldType' => __DIR__ . '/../..' . '/src/Form/ContactGroupFieldType.php',
+        'App\\Form\\ContactGroupType' => __DIR__ . '/../..' . '/src/Form/ContactGroupType.php',
         'App\\Form\\PasswordFormType' => __DIR__ . '/../..' . '/src/Form/PasswordFormType.php',
         'App\\Form\\PermissionType' => __DIR__ . '/../..' . '/src/Form/PermissionType.php',
         'App\\Form\\RegistrationFormType' => __DIR__ . '/../..' . '/src/Form/RegistrationFormType.php',
@@ -1032,7 +1034,6 @@ class ComposerStaticInit327b9fe4054104934313bc7a690a5f49
         'App\\Repository\\ContactGroupFieldRepository' => __DIR__ . '/../..' . '/src/Repository/ContactGroupFieldRepository.php',
         'App\\Repository\\ContactGroupRepository' => __DIR__ . '/../..' . '/src/Repository/ContactGroupRepository.php',
         'App\\Repository\\ContactIndexRepository' => __DIR__ . '/../..' . '/src/Repository/ContactIndexRepository.php',
-        'App\\Repository\\ContactRepository' => __DIR__ . '/../..' . '/src/Repository/ContactRepository.php',
         'App\\Repository\\ExtraAuthorizationRepository' => __DIR__ . '/../..' . '/src/Repository/ExtraAuthorizationRepository.php',
         'App\\Repository\\LogRepository' => __DIR__ . '/../..' . '/src/Repository/LogRepository.php',
         'App\\Repository\\PermissionRepository' => __DIR__ . '/../..' . '/src/Repository/PermissionRepository.php',
@@ -6979,7 +6980,7 @@ class ComposerStaticInit327b9fe4054104934313bc7a690a5f49
         'phpDocumentor\\Reflection\\Types\\This' => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src/Types/This.php',
         'phpDocumentor\\Reflection\\Types\\Void_' => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src/Types/Void_.php',
         'phpDocumentor\\Reflection\\Utils' => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src/Utils.php',
-        '©' => __DIR__ . '/..' . '/symfony/cache/Traits/ValueWrapper.php',
+        'ï¿½' => __DIR__ . '/..' . '/symfony/cache/Traits/ValueWrapper.php',
     );
 
     public static function getInitializer(ClassLoader $loader)

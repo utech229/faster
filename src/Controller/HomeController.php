@@ -40,7 +40,6 @@ class HomeController extends AbstractController
             'pageTitle'     => [ ],
             'menu_text'       => $this->intl->trans('Tableau de bord') .' - '. $this->brand->get()['name'],
             'brand'           => $this->brand->get(),
-            'baseUrl'         => $this->baseUrl,
         ]);
     }
 }

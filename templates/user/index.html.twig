@@ -396,38 +396,74 @@
                                                     <!--end::Col-->
                                                 </div>
                                                 <!--end::Input group-->
-                                                <!--begin::Input group-->
-                                                <div class="mb-7">
-                                                    <!--begin::Label-->
-                                                    <label class="required fw-bold fs-6 mb-5">{{ 'Rôle' | trans }}</label>
-                                                    <!--end::Label-->
-                                                    <!--begin::Roles-->
-                                                    {% if role is defined and  role |length > 0 %}
-                                                    {% for myrole in role %}
-                                                    <!--begin::Input row-->
-                                                    {% if myrole.code != 'AFF0' and myrole.code != 'AFF1'%}
-                                                    <div class="d-flex fv-row">
-                                                        <!--begin::Radio-->
-                                                        <div class="form-check form-check-custom form-check-solid">
-                                                            <!--begin::Input-->
-                                                            <input class="form-check-input me-3" name="user_role" type="radio" value="{{ myrole.code }}" id="kt_modal_update_role_option_{{ myrole.id }}" {% if myrole.id == 1 %}checked='checked'{% endif %} />
-                                                            <!--end::Input-->
-                                                            <!--begin::Label-->
-                                                            <label class="form-check-label" for="kt_modal_update_role_option_{{ myrole.id }}">
-                                                                <div class="fw-bolder text-gray-800">{{ myrole.name }}</div>
-                                                                <div class="text-gray-600">{{ myrole.description }}</div>
-                                                            </label>
-                                                            <!--end::Label-->
+                                                 <!--begin::Input group-->
+                                                <div class="fv-row mb-7">
+                                                    <!--begin::Col-->
+                                                    <div class="col-lg-12">
+                                                        <!--begin::Row-->
+                                                        <div class="row">
+                                                            <!--begin::Col-->
+                                                            <div class="col-lg-6 fv-row">
+                                                                <!--begin::Label-->
+                                                                <label class="fs-6 fw-bold mb-2 form-label" for="kt_user_add_select2_country">
+                                                                    <span class="required">{{ 'Accusé' | trans }}</span>
+                                                                </label>
+                                                                <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="{{'Accusé de reception des message' | trans}}"></i>
+                                                                <!--end::Label-->
+                                                                {{ form_row(userform.isDlr, {'attr': {'class': 'form-select form-select-solid mb-3 mb-lg-0',
+                                                                'data-control':"select2", 'data-placeholder': 'Selectionner'| trans, 'data-allow-clear':"true"
+                                                                ,'data-kt-select2':"true", 'data-dropdown-parent':"#kt_modal_add_user" }}) }}
+                                                            </div>
+                                                            <!--begin::Col-->
+                                                            <div class="col-lg-6 fv-row">
+                                                                <!--begin::Label-->
+                                                                <label class="required fw-bold fs-6 mb-2">{{ 'Prépayé' | trans }}</label>
+                                                                <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="{{"Possibilité pour l'utilisateur d'avoir un solde négatif"| trans}}"></i>
+                                                                <!--end::Label-->
+                                                                {{ form_row(userform.postPay, {'attr': {'class': 'form-select form-select-solid mb-3 mb-lg-0',
+                                                                'data-control':"select2", 'data-placeholder': 'Selectionner'| trans, 'data-allow-clear':"true"
+                                                                ,'data-kt-select2':"true", 'data-dropdown-parent':"#kt_modal_add_user" }}) }}
+                                                            </div>
+                                                            <!--end::Col-->
                                                         </div>
-                                                        <!--end::Radio-->
+                                                        <!--end::Row-->
                                                     </div>
-                                                    {% endif %}
-                                                    <!--end::Input row-->
-                                                    <div class='separator separator-dashed my-5'></div>
-                                                    <!--end::Input row-->
-                                                    {% endfor %}
-                                                    {% endif %}
-                                                    <!--end::Roles-->
+                                                    <!--end::Col-->
+                                                </div>
+                                                <!--end::Input group-->
+                                                 <!--begin::Input group-->
+                                                <div class="fv-row mb-7">
+                                                    <!--begin::Col-->
+                                                    <div class="col-lg-12">
+                                                        <!--begin::Row-->
+                                                        <div class="row">
+                                                            <!--begin::Col-->
+                                                            <div class="col-lg-6 fv-row">
+                                                                <!--begin::Label-->
+                                                                <label class="fs-6 fw-bold mb-2 form-label" for="kt_user_add_select2_country">
+                                                                    <span class="required">{{ 'Accusé' | trans }}</span>
+                                                                </label>
+                                                                <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="{{'Accusé de reception des message' | trans}}"></i>
+                                                                <!--end::Label-->
+                                                                {{ form_row(userform.role, {'attr': {'class': 'form-select form-select-solid mb-3 mb-lg-0',
+                                                                'data-control':"select2", 'data-placeholder': 'Selectionner'| trans, 'data-allow-clear':"true"
+                                                                ,'data-kt-select2':"true", 'data-dropdown-parent':"#kt_modal_add_user" }}) }}
+                                                            </div>
+                                                            <!--begin::Col-->
+                                                            <div class="col-lg-6 fv-row">
+                                                                <!--begin::Label-->
+                                                                <label class="required fw-bold fs-6 mb-2">{{ 'Prépayé' | trans }}</label>
+                                                                <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="{{"Route par défaut sur laquelle fairepasser les message de l'utilisateur"| trans}}"></i>
+                                                                <!--end::Label-->
+                                                                {{ form_row(userform.router, {'attr': {'class': 'form-select form-select-solid mb-3 mb-lg-0',
+                                                                'data-control':"select2", 'data-placeholder': 'Selectionner'| trans, 'data-allow-clear':"true"
+                                                                ,'data-kt-select2':"true", 'data-dropdown-parent':"#kt_modal_add_user" }}) }}
+                                                            </div>
+                                                            <!--end::Col-->
+                                                        </div>
+                                                        <!--end::Row-->
+                                                    </div>
+                                                    <!--end::Col-->
                                                 </div>
                                                 <!--end::Input group-->
                                             </div>

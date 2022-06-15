@@ -286,6 +286,8 @@ return array(
     'App\\Entity\\Usetting' => $baseDir . '/src/Entity/Usetting.php',
     'App\\Form\\AffiliateType' => $baseDir . '/src/Form/AffiliateType.php',
     'App\\Form\\CompanyType' => $baseDir . '/src/Form/CompanyType.php',
+    'App\\Form\\ContactGroupFieldType' => $baseDir . '/src/Form/ContactGroupFieldType.php',
+    'App\\Form\\ContactGroupType' => $baseDir . '/src/Form/ContactGroupType.php',
     'App\\Form\\PasswordFormType' => $baseDir . '/src/Form/PasswordFormType.php',
     'App\\Form\\PermissionType' => $baseDir . '/src/Form/PermissionType.php',
     'App\\Form\\RegistrationFormType' => $baseDir . '/src/Form/RegistrationFormType.php',
@@ -302,7 +304,6 @@ return array(
     'App\\Repository\\ContactGroupFieldRepository' => $baseDir . '/src/Repository/ContactGroupFieldRepository.php',
     'App\\Repository\\ContactGroupRepository' => $baseDir . '/src/Repository/ContactGroupRepository.php',
     'App\\Repository\\ContactIndexRepository' => $baseDir . '/src/Repository/ContactIndexRepository.php',
-    'App\\Repository\\ContactRepository' => $baseDir . '/src/Repository/ContactRepository.php',
     'App\\Repository\\ExtraAuthorizationRepository' => $baseDir . '/src/Repository/ExtraAuthorizationRepository.php',
     'App\\Repository\\LogRepository' => $baseDir . '/src/Repository/LogRepository.php',
     'App\\Repository\\PermissionRepository' => $baseDir . '/src/Repository/PermissionRepository.php',
@@ -6249,5 +6250,5 @@ return array(
     'phpDocumentor\\Reflection\\Types\\This' => $vendorDir . '/phpdocumentor/type-resolver/src/Types/This.php',
     'phpDocumentor\\Reflection\\Types\\Void_' => $vendorDir . '/phpdocumentor/type-resolver/src/Types/Void_.php',
     'phpDocumentor\\Reflection\\Utils' => $vendorDir . '/phpdocumentor/reflection-docblock/src/Utils.php',
-    '©' => $vendorDir . '/symfony/cache/Traits/ValueWrapper.php',
+    'ï¿½' => $vendorDir . '/symfony/cache/Traits/ValueWrapper.php',
 );

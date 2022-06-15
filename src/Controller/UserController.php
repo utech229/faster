@@ -78,8 +78,6 @@ class UserController extends AbstractController
             $this->addFlash('error', $this->intl->trans("Vous n'êtes pas autorisés à accéder à cette page !"));
             return $this->redirectToRoute("app_home");
         }
-
-         /*----------MANAGE user CRU BEGIN -----------*/
         //define if method is user add 
         $isUserAdd = (!$user) ? true : false;
         $user      = (!$user) ? new User() : $user;

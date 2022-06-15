@@ -52,6 +52,7 @@ class uBrand extends AbstractController
            
        ];
     }
+  
 
     
 }

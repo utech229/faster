@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+
+<title>New ContactGroup</title>
+
+{% block body %}
+    <h1>Create new ContactGroup</h1>
+
+    {{ include('contact_group/_form.html.twig') }}
+
+    <a href="{{ path('app_contact_group_index') }}">back to list</a>
+{% endblock %}

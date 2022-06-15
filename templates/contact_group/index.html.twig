@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+
+<title>ContactGroup index</title>
+
+{% block body %}
+    <h1>ContactGroup index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Uid</th>
+                <th>Name</th>
+                <th>CreatedAt</th>
+                <th>UpdatedAt</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for contact_group in contact_groups %}
+            <tr>
+                <td>{{ contact_group.id }}</td>
+                <td>{{ contact_group.uid }}</td>
+                <td>{{ contact_group.name }}</td>
+                <td>{{ contact_group.createdAt ? contact_group.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ contact_group.updatedAt ? contact_group.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_contact_group_show', {'id': contact_group.id}) }}">show</a>
+                    <a href="{{ path('app_contact_group_edit', {'id': contact_group.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_contact_group_new') }}">Create new</a>
+{% endblock %}

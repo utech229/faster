@@ -124,26 +124,27 @@ class StatusController extends AbstractController
     }
  
     //update Status function
-    public function updateStatus($request, $form, $status): Response
+    public function updateStatus($request, $form, $status): JsonResponse
     {
-        if ($form->isSubmitted() && $form->isValid()) {
-        $description = $request->request->get('description');
        
-        $status->setDescription($description);
-        $status->setUpdatedAt(new \DatetimeImmutable());
-        $this->statusRepository->add($status);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $description = $request->request->get('description');
+            $status->setDescription($description);
+            $status->setUpdatedAt(new \DatetimeImmutable());
+            $this->statusRepository->add($status);
 
-        return $this->services->msg_success(
-            $this->intl->trans("Modification de la Status ").$status->getName(),
-            $this->intl->trans("Status modifié avec succès").' : '.$status->getName()
-        );
+            return $this->services->msg_success(
+                $this->intl->trans("Modification de la Status ").$status->getName(),
+                $this->intl->trans("Status modifié avec succès").' : '.$status->getName()
+            );
         }
         else 
         {
         //return $this->services->invalidForm($form, $this->intl);
-        return $this->services->formErrorsNotification($this->validator, $this->intl, $status);
+        //return $this->services->invalidForm($form)
+        return $this->services->formErrorsNotification($this->validator, $status);
         }
-        return $this->services->failedcrud($this->intl->trans("Modification de la Status : "  .$request->request->get('status_name')));
+    
     }
 
     #[Route('/list', name: 'app_status_list')]
@@ -180,6 +181,7 @@ class StatusController extends AbstractController
 
         $data['id']          = $status->getId();
         $data['name']        = $status->getName();
+        $data['code']        = $status->getCode();
         $data['description'] = $status->getDescription();
         return new JsonResponse(['data' => $data]);
     }

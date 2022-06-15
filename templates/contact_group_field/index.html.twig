@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+
+<title>ContactGroupField index</title>
+
+{% block body %}
+    <h1>ContactGroupField index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Uid</th>
+                <th>Field1</th>
+                <th>Field2</th>
+                <th>Field3</th>
+                <th>Field4</th>
+                <th>Field5</th>
+                <th>CreatedAt</th>
+                <th>UpdatedAt</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for contact_group_field in contact_group_fields %}
+            <tr>
+                <td>{{ contact_group_field.id }}</td>
+                <td>{{ contact_group_field.uid }}</td>
+                <td>{{ contact_group_field.field1 }}</td>
+                <td>{{ contact_group_field.field2 }}</td>
+                <td>{{ contact_group_field.field3 }}</td>
+                <td>{{ contact_group_field.field4 }}</td>
+                <td>{{ contact_group_field.field5 }}</td>
+                <td>{{ contact_group_field.createdAt ? contact_group_field.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ contact_group_field.updatedAt ? contact_group_field.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_contact_group_field_show', {'id': contact_group_field.id}) }}">show</a>
+                    <a href="{{ path('app_contact_group_field_edit', {'id': contact_group_field.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="10">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_contact_group_field_new') }}">Create new</a>
+{% endblock %}
