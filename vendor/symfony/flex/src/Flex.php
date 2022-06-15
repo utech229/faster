@@ -206,7 +206,7 @@ class Flex implements PluginInterface, EventSubscriberInterface
                 $this->installer = $trace['object']->setSuggestedPackagesReporter(new SuggestedPackagesReporter(new NullIO()));
 
                 $updateAllowList = \Closure::bind(function () {
-                    return $this->updateWhitelist ?? $this->updateAllowList ?? null;
+                    return $this->updateAllowList;
                 }, $this->installer, $this->installer)();
 
                 if (['php' => 0] === $updateAllowList) {
@@ -317,9 +317,6 @@ class Flex implements PluginInterface, EventSubscriberInterface
             if (!isset($json['flex-'.$type])) {
                 continue;
             }
-
-            $this->io->writeError(sprintf('<warning>Using section "flex-%s" in composer.json is deprecated, use "%1$s" instead.</>', $type));
-
             foreach ($json['flex-'.$type] as $package => $constraint) {
                 if ($symfonyVersion && '*' === $constraint && isset($versions['splits'][$package])) {
                     // replace unbounded constraints for symfony/* packages by extra.symfony.require

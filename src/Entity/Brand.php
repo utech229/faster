@@ -67,7 +67,6 @@ class Brand
 
     public function __construct()
     {
-        $this->brand = new ArrayCollection();
         $this->users = new ArrayCollection();
     }
 

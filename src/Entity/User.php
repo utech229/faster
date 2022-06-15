@@ -71,12 +71,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToOne(targetEntity: Role::class, inversedBy: 'users')]
     private $role;
 
-    #[ORM\ManyToOne(targetEntity: self::class)]
+    #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'accountManagers')]
     private $accountManager;
 
-
-    #[ORM\ManyToOne(targetEntity: Brand::class, inversedBy: 'brand')]
-    private $Brand;
+    #[ORM\OneToMany(mappedBy: 'accountManager', targetEntity: self::class)]
+    private $accountManagers;
 
     #[ORM\ManyToOne(targetEntity: Brand::class, inversedBy: 'users')]
     private $brand;
@@ -151,7 +150,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function __construct()
     {
-        $this->accountManager = new ArrayCollection();
+        $this->accountManagers = new ArrayCollection();
         $this->brands = new ArrayCollection();
         $this->validator = new ArrayCollection();
         $this->routers = new ArrayCollection();
@@ -417,48 +416,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getAccountManager(): ?self
-    {
-        return $this->accountManager;
-    }
-
-    public function setAccountManager(?self $accountManager): self
-    {
-        $this->accountManager = $accountManager;
-
-        return $this;
-    }
-
-    public function addAccountManager(self $accountManager): self
-    {
-        if (!$this->accountManager->contains($accountManager)) {
-            $this->accountManager[] = $accountManager;
-            $accountManager->setAccountManager($this);
-        }
-
-        return $this;
-    }
-
-    public function removeAccountManager(self $accountManager): self
-    {
-        if ($this->accountManager->removeElement($accountManager)) {
-            // set the owning side to null (unless already changed)
-            if ($accountManager->getAccountManager() === $this) {
-                $accountManager->setAccountManager(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function getBrand(): ?Brand
     {
-        return $this->Brand;
+        return $this->brand;
     }
 
-    public function setBrand(?Brand $Brand): self
+    public function setBrand(?Brand $brand): self
     {
-        $this->Brand = $Brand;
+        $this->brand = $brand;
 
         return $this;
     }
@@ -1005,6 +970,48 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($affiliate->getAffiliateManager() === $this) {
                 $affiliate->setAffiliateManager(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getAccountManager(): ?self
+    {
+        return $this->accountManager;
+    }
+
+    public function setAccountManager(?self $accountManager): self
+    {
+        $this->accountManager = $accountManager;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, self>
+     */
+    public function getAccountManagers(): Collection
+    {
+        return $this->accountManagers;
+    }
+
+    public function addAccountManager(self $accountManager): self
+    {
+        if (!$this->accountManagers->contains($accountManager)) {
+            $this->accountManagers[] = $accountManager;
+            $accountManager->setAccountManager($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAccountManager(self $accountManager): self
+    {
+        if ($this->accountManagers->removeElement($accountManager)) {
+            // set the owning side to null (unless already changed)
+            if ($accountManager->getAccountManager() === $this) {
+                $accountManager->setAccountManager(null);
             }
         }
 

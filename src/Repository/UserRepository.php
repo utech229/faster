@@ -62,7 +62,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     }
 
         ///////////////////////////////////////////////////////start/////////////////////////////////////////////////////////////
-   
+
     // returns user by country code
     /**
      * Summary of findUsers
@@ -196,7 +196,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     /**
     * @return User[] Returns an array of User objects
     */
-    public function getUsersByPermission($codePermission, $manager_id)
+    public function getUsersByPermission($codePermission, $userType = null, $user = null, $level = null)
     {
         $qb = $this->createQueryBuilder('u');
 
@@ -205,8 +205,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->from(Authorization::class, "a")
             ->from(Status::class, "s")
             ->from(Brand::class, "b")
-            ->where("p.code = :code")
-            ->andWhere('s.code = 3')
+            ->where('s.code = 3')
             ->andWhere('u.role = r')
             ->andWhere('a.role = r')
             ->andWhere('a.permission = p')
@@ -214,15 +213,33 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->andWhere('r.status = s')
             ->andWhere('a.status = s')
             ->andWhere('u.status = s')
-            ->andWhere('u.brand = b')
-            ->setParameter('code', $codePermission);
+            ->andWhere('u.brand = b');
 
-            if($manager_id)
-            {
-                $qb->andWhere('b.manager = :manager')->setParameter('manager', $manager_id);
+        if($codePermission != "") {
+            $qb->andwhere("p.code = :code")
+                ->setParameter('code', $codePermission);
+        }
+
+        switch ($userType) {
+            case 1: $qb->andWhere('u.accountManager = :manager')->setParameter('manager', $user); break;
+            case 2: $qb->andWhere('b.manager = :manager')->setParameter('manager', $user); break;
+            case 3: $qb->andWhere('b.manager = :manager')->setParameter('manager', $user); break;
+            case 4: $qb->andWhere('u.affiliateManager = :manager')->setParameter('manager', $user); break;
+            case 5: $qb->andWhere('u.affiliateManager = :manager')->setParameter('manager', $user); break;
+            default: break;
+        }
+
+        if($level){
+            switch ($level) {
+                case 1: $qb->andWhere('u.affiliateManager is NULL'); break;
+                case 2: $qb->andWhere('u.affiliateManager is not NULL'); break;
+                default: break;
             }
-            $query = $qb->getQuery();
-            return $query->execute();
+        }
+
+        $query = $qb->getQuery();
+        //dd($query->execute());
+        return $query->execute();
     }
 
 //    /**
