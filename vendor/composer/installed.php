@@ -3,7 +3,7 @@
         'name' => '__root__',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '45ab1d31282c56b646dd5197e383b13010c6ba9a',
+        'reference' => 'daea910bb928e0f4ce2996e93e89dd0021b48310',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         '__root__' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '45ab1d31282c56b646dd5197e383b13010c6ba9a',
+            'reference' => 'daea910bb928e0f4ce2996e93e89dd0021b48310',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -1276,6 +1276,15 @@
             'install_path' => __DIR__ . '/../symfony/web-link',
             'aliases' => array(),
             'dev_requirement' => false,
+        ),
+        'symfony/web-profiler-bundle' => array(
+            'pretty_version' => 'v6.1.1',
+            'version' => '6.1.1.0',
+            'reference' => '2a5bdd2d82dda75475c428c0fd1d59b6d7aad117',
+            'type' => 'symfony-bundle',
+            'install_path' => __DIR__ . '/../symfony/web-profiler-bundle',
+            'aliases' => array(),
+            'dev_requirement' => true,
         ),
         'symfony/webapp-meta' => array(
             'pretty_version' => 'v1.0.0',

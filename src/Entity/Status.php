@@ -7,7 +7,14 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
+
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
+
+#[ORM\Table(name: '`status`')]
 #[ORM\Entity(repositoryClass: StatusRepository::class)]
+#[UniqueEntity(fields: ['name'])]
+#[UniqueEntity(fields: ['code'])]
 class Status
 {
     #[ORM\Id]
@@ -15,8 +22,9 @@ class Status
     #[ORM\Column(type: 'integer')]
     private $id;
 
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: 'integer', unique:true)]
     private $code;
+
 
     #[ORM\Column(type: 'string', length: 255)]
     private $name;

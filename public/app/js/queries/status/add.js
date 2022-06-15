@@ -15,6 +15,17 @@ var KTUsersAddstatus = function() {
                                 }
                             }
                         },
+                        'status[code]': {
+                            validators: {
+                                notEmpty: {
+                                    message: _Required_Field
+                                },
+                                regexp: {
+                                    regexp: /^[0-9]+$/,
+                                    message: _Required_Number
+                                },
+                            }
+                        },
                         description: {
                             validators: {
                                 notEmpty: {
@@ -44,7 +55,7 @@ var KTUsersAddstatus = function() {
                 i.addEventListener("click", (function(t) {
                     t.preventDefault(), o && o.validate().then((function(t) {
                         console.log("validated!"), "Valid" == t ? (i.setAttribute("data-kt-indicator", "on"), i.disabled = !0, 
-                        load.removeClass('sr-only'),
+                        loading(true),
                         $.ajax({
                             url: (isUpdating == true) ? window.location.href +'/'+ statusIDInput.val() + '/update_status' : add_link,
                             type: 'post',
@@ -55,9 +66,9 @@ var KTUsersAddstatus = function() {
                             cache: false,
                             success: function(response) {
                                     i.removeAttribute("data-kt-indicator"), i.disabled = !1;
-                                    load.addClass('sr-only')
+                                    loading()
                                     Swal.fire({
-                                        title: _Swal_success,
+                                        title: response.title,
                                         text: response.message,
                                         icon: response.type,
                                         buttonsStyling: false,
@@ -76,11 +87,11 @@ var KTUsersAddstatus = function() {
                             error: function () { 
                                 $(document).trigger('onAjaxError');
                                 i.removeAttribute("data-kt-indicator"), i.disabled = !1;
-                                load.addClass('sr-only')
+                                loading()
                             },
                         })) : 
                         $(document).trigger('onFormError'),
-                        load.addClass('sr-only');
+                        loading();
                     }))
                 }))
             })()
