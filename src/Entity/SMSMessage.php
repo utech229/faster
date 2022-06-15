@@ -26,7 +26,7 @@ class SMSMessage
     private $message;
 
     #[ORM\Column(type: 'float')]
-    private $campaignAmount;
+    private $messageAmount;
 
     #[ORM\Column(type: 'boolean')]
     private $smsType;
@@ -43,9 +43,21 @@ class SMSMessage
     #[ORM\ManyToOne(targetEntity: SMSCampaign::class, inversedBy: 'sMSMessages')]
     private $campaign;
 
-    #[ORM\ManyToOne(targetEntity: Status::class, inversedBy: 'sMSMessages')]
+    #[ORM\ManyToOne(targetEntity: Status::class)]
     #[ORM\JoinColumn(nullable: false)]
     private $status;
+
+    #[ORM\Column(type: 'string', length: 15)]
+    private $sender;
+
+    #[ORM\Column(type: 'string', length: 20)]
+    private $phone;
+
+    #[ORM\Column(type: 'array')]
+    private $phoneCountry = [];
+
+    #[ORM\Column(type: 'string', length: 25)]
+    private $uid;
 
     public function getId(): ?int
     {
@@ -100,14 +112,14 @@ class SMSMessage
         return $this;
     }
 
-    public function getCampaignAmount(): ?float
+    public function getMessageAmount(): ?float
     {
-        return $this->campaignAmount;
+        return $this->messageAmount;
     }
 
-    public function setCampaignAmount(float $campaignAmount): self
+    public function setMessageAmount(float $messageAmount): self
     {
-        $this->campaignAmount = $campaignAmount;
+        $this->messageAmount = $messageAmount;
 
         return $this;
     }
@@ -180,6 +192,54 @@ class SMSMessage
     public function setStatus(?Status $status): self
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function getSender(): ?string
+    {
+        return $this->sender;
+    }
+
+    public function setSender(string $sender): self
+    {
+        $this->sender = $sender;
+
+        return $this;
+    }
+
+    public function getPhone(): ?string
+    {
+        return $this->phone;
+    }
+
+    public function setPhone(string $phone): self
+    {
+        $this->phone = $phone;
+
+        return $this;
+    }
+
+    public function getPhoneCountry(): ?array
+    {
+        return $this->phoneCountry;
+    }
+
+    public function setPhoneCountry(array $phoneCountry): self
+    {
+        $this->phoneCountry = $phoneCountry;
+
+        return $this;
+    }
+
+    public function getUid(): ?string
+    {
+        return $this->uid;
+    }
+
+    public function setUid(string $uid): self
+    {
+        $this->uid = $uid;
 
         return $this;
     }

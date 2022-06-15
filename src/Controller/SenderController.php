@@ -156,7 +156,11 @@ class SenderController extends AbstractController
             ]
         );
 
-        if($user_manage) $request_sender["manager"] = $user_manage;
+        $brand = ($request->request->get('brand') !== "") ? $this->em->getRepository(Brand::class)->findOneByUid($request->request->get('brand')) : null;
+        if($brand) $request_sender["brand"] = $brand->getId();
+
+        $status = ($request->request->get('status') !== "") ? $this->em->getRepository(Status::class)->findOneByUid($request->request->get('status')) : null;
+        if($status) $request_sender["status"] = $status->getId();
 
         list($userType, $userRequest) = $this->src->checkThisUser($this->pList);
 

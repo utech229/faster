@@ -36,7 +36,7 @@ class Permission
     #[ORM\OneToMany(mappedBy: 'permission', targetEntity: ExtraAuthorization::class)]
     private $extraAuthorizations;
 
-    #[ORM\ManyToOne(targetEntity: Status::class, inversedBy: 'permissions')]
+    #[ORM\ManyToOne(targetEntity: Status::class)]
     #[ORM\JoinColumn(nullable: false)]
     private $status;
 

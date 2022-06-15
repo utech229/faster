@@ -36,7 +36,7 @@ class Sender
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'senders')]
     private $manager;
 
-    #[ORM\ManyToOne(targetEntity: Status::class, inversedBy: 'senders')]
+    #[ORM\ManyToOne(targetEntity: Status::class)]
     #[ORM\JoinColumn(nullable: false)]
     private $status;
 

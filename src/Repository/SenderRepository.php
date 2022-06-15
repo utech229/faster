@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Sender;
 use App\Entity\User;
 use App\Entity\Brand;
+use App\Entity\Status;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -46,10 +47,16 @@ class SenderRepository extends ServiceEntityRepository
     */
     public function userTypeFindBy($userType, $params): array
     {
-        $query = $this->createQueryBuilder('s')->from(User::class, "u")->from(Brand::class, "b");
+        $query = $this->createQueryBuilder('s')->from(User::class, "u")->from(Brand::class, "b")->from(Status::class, "t");
 
         // si selection suivant un utilisateur
         if(isset($params["manager"])) $query->andWhere('s.manager = :manager')->setParameter('manager', $params["manager"]);
+
+        // si rechercher selon status
+        if(isset($params["status"])) $query->andWhere('s.status = :status')->setParameter('status', $params["status"]);
+
+        // si rechercher selon brand
+        if(isset($params["brand"])) $query->andWhere('b = :brand')->setParameter('brand', $params["brand"]);
 
         switch ($userType) {
             case 1:
@@ -91,6 +98,8 @@ class SenderRepository extends ServiceEntityRepository
                 if(!isset($params["master"])) $query->andWhere('s.manager = null');
                 break;
         }
+
+        //dd($query->orderBy('s.id', 'ASC')->getQuery());
 
         return $query->orderBy('s.id', 'ASC')
            ->getQuery()
