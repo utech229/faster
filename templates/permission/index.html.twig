@@ -235,6 +235,8 @@
 	const pDeletePermission        = {{pDeletePermission}};
     const permission_list_link     = "{{path('app_permission_list')}}";
     const add_permission           = "{{path('app_user_permission_add')}}";
+    const update_link              = "{{ path('app_user_permission_update', {'code':'_1_'}) }}";
+    const delete_link              = "{{ path('app_permission_delete', {'code':'_1_'}) }}";
     const csrfToken                = "{{ csrf_token(app.user.uid) }}"
 </script>
 <!--begin::Page Vendors Javascript(used by this page)-->

@@ -58,7 +58,7 @@ class Brand
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'validator')]
     private $validator;
 
-    #[ORM\ManyToOne(targetEntity: Status::class, inversedBy: 'brands')]
+    #[ORM\ManyToOne(targetEntity: Status::class)]
     #[ORM\JoinColumn(nullable: false)]
     private $status;
 
@@ -67,7 +67,6 @@ class Brand
 
     public function __construct()
     {
-        $this->brand = new ArrayCollection();
         $this->users = new ArrayCollection();
     }
 

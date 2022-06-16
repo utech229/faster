@@ -1,7 +1,8 @@
 "use strict";
 const SenderManager = function(){
-    var t, e = pEdit, d = pDelete, l = pList, g, h = [];
-    const el = document.querySelector("#tb_sender"),
+    // t : datatable; e : permission edit; d : permission delete; b : permission de changer de statut, l : permission voir tous, j : visibilité de la column Utilisateur; g : url de soumission du formulaire; h : tableau des données récupérées ayant pour index l'uid de la ligne
+    var t, e = pEdit, d = pDelete, b = pStatus, l = pList, j = clnUser, g, h = [];
+    const el = document.querySelector("#tb_sender"), // el : selecteur de la table html
     cls = [
         { // order
             targets: 0,
@@ -37,7 +38,7 @@ const SenderManager = function(){
         },
         { // manager
             targets: 4,
-            visible: l ? true : false,
+            visible: j ? true : false,
             responsivePriority: 4,
             render: function(data, type, full, meta) {
                 return data[0];
@@ -65,14 +66,14 @@ const SenderManager = function(){
             responsivePriority: 1,
             render : function (data,type, full, meta) {
                 h[data] = full;
-                var icons = e ? `<!--begin::Update-->
+                var icons = ((e && l) || (e && full[2].code === 2)) ? `<!--begin::Update-->
                     <button class="btn btn-icon btn-active-light-primary btn-hover-scale w-30px h-30px" id="update" data-id=`+data+`>
                         <span class="indicator-label"><i class="fa fa-edit"></i></span>
                         <span class="indicator-progress"><span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
                     </button>
                 <!--end::Update-->`:'';
 
-                if(e){
+                if(b){
                     icons += full[2].code !== 3 ? `<!--begin::Enable-->
                         <button class="btn btn-icon btn-active-light-primary btn-hover-scale w-30px h-30px" id="enable" data-id=`+data+`>
                             <span class="indicator-label"><i class="text-success fa fa-unlock"></i></span>
@@ -96,24 +97,26 @@ const SenderManager = function(){
                 return icons;
             }
         }
-    ],
-    a = document.querySelector("#add_sender"),
-    m = document.querySelector("#modal_sender"),
-    f = m.querySelector("#form"),
-    c = f.querySelector("#cancel"),
-    i = f.querySelector("#submit"),
-    k = m.querySelector("#close"),
-    s = document.querySelector("#search"),
-    x = document.querySelector("#export"),
-    y = ".bt-export",
-    u = "#update",
-    v = "#enable",
-    w = "#disable",
-    z = "#delete",
-    o = new bootstrap.Modal(m),
-    r = ()=>{ f.reset(); $(f.querySelector("#sender__token")).val(_token); btnAnimation(i); },
-    filling = (target)=>{
-        var id = $(target.closest("button")).attr("data-id"),
+    ], // cls : colonnes du datatable
+    a = document.querySelector("#add_sender"), // a : selecteur bouton ajout de sender
+    m = document.querySelector("#modal_sender"), // m : selecteur du div ayant la class "modal"
+    f = m.querySelector("#form"), // f : selecteur du formulaire dans le modal
+    c = f.querySelector("#cancel"), // c : selecteur du bouton quitter dans le formulaire
+    i = f.querySelector("#submit"), // i : selecteur du bouton envoyer dans le formulaire
+    k = m.querySelector("#close"), // k : selecteur de l'icon fermé dans le modal
+    s = document.querySelector("#search"), // s : selecteur de l'input recherche
+    x = document.querySelector("#export"), // x : selecteur du bouton affiche/cache des boutons d'exportation
+    y = ".bt-export", // y : class de l'ensemble des boutons d'exportation défini par dom de datatable
+    u = "#update", // u : id des boutons update dans la table
+    v = "#enable", // v : id des boutons activé dans la table
+    w = "#disable", // w : id des boutons désactivé dans la table
+    z = "#delete", // z : id des boutons suppression dans la table
+    o = new bootstrap.Modal(m), // o : objet modal créé à partir de m
+    r = ()=>{ f.reset(); $(f.querySelector("#sender__token")).val(_token); btnAnimation(i); }, // r : function reset du formulaire, remplissage du champs _token et arrêt de toutes les animations
+    filling = (target)=>{ // filling : function pour remplir le formulaire sur click d'un bouton ayant data-id = uid de la ligne
+        const $this = target.closest("button");
+        if($($this).length == 0) return false;
+        const id = $($this).attr("data-id"),
         g = url_edit.replace("_1_", id);
         $(f.querySelector("#sender_manager")).val(h[id][4][1]); $(f.querySelector("#sender_manager")).trigger("change");
         $(f.querySelector("#sender_name")).val(h[id][1]);
@@ -121,9 +124,10 @@ const SenderManager = function(){
         $(f.querySelector("#sender_observation")).val(h[id][6]);
         $(f.querySelector("#sender_uid")).val(h[id][7]);
     },
-    post = (target, action)=>{
-        const $this = target.closest("button"),
-        id = $($this).attr("data-id");
+    post = (target, action)=>{ // post : function exécutant les changement de status (activation, désactivation et suppression)
+        const $this = target.closest("button");
+        if($($this).length == 0) return false;
+        const id = $($this).attr("data-id");
         var message;
         switch (action) {
             case "1": message = _enabled_data; break;
@@ -151,23 +155,35 @@ const SenderManager = function(){
                 }
             });
         });
-    };
+    },
+    filter = document.querySelector("#menu-filter"), // filter : selecteur du div contenant les champs du filtre
+    brand = filter.querySelector("#brand"), // brand : selecteur du champ select brand du filtre
+    user = filter.querySelector("#user"), // user : selecteur du champ select user du filtre
+    status = filter.querySelector("#status"), // status : selecteur du champ select status du filtre
+    reset = filter.querySelector("#reset"), // reset : selecteur du bouton reset du filtre
+    submit = filter.querySelector("#submit"); // submit : selecteur du bouton submit du filtre
 
     return {
         init: ()=>{
-            t = $(el).DataTable({
+            t = $(el).DataTable({ // Initiation du datatable
                 responsive: true,
                 ajax: {
                     "url": url_get,
                     "type": "POST",
                     data: {
                         _token: function(){ return _token; },
-                        manager: function(){ return ""; },
+                        manager: function(){ return $(user).val(); },
+                        brand: function(){ return $(brand).val(); },
+                        status: function(){ return $(status).val(); },
                     },
                     dataSrc: function(response){
+                        if(response.message) swalSimple(response.type, response.message);
+
                         e = response.data.permission.pEdit;
                         d = response.data.permission.pDelete;
+                        b = response.data.permission.pStatus;
                         l = response.data.permission.pList;
+
                         return response.data.table;
                     },
                     error: function (response) {
@@ -185,7 +201,7 @@ const SenderManager = function(){
                 dom: '<"top text-end bt-export d-none"B>rtF<"row"<"col-sm-6"l><"col-sm-6"p>>',
             });
 
-            t.on('draw', ()=>{
+            t.on('draw', ()=>{ // A chaque rafraichissement du tableau
                 $(el).off("click", u);
                 $(el).on("click", u, ($this)=>{ $this.preventDefault(); r(); filling($this.target); o.show(); });
 
@@ -197,17 +213,19 @@ const SenderManager = function(){
 
                 $(el).off("click", z);
                 $(el).on("click", z, ($this)=>{ $this.preventDefault(); post($this.target, "2"); });
+
+                loading();
             });
 
-            $(s).on('keyup', ($this)=>{ t.search($this.target.value).draw(); });
+            $(s).on('keyup', ($this)=>{ t.search($this.target.value).draw(); }); // Recherche dans l'input search
 
-            $(a).on("click", ($this)=>{ $this.preventDefault(); r(); g = url_new; o.show(); });
+            $(a).on("click", ($this)=>{ $this.preventDefault(); r(); g = url_new; o.show(); }); // click sur le bouton Ajout de sender
 
-            $(c).on("click", ($this)=>{ $this.preventDefault(); o.hide(); });
+            $(c).on("click", ($this)=>{ $this.preventDefault(); o.hide(); }); // click sur le bouton annuler du modal
 
-            $(k).on("click", ($this)=>{ $this.preventDefault(); o.hide(); });
+            $(k).on("click", ($this)=>{ $this.preventDefault(); o.hide(); }); // click sur l'icon close du modal
 
-            $(document).on("submit", f, ($this)=>{
+            $(document).on("submit", f, ($this)=>{ // soumission du formulaire
                 $this.preventDefault();
                 btnAnimation(i, true);
                 $.ajax({
@@ -234,6 +252,42 @@ const SenderManager = function(){
 
             // Action sur bouton export
             $(x).on('click', ($this)=>{ $this.preventDefault(); return $(y).hasClass('d-none')?$(y).removeClass('d-none'):$(y).addClass('d-none'); });
+
+            // Filter
+            // Charge par ajax les utilisateurs sous la marque sélectionnée
+            //$(brand).on("change", ($this)=>{
+            	$(user).select2({data:[{id:'',text:''}]});
+
+            	$(user).css("width","100%");
+
+            	$(user).select2({
+            		ajax: {
+            			url: url_user,
+            			type: "post",
+            			data: {
+            				_token: _token,
+            				brand: $(brand).val(),
+            			},
+            			/*success: function(response){
+            				return response;
+            			}*/
+            		},
+            		language: _locale,
+            		width: 'resolve'
+            	});
+            //});
+
+            // Si bouton reset du filtre et cliqué
+            $(reset).on("click", ($this)=>{
+                $(brand).val("").trigger("change");
+                $(user).val("").trigger("change");
+                $(status).val("").trigger("change");
+                loading(true);
+                t.ajax.reload();
+            });
+
+            // Si bouton submit du filtre et cliqué
+            $(submit).on("click", ($this)=>{loading(true); t.ajax.reload();});
         }
     }
 }();

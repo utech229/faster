@@ -44,7 +44,7 @@ var KTUsersAddrouter = function() {
                 i.addEventListener("click", (function(t) {
                     t.preventDefault(), o && o.validate().then((function(t) {
                         console.log("validated!"), "Valid" == t ? (i.setAttribute("data-kt-indicator", "on"), i.disabled = !0, 
-                        load.removeClass('sr-only'),
+                        loading(true),
                         $.ajax({
                             url: (isUpdating == true) ? window.location.href +'/'+ routerIDInput.val() + '/update_router' : add_link,
                             type: 'post',
@@ -55,7 +55,7 @@ var KTUsersAddrouter = function() {
                             cache: false,
                             success: function(response) {
                                     i.removeAttribute("data-kt-indicator"), i.disabled = !1;
-                                    load.addClass('sr-only')
+                                    loading()
                                     Swal.fire({
                                         title: _Swal_success,
                                         text: response.message,
@@ -76,11 +76,11 @@ var KTUsersAddrouter = function() {
                             error: function () { 
                                 $(document).trigger('onAjaxError');
                                 i.removeAttribute("data-kt-indicator"), i.disabled = !1;
-                                load.addClass('sr-only')
+                                loading()
                             },
                         })) : 
                         $(document).trigger('onFormError'),
-                        load.addClass('sr-only');
+                        loading();
                     }))
                 }))
             })()

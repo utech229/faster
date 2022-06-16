@@ -1,7 +1,9 @@
 <?php
 
 namespace App\Form;
+use App\Entity\Role;
 use App\Entity\User;
+use App\Entity\Router;
 use App\Entity\Status;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
@@ -38,14 +40,14 @@ class UserType extends AbstractType
             ->add('uid',HiddenType::class,  array('mapped' => false))
             ->add('isDlr', ChoiceType::class, ['label' => false,
                 'choices'  => [
+                    $this->intl->trans("Désactivé") => false,
                     $this->intl->trans("Activé")   => true,
-                    $this->intl->trans("Désactivé") => false
                 ]
             ])
             ->add('postPay', ChoiceType::class, ['label' => false,
             'choices'  => [
-                $this->intl->trans("Activé")   => true,
-                $this->intl->trans("Désactivé") => false
+                $this->intl->trans("Désactivé") => false,
+                $this->intl->trans("Activé")   => true
             ]
             ])
             ->add('status', EntityType::class, [
@@ -56,6 +58,30 @@ class UserType extends AbstractType
                             ->where('s.code >= 2')
                             ->andwhere('s.code <= 5')
                             ->orderBy('s.code', 'ASC');
+                },
+                'choice_label'=>'name',
+                'choice_value'=>'uid',
+            ])
+            ->add('role', EntityType::class, [
+                'label' => false,
+                'class'=>Role::class,
+                'query_builder'=>function(EntityRepository $er){
+                        return $er->createQueryBuilder('r')
+                            ->where('r.code != :text1')
+                            ->andWhere('r.code != :text2')
+                            ->setParameter('text1', 'AFF0')
+                            ->setParameter('text2', 'AFF1')
+                            ->orderBy('r.code', 'ASC');
+                },
+                'choice_label'=>'name',
+                'choice_value'=>'code',
+            ])
+            ->add('router', EntityType::class, [
+                'label' => false,
+                'class'=> Router::class,
+                'query_builder'=>function(EntityRepository $er){
+                        return $er->createQueryBuilder('r')
+                            ->orderBy('r.id', 'ASC');
                 },
                 'choice_label'=>'name',
                 'choice_value'=>'uid',

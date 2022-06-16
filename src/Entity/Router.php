@@ -36,7 +36,7 @@ class Router
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'routers')]
     private $manager;
 
-    #[ORM\ManyToOne(targetEntity: Status::class, inversedBy: 'routers')]
+    #[ORM\ManyToOne(targetEntity: Status::class)]
     private $status;
 
     public function __construct()

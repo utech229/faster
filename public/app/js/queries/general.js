@@ -1,7 +1,6 @@
 "use strict";
 
 var pCondition = 'true';
-
 $(document).on('onAjaxError', function(event) 
 {
     Swal.fire({
@@ -81,3 +80,33 @@ function dateFormat(dateIN = "", onlyDate = false)
         return new Intl.DateTimeFormat('fr-FR', options).format(date);
     }
 }
+
+// Format options
+const optionFormat = (item) => {
+    if (!item.id) {
+        return item.text;
+    }
+
+    var span = document.createElement('span');
+    var template = '';
+
+    template += '<div class="d-flex align-items-center">';
+    template += '<img src="' + item.element.getAttribute('data-avatar-content-icon') + '" class="rounded-circle h-40px me-3" alt="' + item.text + '"/>';
+    template += '<div class="d-flex flex-column">'
+    template += '<span class="fs-4 fw-bolder lh-1">' + item.text + '</span>';
+    template += '<span class="text-muted fs-5">' + item.element.getAttribute('data-avatar-content-subcontent') + '</span>';
+    template += '</div>';
+    template += '</div>';
+
+    span.innerHTML = template;
+
+    return $(span);
+}
+
+// Init Select2 --- more info: https://select2.org/
+$('#select2_avatar').select2({
+    placeholder: "Select an option",
+    minimumResultsForSearch: Infinity,
+    templateSelection: optionFormat,
+    templateResult: optionFormat
+});
