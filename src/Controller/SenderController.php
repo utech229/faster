@@ -92,7 +92,7 @@ class SenderController extends AbstractController
 
         if($form->isSubmitted() && $request->isXmlHttpRequest()) return $this->src->invalidForm($form);
 
-        list($userType, $userRequest) = $this->src->checkThisUser($this->pList);
+        list($userType, $masterId, $userRequest) = $this->src->checkThisUser($this->pList);
         $status = [
             $this->src->status(2),
             $this->src->status(3),
@@ -113,12 +113,12 @@ class SenderController extends AbstractController
         return $this->renderForm('sender/index.html.twig', [
             'form'      => $form,
             'sender'    => $sender,
-            'brands'     => $brands,
+            'brands'    => $brands,
             'status'    => $status,
             'brand'     => $this->brand->get(),
             'pAccess'   => $this->pAccess,
             'pCreate'   => $this->pCreate,
-            'clnUser'     => $userType > 3 ? false : true,
+            'clnUser'   => $userType > 3 ? false : true,
             'pList'     => $this->pList,
             'pEdit'     => $this->pEdit,
             'pDelete'   => $this->pDelete,
@@ -162,7 +162,7 @@ class SenderController extends AbstractController
         $status = ($request->request->get('status') !== "") ? $this->em->getRepository(Status::class)->findOneByUid($request->request->get('status')) : null;
         if($status) $request_sender["status"] = $status->getId();
 
-        list($userType, $userRequest) = $this->src->checkThisUser($this->pList);
+        list($userType, $masterId, $userRequest) = $this->src->checkThisUser($this->pList);
 
         $merge = array_merge($request_sender, $userRequest);
 

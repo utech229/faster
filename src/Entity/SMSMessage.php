@@ -59,6 +59,9 @@ class SMSMessage
     #[ORM\Column(type: 'string', length: 25)]
     private $uid;
 
+    #[ORM\Column(type: 'text')]
+    private $originMessage;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -240,6 +243,18 @@ class SMSMessage
     public function setUid(string $uid): self
     {
         $this->uid = $uid;
+
+        return $this;
+    }
+
+    public function getOriginMessage(): ?string
+    {
+        return $this->originMessage;
+    }
+
+    public function setOriginMessage(string $originMessage): self
+    {
+        $this->originMessage = $originMessage;
 
         return $this;
     }

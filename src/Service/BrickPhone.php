@@ -23,9 +23,10 @@ class BrickPhone
                 'name' => $countries[$search]['name'],
                 'code' => $countries[$search]['code'],
                 'dial_code' => $countries[$search]['dial_code'],
-            ]; 
-        } else 
-            return false;
+            ];
+        }
+
+        return false;
     }
 
     public function getCountryFromCode($codeCountry)

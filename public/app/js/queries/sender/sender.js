@@ -254,6 +254,10 @@ const SenderManager = function(){
             $(x).on('click', ($this)=>{ $this.preventDefault(); return $(y).hasClass('d-none')?$(y).removeClass('d-none'):$(y).addClass('d-none'); });
 
             // Filter
+            $(brand).select2({
+                templateSelection: select2Format1,
+                templateResult: select2Format1
+            });
             // Charge par ajax les utilisateurs sous la marque sélectionnée
             //$(brand).on("change", ($this)=>{
             	$(user).select2({data:[{id:'',text:''}]});
