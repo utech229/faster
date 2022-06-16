@@ -27,7 +27,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class RechargeController extends AbstractController
 {
 
-        public function __construct(BaseUrl $baseUrl, Services $services, uBrand $brand, TranslatorInterface $translator, EntityManagerInterface $entityManager,
+    public function __construct(BaseUrl $baseUrl, Services $services, uBrand $brand, TranslatorInterface $translator, EntityManagerInterface $entityManager,
         UrlGeneratorInterface $urlGenerator, UserRepository $userRepository, RechargeRepository $rechargeRepository, BrandRepository $brandRepository,
         TransactionRepository $transactionRepository){
         $this->baseUrl         = $baseUrl;
@@ -63,14 +63,15 @@ class RechargeController extends AbstractController
             return $this->redirectToRoute("app_home");
         }
         $actions =[$this->pRechargeUser, $this->pManager, ];
-        return $this->render('recharge/indeex.html.twig', [
-            'controller_name' => 'RechargeController',
+        //$user    = $this->services->getUserByPermission();
+        return $this->render('recharge/index.html.twig', [
+            'controller_name'    => 'RechargeController',
             'brand'              => $this->brand->get(),
             'baseUrl'            => $this->baseUrl->init(),
             'title'              => $this->intl->trans('Rechargement'),
-            'pageTitle'       => [
-                [$this->intl->trans('Gestion des recharges')],
-                [$this->intl->trans('Recharger compte')],
+            'pageTitle'          => [
+                                        [$this->intl->trans('Gestion des recharges')],
+                                        [$this->intl->trans('Recharger compte')],
             ],
         ]);
     }
@@ -89,6 +90,7 @@ class RechargeController extends AbstractController
             $userTransaction = $user = $rechargeBy = $this->getUser();
         }else{
             if(!$this->pRechargeUser) return $this->services->no_access($this->intl->trans("Utilisateur non autorisé pour recharger un utilisateur.").': '.$this->getUser()->getEmail(), $this->intl->trans("Ooops... Vous n'êtes pas autorisé(e) à effectuer cette action."));
+
             $user= $this->uRepository->findOneBy(['uid'=> $isSelect, 'status'=> $this->services->status(3)]);
             //$extractBalance = false;
             if(!$user) return $this->services->msg_error($this->intl->trans("Utilisateur incorrect.").': '.$this->getUser()->getEmail(), $this->intl->trans("L'utilisateur sélectionné n'existe pas ou n'est pas actif."));
@@ -150,6 +152,15 @@ class RechargeController extends AbstractController
                 $userTransaction = $rechargeBy = $this->getUser();
                 $updateDate      = $creatDate;
             }
+        }else{
+            //Récupération API
+            $beforeBalance   = $this->getUser()->getBalance();
+            $afterBalance    = $this->getUser()->getBalance() - $amount;
+            $status          = 'pending';
+            $userTransaction = $rechargeBy = $this->getUser();
+            $idTransaction   = '20123456';
+            $reference       = '20108902';
+            $linkRedirect    = 'recharge.test';
         }
         switch($status){
             //à completer si d'autres statut
@@ -256,7 +267,7 @@ class RechargeController extends AbstractController
     #[Route('{_locale}/loadrecharge', name: 'load_recharge')]
     public function loadRecharge(Request $request){
         // if(!$this->isCsrfTokenValid($this->getUser()->getUid(), $request->request->get('_token'))) return $this->services->no_access($this->intl->trans("Initialisation d'une recharge pour l'utiliateur ").': '.$this->getUser()->getEmail());
-        $isSelect       = $request->request->get('uSelect');
+        $isSelect       = $request->get('uSelect');
         $userSelect     = '';
         if($isSelect){
             $userSelect = $this->uRepository->findOneBy(['uid'=> $isSelect]);
@@ -281,22 +292,29 @@ class RechargeController extends AbstractController
                     }
                 }
             }else{
+                $this->getUser()->getBrand()->getUid();
+                $inBrand      = $this->bRepository->findOneBy(['uid'=> $this->getUser()->getBrand()->getUid()]);
+                if($inBrand){
+                    // if()
+                }
                 $allRecharges = ($this->getUser()->getId() == $userSelect->getId()) ? $this->getRecharge($this->pAllAccess, $userSelect, $this->getUser()) : [];
-
             }
         }else{
             $allRecharges = $this->getRecharge($this->pAllAccess, $userSelect, $this->getUser());
         }
+        // dd($this->pAllAccess, $userSelect, $this->getUser());
         $data = [];
         if($allRecharges){
             foreach($allRecharges as $getRecharge){
                 $row                 = array();
+                $row[]               = null;
                 $row[]               = $getRecharge->getUid();
                 $row[]               = $getRecharge->getTransaction()->getAmount();
+                $row[]               = $getRecharge->getUser()->getEmail();
                 $row[]               = $getRecharge->getRechargeBy()->getEmail();
                 $row[]               = ($this->intl->trans($getRecharge->getStatus()->getName()));
-                $row[]               = $getRecharge->getCreatedAt()->format('d-m-Y H:i');
-                $row[]               = ($getRecharge->getStatus()->getName()== 'En attente' && $this->pAllAccess) ? '<a data-u="'.$getRecharge->getUid().'" href="#"><i class="fa fa-delete"></i></a>' : 'download';
+                $row[]               = $getRecharge->getCreatedAt()->format("d-m-Y H:i");
+                $row[]               = ($getRecharge->getStatus()->getName()== 'En attente' && $this->pAllAccess) ? '<a data-u="'.$getRecharge->getUid().'" href="#"><i class="fa fa-delete">Actualisé</i></a>' : 'download';
                 $data[]              = $row;
             }
         }

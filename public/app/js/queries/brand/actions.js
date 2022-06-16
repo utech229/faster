@@ -1,30 +1,74 @@
 "use strict";
-const tableReloadButton    = $('#kt_table_recharge_reload_button');
-var uriLoad                = loadRecharge;
-$('.phone-required').hide();
-$(document).on('click', '.cursor-balance', function(e){
-    $('.phone-required').hide();
-});
+const tableReloadButton    = $('#kt_table_brand_reload_button');
+var uriLoad                = loadBrand;
 
 
-$(document).on('click', '.cursor-mobile-carte', function(e){
-    $('.phone-required').show();
-});
-
-var KTUsersRechargeUser = function() {
-    const t = document.getElementById("kt_modal_recharge"),
-        e = t.querySelector("#kt_modal_recharge_form"),
+var KTUsersBrandUser = function() {
+    const t = document.getElementById("kt_modal_create_folder"),
+        e = t.querySelector("#kt_modal_brand_form"),
         n = new bootstrap.Modal(t);
     return {
         init: function() {
             (() => {
                 var o = FormValidation.formValidation(e, {
                     fields: {
-                        'amount': {
+                        '_name_brand': {
                             validators: {
                                 notEmpty: {
-                                    message: msg_amount_required
+                                    message: _brand_Required
+                                },
+                                stringLength: {
+                                    min: 3,
+                                    max: 30,
+                                    message:  _brand_Required
+                                },
+                            }
+                        },
+                        '_mail_support': {
+                            validators: {
+                                stringLength: {
+                                    min: 11,
+                                    max: 30,
+                                    message:  _mail_required
+                                },
+                                emailAddress: {
+                                    message: _mail_required
                                 }
+                            }
+                        },
+                        '_mail_noreply': {
+                            validators: {
+                                stringLength: {
+                                    min: 11,
+                                    max: 30,
+                                    message:  _mail_required
+                                },
+                                emailAddress: {
+                                    message: _mail_required
+                                }
+                            }
+                        },
+                        '_phone_support': {
+                            validators: {
+                                notEmpty: {
+                                    message: _empty_info
+                                },
+                                stringLength: {
+                                    min: 8,
+                                    max: 30,
+                                    message: _phone_required
+                                },
+                            }
+                        },
+                        '_url_brand': {
+                            validators: {
+                                notEmpty: {
+                                    message: _empty_info
+                                },
+                                regexp: {
+                                    regexp: /^[a-zA-Z-.]+$/,
+                                    message: _Only_Alphabetics
+                                },
                             }
                         },
                     },
@@ -47,7 +91,7 @@ var KTUsersRechargeUser = function() {
                     t.preventDefault(), o && o.validate().then((function(t) {
                         console.log("validated!"), "Valid" == t ? (i.setAttribute("data-kt-indicator", "on"), i.disabled = !0,
                         $.ajax({
-                            url: createRecharge,
+                            url: createBrand,
                             type: 'post',
                             data: new FormData(e),
                             dataType: 'json',
@@ -83,11 +127,11 @@ var KTUsersRechargeUser = function() {
 }();
 
 //Load list
-var KTUsersLoadRecharge = function() {
+var KTUsersLoadBrand = function() {
     var t, e, n, r, o;
     return {
         init: function() {
-            (e = document.querySelector("#kt_recharge_table")) && (e.querySelectorAll("tbody tr").forEach((t => {
+            (e = document.querySelector("#kt_brand_table")) && (e.querySelectorAll("tbody tr").forEach((t => {
                 const e = t.querySelectorAll("td"), n = moment(e[2].innerHTML, "DD MMM YYYY, LT").format();
                 e[2].setAttribute("data-order", n)
             })), t = $(e).DataTable({
@@ -123,10 +167,10 @@ var KTUsersLoadRecharge = function() {
 
                 }]
             }),
-            $('#kt_table_recharge_reload_button').on('click', function() {
+            $('#kt_table_brand_reload_button').on('click', function() {
                 t.ajax.reload(null, false);
             }),
-            document.querySelector('[data-kt-recharge-table-filter="search"]').addEventListener("keyup", (function(e) {
+            document.querySelector('[data-kt-brand-table-filter="search"]').addEventListener("keyup", (function(e) {
                 t.search(e.target.value).draw()
             }))
             )
@@ -135,8 +179,8 @@ var KTUsersLoadRecharge = function() {
 }();
 
 KTUtil.onDOMContentLoaded((function() {
-    KTUsersRechargeUser.init(),
-    KTUsersLoadRecharge.init()
+    KTUsersBrandUser.init(),
+    KTUsersLoadBrand.init()
 }));
 
 //Action by self-made
