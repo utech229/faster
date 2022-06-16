@@ -69,6 +69,9 @@ class Brand
     #[ORM\JoinColumn(nullable: true)]
     private $creator;
 
+    #[ORM\OneToOne(targetEntity: Sender::class, cascade: ['persist', 'remove'])]
+    private $defaultSender;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
@@ -297,6 +300,18 @@ class Brand
     public function setCreator(?User $creator): self
     {
         $this->creator = $creator;
+
+        return $this;
+    }
+
+    public function getDefaultSender(): ?Sender
+    {
+        return $this->defaultSender;
+    }
+
+    public function setDefaultSender(?Sender $defaultSender): self
+    {
+        $this->defaultSender = $defaultSender;
 
         return $this;
     }

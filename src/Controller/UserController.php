@@ -142,6 +142,7 @@ class UserController extends AbstractController
             $user->setPassword($userPasswordHasher->hashPassword($user, strtoupper($this->services->idgenerate(8))));
             $user->setRoles(['ROLE_'.$form->get('role')->getData()->getName()]);
             $user->setCountry($countryDatas);
+            $user->setCountry($countryDatas);
             $user->setUid(time().uniqid());
             $user->setProfilePhoto($avatarProcess);
             $this->userRepository->add($user);
@@ -210,7 +211,7 @@ class UserController extends AbstractController
         $role                = $user->getRole();
         $brand               =  $user->getBrand();
         $route               =  $user->getRouter();
-        $sender              =  $user->getDefaultSender();
+        $sender              =  $brand->getDefaultSender();
 
 
         $row['orderId']      = $user->getUid();
@@ -223,8 +224,8 @@ class UserController extends AbstractController
         $row['photo']        = $user->getProfilePhoto();
         $row['phone']        = $user->getPhone();
         $row['apikey']       = $user->getApikey();
-        $row['isPostPay']    = (string)$user->IsPostPay();
-        $row['isDlr']        = (string)$user->getIsDlr();
+        $row['isPostPay']    = $user->IsPostPay() ? '1' : '0';
+        $row['isDlr']        = $user->getIsDlr() ? '1' : '0';
         $row['language']     = $usetting->getLanguage()['code'];
         $row['currency']     = $usetting->getCurrency()['code'];
         $row['timezone']     = $usetting->getTimezone();
@@ -248,7 +249,7 @@ class UserController extends AbstractController
             return $this->services->invalid_token_ajax_list($this->intl->trans('Récupération de la liste des utilisateurs : token invalide'));
 
         $data = [];
-        $users = (!$this->pView) ? [] : $this->getUsersByRoles();
+        $users = (!$this->pAccess) ? [] : $this->getUsersByRoles();
         foreach ($users  as $user) 
 		{          
             $row                 = array();
@@ -299,33 +300,9 @@ class UserController extends AbstractController
 
     public function getUsersByRoles() 
     {
-        $cuser     = $this->getUser();
-        $userRole  = $cuser->getRole();
-        $roleName = $userRole->getName();
-        switch ($roleName) {
-            case 'USER' :
-                $data = [];
-                break;
-            case 'AFFILIATE_USER':
-                $data = [];
-                break;
-            case 'AFFILIATE_RESELLER':
-                $data = $this->userRepository->findUserByCountryCode($cuser->getCountry()['code']);
-                break;
-            case 'RESELLER' :
-                $data = $this->userRepository->findUserByCountryCode($cuser->getCountry()['code']);
-                break;
-            case 'ADMINISTRATOR' :
-                $data = $this->userRepository->findAll();
-                break;
-            case 'SUPER_ADMINISTRATOR' :
-                $data = $this->userRepository->findAll();
-                break;
-            default:
-                $data = [];
-                break;
-        }
-        return $data;
+        list($userType, $masterId, $userRequest) = $this->services->checkThisUser($this->pView);
+        $users = $this->em->getRepository(User::class)->getUsersByPermission("", $userType, $masterId, 1);
+        return $users;
     }
 
     public function statisticsData()
