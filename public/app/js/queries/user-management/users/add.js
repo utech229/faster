@@ -73,10 +73,24 @@ var KTUsersAddUser = function() {
                                 }
                             }
                         },
-                        'user_role': {
+                        'user[role]': {
                             validators: {
                                 notEmpty: {
                                     message: _Role_Required
+                                }
+                            }
+                        },
+                        'user[is_dlr]': {
+                            validators: {
+                                notEmpty: {
+                                    message: _Required_Field
+                                }
+                            }
+                        },
+                        'user[post_pay]': {
+                            validators: {
+                                notEmpty: {
+                                    message: _Required_Field
                                 }
                             }
                         },
@@ -96,7 +110,7 @@ var KTUsersAddUser = function() {
                         console.log("validated!"), "Valid" == t ? (i.setAttribute("data-kt-indicator", "on"), i.disabled = !0, 
                         
                            ajax_url = (isUserUpdating == false) ? add_user : window.location.href + '/' + userUidInput.val()+ '/edit',
-                            $('#user_phone').val(intl.getNumber()),
+                            $('#user_phone').val(intl['user_phone'].getNumber()),
                             $.ajax({
                                 url: ajax_url,
                                 type: 'post',
@@ -117,14 +131,14 @@ var KTUsersAddUser = function() {
                                             confirmButton: "btn btn-primary"
                                         }
                                         
-                                    }).then((function(t) {
-                                        if (response.type === 'success') {
-                                            t.isConfirmed && e.reset();
-                                            tableReloadButton.click();
-                                            (isUserUpdating == true) ? n.hide() : null;
-                                            statisticsReload();
-                                        }
-                                    }));
+                                    })
+                                    if (response.type === 'success') {
+                                        t.isConfirmed, $(e).reset();
+                                        tableReloadButton.click();
+                                        (isUserUpdating == true) ? n.hide() : null;
+                                        statisticsReload();
+                                        $('#user_is_dlr').val('0').trigger('change'), $('#user_post_pay').val('0').trigger('change');
+                                    }
                                 },
                                 error: function (response) {
                                     i.removeAttribute("data-kt-indicator"), i.disabled = !1

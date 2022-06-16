@@ -55,7 +55,7 @@
                                 <select class="form-select form-select-solid fw-bolder" data-kt-select2="true" data-placeholder="{{"Choisissez la marque"}}" data-allow-clear="true" id="brand">
                                     <option value="">{{"Toutes"|trans}}</option>
                                     {% for brand in brands %}
-                                        <option value="{{ brand.uid }}">{{ brand.name }}</option>
+                                        <option value="{{ brand.uid }}" data-select2-avatar="{{brand.logo}}" data-select2-alt="{{brand.name}}">{{ brand.name }}</option>
                                     {% endfor %}
                                 </select>
                             </div>
@@ -177,42 +177,37 @@
                     <!--begin::Modal body-->
                     <div class="modal-body scroll-y mx-5 mx-xl-15 my-7">
                         <!--begin::Form-->
-                        {{ form_start(form, {'attr':{'id':'form', 'action':''}}) }}
-                            <!--begin::Input-->
-                            <div class="fv-row mb-10">
+                        {{ form_start(form, {'attr':{'id':'form', 'action':'', 'class':'row'}}) }}
+                            <!--begin::Input group-->
+                            <div class="fv-row mb-10 col-12">
                                 <!--begin::Label-->
                                 <label class="fs-5 fw-bolder form-label mb-2">
-                                    <span class="">{{ form_label(form.manager, 'Your Name', {'label_attr': {'class': 'foo'}}) }}</span>
+                                    <span class="">{{ form_label(form.manager, 'Utilisateur'|trans, {'label_attr': {'class': 'foo'}}) }}</span>
                                 </label>
                                 <!--end::Label-->
                                 <!--begin::Input-->
-                                {{ form_widget(form.manager, {'attr': {'class': 'form-control form-control-solid'}}) }}
+                                {{ form_widget(form.manager, {'attr': {'class': 'form-control form-control-solid w-100'}}) }}
                                 <!--end::Input-->
                             </div>
-                            <!--end::Input-->
+                            <!--end::Input group-->
                             <!--begin::Input group-->
-                            <div class="fv-row mb-10">
-                                <!--begin::Row-->
-                                <div class="row">
-                                    <div class="col-lg-6 fv-row mt-2">
-                                        <!--begin::Label-->
-                                        <label class="fs-5 fw-bolder form-label mb-2">
-                                            <span class="required">{{ form_label(form.name, 'Your Name', {'label_attr': {'class': 'foo'}}) }}</span>
-                                        </label>
-                                        <!--end::Label-->
-                                        <!--begin::Input-->
-                                        {{ form_widget(form.name, {'attr': {'class': 'form-control form-control-solid','maxlength': 50,
-                                        'placeholder': "Entrer l'identifiant d'envoi"|trans }}) }}
-                                        <!--end::Input-->
-                                    </div>
-                                </div>
+                            <div class="fv-row mb-10 col-lg-6">
+                                <!--begin::Label-->
+                                <label class="fs-5 fw-bolder form-label mb-2">
+                                    <span class="">{{ form_label(form.name, 'Identifiant'|trans, {'label_attr': {'class': 'foo'}}) }}</span>
+                                </label>
+                                <!--end::Label-->
+                                <!--begin::Input-->
+                                {{ form_widget(form.name, {'attr': {'class': 'form-control form-control-solid','maxlength': 50,
+                                'placeholder': "Entrer l'identifiant d'envoi"|trans }}) }}
+                                <!--end::Input-->
                             </div>
                             <!--end::Input group-->
                             <!--begin::Input-->
-                            <div class="fv-row mb-10">
+                            <div class="fv-row mb-10 col-lg-6">
                                 <!--begin::Label-->
                                 <label class="fs-5 fw-bolder form-label mb-2">
-                                    <span class="">{{ form_label(form.status, 'Your Name', {'label_attr': {'class': 'foo'}}) }}</span>
+                                    <span class="">{{ form_label(form.status, 'Statut'|trans, {'label_attr': {'class': 'foo'}}) }}</span>
                                 </label>
                                 <!--end::Label-->
                                 <!--begin::Input-->
@@ -221,10 +216,10 @@
                             </div>
                             <!--end::Input-->
                             <!--begin::Input-->
-                            <div class="fv-row mb-10">
+                            <div class="fv-row mb-10 col-12">
                                 <!--begin::Label-->
                                 <label class="fs-5 fw-bolder form-label mb-2">
-                                    <span class="">{{ form_label(form.observation, 'Your Name', {'label_attr': {'class': 'foo'}}) }}</span>
+                                    <span class="">{{ form_label(form.observation, 'Observation'|trans, {'label_attr': {'class': ''}}) }}</span>
                                 </label>
                                 <!--end::Label-->
                                 <!--begin::Input-->
@@ -233,7 +228,7 @@
                             </div>
                             <!--end::Input-->
                             <!--begin::Actions-->
-                            <div class="text-center pt-15">
+                            <div class="text-center col-12">
                                 <button type="button" class="btn btn-light me-3" id="cancel">{{'Annuler'| trans}}</button>
                                 <button type="submit" class="btn btn-primary" id="submit">
                                     <span class="indicator-label">{{'Soumettre'| trans}}</span>

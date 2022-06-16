@@ -37,18 +37,18 @@ class RegistrationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             // encode the plain password
             $user->setPassword(
-            $userPasswordHasher->hashPassword(
-                    $user,
-                    $form->get('plainPassword')->getData()
-                )
+            $userPasswordHasher->hashPassword($user, $form->get('plainPassword')->getData())
             );
 
-            // A commenter lorsque l'envoi des mail est activé
+            // A commenter revoir lorsque l'envoi des mail est activé
             $user->setCreatedAt(new \DatetimeImmutable());
             $user->setBalance(0);
+            $user->setApikey($this->services->idgenerate(32));
             $user->setUid(time().uniqid());
             $user->setIsAffiliate(true);
             $user->setIsVerified(true);
+            $user->setPostPay(0);
+            $user->setIsDlr(0);
 
             $entityManager->persist($user);
             $entityManager->flush();

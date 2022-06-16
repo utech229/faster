@@ -65,6 +65,13 @@ class Brand
     #[ORM\Column(type: 'float')]
     private $commission;
 
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(nullable: true)]
+    private $creator;
+
+    #[ORM\OneToOne(targetEntity: Sender::class, cascade: ['persist', 'remove'])]
+    private $defaultSender;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
@@ -284,4 +291,29 @@ class Brand
 
         return $this;
     }
+
+    public function getCreator(): ?User
+    {
+        return $this->creator;
+    }
+
+    public function setCreator(?User $creator): self
+    {
+        $this->creator = $creator;
+
+        return $this;
+    }
+
+    public function getDefaultSender(): ?Sender
+    {
+        return $this->defaultSender;
+    }
+
+    public function setDefaultSender(?Sender $defaultSender): self
+    {
+        $this->defaultSender = $defaultSender;
+
+        return $this;
+    }
+
 }

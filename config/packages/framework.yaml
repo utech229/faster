@@ -19,6 +19,12 @@ framework:
     form:
         legacy_error_messages: false
 
+    assets:
+        base_path: /
+        packages:
+            avatars:
+                base_path: /
+
 
 when@test:
     framework:

@@ -232,7 +232,7 @@ class Services extends AbstractController
 	public function getUserByPermission($codePermission, $userType = null, $user = null, $level = null)
 	{
 		$allUser = $this->em->getRepository(User::class)->getUsersByPermission(
-			$codePermission, $userType, $user = null, $level
+			$codePermission, $userType, $user, $level
 		);
 
 		return $allUser;
@@ -345,6 +345,11 @@ class Services extends AbstractController
        return $this->statusRepository->findOneByCode($code);
     }
 
+	// Le retour de la fonction est un tableau
+	// Retour : [$code, $id, $arrayRequest]
+	// $code : (0 : Super admin ou administrateur; 1 : Gestionnaire de compte, 2 : Revendeur; 3 : Affilié d'un Revendeur; 4 : Utilisateur simple; 5 : Affilié à un utilisateur simple)
+	// $id : Si $code == 3 ou 5 => id de son administrateur ; Si $code == 1 ou 2 ou 4 => son propre id ; Si $code == 0 => 0 (car aucun utilisateur n'aura en paramètre l'id de l'administrateur)
+	// $arrayRequest : est un tableau formant une partie de requête.
 	public function checkThisUser($pAllView, $pManager = null, $pBrand = null, $user = null)
 	{
 		$session = $user ? $user : $this->getUser();

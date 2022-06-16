@@ -20,7 +20,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'integer')]
     private $id;
 
-    #[ORM\Column(type: 'string', length: 180, unique: true)]
+    #[ORM\Column(type: 'string', length: 180)]
     private $email;
 
     #[ORM\Column(type: 'json')]
@@ -29,7 +29,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string')]
     private $password;
 
-    #[ORM\Column(type: 'string', length: 100)]
+    #[ORM\Column(type: 'string', length: 100, unique: true)]
     private $uid;
 
     #[ORM\Column(type: 'string', length: 20, nullable: true)]
@@ -47,13 +47,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'array', nullable: true)]
     private $country = [];
 
-    #[ORM\Column(type: 'boolean', nullable: true)]
+    #[ORM\Column(type: 'boolean')]
     private $isDlr;
 
     #[ORM\Column(type: 'array', nullable: true)]
     private $price = [];
 
-    #[ORM\Column(type: 'boolean', nullable: true)]
+    #[ORM\Column(type: 'boolean')]
     private $postPay;
 
     #[ORM\Column(type: 'string', length: 10, nullable: true)]
@@ -118,8 +118,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToOne(mappedBy: 'user', targetEntity: SoldeNotification::class, cascade: ['persist', 'remove'])]
     private $soldeNotification;
 
-    #[ORM\ManyToOne(targetEntity: Sender::class, inversedBy: 'users')]
-    private $defaultSender;
+    // #[ORM\ManyToOne(targetEntity: Sender::class, inversedBy: 'users')]
+    // private $defaultSender;
 
     #[ORM\OneToMany(mappedBy: 'manager', targetEntity: Sender::class)]
     private $senders;
@@ -192,7 +192,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getUserIdentifier(): string
     {
-        return (string) $this->email;
+        return (string) $this->uid;
     }
 
     /**
@@ -744,17 +744,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getDefaultSender(): ?Sender
-    {
-        return $this->defaultSender;
-    }
+    // public function getDefaultSender(): ?Sender
+    // {
+    //     return $this->defaultSender;
+    // }
 
-    public function setDefaultSender(?Sender $defaultSender): self
-    {
-        $this->defaultSender = $defaultSender;
+    // public function setDefaultSender(?Sender $defaultSender): self
+    // {
+    //     $this->defaultSender = $defaultSender;
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
     /**
      * @return Collection<int, Sender>

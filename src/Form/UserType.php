@@ -38,16 +38,16 @@ class UserType extends AbstractType
             ->add('email',EmailType::class,array('label' => false ,"required"=>true))
             ->add('phone',TelType::class,array('label' => false, 'mapped' => true, "required"=>true))
             ->add('uid',HiddenType::class,  array('mapped' => false))
-            ->add('isDlr', ChoiceType::class, ['label' => false,
+            ->add('is_dlr', ChoiceType::class, ['label' => false, "required"=>true,
                 'choices'  => [
-                    $this->intl->trans("Désactivé") => false,
-                    $this->intl->trans("Activé")   => true,
+                    $this->intl->trans("Désactivé") => 0,
+                    $this->intl->trans("Activé")   => 1,
                 ]
             ])
-            ->add('postPay', ChoiceType::class, ['label' => false,
+            ->add('post_pay', ChoiceType::class, ['label' => false, "required"=>true,
             'choices'  => [
-                $this->intl->trans("Désactivé") => false,
-                $this->intl->trans("Activé")   => true
+                $this->intl->trans("Désactivé") => 0,
+                $this->intl->trans("Activé")   => 1
             ]
             ])
             ->add('status', EntityType::class, [
@@ -57,7 +57,7 @@ class UserType extends AbstractType
                         return $er->createQueryBuilder('s')
                             ->where('s.code >= 2')
                             ->andwhere('s.code <= 5')
-                            ->orderBy('s.code', 'ASC');
+                            ->orderBy('s.name', 'ASC');
                 },
                 'choice_label'=>'name',
                 'choice_value'=>'uid',
@@ -71,7 +71,7 @@ class UserType extends AbstractType
                             ->andWhere('r.code != :text2')
                             ->setParameter('text1', 'AFF0')
                             ->setParameter('text2', 'AFF1')
-                            ->orderBy('r.code', 'ASC');
+                            ->orderBy('r.level', 'ASC');
                 },
                 'choice_label'=>'name',
                 'choice_value'=>'code',
