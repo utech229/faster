@@ -42,7 +42,7 @@ class Role
     #[ORM\OneToMany(mappedBy: 'role', targetEntity: Authorization::class, orphanRemoval: true)]
     private $authorizations;
 
-    #[ORM\ManyToOne(targetEntity: Status::class, inversedBy: 'roles')]
+    #[ORM\ManyToOne(targetEntity: Status::class)]
     #[ORM\JoinColumn(nullable: false)]
     private $status;
 

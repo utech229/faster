@@ -46,6 +46,16 @@ class SMSCampaign
     #[ORM\OneToMany(mappedBy: 'campaign', targetEntity: SMSMessage::class)]
     private $sMSMessages;
 
+    #[ORM\Column(type: 'string', length: 15)]
+    private $sender;
+
+    #[ORM\ManyToOne(targetEntity: Status::class)]
+    #[ORM\JoinColumn(nullable: false)]
+    private $status;
+
+    #[ORM\Column(type: 'string', length: 25)]
+    private $uid;
+
     public function __construct()
     {
         $this->sMSMessages = new ArrayCollection();
@@ -190,6 +200,42 @@ class SMSCampaign
                 $sMSMessage->setCampaign(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getSender(): ?string
+    {
+        return $this->sender;
+    }
+
+    public function setSender(string $sender): self
+    {
+        $this->sender = $sender;
+
+        return $this;
+    }
+
+    public function getStatus(): ?Status
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?Status $status): self
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    public function getUid(): ?string
+    {
+        return $this->uid;
+    }
+
+    public function setUid(string $uid): self
+    {
+        $this->uid = $uid;
 
         return $this;
     }

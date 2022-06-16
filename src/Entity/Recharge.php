@@ -33,7 +33,7 @@ class Recharge
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'allToRecharge')]
     private $rechargeBy;
 
-    #[ORM\ManyToOne(targetEntity: Status::class, inversedBy: 'recharges')]
+    #[ORM\ManyToOne(targetEntity: Status::class)]
     #[ORM\JoinColumn(nullable: false)]
     private $status;
 

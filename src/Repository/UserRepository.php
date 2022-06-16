@@ -212,7 +212,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->andWhere('p.status = s')
             ->andWhere('r.status = s')
             ->andWhere('a.status = s')
-            ->andWhere('u.status = s')
+            //->andWhere('u.status = s')
             ->andWhere('u.brand = b');
 
         if($codePermission != "") {

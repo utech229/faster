@@ -80,7 +80,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToOne(targetEntity: Brand::class, inversedBy: 'users')]
     private $brand;
 
-    #[ORM\ManyToOne(targetEntity: Status::class, inversedBy: 'users')]
+    #[ORM\ManyToOne(targetEntity: Status::class)]
     #[ORM\JoinColumn(nullable: false)]
     private $status;
 

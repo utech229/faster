@@ -37,7 +37,7 @@ class Company
     #[ORM\Column(type: 'text')]
     private $address;
 
-    #[ORM\ManyToOne(targetEntity: Status::class, inversedBy: 'companies')]
+    #[ORM\ManyToOne(targetEntity: Status::class)]
     #[ORM\JoinColumn(nullable: false)]
     private $status;
 

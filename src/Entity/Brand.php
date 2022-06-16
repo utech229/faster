@@ -58,7 +58,7 @@ class Brand
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'validator')]
     private $validator;
 
-    #[ORM\ManyToOne(targetEntity: Status::class, inversedBy: 'brands')]
+    #[ORM\ManyToOne(targetEntity: Status::class)]
     #[ORM\JoinColumn(nullable: false)]
     private $status;
 

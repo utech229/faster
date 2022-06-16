@@ -97,7 +97,7 @@ const SenderManager = function(){
                 return icons;
             }
         }
-    ], // cls : colonnes de datatable
+    ], // cls : colonnes du datatable
     a = document.querySelector("#add_sender"), // a : selecteur bouton ajout de sender
     m = document.querySelector("#modal_sender"), // m : selecteur du div ayant la class "modal"
     f = m.querySelector("#form"), // f : selecteur du formulaire dans le modal
@@ -156,12 +156,12 @@ const SenderManager = function(){
             });
         });
     },
-    filter = document.querySelector("#menu-filter"),
-    brand = filter.querySelector("#brand"),
-    user = filter.querySelector("#user"),
-    status = filter.querySelector("#status"),
-    reset = filter.querySelector("#reset"),
-    submit = filter.querySelector("#submit");
+    filter = document.querySelector("#menu-filter"), // filter : selecteur du div contenant les champs du filtre
+    brand = filter.querySelector("#brand"), // brand : selecteur du champ select brand du filtre
+    user = filter.querySelector("#user"), // user : selecteur du champ select user du filtre
+    status = filter.querySelector("#status"), // status : selecteur du champ select status du filtre
+    reset = filter.querySelector("#reset"), // reset : selecteur du bouton reset du filtre
+    submit = filter.querySelector("#submit"); // submit : selecteur du bouton submit du filtre
 
     return {
         init: ()=>{
@@ -174,6 +174,7 @@ const SenderManager = function(){
                         _token: function(){ return _token; },
                         manager: function(){ return $(user).val(); },
                         brand: function(){ return $(brand).val(); },
+                        status: function(){ return $(status).val(); },
                     },
                     dataSrc: function(response){
                         if(response.message) swalSimple(response.type, response.message);
@@ -212,6 +213,8 @@ const SenderManager = function(){
 
                 $(el).off("click", z);
                 $(el).on("click", z, ($this)=>{ $this.preventDefault(); post($this.target, "2"); });
+
+                loading();
             });
 
             $(s).on('keyup', ($this)=>{ t.search($this.target.value).draw(); }); // Recherche dans l'input search
@@ -251,8 +254,8 @@ const SenderManager = function(){
             $(x).on('click', ($this)=>{ $this.preventDefault(); return $(y).hasClass('d-none')?$(y).removeClass('d-none'):$(y).addClass('d-none'); });
 
             // Filter
-            $(brand).on("change", ($this)=>{
-                //$('#selEvent').html("<option value=''>"+_selectDefault+"</option>");
+            // Charge par ajax les utilisateurs sous la marque sélectionnée
+            //$(brand).on("change", ($this)=>{
             	$(user).select2({data:[{id:'',text:''}]});
 
             	$(user).css("width","100%");
@@ -272,15 +275,19 @@ const SenderManager = function(){
             		language: _locale,
             		width: 'resolve'
             	});
+            //});
 
-            	//select2Design();
-
-            	t.ajax.reload();
+            // Si bouton reset du filtre et cliqué
+            $(reset).on("click", ($this)=>{
+                $(brand).val("").trigger("change");
+                $(user).val("").trigger("change");
+                $(status).val("").trigger("change");
+                loading(true);
+                t.ajax.reload();
             });
 
-            $(reset).on("click", ($this)=>{});
-
-            $(submit).on("click", ($this)=>{});
+            // Si bouton submit du filtre et cliqué
+            $(submit).on("click", ($this)=>{loading(true); t.ajax.reload();});
         }
     }
 }();

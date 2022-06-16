@@ -29,7 +29,7 @@ class Authorization
     #[ORM\ManyToOne(targetEntity: Permission::class, inversedBy: 'authorizations')]
     private $permission;
 
-    #[ORM\ManyToOne(targetEntity: Status::class, inversedBy: 'authorizations')]
+    #[ORM\ManyToOne(targetEntity: Status::class)]
     #[ORM\JoinColumn(nullable: false)]
     private $status;
 
