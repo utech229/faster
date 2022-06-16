@@ -2,7 +2,6 @@
 var mdHTMLTitle      = $("#kt_modal_add_user_title")
 const userUidInput   = $('#user_uid');
 const avatarPath     = window.location.origin+'/app/uploads/avatars/';
-//const userNotice     = $('#kt_modal_add_user_notice');
 
 
 $(document).on('entityUpBegin', function(e, identifier, id, icon) {
@@ -33,13 +32,17 @@ $(document).on('click', ".userUpdater", function(e) {
                 $(document).trigger('securityFirewall', [r, '#editUserOption', uid, 'fa-edit']);
                 mdHTMLTitle.html(_Edit);
                 isUserUpdating = true;
+                var phone = r.data.phone;
                 $('#user_firstname').val(r.data.user.firstname);
                 $('#user_lastname').val(r.data.user.lastname);
                 $('#user_email').val(r.data.email);
-                $('#user_phone').val(r.data.phone);
+                $('#user_phone').val(phone.substring(4, 20));
+                $('#user_is_dlr').val(r.data.isDlr).trigger('change');
+                $('#user_post_pay').val(r.data.isPostPay).trigger('change');
+                $('#user_role').val(r.data.role.code).trigger('change');
                 $('#kt_user_add_select2_country').val(r.data.countryCode).trigger('change');
                 $('#user_status').val(r.data.status).trigger('change');
-                $("input[name=user_role][value=" + r.data.role.code+ "]").prop('checked', true);
+                //$("input[name=user_role][value=" + r.data.role.code+ "]").prop('checked', true);
                 var cover = avatarPath + r.data.photo;
                 $("#avatar_input").css("background-image", "url(" + cover + ")");
                 formModalButton.click();
@@ -58,6 +61,8 @@ $('#kt_modal_add_user').on('hidden.bs.modal', function(e) {
     mdHTMLTitle.html(_Add);
     isUserUpdating = false;
     userUidInput.val(0);
+    $('#user_is_dlr').val('false').trigger('change');
+    $('#user_post_pay').val('false').trigger('change');
 });
 
 

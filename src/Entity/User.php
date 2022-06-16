@@ -47,13 +47,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'array', nullable: true)]
     private $country = [];
 
-    #[ORM\Column(type: 'boolean', nullable: true)]
+    #[ORM\Column(type: 'boolean')]
     private $isDlr;
 
     #[ORM\Column(type: 'array', nullable: true)]
     private $price = [];
 
-    #[ORM\Column(type: 'boolean', nullable: true)]
+    #[ORM\Column(type: 'boolean')]
     private $postPay;
 
     #[ORM\Column(type: 'string', length: 10, nullable: true)]

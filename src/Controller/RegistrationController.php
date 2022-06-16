@@ -43,12 +43,14 @@ class RegistrationController extends AbstractController
                 )
             );
 
-            // A commenter lorsque l'envoi des mail est activé
+            // A commenter revoir lorsque l'envoi des mail est activé
             $user->setCreatedAt(new \DatetimeImmutable());
             $user->setBalance(0);
             $user->setUid(time().uniqid());
             $user->setIsAffiliate(true);
             $user->setIsVerified(true);
+            $user->setPostPay(0);
+            $user->setIsDlr(0);
 
             $entityManager->persist($user);
             $entityManager->flush();
