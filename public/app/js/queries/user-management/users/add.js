@@ -133,7 +133,7 @@ var KTUsersAddUser = function() {
                                         
                                     })
                                     if (response.type === 'success') {
-                                        t.isConfirmed, e.reset();
+                                        t.isConfirmed, $(e).reset();
                                         tableReloadButton.click();
                                         (isUserUpdating == true) ? n.hide() : null;
                                         statisticsReload();

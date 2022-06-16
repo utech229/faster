@@ -108,7 +108,6 @@ class SuperController extends AbstractController
             $this->userRepository->add($user);
             $this->AddEntity->defaultUsetting($user, $this->brand->get()['name'], $this->brand->get()['name']);
 
-
             $brand   = $this->brandRepository->findOneByName($this->brand->get()['name']);
             $route   = $this->routerRepository->findOneByName("Fastermessage_moov");
             $company = $this->companyRepository->findOneById(1);
