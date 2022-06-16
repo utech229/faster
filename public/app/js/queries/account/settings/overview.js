@@ -64,6 +64,8 @@ var KTAccountSettingsOverview= {
                 desactivateButton.removeClass('active');
                 $(this).addClass('active');
 
+                signin_method_section.addClass('d-none');
+                solde_notification_section.addClass('d-none')
                 profile_setting_section.addClass('d-none');
                 company_section.addClass('d-none');
                 detail_section.removeClass('d-none')
@@ -82,6 +84,7 @@ var KTAccountSettingsOverview= {
                 signinMethodButton.removeClass('active')
                 desactivateButton.removeClass('active')
 
+                solde_notification_section.addClass('d-none')
                 company_section.removeClass('d-none')
                 profile_setting_section.addClass('d-none')
                 detail_section.addClass('d-none')

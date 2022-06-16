@@ -97,13 +97,11 @@ class UserAuthenticator extends AbstractLoginFormAuthenticator
         }
 
         $user = $this->userRepository->findOneByEmail($request->request->get('email'));
-        if($user)
-        {   
-            $user->setLastLoginAt(new \DatetimeImmutable());
-            $this->em->persist($user);
-            $this->em->flush();
-            $this->services->addLog($this->intl->trans("Connexion de l'utilisateur"));
-        }
+        $user->setLastLoginAt(new \DatetimeImmutable());
+        $this->em->persist($user);
+        $this->em->flush();
+        $this->services->addLog($this->intl->trans("Connexion de l'utilisateur"));
+      
         // For example:
         return new RedirectResponse($this->urlGenerator->generate('app_home'));
         //throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);

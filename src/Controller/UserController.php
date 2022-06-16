@@ -47,7 +47,7 @@ class UserController extends AbstractController
         $this->brickPhone      = $brickPhone;
         $this->brand           = $brand;
         $this->em	           = $entityManager;
-        $this->addEntity	           = $addEntity;
+        $this->addEntity	   = $addEntity;
         $this->userRepository  = $userRepository;
         $this->roleRepository    = $roleRepository;
         $this->statusRepository  = $statusRepository;
@@ -127,8 +127,6 @@ class UserController extends AbstractController
             } else
             $avatarProcess;
             //profil photo setting end
-
-            $role          = $request->request->get('user_role');
             $countryCode   = strtoupper($request->request->get('country'));
             $countryDatas  = $this->brickPhone->getInfosCountryFromCode($countryCode);
             $countryDatas  = [
@@ -137,19 +135,16 @@ class UserController extends AbstractController
                 'name'      => $countryDatas['name']
             ];
             $currentUser   = $this->getUser(); //connected user
-            $role          = $this->roleRepository->findOneBy(['code' => $role]);
-            //creation oh referralcode
-            $referralCode = strtoupper($this->services->idgenerate(5).'-'.$this->services->idgenerate(5));
             //user data setting
             $user->setBalance(0);
             $user->setCreatedAt(new \DatetimeImmutable());
-            $user->setPassword($userPasswordHasher->hashPassword($user, strtolower($referralCode)));
-            $user->setRole($role);
-            $user->setRoles(['ROLE_'.$role->getName()]);
+            $user->setPassword($userPasswordHasher->hashPassword($user, strtoupper($this->services->idgenerate(8))));
+            $user->setRoles(['ROLE_'.$form->get('role')->getData()->getName()]);
             $user->setCountry($countryDatas);
             $user->setUid(time().uniqid());
             $user->setProfilePhoto($avatarProcess);
             $this->userRepository->add($user);
+            $setDefaultSetting = $this->AddEntity->defaultUsetting($user,$form->get('firstname')->getData()->getName(), $form->get('lastname')->getData()->getName());
             return $this->services->msg_success(
                 $this->intl->trans("Création d'un nouvel utilisateur"),
                 $this->intl->trans("Utilisateur ajouté avec succès")
@@ -175,7 +170,6 @@ class UserController extends AbstractController
             } else
             $avatarProcess;
             //profil photo setting end
-            $role          = $request->request->get('user_role');
             $countryCode   = strtoupper($request->request->get('country'));
             $countryDatas  = $this->brickPhone->getCountryByCode($countryCode);
             $countryDatas  = [
@@ -184,17 +178,15 @@ class UserController extends AbstractController
                 'name'      => $countryDatas['name']
             ];
             $city          = $request->request->get('user_city');
-            $currentUser   = $this->getUser();
-            $role          = $this->roleRepository->findOneBy(['code' => $role]);
-            
             //user data setting
-            $user->setRole($role);
-            $user->setRoles(['ROLE_'.$role->getName()]);
+            $user->setRoles(['ROLE_'.$form->get('role')->getData()->getName()]);
             $user->setCountry($countryDatas);
             $user->setProfilePhoto($avatarProcess);
             $user->setUpdatedAt(new \DatetimeImmutable());
-       
-            $this->userRepository->add($user);
+            //$user usetting data
+            $user->getUsetting()->setFirstname($form->get('firstname')->getData())
+                                ->setLastname($form->get('lastname')->getData());
+
             return $this->services->msg_success(
                 $this->intl->trans("Modification de l'utilisateur ").$user->getEmail(),
                 $this->intl->trans("Utilisateur modifié avec succès").' : '.$user->getEmail()
@@ -230,8 +222,8 @@ class UserController extends AbstractController
         $row['photo']        = $user->getProfilePhoto();
         $row['phone']        = $user->getPhone();
         $row['apikey']       = $user->getApikey();
-        $row['postPay']      = $user->IsPostPay();
-        $row['isDlr']        = $user->getIsDlr();
+        $row['isPostPay']    = (string)$user->IsPostPay();
+        $row['isDlr']        = (string)$user->getIsDlr();
         $row['language']     = $usetting->getLanguage()['code'];
         $row['currency']     = $usetting->getCurrency()['code'];
         $row['timezone']     = $usetting->getTimezone();

@@ -65,34 +65,41 @@ class CommissionController extends AbstractController
         ]);
     }
 
-    #[Route('/list', name: 'app_commissions_branch', methods: ['POST'])]
-    public function getTransaction(Request $request, EntityManagerInterface $manager) : Response
+    #[Route('/list', name: 'app_commissions_branch_list', methods: ['POST'])]
+    public function getCommissionBranch(Request $request, EntityManagerInterface $manager) : Response
     {
         //Vérification du tokken
 		if (!$this->isCsrfTokenValid($this->getUser()->getUid(), $request->request->get('_token')))
         return $this->services->invalid_token_ajax_list($this->intl->trans('Récupération de la liste des transactions : token invalide'));
 
         $data           =   [];
-        $tabTransaction =   [];
+        $tabBrand       =   [];
 
         if (!$this->pView) {
-            $transactions   =   [];
-            
+
+            $brands   =    $this->em->getRepository(Brand::class)->findByStatus($this->services->status(3));
+
         }
         else
         {
-            
-
+            $brands   =    $this->em->getRepository(Brand::class)->findByStatus($this->services->status(3));
         }
         
-        foreach ($transactions as $key => $transaction) {
+        foreach ($brands as $key => $brand) {
 
+            $tabBrand[$key][0]      =   $brand->getName();
+            $tabBrand[$key][1]      =   $brand->getCommission();
+            $tabBrand[$key][2][0]   =   $brand->getStatus()->getCode();
+            $tabBrand[$key][2][1]   =   $brand->getStatus()->getName();
+            $tabBrand[$key][2][2]   =   $brand->getStatus()->getDescription();
+            $tabBrand[$key][3]      =   $brand->getCreatedAt()->format("c");
+            $tabBrand[$key][4]      =   $brand->getUpdatedAt()?$brand->getUpdatedAt()->format("c"):$this->intl->trans('Pas de modification');
 
         }
        
         $this->services->addLog($this->intl->trans('Lecture de la liste des transactions'));
         $data = [
-                    "data"              =>   $tabTransaction,
+                    "data"              =>   $tabBrand,
                 ];
         return new JsonResponse($data);
     }

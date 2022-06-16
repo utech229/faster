@@ -65,6 +65,10 @@ class Brand
     #[ORM\Column(type: 'float')]
     private $commission;
 
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(nullable: true)]
+    private $creator;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
@@ -284,4 +288,17 @@ class Brand
 
         return $this;
     }
+
+    public function getCreator(): ?User
+    {
+        return $this->creator;
+    }
+
+    public function setCreator(?User $creator): self
+    {
+        $this->creator = $creator;
+
+        return $this;
+    }
+
 }

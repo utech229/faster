@@ -236,7 +236,7 @@
                         <!--begin::Modal - Add task-->
                         <div class="modal fade" id="kt_modal_add_user" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
                             <!--begin::Modal dialog-->
-                            <div class="modal-dialog modal-dialog-centered mw-1000px">
+                            <div class="modal-dialog modal-dialog-centered mw-950px">
                                 <!--begin::Modal content-->
                                 <div class="modal-content">
                                     <!--begin::Modal header-->
@@ -408,9 +408,9 @@
                                                                 <label class="fs-6 fw-bold mb-2 form-label" for="kt_user_add_select2_country">
                                                                     <span class="required">{{ 'Accusé' | trans }}</span>
                                                                 </label>
-                                                                <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="{{'Accusé de reception des message' | trans}}"></i>
+                                                                <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="{{'Accusé de reception des messages' | trans}}"></i>
                                                                 <!--end::Label-->
-                                                                {{ form_row(userform.isDlr, {'attr': {'class': 'form-select form-select-solid mb-3 mb-lg-0',
+                                                                {{ form_row(userform.is_dlr, {'attr': {'class': 'form-select form-select-solid mb-3 mb-lg-0',
                                                                 'data-control':"select2", 'data-placeholder': 'Selectionner'| trans, 'data-allow-clear':"true"
                                                                 ,'data-kt-select2':"true", 'data-dropdown-parent':"#kt_modal_add_user" }}) }}
                                                             </div>
@@ -420,9 +420,9 @@
                                                                 <label class="required fw-bold fs-6 mb-2">{{ 'Prépayé' | trans }}</label>
                                                                 <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="{{"Possibilité pour l'utilisateur d'avoir un solde négatif"| trans}}"></i>
                                                                 <!--end::Label-->
-                                                                {{ form_row(userform.postPay, {'attr': {'class': 'form-select form-select-solid mb-3 mb-lg-0',
+                                                                {{ form_row(userform.post_pay, {'attr': {'class': 'form-select form-select-solid mb-3 mb-lg-0',
                                                                 'data-control':"select2", 'data-placeholder': 'Selectionner'| trans, 'data-allow-clear':"true"
-                                                                ,'data-kt-select2':"true", 'data-dropdown-parent':"#kt_modal_add_user" }}) }}
+                                                                ,'data-kt-select2':"true", 'data-dropdown-parent':"#kt_modal_add_user","selected" : true}}) }}
                                                             </div>
                                                             <!--end::Col-->
                                                         </div>
@@ -441,9 +441,9 @@
                                                             <div class="col-lg-6 fv-row">
                                                                 <!--begin::Label-->
                                                                 <label class="fs-6 fw-bold mb-2 form-label" for="kt_user_add_select2_country">
-                                                                    <span class="required">{{ 'Accusé' | trans }}</span>
+                                                                    <span class="required">{{ 'Rôle' | trans }}</span>
                                                                 </label>
-                                                                <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="{{'Accusé de reception des message' | trans}}"></i>
+                                                                <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="{{"Rôle de l'utilisateur" | trans}}"></i>
                                                                 <!--end::Label-->
                                                                 {{ form_row(userform.role, {'attr': {'class': 'form-select form-select-solid mb-3 mb-lg-0',
                                                                 'data-control':"select2", 'data-placeholder': 'Selectionner'| trans, 'data-allow-clear':"true"
@@ -452,8 +452,8 @@
                                                             <!--begin::Col-->
                                                             <div class="col-lg-6 fv-row">
                                                                 <!--begin::Label-->
-                                                                <label class="required fw-bold fs-6 mb-2">{{ 'Prépayé' | trans }}</label>
-                                                                <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="{{"Route par défaut sur laquelle fairepasser les message de l'utilisateur"| trans}}"></i>
+                                                                <label class="required fw-bold fs-6 mb-2">{{ 'Route' | trans }}</label>
+                                                                <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="{{"Route par défaut sur laquelle faire passer les messages de l'utilisateur"| trans}}"></i>
                                                                 <!--end::Label-->
                                                                 {{ form_row(userform.router, {'attr': {'class': 'form-select form-select-solid mb-3 mb-lg-0',
                                                                 'data-control':"select2", 'data-placeholder': 'Selectionner'| trans, 'data-allow-clear':"true"
