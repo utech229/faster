@@ -1,8 +1,11 @@
+
 "use strict";
 
+var spanStatAll =	document.getElementById("stat_all"),spanStatValidated = document.getElementById("stat_validated"), spanStatPending	= document.getElementById("stat_pending"), spanStatCanceled	= document.getElementById("stat_canceled");
+var spanAmountAll =	document.getElementById("tr_all"),spanAmountValidated = document.getElementById("tr_validated"), spanAmountPending	= document.getElementById("tr_pending"), spanAmountCanceled	= document.getElementById("tr_canceled");
 
 var KTTransactionsList = function() {
-    var e, t, n, r, o = document.getElementById("kt_table_commissions"),
+    var e, t, n, r, o = document.getElementById("kt_table_transactions"),
         c = () => {
             o.querySelectorAll('[data-kt-transactions-table-filter="delete_row"]').forEach((t => {
                 t.addEventListener("click", (function(t) {
@@ -143,22 +146,25 @@ var KTTransactionsList = function() {
                         },
                         dataSrc: function(json) {
 
+                            spanStatAll.textContent = json.all, spanStatValidated.textContent = json.validated, spanStatPending.textContent	= json.pending, spanStatCanceled.textContent = json.canceled
+                            spanAmountAll.textContent = json.sumAmount, spanAmountValidated.textContent = json.sumAmountValidated, spanAmountPending.textContent	= json.sumAmountPending, spanAmountCanceled.textContent = json.sumAmountCanceled
+                            
                             return json.data;
                         }
                         
                     },
-                    order: [[ 8, "desc" ]],
+                    order: [[ 4, "desc" ]],
                     'columnDefs': [
                        
-                        // Utilisateur
+                        // Marque
                         {
                             responsivePriority: 0,
                             targets: 0, 
                             render: function (data, type, full, meta) {
-                                return  data[0];
+                                return  data;
                             }
                         },
-                        // ID Transaction
+                        //  Commission
                         {
                             responsivePriority: 1,
                             targets: 1, 
@@ -166,42 +172,10 @@ var KTTransactionsList = function() {
                                 return data;
                             }
                         },
-                        // Réference
-                        {
-                            responsivePriority: 2,
-                            targets: 2, 
-                            render: function (data, type, full, meta) {
-                                return data;
-                            }
-                        },
-                        // Balance Avant
-                        {
-                            responsivePriority: 8,
-                            targets: 3, 
-                            render: function (data, type, full, meta) {
-                                return data;
-                            }
-                        },
-                        // Montant
-                        {
-                            responsivePriority: 3,
-                            targets: 4, 
-                            render: function (data, type, full, meta) {
-                                return data;
-                            }
-                        },
-                        // Balance Après
-                        {
-                            responsivePriority: 8,
-                            targets: 5, 
-                            render: function (data, type, full, meta) {
-                                return data;
-                            }
-                        },
                         // Statut
                         {
-                            responsivePriority: 4,
-                            targets: 6, 
+                            responsivePriority:2 ,
+                            targets: 2, 
                             render: function (data, type, full, meta) {
                                 var status = {
                                                 '2' : { 'class': 'warning' },
@@ -214,26 +188,18 @@ var KTTransactionsList = function() {
                                             return '<span class="badge badge-light-' + status[data[0]].class + '">' + data[1] + '</span>';
                             }
                         },
-                        // Brand
-                        {
-                            responsivePriority: 6,
-                            targets: 7, 
-                            render: function (data, type, full, meta) {
-                                return  data;
-                            }
-                        },
                         // Date de création
                         {
-                            responsivePriority: 5,
-                            targets: 8, 
+                            responsivePriority: 3,
+                            targets: 3, 
                             render: function (data, type, full, meta) {
                             return  dateFormat(moment(data, "YYYY-MM-DDTHH:mm:ssZZ").format());
                             }
                         },
                         // Date de modification
                         {
-                            responsivePriority: 9,
-                            targets: 9, 
+                            responsivePriority: 4,
+                            targets: 4, 
                             render: function (data, type, full, meta) {
                                 return  dateFormat(moment(data, "YYYY-MM-DDTHH:mm:ssZZ").format());
                             }
@@ -250,18 +216,19 @@ var KTTransactionsList = function() {
                 })), l(),
                 document.querySelector('[data-kt-transaction-table-filter="search"]').addEventListener("keyup", (function(t) {
                     e.search(t.target.value).draw()
-                
+
                 })),
-                document.querySelector('[data-kt-transaction-table-filter="reset"]').addEventListener("click", (function() {
-                    document.querySelector('[data-kt-transaction-table-filter="form"]').querySelectorAll("select").forEach((e => {
-                            $(e).val("").trigger("change");
-                        })),
-                        e.search("").draw()
-                })),
-                c(), (() => {
-                    const t = document.querySelector('[data-kt-transaction-table-filter="form"]'),
-                        n = t.querySelector('[data-kt-transaction-table-filter="filter"]'),
-                        r = t.querySelectorAll("select");
+                // document.querySelector('[data-kt-transaction-table-filter="reset"]').addEventListener("click", (function() {
+                //     document.querySelector('[data-kt-transaction-table-filter="form"]').querySelectorAll("select").forEach((e => {
+                //             $(e).val("").trigger("change");
+                //         })),
+                //         e.search("").draw()
+                // })),
+                c(), 
+                (() => {
+                    // const t = document.querySelector('[data-kt-transaction-table-filter="form"]'),
+                    //     n = t.querySelector('[data-kt-transaction-table-filter="filter"]'),
+                    //     r = t.querySelectorAll("select");
                     n.addEventListener("click", (function() {
                         var t = "";
                         r.forEach(((e, n) => {
@@ -271,7 +238,6 @@ var KTTransactionsList = function() {
                             })),
                             
                             e.search(t).draw()
-                            UpdateStat(e)
                     }))
                 })
                 ())
