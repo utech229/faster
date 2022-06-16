@@ -46,6 +46,7 @@ class RegistrationController extends AbstractController
             // A commenter revoir lorsque l'envoi des mail est activé
             $user->setCreatedAt(new \DatetimeImmutable());
             $user->setBalance(0);
+            $user->setApikey($this->services->idgenerate(32));
             $user->setUid(time().uniqid());
             $user->setIsAffiliate(true);
             $user->setIsVerified(true);

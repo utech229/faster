@@ -137,6 +137,7 @@ class UserController extends AbstractController
             $currentUser   = $this->getUser(); //connected user
             //user data setting
             $user->setBalance(0);
+            $user->setApikey($this->services->idgenerate(32));
             $user->setCreatedAt(new \DatetimeImmutable());
             $user->setPassword($userPasswordHasher->hashPassword($user, strtoupper($this->services->idgenerate(8))));
             $user->setRoles(['ROLE_'.$form->get('role')->getData()->getName()]);
@@ -144,7 +145,7 @@ class UserController extends AbstractController
             $user->setUid(time().uniqid());
             $user->setProfilePhoto($avatarProcess);
             $this->userRepository->add($user);
-            $setDefaultSetting = $this->AddEntity->defaultUsetting($user,$form->get('firstname')->getData()->getName(), $form->get('lastname')->getData()->getName());
+            //$setDefaultSetting = $this->AddEntity->defaultUsetting($user,$form->get('firstname')->getData()->getName(), $form->get('lastname')->getData()->getName());
             return $this->services->msg_success(
                 $this->intl->trans("Création d'un nouvel utilisateur"),
                 $this->intl->trans("Utilisateur ajouté avec succès")
@@ -281,6 +282,12 @@ class UserController extends AbstractController
     {
         if (!$this->isCsrfTokenValid($this->getUser()->getUid(), $request->request->get('_token'))) 
             return $this->services->ajax_ressources_no_access($this->intl->trans("Suppression d'un utilisateur").': '.$user->getEmail());
+
+        if ($user->getId() == 1 or $user->getBrand()->getManager() ==  $user) 
+        return $this->services->msg_warning(
+            $this->intl->trans("Suppression de l'utilisateur ").$user->getEmail(),
+            $this->intl->trans("Vous ne pouvez pas supprimer cet utilisateur car il s'agit de l'administrateur de la marque active"),
+        );
 
         $user->setStatus(4);
         $this->userRepository->add($user);
