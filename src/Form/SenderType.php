@@ -29,17 +29,20 @@ class SenderType extends AbstractType
         $builder
             ->add('manager', EntityType::class, [
                 'class'=>User::class,
-                'choices'=>$this->userRepo->getUsersByPermission("SEND1", null),
+                'choices'=>$this->userRepo->getUsersByPermission("SEND1", null, null, 1),
                 'choice_label'=>'email',
                 'choice_value'=>'uid',
+                'required'=>true,
             ])
-            ->add('uid', HiddenType::class)
+            ->add('uid', HiddenType::class, [
+                'required'=>false,
+            ])
             ->add('name', TextType::class, [
-                'attr'=>[
-                    'required' => true
-                ]
+                'required'=>true,
             ])
-            ->add('observation', TextareaType::class)
+            ->add('observation', TextareaType::class, [
+                'required'=>false,
+            ])
             ->add('status', EntityType::class, [
                 'class'=>Status::class,
                 'query_builder'=>function(EntityRepository $er){
@@ -50,6 +53,7 @@ class SenderType extends AbstractType
                 },
                 'choice_label'=>'name',
                 'choice_value'=>'uid',
+                'required'=>true,
             ])
         ;
     }

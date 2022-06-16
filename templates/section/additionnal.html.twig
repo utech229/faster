@@ -30,7 +30,7 @@
             if (result.isConfirmed && callback) callback();
         });
     }
-    function swalConfirm(icon, message, callback, cancel = null){
+    function swalConfirm(icon, message, callback, cancelCallback = null){
         Swal.fire({
             html: message,
             icon: icon,
@@ -39,7 +39,26 @@
             cancelButtonColor: '#d33',
             confirmButtonText: _confirm_success
         }).then((result) => {
-            if (result.isConfirmed && callback) callback(); else if (cancel) cancel();
+            if (result.isConfirmed && callback) callback(); else if (cancelCallback) cancelCallback();
         });
+    }
+
+    const select2Format1 = function(item) {
+        if ( !item.id ) {
+            return item.text;
+        }
+
+        var span = document.createElement('span');
+        var imgUrl = item.element.getAttribute('data-select2-avatar');
+        var imgAlt = item.element.getAttribute('data-select2-alt');
+        imgAlt = (imgAlt !== "null")?imgAlt:"image";
+        var template = '';
+
+        template += '<img src="' + imgUrl + '" class="rounded-circle h-20px me-2" alt="'+imgAlt+'"/>';
+        template += item.text;
+
+        span.innerHTML = template;
+
+        return $(span);
     }
 </script>

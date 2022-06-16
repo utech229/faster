@@ -3,120 +3,110 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Entity\SMSMessage;
 
 use App\Service\APIResponse;
 use App\Service\BrickPhone;
+use App\Service\Services;
+use App\Service\Message;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
-#[Route('/api/v1')]
+#[Route('{_locale}/api/v1')]
 class ApiController extends AbstractController
 {
-    #[Route('/message/send', name: 'api_send')]
-    public function created(Request $request)
+    public function __construct(TranslatorInterface $intl, EntityManagerInterface $em, Services $src)
     {
+        $this->intl          = $intl;
+        $this->em            = $em;
+        $this->src           = $src;
+    }
+
+    #[Route('/message/send', name: 'api_send')]
+    public function created(Request $request, BrickPhone $brick, Message $sMessage)
+    {
+        $SMSMessage = new SMSMessage();
+
         $request = Request::createFromGlobals();
 
         // Vérifier l'entêtemp
-        list($code, $token, $service) = $this->checkHeader($request->headers);
-        if($code != 200) return (new APIResponse())->new(["error"=>"bad header", "status"=>$code], $code);
+        list($code, $token, $manager) = $this->checkHeader($request->headers);
+        if($code != 200) return (new APIResponse())->new(["error"=>$this->intl->trans("Erreur dans l'entête de la requête."), "status"=>$code], $code);
 
         // Vérification de la méthode
         $method = $request->getMethod();
-        if($method != "POST" && $method != "GET") return (new APIResponse())->new(["error"=>"bad method", "status"=>405], 405);
+        if($method != "POST" && $method != "GET") return (new APIResponse())->new(["error"=>$this->intl->trans("Erreur sur la méthode d'evoie des données."), "status"=>405], 405);
 
         $sender = $request->get('sender', null);
         $message = $request->get('message', '');
         $phone_number = $request->get('phone', null);
-        $internal_ref = $request->request->get('internal_ref', null);
-        $process = $request->request->get('process', "");
-        $expired = $request->request->get('expired', null);
+        $date_heure_send = $request->get('date_heure', null); // format Y-m-d H:i:s
+        $timezone = $request->get('timezone', null);
+        $mode = $request->get('mode', '1');
+        $canal = $request->get('canal', 'SMS');
 
         $msg = [];
-        if(!$expired) $msg[] = "bad or no expired date";
-        if(!$email) $msg[] = "bad or no email";
-        if(!$lastname) $msg[] = "bad or no lastname";
-        if(!$firstname) $msg[] = "bad or no firstname";
-        if(!$internal_ref) $msg[] = "bad or no internal_ref";
-        $country = $this->brick->getInfosCountryFromCode($phone_number);
-        if(!$phone_number || !$country) $msg[] = "bad or no phone_number";
-        if(!$this->router->checkAmount($amount, 100)) $msg[] = "bad or no amount";
+
+        $mySender = $sMessage->checkSender($manager, $sender);
+        if($mySender == null) $msg[] = $this->intl->trans("Mauvais ou aucun identifiant d'envoi défini.");
+
+        list($isValid, $length) = $sMessage->trueLength($message);
+        if(!$isValid) $msg[] = $this->intl->trans("Le nombre maximal de caractère est 160. Le message contient %1% caractère(s).", ["%1%"=>$length]);
+
+        $phone_data = $brick->getInfosCountryFromCode($phone_number);
+        if(!$phone_data) $msg[] = $this->intl->trans("Le numéro de téléphone indiqué est erroné.");
+
+        list($isValid, $sendingAt) = $sMessage->checkSendingAt($date_heure_send, $timezone);
+        if(!$isValid) $msg[] = $this->intl->trans("Mauvais format de DATE_HEURE ou TIMEZONE indiqué.");
+
+        if((int)$mode !== 0) $mode = true; else $mode = false;
 
         if($msg != []) return (new APIResponse())->new(["error"=>$msg, "status"=>403], 403);
 
-        $expiredAt = (new \DateTimeImmutable($expired, new \DateTimeZone('GMT')))->modify('+120 min');
+        list($valid, $price, $response) = $sMessage->getAmountSMS($message, $manager, $phone_data);
+        if(!$valid) return (new APIResponse())->new(["error"=>$response, "status"=>403], 403);
 
-        $expiredAt->setTimezone(new \DateTimeZone(date_default_timezone_get()));
+        if($sendingAt) $SMSMessage->setStatus($this->src->status(0));
+        else $SMSMessage->setStatus($this->src->status(1));
 
-        if(!$country) return (new APIResponse())->new(["error"=>"API error country", "status"=>403], 403);
-
-        $process = (strtoupper($process) == "CARD")?"CARD":"MOBILE";
-
-        $transation = new Transaction();
-        $transation->setDescription($description)
-            ->setIdTransaction("")
-            ->setRefExterne("")
-            ->setRefInterne($internal_ref)
+        $SMSMessage
+            ->setManager($manager)
             ->setUid($this->src->getUniqid())
-            ->setOriginAmount($amount)
-            ->setAmount($amount)
-            ->setFinalAmount($amount)
-            ->setAgregator("")
-            ->setStatus(0)
-            ->setFees(0)
-            ->setFirstName($firstname)
-            ->setLastName($lastname)
-            ->setEmail($email)
+            ->setCampaign(null)
+            ->setSendingAt($sendingAt)
+            ->setOriginMessage($message)
+            ->setMessage($message)
+            ->setMessageAmount($price)
+            ->setSmsType($mode)
+            ->setIsParameterized(false)
+            ->setTimezone($timezone ? $timezone : "")
+            ->setSender($mySender)
             ->setPhone($phone_number)
-            ->setCurrency("XOF")
-            ->setCurrencyChange(1)
-            ->setCountry($country["code"])
-            ->setProcess($process)
-            ->setService($service)
-            ->setExpiredAt($expiredAt)
-            ->setEnv($environment)
+            ->setPhoneCountry($phone_data)
             ->setCreatedAt(new \DateTimeImmutable())
+            ->setUpdatedAt(null)
         ;
 
-        $this->em->persist($transation);
-        //if($environment == "dev") $this->em->flush();
+        $this->em->persist($SMSMessage);
 
-        list($new_transation, $response) = $this->router->processRouter($transation);
+        $lastBalance = $manager->getBalance();
+        $manager->setBalance($lastBalance - $SMSMessage->getMessageAmount());
+        $this->em->persist($manager);
 
-        if($response["status"] < 200 && $response["status"] > 399) return (new APIResponse())->new(["error"=>$response["api"]["message"], "status"=>500], 500);
-
-        $this->em->persist($new_transation);
         $this->em->flush();
 
         return (new APIResponse())->new([
-            "id_transaction"=>$new_transation->getUid(),
-            "external_id"=>$new_transation->getIdTransaction(),
-            "external_ref"=>$new_transation->getRefExterne(),
-            "internal_ref"=>$new_transation->getRefInterne(),
-            "amount"=>$new_transation->getOriginAmount(),
-            "devise_change"=>$new_transation->getCurrencyChange(),
-            "amount_devise"=>$new_transation->getAmount(),
-            "amount_paie"=>$new_transation->getFinalAmount(),
-            "status"=>$this->router->getStatusText($new_transation->getStatus()),
-            "fees"=>$new_transation->getFees(),
-            "firstname"=>$new_transation->getFirstName(),
-            "lastname"=>$new_transation->getLastName(),
-            "email"=>$new_transation->getEmail(),
-            "phone_number"=>$new_transation->getPhone(),
-            "payment_phone"=>($new_transation->getPhonePaie())?$new_transation->getPhonePaie():"-",
-            "currency"=>$new_transation->getCurrency(),
-            "country"=>$new_transation->getCountry(),
-            "process"=>($new_transation->getProcess()=="CARD")?"CARD":"MOBILE",
-            "operator"=>$new_transation->getProcess(),
-            "service_key"=>$new_transation->getService()->getApikey(),
-            "service_name"=>$new_transation->getService()->getName(),
-            "expired"=>$new_transation->getExpiredAt()->format("c"),
-            "description"=>$new_transation->getDescription(),
-            "response"=>$response
-        ], $response["status"]);
+            "id_sending"=>$SMSMessage->getUid(),
+            "amount_paie"=>$SMSMessage->getMessageAmount(),
+            "status"=>strtoupper($SMSMessage->getStatus()->getName()),
+            "balance"=>$SMSMessage->getManager()->getBalance(), // Vérifier si la récupération est instantanée
+            "response"=>$response,
+        ], 200);
     }
 
     public function checkHeader($headers)
@@ -134,18 +124,18 @@ class ApiController extends AbstractController
 
         if($auth_token == "") return [404, "", null];
 
-        list($code, $service) = $this->checkUser($auth_token);
+        list($code, $manager) = $this->checkUser($auth_token);
 
-        return [$code, $auth_token, $service];
+        return [$code, $auth_token, $manager];
     }
 
     public function checkUser($token = null)
     {
-        //$service = $this->em->getRepository(Service::class)->findOneBy(["name"=>$user, "uid"=>$psw, "apikey"=>$token]);
-        $service = $this->em->getRepository(User::class)->findOneBy(["apikey"=>$token]);
+        //$manager = $this->em->getRepository(Service::class)->findOneBy(["name"=>$user, "uid"=>$psw, "apikey"=>$token]);
+        $manager = $this->em->getRepository(User::class)->findOneBy(["apikey"=>$token]);
 
-        if(!$service) return [428, null];
+        if(!$manager) return [428, null];
 
-        return [200, $service];
+        return [200, $manager];
     }
 }
