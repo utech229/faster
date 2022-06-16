@@ -34,6 +34,7 @@ $(document).on('click', ".updater", function(e) {
             mdHTMLTitle.html(_Edit);
             isUpdating = true;
             $('#status_name').val(r.data.name);
+            $('#status_code').val(r.data.code);
             $('#description').val(r.data.description);
             formModalButton.click();
         },

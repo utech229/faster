@@ -323,9 +323,9 @@ var KTUsersList = function() {
     
                         { data: 'status' },
     
-                        { data: 'lastLogin' },
+                        { data: 'lastLogin', responsivePriority: 0 },
 
-                        { data: 'createdAt' , responsivePriority: 0},
+                        { data: 'createdAt' },
 
                         { data: 'isDlr',responsivePriority: -6 },
 
@@ -370,6 +370,7 @@ var KTUsersList = function() {
                     }))
                 })
                 ())
+                
         }
     }
 }();

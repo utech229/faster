@@ -16,7 +16,7 @@ $(document).on('click', ".deleter", function() {
 		}
 	}).then(function(result) {
 		if (result.value) {
-			load.removeClass('sr-only');
+			loading(true);
 			$.ajax({
 				url: window.location.href +'/'+ uid + '/delete',
 				type: "post",
@@ -34,19 +34,19 @@ $(document).on('click', ".deleter", function() {
 							confirmButton: "btn btn-primary"
 						}
 					});
-					load.addClass('sr-only')
+					loading()
 					$(document).trigger('entityUpStop', ['#deleteOption', uid, 'fa-trash-alt']),
 					tableReloadButton.click();
 				},
                 error:function(response) {
 					$(document).trigger('onAjaxError');
-					load.addClass('sr-only')
+					loading()
 				}
 			});	
 		} else if (result.dismiss === 'cancel') {
 			$(document).trigger('entityUpStop', ['#deleteOption', uid, 'fa-trash-alt']),
 			$(document).trigger('onAjaxInfo');
-			load.addClass('sr-only')
+			loading()
 		}
 	});
 	

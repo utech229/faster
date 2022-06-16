@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Entity\Sender;
 use App\Entity\Status;
+use App\Entity\Brand;
 use App\Service\uBrand;
 use App\Service\Services;
 use App\Form\SenderType;
@@ -32,15 +33,14 @@ class SenderController extends AbstractController
        $this->ug            = $ug;
        $this->em            = $em;
        $this->permission    = [
-           "SEND0", "SEND1",  "SEND2", "SEND3", "SEND4", "BRND1", "MAN"
+           "SEND0", "SEND1",  "SEND2", "SEND3", "SEND4", "SEND5"
        ];
        $this->pAccess   =	$this->src->checkPermission($this->permission[0]);
        $this->pCreate   =	$this->src->checkPermission($this->permission[1]);
        $this->pList     =	$this->src->checkPermission($this->permission[2]);
        $this->pEdit	    =	$this->src->checkPermission($this->permission[3]);
        $this->pDelete	=	$this->src->checkPermission($this->permission[4]);
-       $this->pBrand	=	$this->src->checkPermission($this->permission[5]);
-       $this->pManag	=	$this->src->checkPermission($this->permission[6]);
+       $this->pStatus	=	$this->src->checkPermission($this->permission[5]);
     }
 
     #[Route('', name: 'sender', methods: ['GET'])]
@@ -74,7 +74,7 @@ class SenderController extends AbstractController
                 $message = $this->intl->trans("Mise à jour de l'identifiant effectuée.");
                 $sender->setUpdatedAt(new \DateTimeImmutable());
             }else{
-                $sender->setUid($this->src->getUniqid())->setCreatedAt(new \DateTimeImmutable());
+                $sender->setUid($this->src->getUniqid())->setCreatedAt(new \DateTimeImmutable())->setCreateBy($this->getUser());
                 $task = $this->intl->trans("Création du Sender : ".$sender->getName());
                 if(!$this->pCreate) return $this->src->no_access($this->intl->trans("Acces refusé à l'ajout du sender : ".$sender->getName()));
                 $message = $this->intl->trans("Identifiant créé avec succès.");
@@ -92,15 +92,37 @@ class SenderController extends AbstractController
 
         if($form->isSubmitted() && $request->isXmlHttpRequest()) return $this->src->invalidForm($form);
 
+        list($userType, $masterId, $userRequest) = $this->src->checkThisUser($this->pList);
+        $status = [
+            $this->src->status(2),
+            $this->src->status(3),
+            $this->src->status(4),
+        ];
+        switch ($userType) {
+            case 0:
+                array_push($status, $this->src->status(5));
+                break;
+            case 1:
+                array_push($status, $this->src->status(5));
+                break;
+            default: break;
+        }
+        $params = [];
+        $merge = array_merge($params, $userRequest);
+        $brands = $this->em->getRepository(Brand::class)->findBrandBy($userType, $merge);
         return $this->renderForm('sender/index.html.twig', [
             'form'      => $form,
             'sender'    => $sender,
+            'brands'    => $brands,
+            'status'    => $status,
             'brand'     => $this->brand->get(),
             'pAccess'   => $this->pAccess,
             'pCreate'   => $this->pCreate,
+            'clnUser'   => $userType > 3 ? false : true,
             'pList'     => $this->pList,
             'pEdit'     => $this->pEdit,
             'pDelete'   => $this->pDelete,
+            'pStatus'   => $this->pStatus,
             'pageTitle' => []
         ]);
     }
@@ -108,6 +130,7 @@ class SenderController extends AbstractController
     #[Route('/all', name: 'sender_all', methods: ['POST'])]
     public function all(Request $request): JsonResponse
     {
+        $session = $this->getUser();
         if (!$this->isCsrfTokenValid('sender', $request->request->get('_token')))
             return $this->src->no_access($this->intl->trans("Récupération des senders bloquée. (Erreur de requête)"));
 
@@ -115,10 +138,9 @@ class SenderController extends AbstractController
 
         $senders = [];
         $request_sender = [];
-        $request_user = [];
 
-        $manager = ($request->request->get('manager') !== "") ? $this->em->getRepository(User::class)->findOneByUid($request->request->get('manager')) : null;
-        if ($request->request->get('manager', null) && !$manager) return $this->src->msg_error(
+        $user_manage = ($request->request->get('manager') !== "") ? $this->em->getRepository(User::class)->findOneByUid($request->request->get('manager')) : null;
+        if ($request->request->get('manager', null) && !$user_manage) return $this->src->msg_error(
             $this->intl->trans("Utilisateur inconnu : uid=".$request->request->get('manager')),
             $this->intl->trans("Utilisateur inconnu"),
             [
@@ -129,40 +151,22 @@ class SenderController extends AbstractController
                     'pList'     => $this->pList,
                     'pEdit'     => $this->pEdit,
                     'pDelete'   => $this->pDelete,
+                    'pStatus'   => $this->pStatus,
                 ]
             ]
         );
 
-        if($manager) $request_sender["manager"] = $manager;
+        $brand = ($request->request->get('brand') !== "") ? $this->em->getRepository(Brand::class)->findOneByUid($request->request->get('brand')) : null;
+        if($brand) $request_sender["brand"] = $brand->getId();
 
-        // if($this->pList) $senders = $this->em->getRepository(Sender::class)->findBy($request_sender);
-        // else if($this->pManag) $this->getUser()->
-        // else if(!$this->pBrand) $senders = $this->getUser()->getSenders()
-        //
-        //
-        // if($manager) $request_sender["manager"=>$manager];
-        //
-        // (pList) super => all || selectionné
-        // (MAN) manageraccount => allAccount (user->getAccountManager == this) || selectionné (user->getAccountManager == this)
-        // (BRND1) reseller => allMyUser (user->getBrand->getManager == this) || selectionné (user->getBrand->getManager == this)
-        // (!BRND1) reseller aff => allAdnUser (this->getAffiliateManager = true && (BRND1)this->getAffiliateManager && user->getBrand->getManager == this->getAffiliateManager) || selectionné (this->getAffiliateManager = true && user->getBrand->getManager == this->getAffiliateManager)
-        // (!BRND1) user => allMyData (this->getAffiliateManager = false)
-        // (!BRND1) user aff => allAdnData (this->getAffiliateManager = true  && (!BRND1)this->getAffiliateManager)
-        //
-        //
-        //
-        // if($this->pList && !$manager) $senders = $this->em->getRepository(Sender::class)->findAll();
-        // else
-        // if($this->pBrand && $manager) $request_user["accountManager"=>$manager];
-        //
-        // if(!$this->pList)
-        // {
-        //     $manager = $this->em->getRepository(User::class)->findOneByUid($request->request->get('manager'));
-        //     if(!$manager)
-        // }
-        //
-        // if($manager) $senders = $this->em->getRepository(Sender::class)->findByManager($manager);
-        // else
+        $status = ($request->request->get('status') !== "") ? $this->em->getRepository(Status::class)->findOneByUid($request->request->get('status')) : null;
+        if($status) $request_sender["status"] = $status->getId();
+
+        list($userType, $masterId, $userRequest) = $this->src->checkThisUser($this->pList);
+
+        $merge = array_merge($request_sender, $userRequest);
+
+        $senders = $this->em->getRepository(Sender::class)->userTypeFindBy($userType, $merge);
 
         $data = [];
 
@@ -182,7 +186,7 @@ class SenderController extends AbstractController
             $data[$key][] = $sender->getUid();
         }
 
-        $manager_email = $manager ? $manager->getEmail() : "tous";
+        $manager_email = $user_manage ? $user_manage->getEmail() : "tous";
 
         return $this->src->msg_success(
             $this->intl->trans("Récupération des senders de ".$manager_email),
@@ -195,16 +199,55 @@ class SenderController extends AbstractController
                     'pList'     => $this->pList,
                     'pEdit'     => $this->pEdit,
                     'pDelete'   => $this->pDelete,
+                    'pStatus'   => $this->pStatus,
                 ]
             ]
         );
+    }
+
+    #[Route('/{uid}/show', name: 'sender_show', methods: ['GET', 'POST'])]
+    public function show(Request $request, Sender $sender, SenderRepository $senderRepository): Response
+    {
+        return $this->src->msg_success(
+            $this->intl->trans("Récupération des senders de ".$manager_email),
+            "",
+            []
+        );
+    }
+
+    #[Route('/user/get', name: 'sender_user', methods: ['POST'])]
+    public function user(Request $request): Response
+    {
+        $data = [
+			"results"=>[
+				["id"=>"", "text"=>""],
+			]
+		];
+        if (!$this->isCsrfTokenValid('sender', $request->request->get('_token'))){
+            $this->src->addLog($this->intl->trans("Actions sur sender bloquées à l'utilisateur (Erreur de requête)."));
+            return new JsonResponse($data);
+        }
+
+        $brand = $this->em->getRepository(Brand::class)->findOneByUid($request->request->get("brand", "IwyXLGn0gH"));
+
+        if($brand) $users = $this->em->getRepository(User::class)->getUsersByPermission("", 2, $brand->getManager()->getId(), 1);
+        else $users = $this->em->getRepository(User::class)->getUsersByPermission("", null, null, 1);
+
+        foreach ($users as $key => $user) {
+            $data["results"][] = [
+				"id"=>$user->getUid(),
+				"text"=>$user->getEmail(),
+			];
+        }
+
+        return new JsonResponse($data);
     }
 
     #[Route('/{uid}', name: 'sender_action', methods: ['GET', 'POST'])]
     public function action(Request $request, Sender $sender, SenderRepository $senderRepository): Response
     {
         if (!$this->isCsrfTokenValid('sender', $request->request->get('_token')))
-            return $this->src->no_access($this->intl->trans("Actions sur sender bloquées à l'utilisateur. (Erreur de requête)"));
+            return $this->src->no_access($this->intl->trans("Actions sur sender bloquées à l'utilisateur (Erreur de requête)."));
 
         $action = (int)$request->request->get("action");
 

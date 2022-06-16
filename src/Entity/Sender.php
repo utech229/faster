@@ -30,19 +30,22 @@ class Sender
     #[ORM\Column(type: 'text', nullable: true)]
     private $observation;
 
-    #[ORM\OneToMany(mappedBy: 'defaultSender', targetEntity: User::class)]
-    private $users;
+    //#[ORM\OneToMany(mappedBy: 'defaultSender', targetEntity: User::class)]
+   // private $users;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'senders')]
     private $manager;
 
-    #[ORM\ManyToOne(targetEntity: Status::class, inversedBy: 'senders')]
+    #[ORM\ManyToOne(targetEntity: Status::class)]
     #[ORM\JoinColumn(nullable: false)]
     private $status;
 
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    private $createBy;
+
     public function __construct()
     {
-        $this->users = new ArrayCollection();
+        //$this->users = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -110,35 +113,35 @@ class Sender
         return $this;
     }
 
-    /**
-     * @return Collection<int, User>
-     */
-    public function getUsers(): Collection
-    {
-        return $this->users;
-    }
+    // /**
+    //  * @return Collection<int, User>
+    //  */
+    // public function getUsers(): Collection
+    // {
+    //     return $this->users;
+    // }
 
-    public function addUser(User $user): self
-    {
-        if (!$this->users->contains($user)) {
-            $this->users[] = $user;
-            $user->setDefaultSender($this);
-        }
+    // // public function addUser(User $user): self
+    // {
+    //     if (!$this->users->contains($user)) {
+    //         $this->users[] = $user;
+    //         $user->setDefaultSender($this);
+    //     }
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
-    public function removeUser(User $user): self
-    {
-        if ($this->users->removeElement($user)) {
-            // set the owning side to null (unless already changed)
-            if ($user->getDefaultSender() === $this) {
-                $user->setDefaultSender(null);
-            }
-        }
+    // public function removeUser(User $user): self
+    // {
+    //     if ($this->users->removeElement($user)) {
+    //         // set the owning side to null (unless already changed)
+    //         if ($user->getDefaultSender() === $this) {
+    //             $user->setDefaultSender(null);
+    //         }
+    //     }
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
     public function getManager(): ?User
     {
@@ -160,6 +163,18 @@ class Sender
     public function setStatus(?Status $status): self
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function getCreateBy(): ?User
+    {
+        return $this->createBy;
+    }
+
+    public function setCreateBy(?User $createBy): self
+    {
+        $this->createBy = $createBy;
 
         return $this;
     }

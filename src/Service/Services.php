@@ -213,7 +213,7 @@ class Services extends AbstractController
         {
 			$role			=	$user	->	getRole();
 			$authorizations	=	$role	->	getAuthorizations();
-			foreach ($authorizations as $key => $value) 
+			foreach ($authorizations as $key => $value)
             {
 	            if(is_array($codePermission))
                 {
@@ -228,10 +228,11 @@ class Services extends AbstractController
         return $return;
     }
 
-	public function getUserByPermission($codePermission, $resseler_id = null)
+	// $level == 1 (Uniquement les sous marques) $level == 2 (Uniquement les Affiliés) $level == 0 || autres (Tous)
+	public function getUserByPermission($codePermission, $userType = null, $user = null, $level = null)
 	{
-		$allUser	=	$this->em->getRepository(User::class)->getUsersByPermission(
-			$codePermission, $resseler_id
+		$allUser = $this->em->getRepository(User::class)->getUsersByPermission(
+			$codePermission, $userType, $user, $level
 		);
 
 		return $allUser;
@@ -295,12 +296,12 @@ class Services extends AbstractController
         return new JsonResponse(['message' => $message,
         'title' => $this->intl->trans('Erreur'), 'type' => 'error', 'status' =>'error','data' => $data,  400]);
     }
-    
+
 
     public function msg_success($task , $message, $data = null){
         $this->addLog($task, 200);
         return new JsonResponse([
-            'message' => $message,'title'  => $this->intl->trans('Opération réussie'), 'type' => 'success', 
+            'message' => $message,'title'  => $this->intl->trans('Opération réussie'), 'type' => 'success',
             'status' =>'success','data' => $data, 200]);
     }
 
@@ -317,7 +318,7 @@ class Services extends AbstractController
         ];
     }
 
-    public function idgenerate($length) 
+    public function idgenerate($length)
     {
         $chaine ="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
         srand((double)microtime()*1000000);
@@ -328,7 +329,7 @@ class Services extends AbstractController
         return $pass;
     }
 
-    public function numeric_generate($length) 
+    public function numeric_generate($length)
     {
         $chaine ="0123456789";
         srand((double)microtime()*1000000);
@@ -339,10 +340,27 @@ class Services extends AbstractController
         return $pass;
     }
 
-    public function status($code) 
+    public function status($code)
     {
        return $this->statusRepository->findOneByCode($code);
     }
 
-    
+	// Le retour de la fonction est un tableau
+	// Retour : [$code, $id, $arrayRequest]
+	// $code : (0 : Super admin ou administrateur; 1 : Gestionnaire de compte, 2 : Revendeur; 3 : Affilié d'un Revendeur; 4 : Utilisateur simple; 5 : Affilié à un utilisateur simple)
+	// $id : Si $code == 3 ou 5 => id de son administrateur ; Si $code == 1 ou 2 ou 4 => son propre id ; Si $code == 0 => 0 (car aucun utilisateur n'aura en paramètre l'id de l'administrateur)
+	// $arrayRequest : est un tableau formant une partie de requête.
+	public function checkThisUser($pAllView, $pManager = null, $pBrand = null, $user = null)
+	{
+		$session = $user ? $user : $this->getUser();
+		if($pManager === null) $pManager = $this->checkPermission("MANGR", $session);
+		if($pBrand === null) $pBrand = $this->checkPermission("BRND1", $session);
+
+		if($pAllView) return [0, 0, ["master"=>true]]; // Super admin ou administrateur
+        else if($pManager) return [1, $session->getId(), ["managerby"=>$session->getId()]]; // Gestionnaire de compte
+        else if($pBrand && !$session->getAffiliateManager()) return [2, $session->getId(), ["reselby"=>$session->getId()]]; // Revendeur
+        else if($session->getAffiliateManager() && $this->checkPermission("BRND1", $session->getAffiliateManager())) return [3, $session->getAffiliateManager()->getId(), ["reselby"=>$session->getAffiliateManager()->getId()]]; // Affilié d'un Revendeur
+        else if(!$pBrand && !$session->getAffiliateManager()) return [4, $session->getId(), ["user"=>$session->getId()]]; // Utilisateur
+        else if($session->getAffiliateManager()) return [5, $session->getAffiliateManager()->getId(), ["user"=>$session->getAffiliateManager()->getId()]]; // Affilié à un utilisateur
+	}
 }

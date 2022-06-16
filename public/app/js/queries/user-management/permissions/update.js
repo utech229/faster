@@ -36,7 +36,6 @@ $(document).on('click', ".permissionUpdater", function(e) {
             $('#permission_code').val(r.data.code);
             $('#permission_name').val(r.data.name);
             $('#description').val(r.data.description);
-            document.getElementById('kt_permissions_core').checked = r.data.iscore;
             formModalButton.click();
         },
         error: function () { 
