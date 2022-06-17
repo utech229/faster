@@ -11,6 +11,7 @@ $(document).on('click', '.cursor-mobile-carte', function(e){
     $('.phone-required').show();
 });
 
+
 var KTUsersRechargeUser = function() {
     const t = document.getElementById("kt_modal_recharge"),
         e = t.querySelector("#kt_modal_recharge_form"),
