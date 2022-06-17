@@ -48,7 +48,9 @@ class uBrand extends AbstractController
                'ifu'            => $company->getIfu(),
                'rccm'           => $company->getRccm(),
            ],
-           'year'               => date('Y')
+           'year'               => date('Y'),
+           'brand'              =>  $brand,
+
            
        ];
     }

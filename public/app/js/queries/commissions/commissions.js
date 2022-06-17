@@ -139,7 +139,8 @@ var KTTransactionsList = function() {
                         url: transaction_list_link,
                         type: "POST",
                         data: {
-                            _token: function(){ return csrfToken; }
+                            _token: function(){ return csrfToken; },
+                            _uid: function(){ return document.querySelector('[data-kt-commission-table-filter="user"]').value; }
                         },
                         error: function () { 
                             $(document).trigger('toastr.onAjaxError');
@@ -148,7 +149,6 @@ var KTTransactionsList = function() {
 
                             spanStatAll.textContent = json.all, spanStatValidated.textContent = json.validated, spanStatPending.textContent	= json.pending, spanStatCanceled.textContent = json.canceled
                             spanAmountAll.textContent = json.sumAmount, spanAmountValidated.textContent = json.sumAmountValidated, spanAmountPending.textContent	= json.sumAmountPending, spanAmountCanceled.textContent = json.sumAmountCanceled
-                            
                             return json.data;
                         }
                         
@@ -214,10 +214,13 @@ var KTTransactionsList = function() {
                     e.ajax.reload(null, false);
                 })).on("draw", (function() { l(), c(), a()
                 })), l(),
-                document.querySelector('[data-kt-transaction-table-filter="search"]').addEventListener("keyup", (function(t) {
+                document.querySelector('[data-kt-commission-table-filter="search"]').addEventListener("keyup", (function(t) {
                     e.search(t.target.value).draw()
 
                 })),
+                $('[data-kt-commission-table-filter="user"]').on('change', function() {
+                    e.ajax.reload();
+                }),
                 // document.querySelector('[data-kt-transaction-table-filter="reset"]').addEventListener("click", (function() {
                 //     document.querySelector('[data-kt-transaction-table-filter="form"]').querySelectorAll("select").forEach((e => {
                 //             $(e).val("").trigger("change");

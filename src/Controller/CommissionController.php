@@ -34,14 +34,14 @@ class CommissionController extends AbstractController
         $this->baseUrl         = $baseUrl;
         $this->em	           = $entityManager;
 
-        $this->permission      =    ["COMM0", "COMM1", "COMM2", "COMM3", "COMM4"];
-        $this->pAccess         =    $this->services->checkPermission($this->permission[0]);
-        $this->pCreate         =    $this->services->checkPermission($this->permission[1]);
-        $this->pView           =    $this->services->checkPermission($this->permission[2]);
-        $this->pUpdate         =    $this->services->checkPermission($this->permission[3]);
-        $this->pDelete         =    $this->services->checkPermission($this->permission[4]);
+        $this->permission      =    ["COMM0", "COMM1", "COMM2","BRND1"];
+        $this->pAccess         =    $this->services->checkPermission($this->permission[0]); //Accéder au menu commission par branche
+        $this->pView           =    $this->services->checkPermission($this->permission[1]); //Voir sa commission par branche
+        $this->pAllView        =    $this->services->checkPermission($this->permission[2]); //Voir toutes commissions par branche
+        $this->pSeller         =    $this->services->checkPermission($this->permission[3]); //Revendeur
 
-        $this->placeAvatar	   = "public/app/uploads/avatars/"; //profile image file path
+
+        $this->placeAvatar	   =    "public/app/uploads/avatars/"; //profile image file path
 
     }
     
@@ -54,12 +54,23 @@ class CommissionController extends AbstractController
             return $this->redirectToRoute("app_home");
         }
 
+        list($typeUser,$Id) =   $this->services->checkThisUser($this->pAllView);
+
+        $users              =   [];
+
+        if ($this->pView) {
+            
+            $users   =   $this->services->getUserByPermission($this->pSeller,$typeUser,$Id,1);
+        }
+
+        dd($users);
         return $this->render('commission/index.html.twig', [
             'title'           => $this->intl->trans('Commissions').' - '. $this->brand->get()['name'],
             'pageTitle'       => [
                 [$this->intl->trans('Commissions')] 
             ],
             'brand'       => $this->brand->get(),
+            'users'       => $users,
             'baseUrl'     => $this->baseUrl->init(),
             'pAccess'     => $this->pAccess,
         ]);
@@ -75,15 +86,50 @@ class CommissionController extends AbstractController
         $data           =   [];
         $tabBrand       =   [];
 
+        list($typeUser,$Id) =   $this->services->checkThisUser($this->pAllView);
+
+        switch ($request->request->get('_uid')) {
+            case 'all':
+                if ($typeUser == 0) {
+                    $brands   =    $this->em->getRepository(Brand::class)->findAll();
+                }
+                else
+                {
+                    $users   =   $this->services->getUserByPermission($this->pSeller,$typeUser,$Id,1);
+                
+                    foreach ($users as $key => $user) {
+                        foreach ($user->getBrands() as $key => $brand) {
+
+                            $tabBrand[$key][0]      =   $brand->getName();
+                            $tabBrand[$key][1]      =   $brand->getCommission();
+                            $tabBrand[$key][2][0]   =   $brand->getStatus()->getCode();
+                            $tabBrand[$key][2][1]   =   $brand->getStatus()->getName();
+                            $tabBrand[$key][2][2]   =   $brand->getStatus()->getDescription();
+                            $tabBrand[$key][3]      =   $brand->getCreatedAt()->format("c");
+                            $tabBrand[$key][4]      =   $brand->getUpdatedAt()?$brand->getUpdatedAt()->format("c"):$this->intl->trans('Pas de modification');
+                
+                        }
+                    }
+                    $data   =[
+                                "data"              =>   $tabBrand,
+                            ];
+                    return new JsonResponse($data);
+                }
+                break;
+            case '':
+                    $brands   = [];
+                    break;
+            
+            default:
+                    $brands   =    $this->em->getRepository(Brand::class)->findByManager($this->getUser());
+
+                break;
+        }
+
         if (!$this->pView) {
-
-            $brands   =    $this->em->getRepository(Brand::class)->findByStatus($this->services->status(3));
-
+            $brands   =    [];
         }
-        else
-        {
-            $brands   =    $this->em->getRepository(Brand::class)->findByStatus($this->services->status(3));
-        }
+
         
         foreach ($brands as $key => $brand) {
 

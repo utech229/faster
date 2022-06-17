@@ -137,14 +137,16 @@ class UserController extends AbstractController
             $currentUser   = $this->getUser(); //connected user
             //user data setting
             $user->setBalance(0);
+            $user->setApikey($this->services->idgenerate(32));
             $user->setCreatedAt(new \DatetimeImmutable());
             $user->setPassword($userPasswordHasher->hashPassword($user, strtoupper($this->services->idgenerate(8))));
             $user->setRoles(['ROLE_'.$form->get('role')->getData()->getName()]);
             $user->setCountry($countryDatas);
+            $user->setCountry($countryDatas);
             $user->setUid(time().uniqid());
             $user->setProfilePhoto($avatarProcess);
             $this->userRepository->add($user);
-            $setDefaultSetting = $this->AddEntity->defaultUsetting($user,$form->get('firstname')->getData()->getName(), $form->get('lastname')->getData()->getName());
+            $setDefaultSetting = $this->addEntity->defaultUsetting($user,$form->get('firstname')->getData(), $form->get('lastname')->getData());
             return $this->services->msg_success(
                 $this->intl->trans("Création d'un nouvel utilisateur"),
                 $this->intl->trans("Utilisateur ajouté avec succès")
@@ -209,7 +211,7 @@ class UserController extends AbstractController
         $role                = $user->getRole();
         $brand               =  $user->getBrand();
         $route               =  $user->getRouter();
-        $sender              =  $user->getDefaultSender();
+        $sender              =  $brand->getDefaultSender();
 
 
         $row['orderId']      = $user->getUid();
@@ -222,8 +224,8 @@ class UserController extends AbstractController
         $row['photo']        = $user->getProfilePhoto();
         $row['phone']        = $user->getPhone();
         $row['apikey']       = $user->getApikey();
-        $row['isPostPay']    = (string)$user->IsPostPay();
-        $row['isDlr']        = (string)$user->getIsDlr();
+        $row['isPostPay']    = $user->IsPostPay() ? '1' : '0';
+        $row['isDlr']        = $user->getIsDlr() ? '1' : '0';
         $row['language']     = $usetting->getLanguage()['code'];
         $row['currency']     = $usetting->getCurrency()['code'];
         $row['timezone']     = $usetting->getTimezone();
@@ -247,7 +249,7 @@ class UserController extends AbstractController
             return $this->services->invalid_token_ajax_list($this->intl->trans('Récupération de la liste des utilisateurs : token invalide'));
 
         $data = [];
-        $users = (!$this->pView) ? [] : $this->getUsersByRoles();
+        $users = (!$this->pAccess) ? [] : $this->getUsersByRoles();
         foreach ($users  as $user) 
 		{          
             $row                 = array();
@@ -282,6 +284,12 @@ class UserController extends AbstractController
         if (!$this->isCsrfTokenValid($this->getUser()->getUid(), $request->request->get('_token'))) 
             return $this->services->ajax_ressources_no_access($this->intl->trans("Suppression d'un utilisateur").': '.$user->getEmail());
 
+        if ($user->getId() == 1 or $user->getBrand()->getManager() ==  $user) 
+        return $this->services->msg_warning(
+            $this->intl->trans("Suppression de l'utilisateur ").$user->getEmail(),
+            $this->intl->trans("Vous ne pouvez pas supprimer cet utilisateur car il s'agit de l'administrateur de la marque active"),
+        );
+
         $user->setStatus(4);
         $this->userRepository->add($user);
         return $this->services->msg_success(
@@ -292,33 +300,10 @@ class UserController extends AbstractController
 
     public function getUsersByRoles() 
     {
-        $cuser     = $this->getUser();
-        $userRole  = $cuser->getRole();
-        $roleName = $userRole->getName();
-        switch ($roleName) {
-            case 'USER' :
-                $data = [];
-                break;
-            case 'AFFILIATE_USER':
-                $data = [];
-                break;
-            case 'AFFILIATE_RESELLER':
-                $data = $this->userRepository->findUserByCountryCode($cuser->getCountry()['code']);
-                break;
-            case 'RESELLER' :
-                $data = $this->userRepository->findUserByCountryCode($cuser->getCountry()['code']);
-                break;
-            case 'ADMINISTRATOR' :
-                $data = $this->userRepository->findAll();
-                break;
-            case 'SUPER_ADMINISTRATOR' :
-                $data = $this->userRepository->findAll();
-                break;
-            default:
-                $data = [];
-                break;
-        }
-        return $data;
+        /*list($userType, $masterId, $userRequest) = $this->services->checkThisUser($this->pView);
+        $users = $this->em->getRepository(User::class)->getUsersByPermission("", $userType, $masterId, 1);*/
+        $users = $this->em->getRepository(User::class)->findAll();
+        return $users;
     }
 
     public function statisticsData()

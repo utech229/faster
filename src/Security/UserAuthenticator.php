@@ -54,35 +54,38 @@ class UserAuthenticator extends AbstractLoginFormAuthenticator
     {
         $email = $request->request->get('email', '');
         //verification for compte by status
-        $user = $this->userRepository->findOneByEmail($email);// find a user based on an "email" form field
+        $user = $this->userRepository->findOneBy(['brand' => $this->brand->get()['brand'], 'email' => $email]);// find a user based on an "email" form field
         if (!$user) {
             throw new CustomUserMessageAuthenticationException($this->intl->trans("Vos informations de connexion sont 
             inexistantes, veuillez vérifier et réessayer"));
-        }
-        elseif ($user->getStatus()->getCode() == 7)  // Sinon si l'utilisateur est supprimé
-        {
-            throw new CustomUserMessageAuthenticationException($this->intl->trans('Vos identifiants ont été banis du système, 
-            vous devez créer un nouveau compte avec de nouvel identifiant'));
-        }
-        elseif ($user->getStatus()->getCode() == 5 )  // Sinon si l'utilisateur est suspendu
-        {
-            throw new CustomUserMessageAuthenticationException($this->intl->trans('Oups ! Votre compte est suspendu pour le moment. 
-            Veuillez contacter l\'administrateur du système.'));
-        }
-        elseif ($user->getStatus()->getCode() == 4 )  // Sinon si l'utilisateur existe et que son statut est 2, retourne une exception
-        {
-            throw new CustomUserMessageAuthenticationException($this->intl->trans('Oups ! Vous avez désactivé votre compte,
-             veuillez lancer le processus de réactivation du compte'));
-        }
-        elseif ($user->getStatus()->getCode() == 0 ) 
-        {
-            throw new CustomUserMessageAuthenticationException($this->intl->trans('Veuillez vérifier votre boite email ').$email.$this->intl->trans(' pour activer votre le mail de confirmation. Merci'));
+        }else {
+            switch ($user->getStatus()->getCode()) {
+                case 7:
+                    throw new CustomUserMessageAuthenticationException($this->intl->trans('Vos identifiants ont été banis du système, 
+                    vous devez créer un nouveau compte avec de nouvel identifiant'));
+                    break;
+                case 5:
+                    throw new CustomUserMessageAuthenticationException($this->intl->trans('Oups ! Votre compte est suspendu pour le moment. 
+                    Veuillez contacter l\'administrateur du système.'));
+                    break;
+                case 4:
+                    throw new CustomUserMessageAuthenticationException($this->intl->trans('Oups ! Vous avez désactivé votre compte,
+                    veuillez lancer le processus de réactivation du compte'));
+                    break;
+                case 0:
+                    throw new CustomUserMessageAuthenticationException($this->intl->trans('Oups ! Vous avez désactivé votre compte,
+                    veuillez lancer le processus de réactivation du compte'));
+                    break;
+                
+                default:
+                    break;
+            }
         }
 
-        $request->getSession()->set(Security::LAST_USERNAME, $email);
+        $request->getSession()->set(Security::LAST_USERNAME, $user->getUid());
 
         return new Passport(
-            new UserBadge($email),
+            new UserBadge($user->getUid()),
             new PasswordCredentials($request->request->get('password', '')),
             [
                 new CsrfTokenBadge('authenticate', $request->request->get('_csrf_token')),

@@ -133,10 +133,11 @@ var KTUsersAddUser = function() {
                                         
                                     })
                                     if (response.type === 'success') {
-                                        t.isConfirmed && e.reset();
+                                        t.isConfirmed, $(e).reset();
                                         tableReloadButton.click();
                                         (isUserUpdating == true) ? n.hide() : null;
                                         statisticsReload();
+                                        $('#user_is_dlr').val('0').trigger('change'), $('#user_post_pay').val('0').trigger('change');
                                     }
                                 },
                                 error: function (response) {
