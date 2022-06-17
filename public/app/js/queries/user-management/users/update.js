@@ -3,7 +3,10 @@ var mdHTMLTitle      = $("#kt_modal_add_user_title")
 const userUidInput   = $('#user_uid');
 const avatarPath     = window.location.origin+'/app/uploads/avatars/';
 
-
+$('#modalbrand').select2({
+    templateSelection: select2Format1,
+    templateResult: select2Format1
+});
 $(document).on('entityUpBegin', function(e, identifier, id, icon) {
     $(identifier + id).removeClass("fa");
 	$(identifier + id).removeClass("fa");

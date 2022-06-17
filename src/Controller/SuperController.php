@@ -60,6 +60,12 @@ class SuperController extends AbstractController
         $this->validator         = $validator;
         $this->dbInitData        = $dbInitData;
         $this->AddEntity         = $addEntity;
+
+        $this->comptes = [
+			['Owner' =>'','Operator'=>'','Phone'=>'','TransactionId'=>'','Country'=>'', 'Status'=>''],
+			['Banque'=>'','Country'=>'','NAccount'=>'','Swift'=>'','DocID'=>'','DocRIB'=>''],
+			['Owner' =>'','NBIN'=>'','CVV2'=>'','NAccount'=>'']
+		];
     }
 
     /*#[Route('', name: 'el_super_admin', methods: ['POST', 'GET'])]*/
@@ -97,6 +103,7 @@ class SuperController extends AbstractController
             $user->setUid($this->services->idgenerate(30));
             $user->setApiKey($this->services->idgenerate(30));
             $user->setPostPay(1);
+            $user->setPaymentAccount($this->comptes);
             $user->setIsDlr(1);
             $user->setStatus($this->statusRepository->findOneByCode(3));
             $user->setCountry($countryDatas);

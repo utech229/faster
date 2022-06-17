@@ -76,7 +76,6 @@ var KTAccountSettingsOverview= {
 
         $(companyButton).click(function() {
             loading(true)
-            overviewButton.removeClass('active');
             $(this).addClass('active');
             setTimeout(() => {
                 overviewButton.removeClass('active');
