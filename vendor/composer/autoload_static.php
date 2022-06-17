@@ -4,34 +4,34 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit327b9fe4054104934313bc7a690a5f49
+class ComposerStaticInita747b675ce0726c12a7b51416be97bc7
 {
     public static $files = array (
+        '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
+        '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
         'e8aa6e4b5a1db2f56ae794f1505391a8' => __DIR__ . '/..' . '/amphp/amp/lib/functions.php',
         '76cd0796156622033397994f25b0d8fc' => __DIR__ . '/..' . '/amphp/amp/lib/Internal/functions.php',
+        '667aeda72477189d0494fecd327c3641' => __DIR__ . '/..' . '/symfony/var-dumper/Resources/functions/dump.php',
+        'e69f7f6ee287b969198c3c9d6777bd38' => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer/bootstrap.php',
         '6cd5651c4fef5ed6b63e8d8b8ffbf3cc' => __DIR__ . '/..' . '/amphp/byte-stream/lib/functions.php',
-        '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
+        '8825ede83f2f289127722d4e842cf7e8' => __DIR__ . '/..' . '/symfony/polyfill-intl-grapheme/bootstrap.php',
+        'b6b991a57620e2fb6b2f66f03fe9ddc2' => __DIR__ . '/..' . '/symfony/string/Resources/functions.php',
+        'f598d06aa772fa33d905e87be6398fb1' => __DIR__ . '/..' . '/symfony/polyfill-intl-idn/bootstrap.php',
         'bcb7d4fc55f4b1a7e10f5806723e9892' => __DIR__ . '/..' . '/amphp/sync/src/functions.php',
         'e187e371b30897d6dc51cac6a8c94ff6' => __DIR__ . '/..' . '/amphp/sync/src/ConcurrentIterator/functions.php',
         '8dc56fe697ca93c4b40d876df1c94584' => __DIR__ . '/..' . '/amphp/process/lib/functions.php',
         '3da389f428d8ee50333e4391c3f45046' => __DIR__ . '/..' . '/amphp/serialization/src/functions.php',
+        'c2aad8997a98dfc4771bdbffea3d62b7' => __DIR__ . '/..' . '/laminas/laminas-code/polyfill/ReflectionEnumPolyfill.php',
         '445532134d762b3cbc25500cac266092' => __DIR__ . '/..' . '/daverandom/libdns/src/functions.php',
         '7ebf029ad4b246f1e3f66192b40a932f' => __DIR__ . '/..' . '/amphp/dns/lib/functions.php',
         'e1e8b49c332434256b5df11b0f0c2a62' => __DIR__ . '/..' . '/league/uri-parser/src/functions_include.php',
+        '3d8ee50db78074a9235f0c2008c26b42' => __DIR__ . '/..' . '/amphp/http/src/functions.php',
         'd4e415514e4352172d58f02433fa50e4' => __DIR__ . '/..' . '/amphp/socket/src/functions.php',
         '1c2dcb9d6851a7abaae89f9586ddd460' => __DIR__ . '/..' . '/amphp/socket/src/Internal/functions.php',
-        'e69f7f6ee287b969198c3c9d6777bd38' => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer/bootstrap.php',
-        '3d8ee50db78074a9235f0c2008c26b42' => __DIR__ . '/..' . '/amphp/http/src/functions.php',
-        '77e5a577434e31d19d8dd6aeceac1ff4' => __DIR__ . '/..' . '/amphp/http-client/src/Internal/functions.php',
-        '8825ede83f2f289127722d4e842cf7e8' => __DIR__ . '/..' . '/symfony/polyfill-intl-grapheme/bootstrap.php',
-        'b6b991a57620e2fb6b2f66f03fe9ddc2' => __DIR__ . '/..' . '/symfony/string/Resources/functions.php',
-        '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
-        '667aeda72477189d0494fecd327c3641' => __DIR__ . '/..' . '/symfony/var-dumper/Resources/functions/dump.php',
-        'f598d06aa772fa33d905e87be6398fb1' => __DIR__ . '/..' . '/symfony/polyfill-intl-idn/bootstrap.php',
-        '6a47392539ca2329373e0d33e1dba053' => __DIR__ . '/..' . '/symfony/polyfill-intl-icu/bootstrap.php',
-        'a1105708a18b76903365ca1c4aa61b02' => __DIR__ . '/..' . '/symfony/translation/Resources/functions.php',
-        'c2aad8997a98dfc4771bdbffea3d62b7' => __DIR__ . '/..' . '/laminas/laminas-code/polyfill/ReflectionEnumPolyfill.php',
         '2cffec82183ee1cea088009cef9a6fc3' => __DIR__ . '/..' . '/ezyang/htmlpurifier/library/HTMLPurifier.composer.php',
+        '6a47392539ca2329373e0d33e1dba053' => __DIR__ . '/..' . '/symfony/polyfill-intl-icu/bootstrap.php',
+        '77e5a577434e31d19d8dd6aeceac1ff4' => __DIR__ . '/..' . '/amphp/http-client/src/Internal/functions.php',
+        'a1105708a18b76903365ca1c4aa61b02' => __DIR__ . '/..' . '/symfony/translation/Resources/functions.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -162,6 +162,10 @@ class ComposerStaticInit327b9fe4054104934313bc7a690a5f49
         array (
             'Giggsey\\Locale\\' => 15,
         ),
+        'F' => 
+        array (
+            'FedaPay\\' => 8,
+        ),
         'E' => 
         array (
             'Egulias\\EmailValidator\\' => 23,
@@ -215,8 +219,8 @@ class ComposerStaticInit327b9fe4054104934313bc7a690a5f49
         'phpDocumentor\\Reflection\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpdocumentor/reflection-common/src',
-            1 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
-            2 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
+            1 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
+            2 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
         ),
         'libphonenumber\\' => 
         array (
@@ -524,8 +528,8 @@ class ComposerStaticInit327b9fe4054104934313bc7a690a5f49
         ),
         'Psr\\Http\\Message\\' => 
         array (
-            0 => __DIR__ . '/..' . '/psr/http-message/src',
-            1 => __DIR__ . '/..' . '/psr/http-factory/src',
+            0 => __DIR__ . '/..' . '/psr/http-factory/src',
+            1 => __DIR__ . '/..' . '/psr/http-message/src',
         ),
         'Psr\\Http\\Client\\' => 
         array (
@@ -577,8 +581,8 @@ class ComposerStaticInit327b9fe4054104934313bc7a690a5f49
         ),
         'League\\Uri\\' => 
         array (
-            0 => __DIR__ . '/..' . '/league/uri-interfaces/src',
-            1 => __DIR__ . '/..' . '/league/uri/src',
+            0 => __DIR__ . '/..' . '/league/uri/src',
+            1 => __DIR__ . '/..' . '/league/uri-interfaces/src',
             2 => __DIR__ . '/..' . '/league/uri-parser/src',
         ),
         'Laminas\\Code\\' => 
@@ -592,6 +596,10 @@ class ComposerStaticInit327b9fe4054104934313bc7a690a5f49
         'Giggsey\\Locale\\' => 
         array (
             0 => __DIR__ . '/..' . '/giggsey/locale/src',
+        ),
+        'FedaPay\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/fedapay/fedapay-php/lib',
         ),
         'Egulias\\EmailValidator\\' => 
         array (
@@ -647,8 +655,8 @@ class ComposerStaticInit327b9fe4054104934313bc7a690a5f49
         ),
         'Doctrine\\Common\\' => 
         array (
-            0 => __DIR__ . '/..' . '/doctrine/event-manager/lib/Doctrine/Common',
-            1 => __DIR__ . '/..' . '/doctrine/common/lib/Doctrine/Common',
+            0 => __DIR__ . '/..' . '/doctrine/common/lib/Doctrine/Common',
+            1 => __DIR__ . '/..' . '/doctrine/event-manager/lib/Doctrine/Common',
         ),
         'Doctrine\\Bundle\\MigrationsBundle\\' => 
         array (
@@ -971,13 +979,19 @@ class ComposerStaticInit327b9fe4054104934313bc7a690a5f49
         'Amp\\WindowsRegistry\\KeyNotFoundException' => __DIR__ . '/..' . '/amphp/windows-registry/lib/KeyNotFoundException.php',
         'Amp\\WindowsRegistry\\WindowsRegistry' => __DIR__ . '/..' . '/amphp/windows-registry/lib/WindowsRegistry.php',
         'App\\Controller\\AffiliateController' => __DIR__ . '/../..' . '/src/Controller/AffiliateController.php',
+        'App\\Controller\\ApiController' => __DIR__ . '/../..' . '/src/Controller/ApiController.php',
+        'App\\Controller\\BrandController' => __DIR__ . '/../..' . '/src/Controller/BrandController.php',
+        'App\\Controller\\CampaignController' => __DIR__ . '/../..' . '/src/Controller/CampaignController.php',
         'App\\Controller\\CommissionController' => __DIR__ . '/../..' . '/src/Controller/CommissionController.php',
         'App\\Controller\\CompanyController' => __DIR__ . '/../..' . '/src/Controller/CompanyController.php',
-        'App\\Controller\\ContactController' => __DIR__ . '/../..' . '/src/Controller/ContactController.php',
+        'App\\Controller\\ContactGroupController' => __DIR__ . '/../..' . '/src/Controller/ContactGroupController.php',
+        'App\\Controller\\ContactGroupFieldController' => __DIR__ . '/../..' . '/src/Controller/ContactGroupFieldController.php',
         'App\\Controller\\DeveloperController' => __DIR__ . '/../..' . '/src/Controller/DeveloperController.php',
         'App\\Controller\\HomeController' => __DIR__ . '/../..' . '/src/Controller/HomeController.php',
         'App\\Controller\\InitController' => __DIR__ . '/../..' . '/src/Controller/InitController.php',
         'App\\Controller\\LogController' => __DIR__ . '/../..' . '/src/Controller/LogController.php',
+        'App\\Controller\\PaymentController' => __DIR__ . '/../..' . '/src/Controller/PaymentController.php',
+        'App\\Controller\\PaymentMethodController' => __DIR__ . '/../..' . '/src/Controller/PaymentMethodController.php',
         'App\\Controller\\PermissionController' => __DIR__ . '/../..' . '/src/Controller/PermissionController.php',
         'App\\Controller\\ProfileController' => __DIR__ . '/../..' . '/src/Controller/ProfileController.php',
         'App\\Controller\\RechargeController' => __DIR__ . '/../..' . '/src/Controller/RechargeController.php',
@@ -1000,6 +1014,7 @@ class ComposerStaticInit327b9fe4054104934313bc7a690a5f49
         'App\\Entity\\ContactIndex' => __DIR__ . '/../..' . '/src/Entity/ContactIndex.php',
         'App\\Entity\\ExtraAuthorization' => __DIR__ . '/../..' . '/src/Entity/ExtraAuthorization.php',
         'App\\Entity\\Log' => __DIR__ . '/../..' . '/src/Entity/Log.php',
+        'App\\Entity\\Payment' => __DIR__ . '/../..' . '/src/Entity/Payment.php',
         'App\\Entity\\Permission' => __DIR__ . '/../..' . '/src/Entity/Permission.php',
         'App\\Entity\\Recharge' => __DIR__ . '/../..' . '/src/Entity/Recharge.php',
         'App\\Entity\\ResellerRequest' => __DIR__ . '/../..' . '/src/Entity/ResellerRequest.php',
@@ -1019,6 +1034,7 @@ class ComposerStaticInit327b9fe4054104934313bc7a690a5f49
         'App\\Form\\ContactGroupFieldType' => __DIR__ . '/../..' . '/src/Form/ContactGroupFieldType.php',
         'App\\Form\\ContactGroupType' => __DIR__ . '/../..' . '/src/Form/ContactGroupType.php',
         'App\\Form\\PasswordFormType' => __DIR__ . '/../..' . '/src/Form/PasswordFormType.php',
+        'App\\Form\\PaymentType' => __DIR__ . '/../..' . '/src/Form/PaymentType.php',
         'App\\Form\\PermissionType' => __DIR__ . '/../..' . '/src/Form/PermissionType.php',
         'App\\Form\\RegistrationFormType' => __DIR__ . '/../..' . '/src/Form/RegistrationFormType.php',
         'App\\Form\\RoleType' => __DIR__ . '/../..' . '/src/Form/RoleType.php',
@@ -1036,6 +1052,7 @@ class ComposerStaticInit327b9fe4054104934313bc7a690a5f49
         'App\\Repository\\ContactIndexRepository' => __DIR__ . '/../..' . '/src/Repository/ContactIndexRepository.php',
         'App\\Repository\\ExtraAuthorizationRepository' => __DIR__ . '/../..' . '/src/Repository/ExtraAuthorizationRepository.php',
         'App\\Repository\\LogRepository' => __DIR__ . '/../..' . '/src/Repository/LogRepository.php',
+        'App\\Repository\\PaymentRepository' => __DIR__ . '/../..' . '/src/Repository/PaymentRepository.php',
         'App\\Repository\\PermissionRepository' => __DIR__ . '/../..' . '/src/Repository/PermissionRepository.php',
         'App\\Repository\\RechargeRepository' => __DIR__ . '/../..' . '/src/Repository/RechargeRepository.php',
         'App\\Repository\\ResellerRequestRepository' => __DIR__ . '/../..' . '/src/Repository/ResellerRequestRepository.php',
@@ -1052,12 +1069,16 @@ class ComposerStaticInit327b9fe4054104934313bc7a690a5f49
         'App\\Repository\\UsettingRepository' => __DIR__ . '/../..' . '/src/Repository/UsettingRepository.php',
         'App\\Security\\EmailVerifier' => __DIR__ . '/../..' . '/src/Security/EmailVerifier.php',
         'App\\Security\\UserAuthenticator' => __DIR__ . '/../..' . '/src/Security/UserAuthenticator.php',
+        'App\\Service\\APIResponse' => __DIR__ . '/../..' . '/src/Service/APIResponse.php',
         'App\\Service\\AddEntity' => __DIR__ . '/../..' . '/src/Service/AddEntity.php',
         'App\\Service\\BaseUrl' => __DIR__ . '/../..' . '/src/Service/BaseUrl.php',
         'App\\Service\\BrickPhone' => __DIR__ . '/../..' . '/src/Service/BrickPhone.php',
         'App\\Service\\DbInitData' => __DIR__ . '/../..' . '/src/Service/DbInitData.php',
+        'App\\Service\\Message' => __DIR__ . '/../..' . '/src/Service/Message.php',
         'App\\Service\\Services' => __DIR__ . '/../..' . '/src/Service/Services.php',
+        'App\\Service\\sAgregatorRouter' => __DIR__ . '/../..' . '/src/Service/sAgregatorRouter.php',
         'App\\Service\\sBrand' => __DIR__ . '/../..' . '/src/Service/sBrand.php',
+        'App\\Service\\sFedapay' => __DIR__ . '/../..' . '/src/Service/sFedapay.php',
         'App\\Service\\uBrand' => __DIR__ . '/../..' . '/src/Service/uBrand.php',
         'App\\Twig\\AppExtension' => __DIR__ . '/../..' . '/src/Twig/AppExtension.php',
         'Brick\\PhoneNumber\\PhoneNumber' => __DIR__ . '/..' . '/brick/phonenumber/src/PhoneNumber.php',
@@ -2268,6 +2289,41 @@ class ComposerStaticInit327b9fe4054104934313bc7a690a5f49
         'Egulias\\EmailValidator\\Warning\\QuotedString' => __DIR__ . '/..' . '/egulias/email-validator/src/Warning/QuotedString.php',
         'Egulias\\EmailValidator\\Warning\\TLD' => __DIR__ . '/..' . '/egulias/email-validator/src/Warning/TLD.php',
         'Egulias\\EmailValidator\\Warning\\Warning' => __DIR__ . '/..' . '/egulias/email-validator/src/Warning/Warning.php',
+        'FedaPay\\Account' => __DIR__ . '/..' . '/fedapay/fedapay-php/lib/Account.php',
+        'FedaPay\\ApiKey' => __DIR__ . '/..' . '/fedapay/fedapay-php/lib/ApiKey.php',
+        'FedaPay\\ApiOperations\\All' => __DIR__ . '/..' . '/fedapay/fedapay-php/lib/ApiOperations/All.php',
+        'FedaPay\\ApiOperations\\Create' => __DIR__ . '/..' . '/fedapay/fedapay-php/lib/ApiOperations/Create.php',
+        'FedaPay\\ApiOperations\\Delete' => __DIR__ . '/..' . '/fedapay/fedapay-php/lib/ApiOperations/Delete.php',
+        'FedaPay\\ApiOperations\\Request' => __DIR__ . '/..' . '/fedapay/fedapay-php/lib/ApiOperations/Request.php',
+        'FedaPay\\ApiOperations\\Retrieve' => __DIR__ . '/..' . '/fedapay/fedapay-php/lib/ApiOperations/Retrieve.php',
+        'FedaPay\\ApiOperations\\Save' => __DIR__ . '/..' . '/fedapay/fedapay-php/lib/ApiOperations/Save.php',
+        'FedaPay\\ApiOperations\\Search' => __DIR__ . '/..' . '/fedapay/fedapay-php/lib/ApiOperations/Search.php',
+        'FedaPay\\ApiOperations\\Update' => __DIR__ . '/..' . '/fedapay/fedapay-php/lib/ApiOperations/Update.php',
+        'FedaPay\\Balance' => __DIR__ . '/..' . '/fedapay/fedapay-php/lib/Balance.php',
+        'FedaPay\\Currency' => __DIR__ . '/..' . '/fedapay/fedapay-php/lib/Currency.php',
+        'FedaPay\\Customer' => __DIR__ . '/..' . '/fedapay/fedapay-php/lib/Customer.php',
+        'FedaPay\\Error\\ApiConnection' => __DIR__ . '/..' . '/fedapay/fedapay-php/lib/Error/ApiConnection.php',
+        'FedaPay\\Error\\Base' => __DIR__ . '/..' . '/fedapay/fedapay-php/lib/Error/Base.php',
+        'FedaPay\\Error\\InvalidRequest' => __DIR__ . '/..' . '/fedapay/fedapay-php/lib/Error/InvalidRequest.php',
+        'FedaPay\\Error\\SignatureVerification' => __DIR__ . '/..' . '/fedapay/fedapay-php/lib/Error/SignatureVerification.php',
+        'FedaPay\\Event' => __DIR__ . '/..' . '/fedapay/fedapay-php/lib/Event.php',
+        'FedaPay\\FedaPay' => __DIR__ . '/..' . '/fedapay/fedapay-php/lib/FedaPay.php',
+        'FedaPay\\FedaPayObject' => __DIR__ . '/..' . '/fedapay/fedapay-php/lib/FedaPayObject.php',
+        'FedaPay\\HttpClient\\ClientInterface' => __DIR__ . '/..' . '/fedapay/fedapay-php/lib/HttpClient/ClientInterface.php',
+        'FedaPay\\HttpClient\\CurlClient' => __DIR__ . '/..' . '/fedapay/fedapay-php/lib/HttpClient/CurlClient.php',
+        'FedaPay\\Invoice' => __DIR__ . '/..' . '/fedapay/fedapay-php/lib/Invoice.php',
+        'FedaPay\\Log' => __DIR__ . '/..' . '/fedapay/fedapay-php/lib/Log.php',
+        'FedaPay\\Page' => __DIR__ . '/..' . '/fedapay/fedapay-php/lib/Page.php',
+        'FedaPay\\Payout' => __DIR__ . '/..' . '/fedapay/fedapay-php/lib/Payout.php',
+        'FedaPay\\PhoneNumber' => __DIR__ . '/..' . '/fedapay/fedapay-php/lib/PhoneNumber.php',
+        'FedaPay\\Requestor' => __DIR__ . '/..' . '/fedapay/fedapay-php/lib/Requestor.php',
+        'FedaPay\\Resource' => __DIR__ . '/..' . '/fedapay/fedapay-php/lib/Resource.php',
+        'FedaPay\\Transaction' => __DIR__ . '/..' . '/fedapay/fedapay-php/lib/Transaction.php',
+        'FedaPay\\Util\\Inflector' => __DIR__ . '/..' . '/fedapay/fedapay-php/lib/Util/Inflector.php',
+        'FedaPay\\Util\\RandomGenerator' => __DIR__ . '/..' . '/fedapay/fedapay-php/lib/Util/RandomGenerator.php',
+        'FedaPay\\Util\\Util' => __DIR__ . '/..' . '/fedapay/fedapay-php/lib/Util/Util.php',
+        'FedaPay\\Webhook' => __DIR__ . '/..' . '/fedapay/fedapay-php/lib/Webhook.php',
+        'FedaPay\\WebhookSignature' => __DIR__ . '/..' . '/fedapay/fedapay-php/lib/WebhookSignature.php',
         'Giggsey\\Locale\\Locale' => __DIR__ . '/..' . '/giggsey/locale/src/Locale.php',
         'HTMLPurifier' => __DIR__ . '/..' . '/ezyang/htmlpurifier/library/HTMLPurifier.php',
         'HTMLPurifier_Arborize' => __DIR__ . '/..' . '/ezyang/htmlpurifier/library/HTMLPurifier/Arborize.php',
@@ -6980,16 +7036,16 @@ class ComposerStaticInit327b9fe4054104934313bc7a690a5f49
         'phpDocumentor\\Reflection\\Types\\This' => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src/Types/This.php',
         'phpDocumentor\\Reflection\\Types\\Void_' => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src/Types/Void_.php',
         'phpDocumentor\\Reflection\\Utils' => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src/Utils.php',
-        'ï¿½' => __DIR__ . '/..' . '/symfony/cache/Traits/ValueWrapper.php',
+        '©' => __DIR__ . '/..' . '/symfony/cache/Traits/ValueWrapper.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit327b9fe4054104934313bc7a690a5f49::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit327b9fe4054104934313bc7a690a5f49::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit327b9fe4054104934313bc7a690a5f49::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit327b9fe4054104934313bc7a690a5f49::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInita747b675ce0726c12a7b51416be97bc7::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInita747b675ce0726c12a7b51416be97bc7::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInita747b675ce0726c12a7b51416be97bc7::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInita747b675ce0726c12a7b51416be97bc7::$classMap;
 
         }, null, ClassLoader::class);
     }
