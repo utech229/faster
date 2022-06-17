@@ -171,7 +171,7 @@ class PaymentController extends AbstractController
         $row['uid']             = $payment->getUid();
         $row['reference']       = $payment->getReference();
         $row['transactionId']   = $payment->getTransactionId();
-        $row['user']            = [$cuser->getFirstName().' '.$cuser->getLastName(), $cuser->getEmail()];
+        $row['user']            = [$cuser->getUsetting()->getFirstName().' '.$cuser->getUsetting()->getLastname(), $cuser->getEmail()];
         $row['owner']           = $cuser->getPaymentAccount()[0]['Owner'];
         $row['operator']        = $cuser->getPaymentAccount()[0]['Operator'];
         $row['treatedby']       = ($payment->getValidator()) ? $payment->getValidator()->getEmail() : '...';
@@ -202,7 +202,7 @@ class PaymentController extends AbstractController
             $paymentCreator      = $payment->getUser();
 
             $row['orderId']      = $payment->getUid();
-            $row['user']         =  ['name'  => $paymentCreator->getFirstName().' '.$paymentCreator->getLastName(),
+            $row['user']         =  ['name'  => $paymentCreator->getUsetting()->getFirstname().' '.$paymentCreator->getUsetting()->getLastname(),
                                         'phone' => $paymentCreator->getPhone(),
                                         'photo' => $paymentCreator->getProfilePhoto()
                                     ];
