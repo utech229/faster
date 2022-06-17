@@ -58,21 +58,34 @@ class BrandRepository extends ServiceEntityRepository
                     ->setParameter('account', $params["managerby"]);
                 break;
 
-            case 2||3:
-                // si this user est un revender ou son Affilié
+            case 2:
+                // si this user est un revender
                 $query->andWhere('b.manager = :reseller')
                     ->setParameter('reseller', $params["reselby"]);
                 break;
 
-            case 4||5:
-                // si this user est un utilisateur simple ou son Affilié
+            case 3:
+                // si this user est un Affilié d'un revender
+                $query->andWhere('b.manager = :reseller')
+                    ->setParameter('reseller', $params["reselby"]);
+                break;
+
+            case 4:
+                // si this user est un utilisateur simple
+                $query->andWhere('u.brand = b')
+                    ->andWhere('u = :user')
+                    ->setParameter('user', $params["user"]);
+                break;
+
+            case 5:
+                // si this user est un Affilié d'un utilisateur simple
                 $query->andWhere('u.brand = b')
                     ->andWhere('u = :user')
                     ->setParameter('user', $params["user"]);
                 break;
             default:
                 // si type de this user n'est pas défini données vide
-                if(!isset($params["master"])) $query->andWhere('b.manager = null');
+                if(!isset($params["master"])) $query->andWhere('b.manager is null');
                 break;
         }
 

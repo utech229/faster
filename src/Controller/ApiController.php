@@ -109,6 +109,34 @@ class ApiController extends AbstractController
         ], 200);
     }
 
+    #[Route('/account/balance', name: 'api_balance')]
+    public function balance(Request $request)
+    {
+        $request = Request::createFromGlobals();
+
+        // Vérifier l'entêtemp
+        list($code, $token, $manager) = $this->checkHeader($request->headers);
+        if($code != 200) return (new APIResponse())->new(["error"=>$this->intl->trans("Erreur dans l'entête de la requête."), "status"=>$code], $code);
+
+        // Vérification de la méthode
+        $method = $request->getMethod();
+        if($method != "POST" && $method != "GET") return (new APIResponse())->new(["error"=>$this->intl->trans("Erreur sur la méthode d'evoie des données."), "status"=>405], 405);
+
+        $balance = $manager()->getBalance();
+        $notification = $manager->getSoldeNotification();
+        $minSolde = $notification ? $notification->getMinSolde() : 0;
+
+        $response = ($balance < $minSolde) ? $this->intl->trans("Votre solde est en dessous de la limite. Pensez à recharger votre compte.") : "";
+
+        if($balance < 0) $this->intl->trans("Votre solde est négatif. Veuillez recharger votre compte.");
+
+        return (new APIResponse())->new([
+            "status"=>strtoupper($manager->getStatus()->getName()),
+            "balance"=>$manager()->getBalance(),
+            "response"=>$response,
+        ], 200);
+    }
+
     public function checkHeader($headers)
     {
         // retrieves an HTTP request header, with normalized, lowercase keys

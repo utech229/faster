@@ -8,15 +8,22 @@ use JMS\Serializer\SerializerBuilder;
 
 class Message extends AbstractController
 {
-    private $page1 = 160;
-    private $page2 = 205;
-    private $page3 = 357;
+    private $maxPage1 = 160;
+    private $maxPage2 = 205;
+    private $maxPage3 = 350;
 
     public function trueLength($originMessage)
     {
         $message = $this->corrigeCarac($originMessage);
-
-        return [true, $message, strlen($message)];
+        $length = strlen($message);
+        $page = 0;
+        switch (true) {
+            case ($length <= $maxPage1): $page = 1; break;
+            case ($length <= $maxPage2): $page = 2; break;
+            case ($length <= $maxPage3): $page = 3; break;
+            default: $page = 4; break;
+        }
+        return [true, $message, $length, $page];
     }
 
     public function getAmountSMS($sms, $user, $phone)
@@ -70,6 +77,46 @@ class Message extends AbstractController
         for ($i=0; $i < strlen($originMessage); $i++) {
             switch ($originMessage[$i])
             {
+                case '(': $message += ''; break;
+                case '+': $message += ''; break;
+                case '*': $message += ''; break;
+                case '-': $message += ''; break;
+                case '_': $message += ''; break;
+                case '=': $message += ''; break;
+                case '~': $message += ''; break;
+                case '#': $message += ''; break;
+                case '{': $message += ''; break;
+                case '[': $message += ''; break;
+                case '|': $message += ''; break;
+                case '`': $message += ''; break;
+                case '\\': $message += ''; break;
+                case '^': $message += ''; break;
+                case '@': $message += ''; break;
+                case ']': $message += ''; break;
+                case '}': $message += ''; break;
+                case '$': $message += ''; break;
+                case 'ù': $message += ''; break;
+                case '*': $message += ''; break;
+                case '!': $message += ''; break;
+                case ';': $message += ''; break;
+                case '¤': $message += ''; break;
+                case '£': $message += ''; break;
+                case '¨': $message += ''; break;
+                case '%': $message += ''; break;
+                case 'µ': $message += ''; break;
+                case '^': $message += ''; break;
+                case '%': $message += ''; break;
+                case 'û': $message += ''; break;
+                case '§': $message += ''; break;
+                case '/': $message += ''; break;
+                case '?': $message += ''; break;
+                case '€': $message += ''; break;
+                case ']': $message += ''; break;
+                case '}': $message += ''; break;
+                case '"': $message += ''; break;
+                case '\'': $message += ''; break;
+                case ')': $message += ''; break;
+                case '&': $message += ''; break;
                 case 'à': $message += 'a'; break;
                 case 'à': $message += 'a'; break;
                 case 'â': $message += 'a'; break;
@@ -89,7 +136,7 @@ class Message extends AbstractController
                 default: $message += $originMessage[$i]; break;
             }
         }
-        //&('"-è_)=~#{[|`\^@]}$ù*!:;,¤£¨%µ^%µ§/.?€`]}"')
+
         return $message;
     }
 }

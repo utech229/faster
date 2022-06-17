@@ -345,12 +345,18 @@ class Services extends AbstractController
        return $this->statusRepository->findOneByCode($code);
     }
 
+	// : Les signatures de la fonction
+	// $pAllView : permission de tous voir
+	// $user = null : entité User, si null, l'utilisateur en session est automatiquement récupéré
+	// $pManager = null : (boolean) permission de gérer un compte (facultatif)
+	// $pBrand = null : (boolean) permission de créer une marque (facultatif)
+
 	// Le retour de la fonction est un tableau
 	// Retour : [$code, $id, $arrayRequest]
 	// $code : (0 : Super admin ou administrateur; 1 : Gestionnaire de compte, 2 : Revendeur; 3 : Affilié d'un Revendeur; 4 : Utilisateur simple; 5 : Affilié à un utilisateur simple)
 	// $id : Si $code == 3 ou 5 => id de son administrateur ; Si $code == 1 ou 2 ou 4 => son propre id ; Si $code == 0 => 0 (car aucun utilisateur n'aura en paramètre l'id de l'administrateur)
 	// $arrayRequest : est un tableau formant une partie de requête.
-	public function checkThisUser($pAllView, $pManager = null, $pBrand = null, $user = null)
+	public function checkThisUser($pAllView, $user = null, $pManager = null, $pBrand = null)
 	{
 		$session = $user ? $user : $this->getUser();
 		if($pManager === null) $pManager = $this->checkPermission("MANGR", $session);
