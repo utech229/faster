@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Brand;
 use App\Entity\Status;
+use App\Entity\User;
 use App\Service\uBrand;
 use App\Service\BaseUrl;
 use App\Service\Services;
@@ -119,7 +120,7 @@ class CommissionController extends AbstractController
                     break;
             
             default:
-                    $brands   =    $this->em->getRepository(Brand::class)->findByManager($this->getUser());
+                    $brands   =    $this->em->getRepository(Brand::class)->findByManager($this->em->getRepository(User::class)->findByUid($request->request->get('_uid')));
 
                 break;
         }

@@ -527,7 +527,7 @@ var KTTransactionsList = function() {
                                 var status = {
                                                 '2' : { 'class': 'warning' },
                                                 '6' : { 'class': 'success' },
-                                                '7' : { 'class': 'primary' },
+                                                '7' : { 'class': 'danger' },
                                             };
                                             if (typeof status[data[0]] === 'undefined') {
                                                 return data[1];
@@ -581,13 +581,14 @@ var KTTransactionsList = function() {
                         {
                             sum_amount_all  += item['_aData'][4]
                             sum_tr_all      +=  1
-                
-                            if (item['_aData'][6][0] = 6) {
+                            
+                            alert(item['_aData'][6][0]);
+                            if (item['_aData'][6][0] == 6) {
                                 sum_amount_validated += item['_aData'][4];
                                 sum_tr_validated      +=  1
                 
                             }
-                            else if(item['_aData'][6][0] = 2){
+                            else if(item['_aData'][6][0] == 2){
                                 sum_amount_pending += item['_aData'][4];
                                 sum_tr_pending      +=  1
                                 
@@ -648,12 +649,12 @@ function UpdateStat(e) {
             sum_amount_all  += item['_aData'][4]
             sum_tr_all      +=  1
 
-            if (item['_aData'][6][0] = 6) {
+            if (item['_aData'][6][0] == 6) {
                 sum_amount_validated += item['_aData'][4];
                 sum_tr_validated      +=  1
 
             }
-            else if(item['_aData'][6][0] = 2){
+            else if(item['_aData'][6][0] == 2){
                 sum_amount_pending += item['_aData'][4];
                 sum_tr_pending      +=  1
                 
