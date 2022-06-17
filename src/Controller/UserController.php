@@ -146,7 +146,7 @@ class UserController extends AbstractController
             $user->setUid(time().uniqid());
             $user->setProfilePhoto($avatarProcess);
             $this->userRepository->add($user);
-            //$setDefaultSetting = $this->AddEntity->defaultUsetting($user,$form->get('firstname')->getData()->getName(), $form->get('lastname')->getData()->getName());
+            $setDefaultSetting = $this->addEntity->defaultUsetting($user,$form->get('firstname')->getData(), $form->get('lastname')->getData());
             return $this->services->msg_success(
                 $this->intl->trans("Création d'un nouvel utilisateur"),
                 $this->intl->trans("Utilisateur ajouté avec succès")
@@ -300,8 +300,9 @@ class UserController extends AbstractController
 
     public function getUsersByRoles() 
     {
-        list($userType, $masterId, $userRequest) = $this->services->checkThisUser($this->pView);
-        $users = $this->em->getRepository(User::class)->getUsersByPermission("", $userType, $masterId, 1);
+        /*list($userType, $masterId, $userRequest) = $this->services->checkThisUser($this->pView);
+        $users = $this->em->getRepository(User::class)->getUsersByPermission("", $userType, $masterId, 1);*/
+        $users = $this->em->getRepository(User::class)->findAll();
         return $users;
     }
 

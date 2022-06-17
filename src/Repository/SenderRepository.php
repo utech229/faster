@@ -95,7 +95,7 @@ class SenderRepository extends ServiceEntityRepository
                 break;
             default:
                 // si type de this user n'est pas défini données vide
-                if(!isset($params["master"])) $query->andWhere('s.manager = null');
+                if(!isset($params["master"])) $query->andWhere('s.manager is null');
                 break;
         }
 

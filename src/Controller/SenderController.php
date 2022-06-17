@@ -140,21 +140,7 @@ class SenderController extends AbstractController
         $request_sender = [];
 
         $user_manage = ($request->request->get('manager') !== "") ? $this->em->getRepository(User::class)->findOneByUid($request->request->get('manager')) : null;
-        if ($request->request->get('manager', null) && !$user_manage) return $this->src->msg_error(
-            $this->intl->trans("Utilisateur inconnu : uid=".$request->request->get('manager')),
-            $this->intl->trans("Utilisateur inconnu"),
-            [
-                "table"=>[],
-                "permission"=>[
-                    'pAccess'   => $this->pAccess,
-                    'pCreate'   => $this->pCreate,
-                    'pList'     => $this->pList,
-                    'pEdit'     => $this->pEdit,
-                    'pDelete'   => $this->pDelete,
-                    'pStatus'   => $this->pStatus,
-                ]
-            ]
-        );
+        if($user_manage) $request_sender["manager"] = $user_manage->getId();
 
         $brand = ($request->request->get('brand') !== "") ? $this->em->getRepository(Brand::class)->findOneByUid($request->request->get('brand')) : null;
         if($brand) $request_sender["brand"] = $brand->getId();

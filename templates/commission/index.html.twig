@@ -209,7 +209,7 @@
                             </span>
                             <!--end::Svg Icon-->
                         </div>
-                            <input type="text" data-kt-transaction-table-filter="search" class="form-control form-control-solid w-250px ps-14" placeholder="{{'Rechercher'| trans}}" />
+                            <input type="text" data-kt-commission-table-filter="search" class="form-control form-control-solid w-250px ps-14" placeholder="{{'Rechercher'| trans}}" />
                         <!--end::Search-->
                     </div>
                     <!--begin::Card title-->
@@ -267,13 +267,23 @@
                             </div> #}
                             <!--end::Menu 1-->
                             <!--end::Filter-->
-                            <div class="mb-10">
-                                        <label class="form-label fs-6 fw-bold">{% trans %}Utilisateur{% endtrans %}</label>
-                                        <select  data-allow-clear="true" data-control="select2" data-kt-transaction-table-filter="Statut"
-                                            class="form-select form-select-solid fw-bolder" data-placeholder="{{'Selectionnez un utilisateur'| trans}}"/>
-                                                <option value="status.name" >status.name</option>
-                                        </select>
-                            </div>
+                            {% if users|length > 1 %}
+                                <div class="mb-10">
+                                            <label class="form-label fs-6 fw-bold">{% trans %}Utilisateur{% endtrans %}</label>
+                                            <select  data-allow-clear="true" data-control="select2" data-kt-commission-table-filter="user"
+                                                class="form-select form-select-solid fw-bolder" data-placeholder="{{'Selectionnez un utilisateur'| trans}}"/>
+                                                    <option value="">Sélectionnez un utilisateur</option>
+                                                    <option value="all">Tous</option>
+                                                    {% for user in users %}
+                                                    <option value="{{ user.uid }}" >{{ user.email }}</option>
+                                                    {% endfor %}
+                                            </select>
+                                </div>
+                            {% elseif users|length == 1 %}
+                                <input type="hidden" value="{{ users[0].uid }}" data-kt-commission-table-filter="user" class="form-control form-control-solid w-250px ps-14" />
+                            {% else %}
+                                <input type="hidden" value="{{ app.user.uid }}" data-kt-commission-table-filter="user" class="form-control form-control-solid w-250px ps-14" />
+                            {% endif %}
                         </div>
                         <!--end::Toolbar-->
                         <!--begin::Group actions-->
