@@ -132,7 +132,7 @@ class SuperController extends AbstractController
             $brand->setDefaultSender($sender);
             $this->companyRepository->add($company, true);
             $this->brandRepository->add($brand, true);
-            $existed_user->setAccountManager($existed_user)->setBrand($brand)->setDefaultSender($sender);
+            $existed_user->setAccountManager($existed_user)->setBrand($brand);
             $this->userRepository->add($existed_user);
             return $this->services->msg_success(
                 $this->intl->trans("Mise à jour de la marque initiale"),
