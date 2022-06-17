@@ -572,33 +572,28 @@ var KTTransactionsList = function() {
                 document.querySelector('[data-kt-transaction-table-filter="search"]').addEventListener("keyup", (function(t) {
                     e.search(t.target.value).draw()
 
-                    let sum_amount_all =   0, sum_amount_pending = 0, sum_amount_validated = 0, sum_amount_canceled = 0, filtre_tab = e['context'][0]['oPreviousSearch']['sSearch'].replace(/\s+/g, '').toLowerCase()
+                    let sum_amount_all =   0, sum_amount_pending = 0, sum_amount_validated = 0, sum_amount_canceled = 0, filtre_tab = e['context'][0]['aoData']
                     let sum_tr_all = 0, sum_tr_pending = 0, sum_tr_validated = 0, sum_tr_canceled = 0
-                   
-                    e['context'][0]['aoData'].forEach(function(item){
+                    console.log(e['context'][0]['aiDisplay']);
+                    e['context'][0]['aiDisplay'].forEach(function(item){
                         
-                        if ( item['_aFilterData'].find(el => el.toLowerCase().includes(filtre_tab) ) != undefined) 
-                        {
-                            sum_amount_all  += item['_aData'][4]
+                            sum_amount_all  += parseInt(filtre_tab[item]['_aFilterData'][4]) 
                             sum_tr_all      +=  1
-                            
-                            alert(item['_aData'][6][0]);
-                            if (item['_aData'][6][0] == 6) {
-                                sum_amount_validated += item['_aData'][4];
-                                sum_tr_validated      +=  1
+                            if (parseInt(filtre_tab[item]['_aData'][6][0])  == 6) {
+                                sum_amount_validated += parseInt(filtre_tab[item]['_aFilterData'][4]);
+                                sum_tr_validated     +=  1
                 
                             }
-                            else if(item['_aData'][6][0] == 2){
-                                sum_amount_pending += item['_aData'][4];
+                            else if(parseInt(filtre_tab[item]['_aData'][6][0]) == 2){
+                                sum_amount_pending  += parseInt(filtre_tab[item]['_aFilterData'][4]);
                                 sum_tr_pending      +=  1
                                 
                             }
                             else{
-                                sum_amount_canceled += item['_aData'][4];
-                                sum_tr_canceled      +=  1
+                                sum_amount_canceled += parseInt(filtre_tab[item]['_aFilterData'][4]);
+                                sum_tr_canceled     +=  1
                 
                             }
-                        }
                         
                     });
                 

@@ -1,8 +1,7 @@
 
 "use strict";
 
-var spanStatAll =	document.getElementById("stat_all"),spanStatValidated = document.getElementById("stat_validated"), spanStatPending	= document.getElementById("stat_pending"), spanStatCanceled	= document.getElementById("stat_canceled");
-var spanAmountAll =	document.getElementById("tr_all"),spanAmountValidated = document.getElementById("tr_validated"), spanAmountPending	= document.getElementById("tr_pending"), spanAmountCanceled	= document.getElementById("tr_canceled");
+var spanNbrBrand =	document.getElementById("nbr_brand"),spanAllCommission = document.getElementById("all_commission");
 
 var KTTransactionsList = function() {
     var e, t, n, r, o = document.getElementById("kt_table_transactions"),
@@ -146,7 +145,12 @@ var KTTransactionsList = function() {
                             $(document).trigger('toastr.onAjaxError');
                         },
                         dataSrc: function(json) {
-
+                            let commission = 0
+                                json.data.forEach(element => {
+                                commission  += element[1]
+                            });
+                            spanNbrBrand.textContent        =   json.data.length;
+                            spanAllCommission.textContent   =   commission;
                             return json.data;
                         }
                         

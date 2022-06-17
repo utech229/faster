@@ -121,7 +121,6 @@ class CommissionController extends AbstractController
             
             default:
                     $brands   =    $this->em->getRepository(Brand::class)->findByManager($this->em->getRepository(User::class)->findByUid($request->request->get('_uid')));
-
                 break;
         }
 
@@ -144,7 +143,7 @@ class CommissionController extends AbstractController
        
         $this->services->addLog($this->intl->trans('Lecture de la liste des transactions'));
         $data = [
-                    "data"              =>   $tabBrand,
+                    "data"              =>   $tabBrand
                 ];
         return new JsonResponse($data);
     }
