@@ -108,7 +108,7 @@ var KTUsersAddUser = function() {
                 i.addEventListener("click", (t => {
                     t.preventDefault(), o && o.validate().then((function(t) {
                         console.log("validated!"), "Valid" == t ? (i.setAttribute("data-kt-indicator", "on"), i.disabled = !0, 
-                        
+                            loading(true),
                            ajax_url = (isUserUpdating == false) ? add_user : window.location.href + '/' + userUidInput.val()+ '/edit',
                             $('#user_phone').val(intl['user_phone'].getNumber()),
                             $.ajax({
@@ -121,7 +121,7 @@ var KTUsersAddUser = function() {
                                 async: true,
                                 dataType: 'json',
                                 success: function (response) {
-                                    i.removeAttribute("data-kt-indicator"), i.disabled = !1
+                                    i.removeAttribute("data-kt-indicator"), i.disabled = !1,loading();
                                     Swal.fire({
                                         text: response.message,
                                         icon: response.type,
@@ -133,18 +133,18 @@ var KTUsersAddUser = function() {
                                         
                                     })
                                     if (response.type === 'success') {
-                                        t.isConfirmed, $(e).reset();
-                                        tableReloadButton.click();
+                                        t.isConfirmed,e.reset(),tableReloadButton.click();
                                         (isUserUpdating == true) ? n.hide() : null;
                                         statisticsReload();
                                         $('#user_is_dlr').val('0').trigger('change'), $('#user_post_pay').val('0').trigger('change');
                                     }
                                 },
                                 error: function (response) {
+                                    loading()
                                     i.removeAttribute("data-kt-indicator"), i.disabled = !1
                                     $(document).trigger('onAjaxError');
                                 }
-                            })) : $(document).trigger('onFormError');
+                            })) : $(document).trigger('onFormError'),loading();
                     }))
                 })), 
                 t.querySelector('[data-kt-users-modal-action="cancel"]').addEventListener("click", (t => {

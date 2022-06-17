@@ -30,9 +30,6 @@ class Sender
     #[ORM\Column(type: 'text', nullable: true)]
     private $observation;
 
-    //#[ORM\OneToMany(mappedBy: 'defaultSender', targetEntity: User::class)]
-   // private $users;
-
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'senders')]
     private $manager;
 
@@ -45,7 +42,6 @@ class Sender
 
     public function __construct()
     {
-        //$this->users = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -112,36 +108,6 @@ class Sender
 
         return $this;
     }
-
-    // /**
-    //  * @return Collection<int, User>
-    //  */
-    // public function getUsers(): Collection
-    // {
-    //     return $this->users;
-    // }
-
-    // // public function addUser(User $user): self
-    // {
-    //     if (!$this->users->contains($user)) {
-    //         $this->users[] = $user;
-    //         $user->setDefaultSender($this);
-    //     }
-
-    //     return $this;
-    // }
-
-    // public function removeUser(User $user): self
-    // {
-    //     if ($this->users->removeElement($user)) {
-    //         // set the owning side to null (unless already changed)
-    //         if ($user->getDefaultSender() === $this) {
-    //             $user->setDefaultSender(null);
-    //         }
-    //     }
-
-    //     return $this;
-    // }
 
     public function getManager(): ?User
     {

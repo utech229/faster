@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Log;
 use App\Entity\User;
+use App\Entity\Brand;
 use App\Form\UserType;
 use App\Service\uBrand;
 use App\Service\BaseUrl;
@@ -54,6 +55,12 @@ class UserController extends AbstractController
         $this->validator         = $validator;
         $this->DbInitData        = $dbInitData;
 
+        $this->comptes = [
+			['Owner' =>'','Operator'=>'','Phone'=>'','TransactionId'=>'','Country'=>'', 'Status'=>''],
+			['Banque'=>'','Country'=>'','NAccount'=>'','Swift'=>'','DocID'=>'','DocRIB'=>''],
+			['Owner' =>'','NBIN'=>'','CVV2'=>'','NAccount'=>'']
+		];
+
         $this->permission      =    ["UTI0", "UTI1", "UTI2", "UTI3", "UTI4","AFFL0", "AFFL1", "AFFL2", "AFFL3", "AFFL4"];
         $this->pAccess         =    $this->services->checkPermission($this->permission[0]);
         $this->pCreate         =    $this->services->checkPermission($this->permission[1]);
@@ -97,6 +104,12 @@ class UserController extends AbstractController
         
         $statistics =  $this->statisticsData();
         $this->services->addLog($this->intl->trans('Accès au menu utilisateurs'));
+
+        list($userType, $masterId, $userRequest) = $this->services->checkThisUser($this->pView);
+        $brands = $this->em->getRepository(Brand::class)->findBrandBy($userType,  $userRequest);
+
+        //dd($brands);
+
         return $this->render('user/index.html.twig', [
             'controller_name' => 'UserController',
             'role'            => $this->roleRepository->findAll(),
@@ -105,6 +118,7 @@ class UserController extends AbstractController
                 [$this->intl->trans('Utilisateurs')],
             ],
             'brand'           => $this->brand->get(),
+            'brands'          => $brands,
             'baseUrl'         => $this->baseUrl->init(),
             'users'           => $this->userRepository->findAll(),
             'userform'        => $form->createView(),
@@ -137,9 +151,10 @@ class UserController extends AbstractController
             $currentUser   = $this->getUser(); //connected user
             //user data setting
             $user->setBalance(0);
+            $user->setPaymentAccount($this->comptes);
             $user->setApikey($this->services->idgenerate(32));
             $user->setCreatedAt(new \DatetimeImmutable());
-            $user->setPassword($userPasswordHasher->hashPassword($user, strtoupper($this->services->idgenerate(8))));
+            $user->setPassword($userPasswordHasher->hashPassword($user, strtoupper($form->get('firstname')->getData()/*$this->services->idgenerate(8)*/)));
             $user->setRoles(['ROLE_'.$form->get('role')->getData()->getName()]);
             $user->setCountry($countryDatas);
             $user->setCountry($countryDatas);
@@ -183,6 +198,7 @@ class UserController extends AbstractController
             //user data setting
             $user->setRoles(['ROLE_'.$form->get('role')->getData()->getName()]);
             $user->setCountry($countryDatas);
+            $user->setPaymentAccount($this->comptes);
             $user->setProfilePhoto($avatarProcess);
             $user->setUpdatedAt(new \DatetimeImmutable());
             //$user usetting data
@@ -290,7 +306,7 @@ class UserController extends AbstractController
             $this->intl->trans("Vous ne pouvez pas supprimer cet utilisateur car il s'agit de l'administrateur de la marque active"),
         );
 
-        $user->setStatus(4);
+        $user->setStatus($this->services->status(3));
         $this->userRepository->add($user);
         return $this->services->msg_success(
             $this->intl->trans("Suppression de l'utilisateur ").$user->getEmail(),
