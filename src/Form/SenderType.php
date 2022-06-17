@@ -5,6 +5,9 @@ namespace App\Form;
 use App\Entity\Sender;
 use App\Entity\Status;
 use App\Entity\User;
+
+use App\Service\Services;
+
 use Doctrine\ORM\EntityRepository;
 use App\Repository\UserRepository;
 use Symfony\Component\Form\AbstractType;
@@ -18,9 +21,11 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class SenderType extends AbstractType
 {
-    public function __construct(UserRepository $userRepo)
+    public function __construct(UserRepository $userRepo, Services $src)
     {
         $this->userRepo = $userRepo;
+        $this->userType = $src->checkThisUser($src->checkPermission("SEND2"))[0];
+        $this->min = '2'; $this->max = '4';
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -46,10 +51,16 @@ class SenderType extends AbstractType
             ->add('status', EntityType::class, [
                 'class'=>Status::class,
                 'query_builder'=>function(EntityRepository $er){
-                        return $er->createQueryBuilder('s')
-                            ->where('s.code >= 2')
-                            ->andwhere('s.code <= 6')
-                            ->orderBy('s.code', 'ASC');
+                    switch ($this->userType) {
+                        case 0: $this->max = '5'; break;
+                        case 1: $this->max = '5'; break;
+                        case 2: $this->max = '5'; break;
+                        default: break;
+                    }
+                    return $er->createQueryBuilder('s')
+                        ->where('s.code >= '.$this->min)
+                        ->andwhere('s.code <= '.$this->max)
+                        ->orderBy('s.code', 'ASC');
                 },
                 'choice_label'=>'name',
                 'choice_value'=>'uid',
