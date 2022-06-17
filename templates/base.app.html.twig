@@ -244,27 +244,29 @@
                             {% endif %}
 
                             {% if permission(["TRAN0"], app.user) %}
-                            <div class="menu-item">
-                                <div class="menu-content pt-8 pb-2">
-                                    <span class="menu-section text-muted text-uppercase fs-8 ls-1">{{ 'Comptabilité' | trans }}</span>
+                                <div class="menu-item">
+                                    <div class="menu-content pt-8 pb-2">
+                                        <span class="menu-section text-muted text-uppercase fs-8 ls-1">{{ 'Comptabilité' | trans }}</span>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="menu-item">
-                                <a class="menu-link {{ menu(uri, path('app_transaction_index')) }}" href="{{ path('app_transaction_index') }}">
-                                    <span class="menu-icon">
-                                       <i class="bi bi-currency-exchange fs-3"></i>
-                                    </span>
-                                    <span class="menu-title">{{ "Transactions" | trans }}</span>
-                                </a>
-                            </div>
-                            <div class="menu-item">
-                                <a class="menu-link {{ menu(uri, path('app_commission_index')) }}" href="{{ path('app_commission_index') }}">
-                                    <span class="menu-icon">
-                                       <i class="bi bi-currency-exchange fs-3"></i>
-                                    </span>
-                                    <span class="menu-title">{{ "Commissions" | trans }}</span>
-                                </a>
-                            </div>
+                                <div class="menu-item">
+                                    <a class="menu-link {{ menu(uri, path('app_transaction_index')) }}" href="{{ path('app_transaction_index') }}">
+                                        <span class="menu-icon">
+                                        <i class="bi bi-currency-exchange fs-3"></i>
+                                        </span>
+                                        <span class="menu-title">{{ "Transactions" | trans }}</span>
+                                    </a>
+                                </div>
+                            {% endif %}
+                            {% if permission(["COMM0"], app.user) %}
+                                <div class="menu-item">
+                                    <a class="menu-link {{ menu(uri, path('app_commission_index')) }}" href="{{ path('app_commission_index') }}">
+                                        <span class="menu-icon">
+                                        <i class="bi bi-currency-exchange fs-3"></i>
+                                        </span>
+                                        <span class="menu-title">{{ "Commissions" | trans }}</span>
+                                    </a>
+                                </div>
                             {% endif %}
                             <div class="menu-item">
                                 <div class="menu-content pt-8 pb-2">

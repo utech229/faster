@@ -59,11 +59,9 @@ class CommissionController extends AbstractController
         $users              =   [];
 
         if ($this->pView) {
-            
-            $users   =   $this->services->getUserByPermission($this->pSeller,$typeUser,$Id,1);
+            $users   =   $this->services->getUserByPermission($this->permission[3], null, null, 1);
         }
 
-        dd($users);
         return $this->render('commission/index.html.twig', [
             'title'           => $this->intl->trans('Commissions').' - '. $this->brand->get()['name'],
             'pageTitle'       => [
