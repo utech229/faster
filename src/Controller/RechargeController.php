@@ -62,8 +62,10 @@ class RechargeController extends AbstractController
             $this->addFlash('error', $this->intl->trans("Vous n'êtes pas autorisé pour accéder à cette page !"));
             return $this->redirectToRoute("app_home");
         }
+
         $actions =[$this->pRechargeUser, $this->pManager, ];
         //$user    = $this->services->getUserByPermission();
+
         return $this->render('recharge/index.html.twig', [
             'controller_name'    => 'RechargeController',
             'brand'              => $this->brand->get(),
@@ -73,6 +75,8 @@ class RechargeController extends AbstractController
                                         [$this->intl->trans('Gestion des recharges')],
                                         [$this->intl->trans('Recharger compte')],
             ],
+            'canRechargeUser'        => $this->pRechargeUser,
+            'pAllAccess'             => $this->pAllAccess
         ]);
     }
     //We use this function to create a new recharge for user

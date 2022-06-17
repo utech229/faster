@@ -236,7 +236,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
                 default: break;
             }
         }
-
+        
         $query = $qb->getQuery();
         //dd($query->execute());
         return $query->execute();
