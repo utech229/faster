@@ -218,12 +218,14 @@ var KTTransactionsList = function() {
                 })), l(),
                 document.querySelector('[data-kt-commission-table-filter="search"]').addEventListener("keyup", (function(t) {
                     e.search(t.target.value).draw()
+                    let filtre_tab = e['context'][0]['aoData'], commission = 0;
+                    spanNbrBrand.textContent        =  e['context'][0]['aiDisplay'].length;
                     e['context'][0]['aiDisplay'].forEach(function(item){
 
-                        console.log(item);
-                        spanNbrBrand.textContent        =  e['context'][0]['aiDisplay'].length;
+                        commission += parseInt(filtre_tab[item]['_aFilterData'][1]);
                         
                     });
+                    spanAllCommission.textContent   =   commission;
 
                 })),
                 $('[data-kt-commission-table-filter="user"]').on('change', function() {
