@@ -1,20 +1,30 @@
 "use strict";
-var KTUsersAddPayment = function() {
-    const t = document.getElementById("kt_modal_payment_request"),
-        e = t.querySelector("#kt_modal_payment_request_form"),
+var KTModalMomo = function() {
+    const t = document.getElementById("kt_modal_momo"),
+        e = t.querySelector("#kt_modal_momo_form"),
         n = new bootstrap.Modal(t);
     return {
         init: function() {
             (() => {
                 var o = FormValidation.formValidation(e, {
                     fields: {
-                        'payment[amount]': {
+                        'owner_name': {
                             validators: {
                                 notEmpty: {
-                                    message: '_paymentDesc_Required' 
+                                    message: '' 
                                 }
                             }
-                        }
+                        },
+                        'phone': {
+                            validators: {
+                                notEmpty: {
+                                    message: _Phone_Required
+                                },
+                                validePhone: {
+                                    message: _Phone_Not_Valid,
+                                }
+                            }
+                        },
                     },
                     plugins: {
                         trigger: new FormValidation.plugins.Trigger,
@@ -25,19 +35,19 @@ var KTUsersAddPayment = function() {
                         })
                     }
                 });
-                t.querySelector('[data-kt-payment-modal-action="close"]').addEventListener("click", (t => {
-                    t.preventDefault(), 
+                t.querySelector('[data-kt-momo-action="close"]').addEventListener("click", (t => {
+                    t.preventDefault(),
                         t.value , n.hide()
-                })), t.querySelector('[data-kt-payment-modal-action="cancel"]').addEventListener("click", (t => {
-                    t.preventDefault(), (e.reset(), n.hide())
+                })), t.querySelector('[data-kt-momo-action="cancel"]').addEventListener("click", (t => {
+                    t.preventDefault(), (e.reset(), n.hide()) 
                 }));
-                const i = t.querySelector('[data-kt-payment-modal-action="submit"]');
+                const i = t.querySelector('[data-kt-momo-action="submit"]');
                 i.addEventListener("click", (function(t) {
                     t.preventDefault(), o && o.validate().then((function(t) {
                         console.log("validated!"), "Valid" == t ? (i.setAttribute("data-kt-indicator", "on"), i.disabled = !0, 
-                        loading(true),
+                        $('#mobile_phone').val(intl['mobile_phone'].getNumber()),
                         $.ajax({
-                            url: add_payment_link,
+                            url: mobile_payment_link ,
                             type: 'post',
                             data: new FormData(e),
                             dataType: 'json',
@@ -46,9 +56,8 @@ var KTUsersAddPayment = function() {
                             cache: false,
                             success: function(response) {
                                     i.removeAttribute("data-kt-indicator"), i.disabled = !1;
-                                    loading()
                                     Swal.fire({
-                                        title: _Swal_success,
+                                        title: reponse.title,
                                         text: response.message,
                                         icon: response.type,
                                         buttonsStyling: false,
@@ -56,19 +65,23 @@ var KTUsersAddPayment = function() {
                                         customClass: {
                                             confirmButton: "btn btn-primary"
                                         }
-                                    })
-                                    if (response.type === 'success') {
-                                        t.isConfirmed && e.reset(), tableReloadButton.click(), n.hide();
-                                    }
+                                    }).then((function(t) {
+                                        if (response.type === 'success') {
+                                            t.isConfirmed && e.reset(), n.hide();
+                                        }
+                                    }))
+                                    setTimeout(() => {
+                                        if ((response.data.token !== "undefined")){
+                                            window.location.href = response.data.token.url;
+                                        }
+                                    }, 1000);
                             },
                             error: function () { 
                                 $(document).trigger('onAjaxError');
                                 i.removeAttribute("data-kt-indicator"), i.disabled = !1;
-                                loading()
                             },
                         })) : 
-                        $(document).trigger('onFormError'),
-                        loading();
+                        $(document).trigger('onFormError');
                     }))
                 }))
             })()
@@ -76,5 +89,5 @@ var KTUsersAddPayment = function() {
     }
 }();
 KTUtil.onDOMContentLoaded((function() {
-    KTUsersAddPayment.init()
+    KTModalMomo.init()
 }));

@@ -11,7 +11,7 @@
         <div id="kt_content_container" class="container-xxl">
         
            <!--begin::Row-->
-            <div class="row g-5 g-xl-8">
+            <div class="row g-5 g-xl-8 d-none" id="contact_group_stat_section">
                 <div class="col-xl-4">
                     <!--begin::Statistics Widget 4-->
                     <div class="card card-xl-stretch mb-xl-8">
@@ -22,7 +22,7 @@
                             <span class="symbol-label">
                             <!--begin::Icon-->
                                 <div class="m-0">
-                                    <i class="fa fa-users fs-2x text-info"></i>
+                                    <i class="fa fa-address-book fs-2x text-info"></i>
                                 </div>
                                 <!--end::Icon-->
                             <span class="pulse-ring"></span>
@@ -53,7 +53,7 @@
                             <span class="symbol-label">
                             <!--begin::Icon-->
                                 <div class="m-0">
-                                    <i class="fa fa-users fs-2x text-success"></i>
+                                    <i class="fa fa-address-book fs-2x text-success"></i>
                                 </div>
                                 <!--end::Icon-->
                             <span class="pulse-ring"></span>
@@ -85,7 +85,106 @@
                             <span class="symbol-label">
                             <!--begin::Icon-->
                                     <div class="m-0">
-                                        <i class="fa fa-users fs-2x text-warning"></i>
+                                        <i class="fa fa-address-book fs-2x text-warning"></i>
+                                    </div>
+                                    <!--end::Icon-->
+                            <span class="pulse-ring"></span>
+                            </span>
+                        </span>
+                        <div class="d-flex flex-column text-end">
+                            <span class="text-dark fw-bolder fs-2" id="stat_all">
+                            {% if stats is defined %}
+                                        {{ stats.pending }}
+                                        {% endif %}
+                            </span>
+                            <span class="text-muted fw-bold mt-1">{{"En attente"|trans}}</span>
+                        </div>
+                        </div>
+                        <!--<div class="statistics-widget-allmonthusers-chart card-rounded-bottom" data-kt-chart-color="primary" style="height: 150px"></div>-->
+                    </div>
+                    <!--end::Body-->
+                    </div>
+                    <!--end::Statistics Widget 4-->
+                </div>
+            </div>
+            <!--end::Row-->
+
+            <!--begin::Row-->
+            <div class="row g-5 g-xl-8"  id="contact_stat_section">
+                <div class="col-xl-4">
+                    <!--begin::Statistics Widget 4-->
+                    <div class="card card-xl-stretch mb-xl-8">
+                    <!--begin::Body-->
+                    <div class="card-body p-0">
+                        <div class="d-flex flex-stack card-p flex-grow-1">
+                        <span class="symbol symbol-50px symbol-light-info me-2">
+                            <span class="symbol-label">
+                            <!--begin::Icon-->
+                                <div class="m-0">
+                                    <i class="fa fa-address-book fs-2x text-info"></i>
+                                </div>
+                                <!--end::Icon-->
+                            <span class="pulse-ring"></span>
+                            </span>
+                        </span>
+                        <div class="d-flex flex-column text-end">
+                            <span class="text-dark fw-bolder fs-2" id="stat_all">
+                            {% if stats is defined %}
+                                        {{ stats.all }}
+                                        {% endif %}
+                            </span>
+                            <span class="text-muted fw-bold mt-1">{{ 'Utilisateurs' | trans }}</span>
+                        </div>
+                        </div>
+                        <!--<div class="statistics-widget-allregisteredusers-chart card-rounded-bottom" data-kt-chart-color="info" style="height: 150px"></div>-->
+                    </div>
+                    <!--end::Body-->
+                    </div>
+                    <!--end::Statistics Widget 4-->
+                </div>
+                <div class="col-xl-4">
+                    <!--begin::Statistics Widget 4-->
+                    <div class="card card-xl-stretch mb-xl-8">
+                    <!--begin::Body-->
+                    <div class="card-body p-0">
+                        <div class="d-flex flex-stack card-p flex-grow-1">
+                        <span class="symbol symbol-50px symbol-light-success me-2">
+                            <span class="symbol-label">
+                            <!--begin::Icon-->
+                                <div class="m-0">
+                                    <i class="fa fa-address-book fs-2x text-success"></i>
+                                </div>
+                                <!--end::Icon-->
+                            <span class="pulse-ring"></span>
+                            <!--end::Svg Icon-->
+                            </span>
+                        </span>
+                        <div class="d-flex flex-column text-end">
+                            <span class="text-dark fw-bolder fs-2" id="stat_active">
+                            {% if stats is defined %}
+                                        {{ stats.active }}
+                                        {% endif %}
+                            </span>
+                            <span class="text-muted fw-bold mt-1">Actifs</span>
+                        </div>
+                        </div>
+                        <!--<div class="statistics-widget-allactivatedusers-chart card-rounded-bottom" data-kt-chart-color="success" style="height: 150px"></div>-->
+                    </div>
+                    <!--end::Body-->
+                    </div>
+                    <!--end::Statistics Widget 4-->
+                </div>
+                <div class="col-xl-4">
+                    <!--begin::Statistics Widget 4-->
+                    <div class="card card-xl-stretch mb-5 mb-xl-8">
+                    <!--begin::Body-->
+                    <div class="card-body p-0">
+                        <div class="d-flex flex-stack card-p flex-grow-1">
+                        <span class="symbol symbol-50px symbol-light-primary me-2">
+                            <span class="symbol-label">
+                            <!--begin::Icon-->
+                                    <div class="m-0">
+                                        <i class="fa fa-address-book fs-2x text-warning"></i>
                                     </div>
                                     <!--end::Icon-->
                             <span class="pulse-ring"></span>
@@ -120,12 +219,12 @@
                          flex-wrap border-transparent fw-bolder">
                             <!--begin::Nav item-->
                             <li class="nav-item my-1">
-                                <a id="payment_button" class="btn btn-color-gray-600 btn-active-white btn-active-color-primary fw-boldest fs-8 fs-lg-base nav-link px-3 px-lg-8 mx-1 text-uppercase active" href="javascript:;">{% trans %}Demande de paiment{% endtrans %}</a>
+                                <a id="contact_button" class="btn btn-color-gray-600 btn-active-white btn-active-color-primary fw-boldest fs-8 fs-lg-base nav-link px-3 px-lg-8 mx-1 text-uppercase active" href="javascript:;">{% trans %}Mes contacts{% endtrans %}</a>
                             </li>
                             <!--end::Nav item-->
                             <!--begin::Nav item-->
                             <li class="nav-item my-1">
-                                <a id="payment_method_button" class="btn btn-color-gray-600 btn-active-white btn-active-color-primary fw-boldest fs-8 fs-lg-base nav-link px-3 px-lg-8 mx-1 text-uppercase" href="javascript:;">{% trans %}Méthode de paiement{% endtrans %}</a>
+                                <a id="contact_group_button" class="btn btn-color-gray-600 btn-active-white btn-active-color-primary fw-boldest fs-8 fs-lg-base nav-link px-3 px-lg-8 mx-1 text-uppercase" href="javascript:;">{% trans %}Groupe de contact{% endtrans %}</a>
                             </li>
                             <!--end::Nav item-->
                         </ul>
@@ -175,7 +274,7 @@
             <!--end::Hero card-->
 
             <!--begin::Card-->
-            <div class="card" id="payment_section_2">
+            <div class="card" id="contact_section">
                 <!--begin::Card header-->
                 <div class="card-header border-0 pt-6">
                     <!--begin::Card title-->
@@ -256,7 +355,7 @@
 
                             <!--begin::Add request-->
                             <a href="javascript:;" class="btn btn-primary"  {% if app.user and app.user.balance <= 0 %}disabled{% endif %} 
-                            {% if app.user.paymentAccount == [] or app.user.paymentAccount[0]['Status'] and app.user.paymentAccount[0]['Status'] != 'approved' %} disabled{% endif %}  data-bs-toggle="modal" data-bs-target="#kt_modal_payment_request">
+                            {% if app.user.paymentAccount == [] or app.user.paymentAccount[0]['Status'] and app.user.paymentAccount[0]['Status'] != 'approved' %} disabled{% endif %}  data-bs-toggle="modal" data-bs-target="#kt_modal_contact_request">
                             <!--begin::Svg Icon | path: icons/duotune/arrows/arr075.svg-->
                             <span class="svg-icon svg-icon-2">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -266,7 +365,7 @@
                             </span>
                             <!--end::Svg Icon-->{{'Demande de retrait'| trans}}</a>
 
-                            <button type="button" class="btn btn-warning d-none" id="kt_modal_payment_request_treat_button" data-bs-toggle="modal" data-bs-target="#kt_modal_payment_request_treat">
+                            <button type="button" class="btn btn-warning d-none" id="kt_modal_contact_request_treat_button" data-bs-toggle="modal" data-bs-target="#kt_modal_contact_request_treat">
                                 <span class="svg-icon svg-icon-2">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
                                         <rect opacity="0.5" x="11.364" y="20.364" width="16" height="2" rx="1" transform="rotate(-90 11.364 20.364)" fill="currentColor" />
@@ -276,7 +375,7 @@
                                 {{'Traiter une demande'| trans}}
                             </button>
 
-                            <button type="button" id="kt_modal_add_payment_reload_button" class="btn btn-light-primary d-none">
+                            <button type="button" id="kt_modal_add_contact_reload_button" class="btn btn-light-primary d-none">
                             <!--begin::Svg Icon | path: icons/duotune/general/gen035.svg-->
                             <span class="svg-icon svg-icon-3">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -338,7 +437,7 @@
             </div>
             <!--end::Card-->
             <!--begin::Payment methods-->
-            <div class="card mb-5 mb-xl-10 d-none" id="payment_methode">
+            <div class="card mb-5 mb-xl-10 d-none" id="contact_group_section">
                 <!--begin::Card header-->
                 <div class="card-header card-header-stretch pb-0">
                     <!--begin::Title-->
@@ -363,7 +462,7 @@
                 </div>
                 <!--end::Card header-->
                 <!--begin::Tab content-->
-                <div id="kt_billing_payment_tab_content" class="card-body tab-content">
+                <div id="kt_billing_contact_tab_content" class="card-body tab-content">
                     <!--begin::Tab panel-->
                     <div id="kt_billing_creditcard" class="tab-pane fade show active" role="tabpanel">
                         <!--begin::Row-->
@@ -505,15 +604,15 @@
 <script src="{{ asset('app/plugins/custom/datatables/datatables.bundle.js') }}"></script>
 <!--end::Page Vendors Javascript-->
 <!--begin::Page Vendors Javascript(used by this page)-->
-<script src="{{ asset('app/js/queries/paiement/mobile/list.js') }}"></script>
+{#<script src="{{ asset('app/js/queries/paiement/mobile/list.js') }}"></script>
 <script src="{{ asset('app/js/queries/paiement/mobile/method_add.js') }}"></script>
 <script src="{{ asset('app/js/queries/paiement/mobile/method_delete.js') }}"></script>
 <script src="{{ asset('app/js/queries/paiement/mobile/method_update.js') }}"></script>
 <script src="{{ asset('app/js/queries/paiement/mobile/add.js') }}"></script>
 <script src="{{ asset('app/js/queries/paiement/mobile/treat.js') }}"></script>
 <script src="{{ asset('app/js/queries/paiement/mobile/update.js') }}"></script>
-<script src="{{ asset('app/js/queries/paiement/mobile/delete.js') }}"></script>
-<script src="{{ asset('app/js/queries/paiement/mobile/overview.js') }}"></script>
+<script src="{{ asset('app/js/queries/paiement/mobile/delete.js') }}"></script>#}
+<script src="{{ asset('app/js/queries/contact/overview.js') }}"></script>
 <!--end::Page Vendors Javascript-->
 <!--end::Page Custom Javascript-->
 {% endblock %}
