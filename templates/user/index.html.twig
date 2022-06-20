@@ -13,100 +13,100 @@
         <div id="kt_content_container" class="container-xxl">
             <!--begin::Row-->
             <div class="row g-5 g-xl-8">
-            <div class="col-xl-4">
-                <!--begin::Statistics Widget 4-->
-                <div class="card card-xl-stretch mb-xl-8">
-                <!--begin::Body-->
-                <div class="card-body p-0">
-                    <div class="d-flex flex-stack card-p flex-grow-1">
-                    <span class="symbol symbol-50px symbol-light-info me-2">
-                        <span class="symbol-label">
-                        <!--begin::Icon-->
-                            <div class="m-0">
-                                <i class="fa fa-users fs-2x text-info"></i>
-                            </div>
-                            <!--end::Icon-->
-                        <span class="pulse-ring"></span>
-                        </span>
-                    </span>
-                    <div class="d-flex flex-column text-end">
-                        <span class="text-dark fw-bolder fs-2" id="stat_all">
-                        {% if stats is defined %}
-                                    {{ stats.all }}
-                                    {% endif %}
-                        </span>
-                        <span class="text-muted fw-bold mt-1">{{ 'Utilisateurs' | trans }}</span>
-                    </div>
-                    </div>
-                    <!--<div class="statistics-widget-allregisteredusers-chart card-rounded-bottom" data-kt-chart-color="info" style="height: 150px"></div>-->
-                </div>
-                <!--end::Body-->
-                </div>
-                <!--end::Statistics Widget 4-->
-            </div>
-            <div class="col-xl-4">
-                <!--begin::Statistics Widget 4-->
-                <div class="card card-xl-stretch mb-xl-8">
-                <!--begin::Body-->
-                <div class="card-body p-0">
-                    <div class="d-flex flex-stack card-p flex-grow-1">
-                    <span class="symbol symbol-50px symbol-light-success me-2">
-                        <span class="symbol-label">
-                        <!--begin::Icon-->
-                            <div class="m-0">
-                                <i class="fa fa-users fs-2x text-success"></i>
-                            </div>
-                            <!--end::Icon-->
-                        <span class="pulse-ring"></span>
-                        <!--end::Svg Icon-->
-                        </span>
-                    </span>
-                    <div class="d-flex flex-column text-end">
-                        <span class="text-dark fw-bolder fs-2" id="stat_active">
-                        {% if stats is defined %}
-                                    {{ stats.active }}
-                                    {% endif %}
-                        </span>
-                        <span class="text-muted fw-bold mt-1">Actifs</span>
-                    </div>
-                    </div>
-                    <!--<div class="statistics-widget-allactivatedusers-chart card-rounded-bottom" data-kt-chart-color="success" style="height: 150px"></div>-->
-                </div>
-                <!--end::Body-->
-                </div>
-                <!--end::Statistics Widget 4-->
-            </div>
-            <div class="col-xl-4">
-                <!--begin::Statistics Widget 4-->
-                <div class="card card-xl-stretch mb-5 mb-xl-8">
-                <!--begin::Body-->
-                <div class="card-body p-0">
-                    <div class="d-flex flex-stack card-p flex-grow-1">
-                    <span class="symbol symbol-50px symbol-light-primary me-2">
-                        <span class="symbol-label">
-                        <!--begin::Icon-->
+                <div class="col-xl-4">
+                    <!--begin::Statistics Widget 4-->
+                    <div class="card card-xl-stretch mb-xl-8">
+                    <!--begin::Body-->
+                    <div class="card-body p-0">
+                        <div class="d-flex flex-stack card-p flex-grow-1">
+                        <span class="symbol symbol-50px symbol-light-info me-2">
+                            <span class="symbol-label">
+                            <!--begin::Icon-->
                                 <div class="m-0">
-                                    <i class="fa fa-users fs-2x text-warning"></i>
+                                    <i class="fa fa-users fs-2x text-info"></i>
                                 </div>
                                 <!--end::Icon-->
-                        <span class="pulse-ring"></span>
+                            <span class="pulse-ring"></span>
+                            </span>
                         </span>
-                    </span>
-                    <div class="d-flex flex-column text-end">
-                        <span class="text-dark fw-bolder fs-2" id="stat_all">
-                        {% if stats is defined %}
-                                    {{ stats.pending }}
-                                    {% endif %}
+                        <div class="d-flex flex-column text-end">
+                            <span class="text-dark fw-bolder fs-2" id="stat_all">
+                            {% if stats is defined %}
+                                        {{ stats.all }}
+                                        {% endif %}
+                            </span>
+                            <span class="text-muted fw-bold mt-1">{{ 'Utilisateurs' | trans }}</span>
+                        </div>
+                        </div>
+                        <!--<div class="statistics-widget-allregisteredusers-chart card-rounded-bottom" data-kt-chart-color="info" style="height: 150px"></div>-->
+                    </div>
+                    <!--end::Body-->
+                    </div>
+                    <!--end::Statistics Widget 4-->
+                </div>
+                <div class="col-xl-4">
+                    <!--begin::Statistics Widget 4-->
+                    <div class="card card-xl-stretch mb-xl-8">
+                    <!--begin::Body-->
+                    <div class="card-body p-0">
+                        <div class="d-flex flex-stack card-p flex-grow-1">
+                        <span class="symbol symbol-50px symbol-light-success me-2">
+                            <span class="symbol-label">
+                            <!--begin::Icon-->
+                                <div class="m-0">
+                                    <i class="fa fa-users fs-2x text-success"></i>
+                                </div>
+                                <!--end::Icon-->
+                            <span class="pulse-ring"></span>
+                            <!--end::Svg Icon-->
+                            </span>
                         </span>
-                        <span class="text-muted fw-bold mt-1">{{"En attente"|trans}}</span>
+                        <div class="d-flex flex-column text-end">
+                            <span class="text-dark fw-bolder fs-2" id="stat_active">
+                            {% if stats is defined %}
+                                        {{ stats.active }}
+                                        {% endif %}
+                            </span>
+                            <span class="text-muted fw-bold mt-1">Actifs</span>
+                        </div>
+                        </div>
+                        <!--<div class="statistics-widget-allactivatedusers-chart card-rounded-bottom" data-kt-chart-color="success" style="height: 150px"></div>-->
                     </div>
+                    <!--end::Body-->
                     </div>
-                    <!--<div class="statistics-widget-allmonthusers-chart card-rounded-bottom" data-kt-chart-color="primary" style="height: 150px"></div>-->
+                    <!--end::Statistics Widget 4-->
                 </div>
-                <!--end::Body-->
+                <div class="col-xl-4">
+                    <!--begin::Statistics Widget 4-->
+                    <div class="card card-xl-stretch mb-5 mb-xl-8">
+                    <!--begin::Body-->
+                    <div class="card-body p-0">
+                        <div class="d-flex flex-stack card-p flex-grow-1">
+                        <span class="symbol symbol-50px symbol-light-primary me-2">
+                            <span class="symbol-label">
+                            <!--begin::Icon-->
+                                    <div class="m-0">
+                                        <i class="fa fa-users fs-2x text-warning"></i>
+                                    </div>
+                                    <!--end::Icon-->
+                            <span class="pulse-ring"></span>
+                            </span>
+                        </span>
+                        <div class="d-flex flex-column text-end">
+                            <span class="text-dark fw-bolder fs-2" id="stat_all">
+                            {% if stats is defined %}
+                                        {{ stats.pending }}
+                                        {% endif %}
+                            </span>
+                            <span class="text-muted fw-bold mt-1">{{"En attente"|trans}}</span>
+                        </div>
+                        </div>
+                        <!--<div class="statistics-widget-allmonthusers-chart card-rounded-bottom" data-kt-chart-color="primary" style="height: 150px"></div>-->
+                    </div>
+                    <!--end::Body-->
+                    </div>
+                    <!--end::Statistics Widget 4-->
                 </div>
-                <!--end::Statistics Widget 4-->
-            </div>
             </div>
             <!--end::Row-->
             <!--begin::Card-->
