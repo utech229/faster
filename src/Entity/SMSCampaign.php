@@ -56,6 +56,13 @@ class SMSCampaign
     #[ORM\Column(type: 'string', length: 25)]
     private $uid;
 
+    #[ORM\Column(type: 'string', length: 100)]
+    private $name;
+
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(nullable: false)]
+    private $createBy;
+
     public function __construct()
     {
         $this->sMSMessages = new ArrayCollection();
@@ -236,6 +243,30 @@ class SMSCampaign
     public function setUid(string $uid): self
     {
         $this->uid = $uid;
+
+        return $this;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function getCreateBy(): ?User
+    {
+        return $this->createBy;
+    }
+
+    public function setCreateBy(?User $createBy): self
+    {
+        $this->createBy = $createBy;
 
         return $this;
     }
