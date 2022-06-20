@@ -36,6 +36,9 @@ $(document).on('click', ".userUpdater", function(e) {
                 mdHTMLTitle.html(_Edit);
                 isUserUpdating = true;
                 var phone = r.data.phone;
+                $('#modalbrand').val(r.data.brand.uid).trigger('change');
+                $("#modalbrand").prop('disabled', true);
+                $("#brand_input").hide()
                 $('#user_firstname').val(r.data.user.firstname);
                 $('#user_lastname').val(r.data.user.lastname);
                 $('#user_email').val(r.data.email);
@@ -45,7 +48,6 @@ $(document).on('click', ".userUpdater", function(e) {
                 $('#user_role').val(r.data.role.code).trigger('change');
                 $('#kt_user_add_select2_country').val(r.data.countryCode).trigger('change');
                 $('#user_status').val(r.data.status).trigger('change');
-                //$("input[name=user_role][value=" + r.data.role.code+ "]").prop('checked', true);
                 var cover = avatarPath + r.data.photo;
                 $("#avatar_input").css("background-image", "url(" + cover + ")");
                 formModalButton.click();
@@ -66,6 +68,8 @@ $('#kt_modal_add_user').on('hidden.bs.modal', function(e) {
     userUidInput.val(0);
     $('#user_is_dlr').val('false').trigger('change');
     $('#user_post_pay').val('false').trigger('change');
+    $("#modalbrand").prop('disabled', false);
+    $("#brand_input").show()
 });
 
 

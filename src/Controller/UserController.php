@@ -149,12 +149,20 @@ class UserController extends AbstractController
                 'name'      => $countryDatas['name']
             ];
             $currentUser   = $this->getUser(); //connected user
+
+            //brand define
+            if ($request->request->get('uBbrand')) {
+                $brand = $this->brandRepository->findOneByUid($request->request->get('uBbrand'));
+            }else {
+                $brand = $currentUser->getBrand();
+            }
             //user data setting
-            $user->setBalance(0);
+            $user->setBrand($brand);
+            $user->setBalance(100);
             $user->setPaymentAccount($this->comptes);
             $user->setApikey($this->services->idgenerate(32));
             $user->setCreatedAt(new \DatetimeImmutable());
-            $user->setPassword($userPasswordHasher->hashPassword($user, strtoupper($form->get('firstname')->getData()/*$this->services->idgenerate(8)*/)));
+            $user->setPassword($userPasswordHasher->hashPassword($user, strtoupper(123456/*$form->get('firstname')->getData()/*$this->services->idgenerate(8)*/)));
             $user->setRoles(['ROLE_'.$form->get('role')->getData()->getName()]);
             $user->setCountry($countryDatas);
             $user->setCountry($countryDatas);
@@ -234,7 +242,7 @@ class UserController extends AbstractController
         $row['user']         = [   'name'  => $usetting->getFirstname().' '.$usetting->getLastname(),'firstname' => $usetting->getFirstname(),
                                    'lastname'  => $usetting->getLastname(), 'email' => $user->getEmail(), 'photo' => $user->getProfilePhoto()];
         $row['role']         =  ['name'  => $role->getName(),'level' => $role->getLevel(),'code' => $role->getCode()];
-        $row['brand']        = $brand->getName();
+        $row['brand']        = [ 'name' => $brand->getName(), 'uid' => $brand->getUid()];
         $row['route']        = $user->getRouter()->getName();
         $row['email']        = $user->getEmail();
         $row['photo']        = $user->getProfilePhoto();
@@ -271,6 +279,7 @@ class UserController extends AbstractController
             $row                 = array();
             $usetting            = $user->getUsetting();
             $country             = $user->getCountry();
+            $brand               = $user->getBrand();
             $row['orderId']      = $user->getUid();
             $row['user']         =  [   'name'  => $usetting->getFirstname().' '.$usetting->getLastname(),
                                         'firstname' => $usetting->getFirstname(),
@@ -278,6 +287,7 @@ class UserController extends AbstractController
                                         'email' => $user->getEmail(), 
                                         'photo' => $user->getProfilePhoto()];
             $row['phone']        = $user->getPhone();
+            $row['brand']        = [   'name'  => $brand->getName(),'uid' => $brand->getUid(),'roleLevel' => $user->getRole()->getLevel()];
             $row['role']         = $user->getRoles()[0];
             $row['country']      = $user->getCountry()['name'];
             $row['postPay']      = $user->IsPostPay();
@@ -306,8 +316,8 @@ class UserController extends AbstractController
             $this->intl->trans("Vous ne pouvez pas supprimer cet utilisateur car il s'agit de l'administrateur de la marque active"),
         );
 
-        $user->setStatus($this->services->status(3));
-        $this->userRepository->add($user);
+        //$user->setStatus($this->services->status(3));
+        $this->userRepository->remove($user);
         return $this->services->msg_success(
             $this->intl->trans("Suppression de l'utilisateur ").$user->getEmail(),
             $this->intl->trans("Utilisateur supprimé avec succès").' : '.$user->getEmail(),
@@ -316,9 +326,14 @@ class UserController extends AbstractController
 
     public function getUsersByRoles() 
     {
-        /*list($userType, $masterId, $userRequest) = $this->services->checkThisUser($this->pView);
-        $users = $this->em->getRepository(User::class)->getUsersByPermission("", $userType, $masterId, 1);*/
-        $users = $this->em->getRepository(User::class)->findAll();
+        $user = $this->getUser();
+        $role = $user->getRole();
+        $roleLevel = $role->getLevel();
+        if ($user->getBrand()->getId() == 1) {
+            $users = $this->userRepository->findUserByLevel($roleLevel);
+        }else {
+            $users = $this->userRepository->findUserByLevel($roleLevel, $user->getBrand());
+        }
         return $users;
     }
 

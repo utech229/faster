@@ -183,7 +183,7 @@ var KTUsersList = function() {
                             var status = {
                                 'ROLE_AFFILIATE_USER': { 'title': 'Affilié revendeur', 'class': 'warning' },
                                 'ROLE_AFFILIATE_RESELLER': { 'title': 'Affilié revendeur', 'class': 'warning' },
-                                'ROLE_RESSELER': { 'title': 'Revendeur', 'class': 'warning' },
+                                'ROLE_RESELLER': { 'title': 'Revendeur', 'class': 'warning' },
                                 'ROLE_USER': { 'title': 'Utilisateur', 'class': 'danger' },
                                 'ROLE_ADMINISTRATOR': { 'title': 'Administrateur', 'class': 'secondary' },
                                 'ROLE_SUPER_ADMINISTRATOR': { 'title': 'Super administrateur', 'class': 'info' },
@@ -287,8 +287,15 @@ var KTUsersList = function() {
                         },
     
                     },{
-                        orderable: !1,
                         targets: 11,
+                        visible: (data.roleLevel < 4) ? false : true,
+                        render: function(data, type, full, meta) {
+                            return data.name;
+                        },
+    
+                    },{
+                        orderable: !1,
+                        targets: 12,
                         visible: (!pEditUser && !pDeleteUser) ? false : true,
                         render : function (data,type, full, meta) {
                             var updaterIcon =  `<!--begin::Update-->
@@ -319,7 +326,7 @@ var KTUsersList = function() {
     
                         { data: 'country', responsivePriority: 10 },
     
-                        { data: 'balance' , responsivePriority: -7 },
+                        { data: 'balance' , responsivePriority: -4 },
     
                         { data: 'status' },
     
@@ -330,6 +337,8 @@ var KTUsersList = function() {
                         { data: 'isDlr',responsivePriority: -6 },
 
                         { data: 'postPay',responsivePriority: -5 },
+
+                        { data: 'brand',responsivePriority: -7 },
 
                         { data: 'action',responsivePriority: -9 },
                     ],
