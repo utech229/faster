@@ -2,10 +2,10 @@
 var KTcontactOverview= {
     init:function() {
         var initer = true;
-        const contact_group_section = $('#contact_group_section');
-        const contact_group_stat_section    = $('#contact_group_stat');
+        const contact_group_section         = $('#contact_group_section');
+        const contact_group_stat_section    = $('#contact_group_stat_section');
         const contact_section               = $('#contact_section');
-        const contact_stat_section          = $('#contact_stat');
+        const contact_stat_section          = $('#contact_stat_section');
       
         const btn_one     = $('#contact_button')
         const btn_two     = $('#contact_group_button')
@@ -14,10 +14,10 @@ var KTcontactOverview= {
             loading(true)
             $(this).addClass('active');
             setTimeout(() => {
-                contact_section.addClass('d-none')
-                contact_stat_section.addClass('d-none')
-                contact_group_stat_section.removeClass('d-none')
-                contact_group_section.removeClass('d-none')
+                contact_section.removeClass('d-none')
+                contact_stat_section.removeClass('d-none')
+                contact_group_stat_section.addClass('d-none')
+                contact_group_section.addClass('d-none')
                 btn_two.removeClass('active');
                 loading()
             }, 100);
@@ -28,10 +28,8 @@ var KTcontactOverview= {
             setTimeout(() => {
                 contact_group_stat_section.removeClass('d-none')
                 contact_group_section.removeClass('d-none')
-
                 contact_section.addClass('d-none')
                 contact_stat_section.addClass('d-none')
-
                 btn_one.removeClass('active');
                 loading()
             }, 100);
