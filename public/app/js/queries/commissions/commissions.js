@@ -218,6 +218,12 @@ var KTTransactionsList = function() {
                 })), l(),
                 document.querySelector('[data-kt-commission-table-filter="search"]').addEventListener("keyup", (function(t) {
                     e.search(t.target.value).draw()
+                    e['context'][0]['aiDisplay'].forEach(function(item){
+
+                        console.log(item);
+                        spanNbrBrand.textContent        =  e['context'][0]['aiDisplay'].length;
+                        
+                    });
 
                 })),
                 $('[data-kt-commission-table-filter="user"]').on('change', function() {

@@ -574,11 +574,10 @@ var KTTransactionsList = function() {
 
                     let sum_amount_all =   0, sum_amount_pending = 0, sum_amount_validated = 0, sum_amount_canceled = 0, filtre_tab = e['context'][0]['aoData']
                     let sum_tr_all = 0, sum_tr_pending = 0, sum_tr_validated = 0, sum_tr_canceled = 0
-                    console.log(e['context'][0]['aiDisplay']);
                     e['context'][0]['aiDisplay'].forEach(function(item){
                         
-                            sum_amount_all  += parseInt(filtre_tab[item]['_aFilterData'][4]) 
-                            sum_tr_all      +=  1
+                            sum_amount_all  += parseInt(filtre_tab[item]['_aFilterData'][4]);
+                            sum_tr_all      +=  1;
                             if (parseInt(filtre_tab[item]['_aData'][6][0])  == 6) {
                                 sum_amount_validated += parseInt(filtre_tab[item]['_aFilterData'][4]);
                                 sum_tr_validated     +=  1
@@ -586,12 +585,12 @@ var KTTransactionsList = function() {
                             }
                             else if(parseInt(filtre_tab[item]['_aData'][6][0]) == 2){
                                 sum_amount_pending  += parseInt(filtre_tab[item]['_aFilterData'][4]);
-                                sum_tr_pending      +=  1
+                                sum_tr_pending      +=  1;
                                 
                             }
                             else{
                                 sum_amount_canceled += parseInt(filtre_tab[item]['_aFilterData'][4]);
-                                sum_tr_canceled     +=  1
+                                sum_tr_canceled     +=  1;
                 
                             }
                         
@@ -635,32 +634,28 @@ KTUtil.onDOMContentLoaded((function() {
 
 function UpdateStat(e) {
     // console.log(e['context'][0])
-    let sum_amount_all =   0, sum_amount_pending = 0, sum_amount_validated = 0, sum_amount_canceled = 0, filtre_tab = e['context'][0]['oPreviousSearch']['sSearch'].replace(/\s+/g, '').toLowerCase()
+    let sum_amount_all =   0, sum_amount_pending = 0, sum_amount_validated = 0, sum_amount_canceled = 0, filtre_tab = e['context'][0]['aoData']
     let sum_tr_all = 0, sum_tr_pending = 0, sum_tr_validated = 0, sum_tr_canceled = 0
-    e['context'][0]['aoData'].forEach(function(item){
+    e['context'][0]['aiDisplay'].forEach(function(item){
         
-        if (filtre_tab  == (item['_aData'][7]+item['_aData'][6][1]).replace(/\s+/g, '').toLowerCase() || filtre_tab ==  item['_aData'][7].replace(/\s+/g, '').toLowerCase() || filtre_tab == item['_aData'][6][1].replace(/\s+/g, '').toLowerCase() || filtre_tab == "" ) {
-            
-            sum_amount_all  += item['_aData'][4]
-            sum_tr_all      +=  1
+            sum_amount_all  +=  parseInt(filtre_tab[item]['_aFilterData'][4]);
+            sum_tr_all      +=  1;
 
-            if (item['_aData'][6][0] == 6) {
-                sum_amount_validated += item['_aData'][4];
-                sum_tr_validated      +=  1
+            if (parseInt(filtre_tab[item]['_aData'][6][0]) == 6) {
+                sum_amount_validated    +=  parseInt(filtre_tab[item]['_aFilterData'][4]);
+                sum_tr_validated        +=  1;
 
             }
-            else if(item['_aData'][6][0] == 2){
-                sum_amount_pending += item['_aData'][4];
-                sum_tr_pending      +=  1
+            else if(parseInt(filtre_tab[item]['_aData'][6][0]) == 2){
+                sum_amount_pending      +=  parseInt(filtre_tab[item]['_aFilterData'][4]);
+                sum_tr_pending          +=  1;
                 
             }
             else{
-                sum_amount_canceled += item['_aData'][4];
-                sum_tr_canceled      +=  1
+                sum_amount_canceled     +=  parseInt(filtre_tab[item]['_aFilterData'][4]);
+                sum_tr_canceled         +=  1
 
             }
-        }
-        
         
     });
 
