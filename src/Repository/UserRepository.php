@@ -164,6 +164,25 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         ;
     }
 
+    // Retourne les utilisateur ayant un level de role inférieur à celui de l'utilisteur actuel
+    public function findUserByLevel($level, $brand = null)
+    {
+        $qb = $this->createQueryBuilder('u');
+        $qb->from(Role::class, 'r')
+            ->Where('u.role = r')
+            ->andWhere('r.level < :level')
+            ->setParameter('level', $level);
+
+        if ($brand) {
+            $qb->from(Brand::class, 'b')
+            ->andWhere('u.brand = :brand')
+            ->setParameter('brand', $brand);
+        };
+
+        $query = $qb->getQuery();
+        return $query->getResult();
+    }
+
     // Récupérer un utilisateur à partir de son id de transaction au vérification du N° Tel
     /*public function getUserByPaiementCode($id, $creator): ?User
     {

@@ -301,7 +301,7 @@
                                                 </div>
                                                 <!--end::Input group-->
                                                  <!--begin::Input group-->
-                                                <div class="fv-row mb-7">
+                                                <div class="fv-row mb-7" id="brand_input">
                                                     <!--begin::Col-->
                                                     <div class="col-lg-12 fv-row">
                                                         <!--begin::Label-->
@@ -313,10 +313,13 @@
                                                         <div class="w-100">
                                                             <div class="form-floating border rounded">
                                                                 <!--begin::Select2-->
-                                                                <select id="modalbrand" data-dropdown-parent="#kt_modal_add_user" data-allow-clear="true" data-kt-select2="true"  class="form-select form-select-solid lh-2 py-3" name="uBrand" data-placeholder="{{'Choisir une marque f' | trans}}"/>
+                                                                <select id="modalbrand" data-dropdown-parent="#kt_modal_add_user" data-allow-clear="true" data-kt-select2="true"  class="form-select form-select-solid lh-2 py-3" name="uBrand" data-placeholder="{{'Choisir une marque' | trans}}"/>
                                                                     <option value="">{{"Toutes"|trans}}</option>
+                                                                    {% set bcounter = 0  %}
+
                                                                     {% for brand in brands %}
-                                                                    <option value="{{ brand.uid }}" data-select2-avatar="{{brand.logo}}" data-select2-alt="{{brand.name}}">{{ brand.name }}</option>
+                                                                    {% set bcounter = bcounter + 1 %}
+                                                                    <option {% if bcounter == 1 %}selected{% endif %} value="{{ brand.uid }}" data-select2-avatar="{{brand.logo}}" data-select2-alt="{{brand.name}}">{{ brand.name }}</option>
                                                                     {% endfor %}
                                                                 </select>
                                                                 <!--end::Select2-->
@@ -541,6 +544,7 @@
                                 <th class="min-w-125px">{{'Date d\'inscription'| trans}}</th>
                                 <th class="min-w-125px">{{'Accusé'| trans}}</th>
                                 <th class="min-w-125px">{{'Prépayé'| trans}}</th>
+                                <th class="min-w-125px">{{'Marque'| trans}}</th>
                                 <th class="text-end min-w-100px">{{'Actions'| trans}}</th>
                             </tr>
                             <!--end::Table row-->

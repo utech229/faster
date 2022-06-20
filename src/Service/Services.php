@@ -345,6 +345,11 @@ class Services extends AbstractController
        return $this->statusRepository->findOneByCode($code);
     }
 
+    public function connectedUser()
+    {
+       return $this->getUser();
+    }
+
 	// : Les signatures de la fonction
 	// $pAllView : permission de tous voir
 	// $user = null : entité User, si null, l'utilisateur en session est automatiquement récupéré
