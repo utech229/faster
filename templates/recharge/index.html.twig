@@ -27,64 +27,251 @@
                                 </svg>
                             </span>
                             <!--end::Svg Icon-->
-                            <input type="text" data-kt-recharge-table-filter="search" class="form-control form-control-solid w-250px ps-15" placeholder="{{'Chercher status'| trans}}" />
+                            <input type="text" data-kt-recharge-table-filter="search" class="form-control form-control-solid w-250px ps-15" placeholder="{{'Chercher rechargement'| trans}}" />
                         </div>
                         <!--end::Search-->
                     </div>
                     <!--end::Card title-->
                     <!--begin::Card toolbar-->
-                    <div class="card-toolbar">
-                        <!--begin::Button-->
-                        <button type="button" id="kt_modal_self_recharge_button" class="btn btn-light-primary {% if pCreate is defined and pCreate  == false %}d-none{% endif %}" data-bs-toggle="modal" data-bs-target="#kt_modal_recharge">
-                        <!--begin::Svg Icon | path: icons/duotune/general/gen035.svg-->
-                        <span class="svg-icon svg-icon-3">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="currentColor" />
-                                <rect x="10.8891" y="17.8033" width="12" height="2" rx="1" transform="rotate(-90 10.8891 17.8033)" fill="currentColor" />
-                                <rect x="6.01041" y="10.9247" width="12" height="2" rx="1" fill="currentColor" />
-                            </svg>
-                        </span>
-                        <!--end::Svg Icon-->{% trans %}Recharger mon compte{% endtrans %}</button>
+                    {% if pAllAccess is not defined %}
+                        <div class="card-toolbar">
+                            <!--begin::Button-->
+                            <button type="button" id="self_recharge" class="btn btn-light-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_self_recharge">
+                            <!--begin::Svg Icon | path: icons/duotune/general/gen035.svg-->
+                            <span class="svg-icon svg-icon-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="currentColor" />
+                                    <rect x="10.8891" y="17.8033" width="12" height="2" rx="1" transform="rotate(-90 10.8891 17.8033)" fill="currentColor" />
+                                    <rect x="6.01041" y="10.9247" width="12" height="2" rx="1" fill="currentColor" />
+                                </svg>
+                            </span>
+                            <!--end::Svg Icon-->{% trans %}Recharger mon compte{% endtrans %}</button>
 
-                        <button type="button" id="kt_modal_self_recharge_reload_button" class="btn btn-light-primary d-none">
-                        <!--begin::Svg Icon | path: icons/duotune/general/gen035.svg-->
-                        <span class="svg-icon svg-icon-3">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="currentColor" />
-                                <rect x="10.8891" y="17.8033" width="12" height="2" rx="1" transform="rotate(-90 10.8891 17.8033)" fill="currentColor" />
-                                <rect x="6.01041" y="10.9247" width="12" height="2" rx="1" fill="currentColor" />
-                            </svg>
-                        </span>
-                        <!--end::Svg Icon-->{% trans %}Recharger mon compte{% endtrans %}</button>
-                        <!--end::Button-->
+                            <button type="button" id="kt_modal_self_recharge_reload_button" class="btn btn-light-primary d-none">
+                            <!--begin::Svg Icon | path: icons/duotune/general/gen035.svg-->
+                            <span class="svg-icon svg-icon-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="currentColor" />
+                                    <rect x="10.8891" y="17.8033" width="12" height="2" rx="1" transform="rotate(-90 10.8891 17.8033)" fill="currentColor" />
+                                    <rect x="6.01041" y="10.9247" width="12" height="2" rx="1" fill="currentColor" />
+                                </svg>
+                            </span>
+                            <!--end::Svg Icon-->{% trans %}Recharger mon compte{% endtrans %}</button>
+                            <!--end::Button-->
 
-                    </div>
-                    <div class="card-toolbar">
-                        <!--begin::Button-->
-                        <button type="button" id="kt_modal_other_recharge_button" class="btn btn-light-primary {% if pCreate is defined and pCreate  == false %}d-none{% endif %}" data-bs-toggle="modal" data-bs-target="#kt_modal_recharge">
-                        <!--begin::Svg Icon | path: icons/duotune/general/gen035.svg-->
-                        <span class="svg-icon svg-icon-3">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="currentColor" />
-                                <rect x="10.8891" y="17.8033" width="12" height="2" rx="1" transform="rotate(-90 10.8891 17.8033)" fill="currentColor" />
-                                <rect x="6.01041" y="10.9247" width="12" height="2" rx="1" fill="currentColor" />
-                            </svg>
-                        </span>
-                        <!--end::Svg Icon-->{% trans %}Recharger un utilisateur{% endtrans %}</button>
+                        </div>
+                    {% endif %}
+                    {% if canRechargeUser %}
+                        <div class="card-toolbar">
+                            <!--begin::Button-->
+                            <button type="button" id="kt_modal_other_recharge_button" class="btn btn-light-primary {% if pCreate is defined and pCreate  == false %}d-none{% endif %}" data-bs-toggle="modal" data-bs-target="#kt_modal_recharge">
+                            <!--begin::Svg Icon | path: icons/duotune/general/gen035.svg-->
+                                <span class="svg-icon svg-icon-3">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                        <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="currentColor" />
+                                        <rect x="10.8891" y="17.8033" width="12" height="2" rx="1" transform="rotate(-90 10.8891 17.8033)" fill="currentColor" />
+                                        <rect x="6.01041" y="10.9247" width="12" height="2" rx="1" fill="currentColor" />
+                                    </svg>
+                                </span>{% trans %}Recharger un utilisateur{% endtrans %}
+                            </button>
 
-                        <button type="button" id="kt_table_recharge_reload_button" class="btn btn-light-primary d-none">
-                        <!--begin::Svg Icon | path: icons/duotune/general/gen035.svg-->
-                        <span class="svg-icon svg-icon-3">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="currentColor" />
-                                <rect x="10.8891" y="17.8033" width="12" height="2" rx="1" transform="rotate(-90 10.8891 17.8033)" fill="currentColor" />
-                                <rect x="6.01041" y="10.9247" width="12" height="2" rx="1" fill="currentColor" />
-                            </svg>
-                        </span>
-                        <!--end::Svg Icon-->{% trans %}Recharger le tableau{% endtrans %}</button>
-                        <!--end::Button-->
+                            <button type="button" id="kt_table_recharge_reload_button" class="btn btn-light-primary d-none">
+                            <!--begin::Svg Icon | path: icons/duotune/general/gen035.svg-->
+                            <span class="svg-icon svg-icon-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="currentColor" />
+                                    <rect x="10.8891" y="17.8033" width="12" height="2" rx="1" transform="rotate(-90 10.8891 17.8033)" fill="currentColor" />
+                                    <rect x="6.01041" y="10.9247" width="12" height="2" rx="1" fill="currentColor" />
+                                </svg>
+                            </span>
+                            {% trans %}Recharger le tableau{% endtrans %}</button>
+                        </div>
+                        <div class="modal fade" id="kt_modal_recharge" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered mw-600px">
+                                <!--begin::Modal content-->
+                                <div class="modal-content">
+                                    <!--begin::Modal header-->
+                                    <div class="modal-header">
+                                        <!--begin::Modal title-->
+                                        <h2>{{"Rechargement de compte utilisateur"|trans }}</h2>
+                                        <!--end::Modal title-->
+                                        <!--begin::Close-->
+                                        <div class="btn btn-icon btn-sm btn-active-icon-primary" data-kt-modal-action="close">
+                                            <!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
+                                            <span class="svg-icon svg-icon-1">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                    <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor" />
+                                                    <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor" />
+                                                </svg>
+                                            </span>
+                                            <!--end::Svg Icon-->
+                                        </div>
+                                        <!--end::Close-->
+                                    </div>
+                                    <!--end::Modal header-->
+                                    <!--begin::Modal body-->
 
-                    </div>
+                                    <div class="modal-body py-lg-10 px-lg-10">
+                                        <!--begin::Stepper-->
+                                        <div class="stepper stepper-pills stepper-column d-flex flex-column flex-xl-row flex-row-fluid" id="kt_modal_create_app_stepper">
+
+                                            <!--begin::Aside-->
+                                            <!--begin::Content-->
+                                            <div class="flex-row-fluid py-lg-5 px-lg-15">
+                                                <!--begin::Form-->
+                                                <form class="form" id="kt_modal_recharge_form">
+                                                    <!--begin::Step 1-->
+                                                    <input type="hidden" value="{{ csrf_token(app.user.uid) }}" name="_token">
+                                                    <div class="current" data-kt-stepper-element="content">
+                                                        <div class="w-100 pt-0">
+                                                            <!--begin::Input group-->
+                                                            <div class="fv-row mb-8">
+                                                                <label class="d-flex align-items-center fs-5 fw-bold mb-2">{% trans %}Compte{% endtrans %}</label>
+                                                                <select id="kt_user_filter_select2_country" data-allow-clear="true" data-control="select2" data-kt-user-table-filter="two-step"
+                                                                    class="form-select form-select-solid fw-bolder" name="uSelect" data-placeholder="{{'Sélectionnez un compte' | trans}}"
+                                                                    data-kt-user-settings-type="select2_flags"/>
+                                                                    <option value='9V4mn91t1bzkV7W6WxA3'>user@fastermessage.com</option>
+                                                                    <option value='WDA2n91t1bzkV7W6VX5E'>reseller@fastermessage.com</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="fv-row mb-8">
+                                                                <!--begin::Label-->
+                                                                <label class="d-flex align-items-center fs-5 fw-bold mb-2">
+                                                                    <span class="required">{{'Montant'|trans }}</span>
+                                                                    <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="{{'Le montant à recharger sur votre balance.'|trans }}"></i>
+                                                                </label>
+                                                                <!--end::Label-->
+                                                                <!--begin::Input-->
+                                                                <input type="text" class="form-control form-control-lg form-control-solid" name="amount" id="amount" placeholder="{{'Montant à recharger'|trans }}" value="" />
+                                                                <!--end::Input-->
+                                                            </div>
+                                                            <div class="fv-row mb-8 phone-required">
+                                                                <label class="d-flex align-items-center fs-5 fw-bold mb-2">
+                                                                    <span class="required">{{'Téléphone'|trans }}</span>
+                                                                <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="{{'Numéro de téléphone qui sera utilisé pour le paiement'|trans}}"></i>
+                                                                </label>
+                                                                <input type="tel" class='form-control form-control-solid mb-3 mb-lg-0'  name="phone" placeholder="" value="" />
+
+                                                            </div>
+                                                            <!--end::Input group-->
+                                                            <!--begin::Input group-->
+                                                            <div class="fv-row">
+                                                                <!--begin::Label-->
+                                                                <label class="d-flex align-items-center fs-5 fw-bold mb-4">
+                                                                    <span class="required">{{"Méthodes de rechargement"|trans }}</span>
+                                                                    <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="Select your app category"></i>
+                                                                </label>
+                                                                <!--end::Label-->
+                                                                <!--begin:Options-->
+                                                                <div class="fv-row">
+                                                                    <!--begin:Option-->
+                                                                    <label class="d-flex flex-stack mb-5 cursor-pointer cursor-balance">
+                                                                        <!--begin:Label-->
+                                                                        <span class="d-flex align-items-center me-2">
+                                                                            <!--begin:Icon-->
+                                                                            <span class="symbol symbol-50px me-6">
+                                                                                <span class="symbol-label bg-light-primary">
+                                                                                    <!--begin::Svg Icon | path: icons/duotune/maps/map004.svg-->
+                                                                                    <span class="svg-icon svg-icon-1 svg-icon-primary">
+                                                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                                                            <path opacity="0.3" d="M18.4 5.59998C21.9 9.09998 21.9 14.8 18.4 18.3C14.9 21.8 9.2 21.8 5.7 18.3L18.4 5.59998Z" fill="currentColor" />
+                                                                                            <path d="M12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2ZM19.9 11H13V8.8999C14.9 8.6999 16.7 8.00005 18.1 6.80005C19.1 8.00005 19.7 9.4 19.9 11ZM11 19.8999C9.7 19.6999 8.39999 19.2 7.39999 18.5C8.49999 17.7 9.7 17.2001 11 17.1001V19.8999ZM5.89999 6.90002C7.39999 8.10002 9.2 8.8 11 9V11.1001H4.10001C4.30001 9.4001 4.89999 8.00002 5.89999 6.90002ZM7.39999 5.5C8.49999 4.7 9.7 4.19998 11 4.09998V7C9.7 6.8 8.39999 6.3 7.39999 5.5ZM13 17.1001C14.3 17.3001 15.6 17.8 16.6 18.5C15.5 19.3 14.3 19.7999 13 19.8999V17.1001ZM13 4.09998C14.3 4.29998 15.6 4.8 16.6 5.5C15.5 6.3 14.3 6.80002 13 6.90002V4.09998ZM4.10001 13H11V15.1001C9.1 15.3001 7.29999 16 5.89999 17.2C4.89999 16 4.30001 14.6 4.10001 13ZM18.1 17.1001C16.6 15.9001 14.8 15.2 13 15V12.8999H19.9C19.7 14.5999 19.1 16.0001 18.1 17.1001Z" fill="currentColor" />
+                                                                                        </svg>
+                                                                                    </span>
+                                                                                    <!--end::Svg Icon-->
+                                                                                </span>
+                                                                            </span>
+                                                                            <!--end:Icon-->
+                                                                            <!--begin:Info-->
+                                                                            <span class="d-flex flex-column">
+                                                                                <span class="fw-bolder fs-6">{{"Recharger l'utilisateur avec ma balance"|trans }}</span>
+                                                                                <span class="fs-7 text-muted">{{"Votre balance sera déduite du montant à recharger."|trans }}</span>
+                                                                            </span>
+                                                                            <!--end:Info-->
+                                                                        </span>
+                                                                        <!--end:Label-->
+                                                                        <!--begin:Input-->
+                                                                        <span class="form-check form-check-custom form-check-solid">
+                                                                            <input class="form-check-input" type="radio" name="typeProcess" value="jbIEz1651764268" checked/>
+                                                                        </span>
+                                                                        <!--end:Input-->
+                                                                    </label>
+                                                                    <!--end::Option-->
+                                                                    <!--begin:Option-->
+                                                                    <label class="d-flex flex-stack mb-5 cursor-pointer cursor-mobile-carte">
+                                                                        <!--begin:Label-->
+                                                                        <span class="d-flex align-items-center me-2">
+                                                                            <!--begin:Icon-->
+                                                                            <span class="symbol symbol-50px me-6">
+                                                                                <span class="symbol-label bg-light-danger">
+                                                                                    <!--begin::Svg Icon | path: icons/duotune/general/gen025.svg-->
+                                                                                    <span class="svg-icon svg-icon-1 svg-icon-danger">
+                                                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                                                            <rect x="2" y="2" width="9" height="9" rx="2" fill="currentColor" />
+                                                                                            <rect opacity="0.3" x="13" y="2" width="9" height="9" rx="2" fill="currentColor" />
+                                                                                            <rect opacity="0.3" x="13" y="13" width="9" height="9" rx="2" fill="currentColor" />
+                                                                                            <rect opacity="0.3" x="2" y="13" width="9" height="9" rx="2" fill="currentColor" />
+                                                                                        </svg>
+                                                                                    </span>
+                                                                                    <!--end::Svg Icon-->
+                                                                                </span>
+                                                                            </span>
+                                                                            <!--end:Icon-->
+                                                                            <!--begin:Info-->
+                                                                            <span class="d-flex flex-column">
+                                                                                <span class="fw-bolder fs-6">{{"Paiement Mobile ou carte Bancaire"|trans }}</span>
+                                                                                <span class="fs-7 text-muted">{{"Vous solde mobile ou carte bancaire sera déduit."|trans }}</span>
+                                                                            </span>
+                                                                            <!--end:Info-->
+                                                                        </span>
+                                                                        <!--end:Label-->
+                                                                        <!--begin:Input-->
+                                                                        <span class="form-check form-check-custom form-check-solid">
+                                                                            <input class="form-check-input" type="radio" name="typeProcess" value="cGkJD1651766620"/>
+                                                                        </span>
+                                                                        <!--end:Input-->
+                                                                    </label>
+                                                                    <!--end::Option-->
+
+                                                                </div>
+                                                                <!--end:Options-->
+                                                            </div>
+                                                            <!--end::Input group-->
+                                                        </div>
+                                                    </div>
+
+                                                    <!--begin::Actions-->
+                                                    <div class="d-flex flex-stack pt-1">
+                                                        <!--begin::Wrapper-->
+                                                        <div class="me-2">
+
+                                                        </div>
+                                                        <!--end::Wrapper-->
+                                                        <!--begin::Wrapper-->
+                                                        <div>
+                                                            <button type="reset" class="btn btn-light me-3" data-kt-modal-action="cancel">{{'Annuler'| trans}}</button>
+                                                            <button type="submit" class="btn btn-primary" data-kt-modal-action="submit">
+                                                                <span class="indicator-label">{{'Continuer'| trans}}</span>
+                                                                <span class="indicator-progress">{{'Veuillez patienter'| trans}}...
+                                                                <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                                                            </button>
+                                                        </div>
+                                                        <!--end::Wrapper-->
+                                                    </div>
+                                                    <!--end::Actions-->
+                                                </form>
+                                                <!--end::Form-->
+                                            </div>
+                                            <!--end::Content-->
+                                        </div>
+                                        <!--end::Stepper-->
+                                    </div>
+
+                                </div>
+                                <!--end::Modal content-->
+                            </div>
+                        </div>
+                    {% endif %}
 
                     <div class="card-toolbar">
                         <select id="kt_user_filter_select2_country uSelect" data-allow-clear="true" data-control="select2" data-kt-user-table-filter="two-step"
@@ -136,196 +323,6 @@
                 <!--end::Card body-->
             </div>
             <!--end::Card-->
-            <!--begin::Modals-->
-            <!--begin::Modal - Add statuss-->
-            <div class="modal fade" id="kt_modal_recharge" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
-                    <!--begin::Modal dialog-->
-                <div class="modal-dialog modal-dialog-centered mw-600px">
-                    <!--begin::Modal content-->
-                    <div class="modal-content">
-                        <!--begin::Modal header-->
-                        <div class="modal-header">
-                            <!--begin::Modal title-->
-                            <h2>{{"Rechargement de compte utilisateur"|trans }}</h2>
-                            <!--end::Modal title-->
-                            <!--begin::Close-->
-                            <div class="btn btn-icon btn-sm btn-active-icon-primary" data-kt-modal-action="close">
-                                <!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
-                                <span class="svg-icon svg-icon-1">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                        <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor" />
-                                        <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor" />
-                                    </svg>
-                                </span>
-                                <!--end::Svg Icon-->
-                            </div>
-                            <!--end::Close-->
-                        </div>
-                        <!--end::Modal header-->
-                        <!--begin::Modal body-->
-
-                        <div class="modal-body py-lg-10 px-lg-10">
-                            <!--begin::Stepper-->
-                            <div class="stepper stepper-pills stepper-column d-flex flex-column flex-xl-row flex-row-fluid" id="kt_modal_create_app_stepper">
-
-                                <!--begin::Aside-->
-                                <!--begin::Content-->
-                                <div class="flex-row-fluid py-lg-5 px-lg-15">
-                                    <!--begin::Form-->
-                                    <form class="form" id="kt_modal_recharge_form">
-                                        <!--begin::Step 1-->
-                                        <input type="hidden" value="{{ csrf_token(app.user.uid) }}" name="_token">
-                                        <div class="current" data-kt-stepper-element="content">
-                                            <div class="w-100 pt-0">
-                                                <!--begin::Input group-->
-                                                <div class="fv-row mb-8">
-                                                    <label class="d-flex align-items-center fs-5 fw-bold mb-2">{% trans %}Compte{% endtrans %}</label>
-                                                    <select id="kt_user_filter_select2_country" data-allow-clear="true" data-control="select2" data-kt-user-table-filter="two-step"
-                                                        class="form-select form-select-solid fw-bolder" name="uSelect" data-placeholder="{{'Sélectionnez un compte' | trans}}"
-                                                        data-kt-user-settings-type="select2_flags"/>
-                                                        <option value='9V4mn91t1bzkV7W6WxA3'>user@fastermessage.com</option>
-                                                        <option value='WDA2n91t1bzkV7W6VX5E'>reseller@fastermessage.com</option>
-                                                    </select>
-                                                </div>
-                                                <div class="fv-row mb-8">
-                                                    <!--begin::Label-->
-                                                    <label class="d-flex align-items-center fs-5 fw-bold mb-2">
-                                                        <span class="required">{{'Montant'|trans }}</span>
-                                                        <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="{{'Le montant à recharger sur votre balance.'|trans }}"></i>
-                                                    </label>
-                                                    <!--end::Label-->
-                                                    <!--begin::Input-->
-                                                    <input type="text" class="form-control form-control-lg form-control-solid" name="amount" id="amount" placeholder="{{'Montant à recharger'|trans }}" value="" />
-                                                    <!--end::Input-->
-                                                </div>
-                                                <div class="fv-row mb-8 phone-required">
-                                                    <label class="d-flex align-items-center fs-5 fw-bold mb-2">
-                                                        <span class="required">{{'Téléphone'|trans }}</span>
-                                                    <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="{{'Numéro de téléphone qui sera utilisé pour le paiement'|trans}}"></i>
-                                                    </label>
-                                                    <input type="tel" class='form-control form-control-solid mb-3 mb-lg-0'  name="phone" placeholder="" value="" />
-
-                                                </div>
-                                                <!--end::Input group-->
-                                                <!--begin::Input group-->
-                                                <div class="fv-row">
-                                                    <!--begin::Label-->
-                                                    <label class="d-flex align-items-center fs-5 fw-bold mb-4">
-                                                        <span class="required">{{"Méthodes de rechargement"|trans }}</span>
-                                                        <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="Select your app category"></i>
-                                                    </label>
-                                                    <!--end::Label-->
-                                                    <!--begin:Options-->
-                                                    <div class="fv-row">
-                                                        <!--begin:Option-->
-                                                        <label class="d-flex flex-stack mb-5 cursor-pointer cursor-balance">
-                                                            <!--begin:Label-->
-                                                            <span class="d-flex align-items-center me-2">
-                                                                <!--begin:Icon-->
-                                                                <span class="symbol symbol-50px me-6">
-                                                                    <span class="symbol-label bg-light-primary">
-                                                                        <!--begin::Svg Icon | path: icons/duotune/maps/map004.svg-->
-                                                                        <span class="svg-icon svg-icon-1 svg-icon-primary">
-                                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                                                                <path opacity="0.3" d="M18.4 5.59998C21.9 9.09998 21.9 14.8 18.4 18.3C14.9 21.8 9.2 21.8 5.7 18.3L18.4 5.59998Z" fill="currentColor" />
-                                                                                <path d="M12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2ZM19.9 11H13V8.8999C14.9 8.6999 16.7 8.00005 18.1 6.80005C19.1 8.00005 19.7 9.4 19.9 11ZM11 19.8999C9.7 19.6999 8.39999 19.2 7.39999 18.5C8.49999 17.7 9.7 17.2001 11 17.1001V19.8999ZM5.89999 6.90002C7.39999 8.10002 9.2 8.8 11 9V11.1001H4.10001C4.30001 9.4001 4.89999 8.00002 5.89999 6.90002ZM7.39999 5.5C8.49999 4.7 9.7 4.19998 11 4.09998V7C9.7 6.8 8.39999 6.3 7.39999 5.5ZM13 17.1001C14.3 17.3001 15.6 17.8 16.6 18.5C15.5 19.3 14.3 19.7999 13 19.8999V17.1001ZM13 4.09998C14.3 4.29998 15.6 4.8 16.6 5.5C15.5 6.3 14.3 6.80002 13 6.90002V4.09998ZM4.10001 13H11V15.1001C9.1 15.3001 7.29999 16 5.89999 17.2C4.89999 16 4.30001 14.6 4.10001 13ZM18.1 17.1001C16.6 15.9001 14.8 15.2 13 15V12.8999H19.9C19.7 14.5999 19.1 16.0001 18.1 17.1001Z" fill="currentColor" />
-                                                                            </svg>
-                                                                        </span>
-                                                                        <!--end::Svg Icon-->
-                                                                    </span>
-                                                                </span>
-                                                                <!--end:Icon-->
-                                                                <!--begin:Info-->
-                                                                <span class="d-flex flex-column">
-                                                                    <span class="fw-bolder fs-6">{{"Recharger l'utilisateur avec ma balance"|trans }}</span>
-                                                                    <span class="fs-7 text-muted">{{"Votre balance sera déduite du montant à recharger."|trans }}</span>
-                                                                </span>
-                                                                <!--end:Info-->
-                                                            </span>
-                                                            <!--end:Label-->
-                                                            <!--begin:Input-->
-                                                            <span class="form-check form-check-custom form-check-solid">
-                                                                <input class="form-check-input" type="radio" name="typeProcess" value="jbIEz1651764268" checked/>
-                                                            </span>
-                                                            <!--end:Input-->
-                                                        </label>
-                                                        <!--end::Option-->
-                                                        <!--begin:Option-->
-                                                        <label class="d-flex flex-stack mb-5 cursor-pointer cursor-mobile-carte">
-                                                            <!--begin:Label-->
-                                                            <span class="d-flex align-items-center me-2">
-                                                                <!--begin:Icon-->
-                                                                <span class="symbol symbol-50px me-6">
-                                                                    <span class="symbol-label bg-light-danger">
-                                                                        <!--begin::Svg Icon | path: icons/duotune/general/gen025.svg-->
-                                                                        <span class="svg-icon svg-icon-1 svg-icon-danger">
-                                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                                                                <rect x="2" y="2" width="9" height="9" rx="2" fill="currentColor" />
-                                                                                <rect opacity="0.3" x="13" y="2" width="9" height="9" rx="2" fill="currentColor" />
-                                                                                <rect opacity="0.3" x="13" y="13" width="9" height="9" rx="2" fill="currentColor" />
-                                                                                <rect opacity="0.3" x="2" y="13" width="9" height="9" rx="2" fill="currentColor" />
-                                                                            </svg>
-                                                                        </span>
-                                                                        <!--end::Svg Icon-->
-                                                                    </span>
-                                                                </span>
-                                                                <!--end:Icon-->
-                                                                <!--begin:Info-->
-                                                                <span class="d-flex flex-column">
-                                                                    <span class="fw-bolder fs-6">{{"Paiement Mobile ou carte Bancaire"|trans }}</span>
-                                                                    <span class="fs-7 text-muted">{{"Vous solde mobile ou carte bancaire sera déduit."|trans }}</span>
-                                                                </span>
-                                                                <!--end:Info-->
-                                                            </span>
-                                                            <!--end:Label-->
-                                                            <!--begin:Input-->
-                                                            <span class="form-check form-check-custom form-check-solid">
-                                                                <input class="form-check-input" type="radio" name="typeProcess" value="cGkJD1651766620"/>
-                                                            </span>
-                                                            <!--end:Input-->
-                                                        </label>
-                                                        <!--end::Option-->
-
-                                                    </div>
-                                                    <!--end:Options-->
-                                                </div>
-                                                <!--end::Input group-->
-                                            </div>
-                                        </div>
-
-                                        <!--begin::Actions-->
-                                        <div class="d-flex flex-stack pt-1">
-                                            <!--begin::Wrapper-->
-                                            <div class="me-2">
-
-                                            </div>
-                                            <!--end::Wrapper-->
-                                            <!--begin::Wrapper-->
-                                            <div>
-                                                <button type="reset" class="btn btn-light me-3" data-kt-modal-action="cancel">{{'Annuler'| trans}}</button>
-                                                <button type="submit" class="btn btn-primary" data-kt-modal-action="submit">
-                                                    <span class="indicator-label">{{'Continuer'| trans}}</span>
-                                                    <span class="indicator-progress">{{'Veuillez patienter'| trans}}...
-                                                    <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
-                                                </button>
-                                            </div>
-                                            <!--end::Wrapper-->
-                                        </div>
-                                        <!--end::Actions-->
-                                    </form>
-                                    <!--end::Form-->
-                                </div>
-                                <!--end::Content-->
-                            </div>
-                            <!--end::Stepper-->
-                        </div>
-
-                    </div>
-                    <!--end::Modal content-->
-                </div>
-                <!--end::Modal dialog-->
-            </div>
-
             <div class="modal fade" id="kt_modal_self_recharge" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
                     <!--begin::Modal dialog-->
                 <div class="modal-dialog modal-dialog-centered mw-600px">

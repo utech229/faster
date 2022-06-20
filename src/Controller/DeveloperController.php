@@ -68,11 +68,7 @@ class DeveloperController extends AbstractController
         return $this->render('developer/apikey.html.twig', [
             'controller_name' => 'DeveloperController',
             'title'           => $this->intl->trans('Clé api').' - '. $this->brand->get()['name'],
-            'pageTitle'       => [
-                'one'   => $this->intl->trans('Clé'),
-                'two'   => $this->intl->trans('Ma clé api'),
-                'none'  => $this->intl->trans('Gestion profil'),
-            ],
+            'pageTitle'          => [ [$this->intl->trans('Développeur & Api')], [$this->intl->trans('A')] ],
             'brand'           => $this->brand->get(),
             'baseUrl'         => $this->baseUrl->init(),
             'pCreateUser'     => $this->pCreate,

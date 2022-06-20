@@ -13,100 +13,100 @@
         <div id="kt_content_container" class="container-xxl">
             <!--begin::Row-->
             <div class="row g-5 g-xl-8">
-            <div class="col-xl-4">
-                <!--begin::Statistics Widget 4-->
-                <div class="card card-xl-stretch mb-xl-8">
-                <!--begin::Body-->
-                <div class="card-body p-0">
-                    <div class="d-flex flex-stack card-p flex-grow-1">
-                    <span class="symbol symbol-50px symbol-light-info me-2">
-                        <span class="symbol-label">
-                        <!--begin::Icon-->
-                            <div class="m-0">
-                                <i class="fa fa-users fs-2x text-info"></i>
-                            </div>
-                            <!--end::Icon-->
-                        <span class="pulse-ring"></span>
-                        </span>
-                    </span>
-                    <div class="d-flex flex-column text-end">
-                        <span class="text-dark fw-bolder fs-2" id="stat_all">
-                        {% if stats is defined %}
-                                    {{ stats.all }}
-                                    {% endif %}
-                        </span>
-                        <span class="text-muted fw-bold mt-1">{{ 'Utilisateurs' | trans }}</span>
-                    </div>
-                    </div>
-                    <!--<div class="statistics-widget-allregisteredusers-chart card-rounded-bottom" data-kt-chart-color="info" style="height: 150px"></div>-->
-                </div>
-                <!--end::Body-->
-                </div>
-                <!--end::Statistics Widget 4-->
-            </div>
-            <div class="col-xl-4">
-                <!--begin::Statistics Widget 4-->
-                <div class="card card-xl-stretch mb-xl-8">
-                <!--begin::Body-->
-                <div class="card-body p-0">
-                    <div class="d-flex flex-stack card-p flex-grow-1">
-                    <span class="symbol symbol-50px symbol-light-success me-2">
-                        <span class="symbol-label">
-                        <!--begin::Icon-->
-                            <div class="m-0">
-                                <i class="fa fa-users fs-2x text-success"></i>
-                            </div>
-                            <!--end::Icon-->
-                        <span class="pulse-ring"></span>
-                        <!--end::Svg Icon-->
-                        </span>
-                    </span>
-                    <div class="d-flex flex-column text-end">
-                        <span class="text-dark fw-bolder fs-2" id="stat_active">
-                        {% if stats is defined %}
-                                    {{ stats.active }}
-                                    {% endif %}
-                        </span>
-                        <span class="text-muted fw-bold mt-1">Actifs</span>
-                    </div>
-                    </div>
-                    <!--<div class="statistics-widget-allactivatedusers-chart card-rounded-bottom" data-kt-chart-color="success" style="height: 150px"></div>-->
-                </div>
-                <!--end::Body-->
-                </div>
-                <!--end::Statistics Widget 4-->
-            </div>
-            <div class="col-xl-4">
-                <!--begin::Statistics Widget 4-->
-                <div class="card card-xl-stretch mb-5 mb-xl-8">
-                <!--begin::Body-->
-                <div class="card-body p-0">
-                    <div class="d-flex flex-stack card-p flex-grow-1">
-                    <span class="symbol symbol-50px symbol-light-primary me-2">
-                        <span class="symbol-label">
-                        <!--begin::Icon-->
+                <div class="col-xl-4">
+                    <!--begin::Statistics Widget 4-->
+                    <div class="card card-xl-stretch mb-xl-8">
+                    <!--begin::Body-->
+                    <div class="card-body p-0">
+                        <div class="d-flex flex-stack card-p flex-grow-1">
+                        <span class="symbol symbol-50px symbol-light-info me-2">
+                            <span class="symbol-label">
+                            <!--begin::Icon-->
                                 <div class="m-0">
-                                    <i class="fa fa-users fs-2x text-warning"></i>
+                                    <i class="fa fa-users fs-2x text-info"></i>
                                 </div>
                                 <!--end::Icon-->
-                        <span class="pulse-ring"></span>
+                            <span class="pulse-ring"></span>
+                            </span>
                         </span>
-                    </span>
-                    <div class="d-flex flex-column text-end">
-                        <span class="text-dark fw-bolder fs-2" id="stat_all">
-                        {% if stats is defined %}
-                                    {{ stats.pending }}
-                                    {% endif %}
+                        <div class="d-flex flex-column text-end">
+                            <span class="text-dark fw-bolder fs-2" id="stat_all">
+                            {% if stats is defined %}
+                                        {{ stats.all }}
+                                        {% endif %}
+                            </span>
+                            <span class="text-muted fw-bold mt-1">{{ 'Utilisateurs' | trans }}</span>
+                        </div>
+                        </div>
+                        <!--<div class="statistics-widget-allregisteredusers-chart card-rounded-bottom" data-kt-chart-color="info" style="height: 150px"></div>-->
+                    </div>
+                    <!--end::Body-->
+                    </div>
+                    <!--end::Statistics Widget 4-->
+                </div>
+                <div class="col-xl-4">
+                    <!--begin::Statistics Widget 4-->
+                    <div class="card card-xl-stretch mb-xl-8">
+                    <!--begin::Body-->
+                    <div class="card-body p-0">
+                        <div class="d-flex flex-stack card-p flex-grow-1">
+                        <span class="symbol symbol-50px symbol-light-success me-2">
+                            <span class="symbol-label">
+                            <!--begin::Icon-->
+                                <div class="m-0">
+                                    <i class="fa fa-users fs-2x text-success"></i>
+                                </div>
+                                <!--end::Icon-->
+                            <span class="pulse-ring"></span>
+                            <!--end::Svg Icon-->
+                            </span>
                         </span>
-                        <span class="text-muted fw-bold mt-1">{{"En attente"|trans}}</span>
+                        <div class="d-flex flex-column text-end">
+                            <span class="text-dark fw-bolder fs-2" id="stat_active">
+                            {% if stats is defined %}
+                                        {{ stats.active }}
+                                        {% endif %}
+                            </span>
+                            <span class="text-muted fw-bold mt-1">Actifs</span>
+                        </div>
+                        </div>
+                        <!--<div class="statistics-widget-allactivatedusers-chart card-rounded-bottom" data-kt-chart-color="success" style="height: 150px"></div>-->
                     </div>
+                    <!--end::Body-->
                     </div>
-                    <!--<div class="statistics-widget-allmonthusers-chart card-rounded-bottom" data-kt-chart-color="primary" style="height: 150px"></div>-->
+                    <!--end::Statistics Widget 4-->
                 </div>
-                <!--end::Body-->
+                <div class="col-xl-4">
+                    <!--begin::Statistics Widget 4-->
+                    <div class="card card-xl-stretch mb-5 mb-xl-8">
+                    <!--begin::Body-->
+                    <div class="card-body p-0">
+                        <div class="d-flex flex-stack card-p flex-grow-1">
+                        <span class="symbol symbol-50px symbol-light-primary me-2">
+                            <span class="symbol-label">
+                            <!--begin::Icon-->
+                                    <div class="m-0">
+                                        <i class="fa fa-users fs-2x text-warning"></i>
+                                    </div>
+                                    <!--end::Icon-->
+                            <span class="pulse-ring"></span>
+                            </span>
+                        </span>
+                        <div class="d-flex flex-column text-end">
+                            <span class="text-dark fw-bolder fs-2" id="stat_all">
+                            {% if stats is defined %}
+                                        {{ stats.pending }}
+                                        {% endif %}
+                            </span>
+                            <span class="text-muted fw-bold mt-1">{{"En attente"|trans}}</span>
+                        </div>
+                        </div>
+                        <!--<div class="statistics-widget-allmonthusers-chart card-rounded-bottom" data-kt-chart-color="primary" style="height: 150px"></div>-->
+                    </div>
+                    <!--end::Body-->
+                    </div>
+                    <!--end::Statistics Widget 4-->
                 </div>
-                <!--end::Statistics Widget 4-->
-            </div>
             </div>
             <!--end::Row-->
             <!--begin::Card-->
@@ -270,7 +270,6 @@
                                                     <label class="d-block fw-bold fs-6 mb-5">{{ 'Avatar'| trans }}</label>
                                                     <!--end::Label-->
                                                     <!--begin::Image input-->
-                                                    
                                                     <div class="image-input image-input-outline" data-kt-image-input="true" style="background-image: url({{ asset('app/uploads/avatars/default_avatar_1.png')  }}">
                                                         <!--begin::Preview existing avatar-->
                                                         <div class="image-input-wrapper w-125px h-125px" id="avatar_input" style="background-image: url({{ asset('app/uploads/avatars/default_avatar_1.png') }}"></div>
@@ -299,6 +298,32 @@
                                                     <!--begin::Hint-->
                                                     <div class="form-text">{{ 'Extensions acceptés'| trans }}: png, jpg, jpeg.</div>
                                                     <!--end::Hint-->
+                                                </div>
+                                                <!--end::Input group-->
+                                                 <!--begin::Input group-->
+                                                <div class="fv-row mb-7">
+                                                    <!--begin::Col-->
+                                                    <div class="col-lg-12 fv-row">
+                                                        <!--begin::Label-->
+                                                        <label class="fs-6 fw-bold mb-2 form-label" for="kt_user_add_select2_country">
+                                                            <span class="required">{{ 'Marque'| trans }}:</span>
+                                                        </label>
+                                                        <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="{{"Marque blanche de l'utilisateur à créer"| trans}}"></i>
+                                                        <!--end::Label-->
+                                                        <div class="w-100">
+                                                            <div class="form-floating border rounded">
+                                                                <!--begin::Select2-->
+                                                                <select id="modalbrand" data-dropdown-parent="#kt_modal_add_user" data-allow-clear="true" data-kt-select2="true"  class="form-select form-select-solid lh-2 py-3" name="uBrand" data-placeholder="{{'Choisir une marque f' | trans}}"/>
+                                                                    <option value="">{{"Toutes"|trans}}</option>
+                                                                    {% for brand in brands %}
+                                                                    <option value="{{ brand.uid }}" data-select2-avatar="{{brand.logo}}" data-select2-alt="{{brand.name}}">{{ brand.name }}</option>
+                                                                    {% endfor %}
+                                                                </select>
+                                                                <!--end::Select2-->
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!--end::Col-->
                                                 </div>
                                                 <!--end::Input group-->
                                                 <!--begin::Input group-->

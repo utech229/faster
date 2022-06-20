@@ -51,6 +51,12 @@ class BrandController extends AbstractController
     #[Route('{_locale}/brand', name: 'brand')]
     public function index(): Response
     {
+
+        $user= $this->bRepository->findOneBy(['manager'=> $this->getUser()]);
+        $vCreateDiv = (!$user) ? true : false;
+
+        // dd($vCreateDiv);
+        // dd($this->services->checkThisUser($this->pAllAccess, $this->pManager, NULL, $this->getUser()));
         return $this->render('brand/index.html.twig', [
             'controller_name' => 'BrandController',
             'brand'              => $this->brand->get(),
@@ -62,6 +68,7 @@ class BrandController extends AbstractController
             'pageTitle'          => [
                                         [$this->intl->trans('Gestion des marques')],
             ],
+            'vCreateDiv' => $vCreateDiv
         ]);
     }
 
@@ -69,19 +76,31 @@ class BrandController extends AbstractController
     public function createBrand(Request $request): Response
     {
         if(!$this->isCsrfTokenValid($this->getUser()->getUid(), $request->request->get('_token'))) return $this->services->no_access($this->intl->trans("Initialisation d'une recharge pour l'utiliateur ").': '.$this->getUser()->getEmail());
-        // if(!$this->pRecharge){
-        //     return $this->services->no_access($this->intl->trans("Utilisateur non autorisé pour effectuer un rechargement.").': '.$this->getUser()->getEmail(), $this->intl->trans("Ooops... Vous n'êtes pas autorisé(e) à effectuer cette action."));
-        // }
-        $userAdd    = $this->getUser();
 
         $linkLogo   = 'loadPicture';
-        $buildImg = $this->addEntity->profilePhotoSetter($request , $userAdd, $name, 'brand');
-        // dd($buildImg);
-            if (isset($avatarProcess['error']) && $avatarProcess['error'] == true){
+        $buildImg = $this->addEntity->profilePhotoSetter($request , $this->getUser());
+
+        if (isset($buildImg['error']) && $buildImg['error'] == true){
             return $this->services->ajax_error_crud($this->intl->trans('Traitement du fichier image de profile'), $avatarProcess['info']);
-            }
+        }
+        $user       = $this->getUser();
+        $isSelect   = $request->request->get('uSelect');
+        if($isSelect){
+            $user = $this->uRepository->findOneBy(['uid'=> $isSelect, 'status'=> $this->services->status(3)]);
+            if(!$user) return $this->services->msg_error($this->intl->trans("Utilisateur incorrect.").': '.$this->getUser()->getEmail(), $this->intl->trans("L'utilisateur sélectionné n'existe pas ou n'est pas actif."));
+        }
+
+        $executeReq = $this->services->checkThisUser($this->pAllAccess, $this->pManager, NULL, $user);
+        if($executeReq[0]== 0 || $executeReq[0] == 1){
+            $creator = $this->getUser();
+            $manager = $user;
+        }else{
+            $creator = NULL;
+            $manager = $this->getUser();
+        }
+
         $newBrand   = new Brand;
-        $newBrand-> setManager($userAdd)
+        $newBrand-> setManager($manager)
                     -> setStatus($this->services->status(1))
                     -> setUid($this->services->getUniqid())
                     -> setName($request->request->get('_name_brand'))
@@ -93,7 +112,8 @@ class BrandController extends AbstractController
                     -> setIsDefault(1)
                     -> setPhone($request->request->get('_phone_support'))
                     -> setCreatedAt(new \DatetimeImmutable())
-                    -> setCommission(0);
+                    -> setCommission(0)
+                    -> setCreator($creator);
         $this->bRepository->add($newBrand);
 
         return $this->services->msg_success(

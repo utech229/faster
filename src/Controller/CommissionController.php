@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Brand;
 use App\Entity\Status;
+use App\Entity\User;
 use App\Service\uBrand;
 use App\Service\BaseUrl;
 use App\Service\Services;
@@ -59,11 +60,9 @@ class CommissionController extends AbstractController
         $users              =   [];
 
         if ($this->pView) {
-            
-            $users   =   $this->services->getUserByPermission($this->pSeller,$typeUser,$Id,1);
+            $users   =   $this->services->getUserByPermission($this->permission[3], null, null, 1);
         }
 
-        dd($users);
         return $this->render('commission/index.html.twig', [
             'title'           => $this->intl->trans('Commissions').' - '. $this->brand->get()['name'],
             'pageTitle'       => [
@@ -121,8 +120,7 @@ class CommissionController extends AbstractController
                     break;
             
             default:
-                    $brands   =    $this->em->getRepository(Brand::class)->findByManager($this->getUser());
-
+                    $brands   =    $this->em->getRepository(Brand::class)->findByManager($this->em->getRepository(User::class)->findByUid($request->request->get('_uid')));
                 break;
         }
 
@@ -145,7 +143,7 @@ class CommissionController extends AbstractController
        
         $this->services->addLog($this->intl->trans('Lecture de la liste des transactions'));
         $data = [
-                    "data"              =>   $tabBrand,
+                    "data"              =>   $tabBrand
                 ];
         return new JsonResponse($data);
     }
