@@ -34,14 +34,13 @@ class SMSCampaignController extends AbstractController
        $this->ug            = $ug;
        $this->em            = $em;
        $this->permission    = [
-           "SEND0", "SEND1",  "SEND2", "SEND3", "SEND4", "SEND5"
+           "SMSC0", "SMSC1",  "SMSC2", "SMSC3", "SMSC4",
        ];
        $this->pAccess   =	$this->src->checkPermission($this->permission[0]);
        $this->pCreate   =	$this->src->checkPermission($this->permission[1]);
        $this->pList     =	$this->src->checkPermission($this->permission[2]);
        $this->pEdit	    =	$this->src->checkPermission($this->permission[3]);
        $this->pDelete	=	$this->src->checkPermission($this->permission[4]);
-       $this->pStatus	=	$this->src->checkPermission($this->permission[5]);
     }
 
     #[Route('', name: 'campaign_sms', methods: ['GET'])]
@@ -160,9 +159,6 @@ class SMSCampaignController extends AbstractController
 
         $campaign = new SMSCampaign();
 
-        // $form = $this->createForm(SenderType::class, $campaign);
-        // $form->handleRequest($request);
-
         list($userType, $masterId, $userRequest) = $this->src->checkThisUser($this->pList);
 
         $status = [
@@ -175,10 +171,15 @@ class SMSCampaignController extends AbstractController
 
         $brands = $this->em->getRepository(Brand::class)->findBrandBy($userType, $userRequest);
 
+        $users = (count($brands) > 0) ? $this->em->getRepository(User::class)->getUsersByPermission($this->permission[1], 2, $brands[0]->getManager()->getId(), 1) : [];
+
+        $senders = (count($users) > 0) ? $this->em->getRepository(Sender::class)->findBy(['manager'=>$users[0], 'status'=>$this->src->status(3)]) : [];
+
         return $this->renderForm('smscampaign/new.html.twig', [
             'brands'    => $brands,
+            'users'     => $users,
             'status'    => $status,
-            'senders'   => [],
+            'senders'   => $senders,
             'brand'     => $this->brand->get(),
             'pAccess'   => $this->pAccess,
             'pCreate'   => $this->pCreate,
@@ -186,12 +187,11 @@ class SMSCampaignController extends AbstractController
             'pList'     => $this->pList,
             'pEdit'     => $this->pEdit,
             'pDelete'   => $this->pDelete,
-            'pStatus'   => $this->pStatus,
             'pageTitle' => []
         ]);
     }
 
-    #[Route('/user/get', name: 'sender_user', methods: ['POST'])]
+    #[Route('/user/get', name: 'smscampaign_user', methods: ['POST'])]
     public function user(Request $request): Response
     {
         $data = [
@@ -204,7 +204,7 @@ class SMSCampaignController extends AbstractController
             return new JsonResponse($data);
         }
 
-        $brand = $this->em->getRepository(Brand::class)->findOneByUid($request->request->get("brand", "IwyXLGn0gH"));
+        $brand = $this->em->getRepository(Brand::class)->findOneByUid($request->request->get("brand"));
 
         if($brand) $users = $this->em->getRepository(User::class)->getUsersByPermission("", 2, $brand->getManager()->getId(), 1);
         else $users = $this->em->getRepository(User::class)->getUsersByPermission("", null, null, 1);

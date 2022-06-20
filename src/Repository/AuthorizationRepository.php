@@ -6,6 +6,7 @@ use App\Entity\Authorization;
 use App\Entity\Permission;
 use App\Entity\Role;
 use App\Entity\Status;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -45,13 +46,17 @@ class AuthorizationRepository extends ServiceEntityRepository
     /**
     * @return Authorization|null Return one or null Authorization objects
     */
-    public function findByCodePermission($code): array
+    public function findByCodePermission($code, $user): array
     {
         return $this->createQueryBuilder('a')
             ->from('App\Entity\Permission', 'p')
             ->from('App\Entity\Role', 'r')
             ->from('App\Entity\Status', 's')
-            ->where('a.role = r')
+            ->from('App\Entity\User', 'u')
+            ->where('u = :user')
+            ->setParameter('user', $user)
+            ->andWhere('u.role = r')
+            ->andWhere('a.role = r')
             ->andWhere('a.permission = p')
             ->andWhere('a.status = s')
             ->andWhere('r.status = s')

@@ -215,7 +215,7 @@ class SenderController extends AbstractController
             return new JsonResponse($data);
         }
 
-        $brand = $this->em->getRepository(Brand::class)->findOneByUid($request->request->get("brand", "IwyXLGn0gH"));
+        $brand = $this->em->getRepository(Brand::class)->findOneByUid($request->request->get("brand"));
 
         if($brand) $users = $this->em->getRepository(User::class)->getUsersByPermission("", 2, $brand->getManager()->getId(), 1);
         else $users = $this->em->getRepository(User::class)->getUsersByPermission("", null, null, 1);

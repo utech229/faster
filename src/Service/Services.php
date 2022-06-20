@@ -225,7 +225,7 @@ class Services extends AbstractController
 			return $permission ? 1 : 0;
 		}
 
-		return 0;
+		return $permission ? 1 : 0;
     }
 
 	// $level == 1 (Uniquement les sous marques) $level == 2 (Uniquement les Affiliés) $level == 0 || autres (Tous)

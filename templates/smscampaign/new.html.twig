@@ -75,6 +75,9 @@
                             <!--end::Label-->
                             <!--begin::Input-->
                             <select id="user" data-allow-clear="false" data-control="select2" class="form-select form-select-solid fw-bolder" data-placeholder="{{"Sélectionnez l'utilisateur" | trans}}">
+                                {% for user in users %}
+                                    <option value="{{ user.uid }}">{{ user.email }}</option>
+                                {% endfor %}
                             </select>
                             <!--end::Input-->
                         </div>
