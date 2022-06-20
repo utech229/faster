@@ -62,6 +62,9 @@ class SMSMessage
     #[ORM\Column(type: 'text')]
     private $originMessage;
 
+    #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    private $createBy;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -255,6 +258,18 @@ class SMSMessage
     public function setOriginMessage(string $originMessage): self
     {
         $this->originMessage = $originMessage;
+
+        return $this;
+    }
+
+    public function getCreateBy(): ?string
+    {
+        return $this->createBy;
+    }
+
+    public function setCreateBy(?string $createBy): self
+    {
+        $this->createBy = $createBy;
 
         return $this;
     }
