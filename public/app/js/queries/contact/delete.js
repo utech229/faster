@@ -1,8 +1,8 @@
 "use strict";
 
-$(document).on('click', ".userDeleter", function() {
+$(document).on('click', ".paymentDeleter", function() {
 	var uid = $(this).data('id');
-	$(document).trigger('entityUpBegin', ['#deleteUserOption', uid, 'fa-trash-alt']);
+	$(document).trigger('entityUpBegin', ['#deletePaymentOption', uid, 'fa-trash-alt']);
 	Swal.fire({
 		text: _Deletion_request,
 		icon: "warning",
@@ -16,13 +16,14 @@ $(document).on('click', ".userDeleter", function() {
 		}
 	}).then(function(result) {
 		if (result.value) {
+			loading(true);
 			$.ajax({
 				url: window.location.href +'/'+ uid + '/delete',
 				type: "post",
 				data: {uid : uid, _token : csrfToken},
 				dataType: "json",
 				success: function(response) {
-					$(document).trigger('securityFirewall', [response, '#deleteUserOption', uid, 'fa-trash-alt']);
+					$(document).trigger('securityFirewall', [response, '#deletePaymentOption', uid, 'fa-trash-alt']);
 					if (response.status === 'success') 
 					Swal.fire({
 						text: response.message,
@@ -32,19 +33,20 @@ $(document).on('click', ".userDeleter", function() {
 						customClass: {
 							confirmButton: "btn btn-primary"
 						}
-					}),
-					statisticsReload(),
-					$(document).trigger('entityUpStop', ['#deleteUserOption', uid, 'fa-trash-alt']),
-					tableReloadButton.click();	
+					});
+					loading();
+					$(document).trigger('entityUpStop', ['#deletePaymentOption', uid, 'fa-trash-alt']),
+					tableReloadButton.click();
 				},
                 error:function(response) {
 					$(document).trigger('onAjaxError');
-					$(document).trigger('entityUpStop', ['#deleteUserOption', uid, 'fa-trash-alt']);
+					loading();
 				}
 			});	
 		} else if (result.dismiss === 'cancel') {
-			$(document).trigger('entityUpStop', ['#deleteUserOption', uid, 'fa-trash-alt']);
+			$(document).trigger('entityUpStop', ['#deletePaymentOption', uid, 'fa-trash-alt']),
 			$(document).trigger('onAjaxInfo');
+			loading();
 		}
 	});
 	
