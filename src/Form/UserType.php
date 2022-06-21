@@ -5,6 +5,7 @@ use App\Entity\Role;
 use App\Entity\User;
 use App\Entity\Router;
 use App\Entity\Status;
+use App\Service\Services;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Security\Core\Security;
@@ -24,10 +25,11 @@ class UserType extends AbstractType
     private $security;
     private $trans;
 
-    public function __construct(Security $security, TranslatorInterface $trans)
+    public function __construct(Security $security, TranslatorInterface $trans, Services $services)
     {
         $this->security = $security;
         $this->intl     = $trans;
+        $this->services = $services;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -69,8 +71,10 @@ class UserType extends AbstractType
                         return $er->createQueryBuilder('r')
                             ->where('r.code != :text1')
                             ->andWhere('r.code != :text2')
+                            ->andWhere('r.level < :level')
                             ->setParameter('text1', 'AFF0')
                             ->setParameter('text2', 'AFF1')
+                            ->setParameter('level', $this->services->connectedUser()->getRole()->getLevel())
                             ->orderBy('r.level', 'ASC');
                 },
                 'choice_label'=>'name',

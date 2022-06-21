@@ -4,6 +4,7 @@ namespace App\Twig;
 
 use App\Entity\User;
 use App\Service\BaseUrl;
+use App\Service\Services;
 
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
@@ -14,8 +15,9 @@ class AppExtension extends AbstractExtension
 {
 	//private $translator;
 
-	public function __construct() {
+	public function __construct(Services $src) {
 		//$this->translator = $translator;
+		$this->src = $src;
 	}
 
 	public function getFilters(): array
@@ -79,37 +81,7 @@ class AppExtension extends AbstractExtension
     */
 	public function checkPermission($codePermission, object $user, bool $granted = true)
     {
-		if(!$user) return false;
-
-		$authorizations	=	$user->getRole()->getAuthorizations();
-
-		$master = false;
-
-		foreach ($authorizations as $key => $value) {
-			$permission = $value->getPermission();
-			if(is_array($codePermission)){
-				if (in_array($permission->getCode(), $codePermission, true)) {
-					if(
-						$granted == true
-						&& (
-							$value->getStatus()->getCode() == false
-							|| $permission->getStatus()->getCode() == 2
-						)
-					) return false;
-
-					if($value->getStatus()->getCode() == true && $permission->getStatus()->getCode() <= 3) $master = true;
-				}
-			}else{
-				if ($permission->getCode() == $codePermission){
-					if($granted)
-						return ($value->getStatus()->getCode() == true && $permission->getStatus()->getCode() == 3) ? true : false;
-					else
-						return ($value->getStatus()->getCode() == true && $permission->getStatus()->getCode() <= 3) ? true : false;
-				}
-			}
-		}
-
-        return $master;
+		return $this->src->checkPermission($codePermission, $user, $granted);
 	}
 
 	public function menu(string $uri, $path){

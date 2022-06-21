@@ -34,20 +34,11 @@ class Message extends AbstractController
     public function checkSender($manager, $sender)
     {
         try {
-            if(is_string($sender))
-            {
-                foreach ($manager->getSenders() as $onSender) {
-                    if($onSender->getName() == $sender) return $onSender;
-                }
-            }
-                else if(is_object($sender) && $manager === $sender->getManager())
-            {
-                return $sender;
+            foreach ($manager->getSenders() as $onSender) {
+                if($onSender->getName() == $sender) return $onSender;
             }
         } catch (\Exception $e) {
-            //
         }
-
         return null;
     }
 

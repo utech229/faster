@@ -170,12 +170,14 @@
                                 </a>
                             </div>
 
+                            {% if permission(["CFIG0", "ROUT0", "ROL0"], app.user, false) %}
                             <div class="menu-item">
                                 <div class="menu-content pt-8 pb-2">
                                     <span class="menu-section text-muted text-uppercase fs-8 ls-1">{{ 'Congiguration' | trans }}</span>
                                 </div>
                             </div>
-                            {% if permission(["UTI0"], app.user) %}
+                            {% endif %}
+                            {% if permission(["ROUT0"], app.user) %}
                             <div class="menu-item">
                                 <a class="menu-link {{ menu(uri, path('app_router_index')) }}" href="{{ path('app_router_index') }}">
                                     <span class="menu-icon">
@@ -195,11 +197,13 @@
                                 </a>
                             </div>
                             {% endif %}
+                             {% if permission(["ROL0", "UTI0", "AFFL0", "PER0"], app.user, false) %}
                             <div class="menu-item">
                                 <div class="menu-content pt-8 pb-2">
                                     <span class="menu-section text-muted text-uppercase fs-8 ls-1">{{ 'Gestion Utilisateurs' | trans }}</span>
                                 </div>
                             </div>
+                            {% endif %}
                             {% if permission(["UTI0"], app.user) %}
                             <div class="menu-item">
                                 <a class="menu-link {{ menu(uri, path('app_user_index')) }}" href="{{ path('app_user_index') }}">
@@ -268,11 +272,14 @@
                                     </a>
                                 </div>
                             {% endif %}
+                            {% if permission(["DEV0", "DEV1", "DEV2"], app.user, false) %}
                             <div class="menu-item">
                                 <div class="menu-content pt-8 pb-2">
                                     <span class="menu-section text-muted text-uppercase fs-8 ls-1">{{ 'Développeur & API' | trans }}</span>
                                 </div>
                             </div>
+                            {% endif %}
+                            {% if permission(["DEV0"], app.user) %}
                             <div class="menu-item">
                                 <a class="menu-link " href="{{ path('app_user_apikey') }}">
                                     <span class="menu-icon">
@@ -283,6 +290,7 @@
                                     <span class="menu-title">{{ 'Intégration & clé API' | trans }} </span>
                                 </a>
                             </div>
+                            {% endif %}
                             <div class="menu-item">
                                 <div class="menu-content pt-8 pb-2">
                                     <span class="menu-section text-muted text-uppercase fs-8 ls-1">{{ 'Aide' | trans }}</span>

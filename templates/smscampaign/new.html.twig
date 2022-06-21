@@ -1,0 +1,227 @@
+{% extends 'base.app.html.twig' %}
+
+{% block stylesheets %}
+{% endblock %}
+
+{% block body %}
+<!--begin::Post-->
+<div class="post d-flex flex-column-fluid" id="kt_post">
+    <!--begin::Container-->
+    <div id="kt_content_container" class="container-xxl">
+        <!--begin::Card-->
+        <div class="card card-flush">
+            <!--begin::Card header-->
+            <div class="card-header">
+                <!--begin::Card title-->
+                <div class="card-title">
+                    <!--begin::Title-->
+                    <h3 class="fw-bolder my-2">Project Targets
+                    <span class="fs-6 text-gray-400 fw-bold ms-1">by Recent Updates ↓</span></h3>
+                    <!--end::Title-->
+                </div>
+                <!--end::Card title-->
+                <!--begin::Card toolbar-->
+                <div class="card-toolbar">
+                    <!--begin::Button-->
+                    {% if pCreate %}
+                        <a href="{{path("campaign_sms_created")}}" id="addCampaign" class="btn btn-light-primary">
+                            <!--begin::Svg Icon | path: icons/duotune/general/gen035.svg-->
+                            <span class="svg-icon svg-icon-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="currentColor" />
+                                    <rect x="10.8891" y="17.8033" width="12" height="2" rx="1" transform="rotate(-90 10.8891 17.8033)" fill="currentColor" />
+                                    <rect x="6.01041" y="10.9247" width="12" height="2" rx="1" fill="currentColor" />
+                                </svg>
+                            </span>
+                            <!--end::Svg Icon-->
+                            {% trans %}Nouvelle Campagne{% endtrans %}
+                        </a>
+                    {% endif %}
+
+                    <button type="button" id="export" class="btn btn-secondary ms-2">
+                        {% trans %}Exportation{% endtrans %}
+                    </button>
+                    <!--end::Button-->
+                </div>
+                <!--end::Card toolbar-->
+            </div>
+            <!--end::Card header-->
+            <!--begin::Card body-->
+            <div class="card-body pt-0 pb-2">
+                <form class="form" action="{{path("campaign_sms_created")}}" method="post" id="form">
+                    <div class="row g-9">
+                        <!--begin::Input group-->
+                        <div class="fv-row col-md-6">
+                            <!--begin::Label-->
+                            <label class="fs-5 fw-bolder form-label mb-2 required" for="brand">
+                                {{"Marque blanche"|trans}}
+                            </label>
+                            <!--end::Label-->
+                            <!--begin::Input-->
+                            <select id="brand" data-allow-clear="false" data-control="select2" class="form-select form-select-solid fw-bolder" data-placeholder="{{"Sélectionnez la marque de l'expéditeur" | trans}}">
+                                {% for brand in brands %}
+                                    <option value="{{ brand.uid }}">{{ brand.name }}</option>
+                                {% endfor %}
+                            </select>
+                            <!--end::Input-->
+                        </div>
+                        <!--end::Input group-->
+                        <!--begin::Input group-->
+                        <div class="fv-row col-md-6">
+                            <!--begin::Label-->
+                            <label class="fs-5 fw-bolder form-label mb-2 required" for="user">
+                                {{"Utilisateur de la marque"|trans}}
+                            </label>
+                            <!--end::Label-->
+                            <!--begin::Input-->
+                            <select id="user" data-allow-clear="false" data-control="select2" class="form-select form-select-solid fw-bolder" data-placeholder="{{"Sélectionnez l'utilisateur" | trans}}">
+                                {% for user in users %}
+                                    <option value="{{ user.uid }}">{{ user.email }}</option>
+                                {% endfor %}
+                            </select>
+                            <!--end::Input-->
+                        </div>
+                        <!--end::Input group-->
+                        <!--begin::Input group-->
+                        <div class="fv-row col-md-6 col-lg-8 col-xl-8">
+                            <!--begin::Label-->
+                            <label class="fs-5 fw-bolder form-label mb-2 required" for="name">
+                                {{"Nom de la campagne"|trans}}
+                            </label>
+                            <!--end::Label-->
+                            <!--begin::Input-->
+                            <input type="text" id="name" name="name" value="" class="form-control form-control-solid" required/>
+                            <!--end::Input-->
+                        </div>
+                        <!--end::Input group-->
+                        <!--begin::Input group-->
+                        <div class="fv-row col-md-6 col-lg-4">
+                            <!--begin::Label-->
+                            <label class="fs-5 fw-bolder form-label mb-2 required" for="sender">
+                                {{"Expéditeur"|trans}}
+                            </label>
+                            <!--end::Label-->
+                            <!--begin::Input-->
+                            <select id="sender" data-allow-clear="false" data-control="select2" class="form-select form-select-solid fw-bolder" data-placeholder="{{"Sélectionnez l'identifiant d'envoi" | trans}}">
+                                {% for sender in senders %}
+                                    <option value="{{ sender.uid }}">{{ sender.name }}</option>
+                                {% endfor %}
+                            </select>
+                            <!--end::Input-->
+                        </div>
+                        <!--end::Input group-->
+                        <!--begin::Input group-->
+                        <div class="fv-row mt-4 col-md-4">
+                            <!--begin::Label-->
+                            <label class="fs-5 fw-bolder form-label mb-2" for="datetime">
+                                {{"Date et heure d'envoi"|trans}}
+                            </label>
+                            <!--end::Label-->
+                            <!--begin::Input-->
+                            <input class="form-control form-control-solid" placeholder="{{"Date et heure d'envoie du message"|trans}}" id="datetime"/>
+                            <!--end::Input-->
+                        </div>
+                        <!--end::Input group-->
+                        <!--begin::Input group-->
+                        <div class="fv-row mt-4 col-md-4">
+                            <!--begin::Label-->
+                            <label class="fs-5 fw-bolder form-label mb-2" for="timezone">
+                                {{"Timezone"|trans}}
+                            </label>
+                            <!--end::Label-->
+                            <!--begin::Input-->
+                            <select id="timezone" data-allow-clear="false" data-control="select2" class="form-select form-select-solid fw-bolder" data-placeholder="{{"Sélectionnez le Timezone" | trans}}">
+                                <option value="+00:00">+00:00</option>
+                                <option value="+01:00">+01:00</option>
+                                <option value="+02:00">+02:00</option>
+                            </select>
+                            <!--end::Input-->
+                        </div>
+                        <!--end::Input group-->
+                        <!--begin::Input group-->
+                        <div class="fv-row mt-4 col-md-4">
+                            <!--begin::Label-->
+                            <label class="fs-5 fw-bolder form-label mb-2 required" for="type">
+                                {{"Type de SMS"|trans}}
+                            </label>
+                            <!--end::Label-->
+                            <!--begin::Input-->
+                            <select id="type" class="form-select form-select-solid fw-bolder" data-placeholder="{{"Sélectionnez le type du SMS" | trans}}" required>
+                                <option value="1">{{ "SMS Classique"|trans }}</option>
+                                <option value="0">{{ "SMS Flash"|trans }}</option>
+                            </select>
+                            <!--end::Input-->
+                        </div>
+                        <!--end::Input group-->
+                        <!--begin::Input group-->
+                        <div class="fv-row mt-4 col-12">
+                            <!--begin::Label-->
+                            <label class="fs-5 fw-bolder form-label mb-2 required" for="phones">
+                                {{"Destinataire(s)"|trans}}
+                            </label>
+                            <!--end::Label-->
+                            <!--begin::Input-->
+                            <input type="text" id="phones" name="phones" value="" class="form-control form-control-solid" placeholder="22990909090;22967676767" required/>
+                            <!--end::Input-->
+                        </div>
+                        <!--end::Input group-->
+                        <!--begin::Input group-->
+                        <div class="fv-row mt-4 col-12">
+                            <!--begin::Label-->
+                            <label class="fs-5 fw-bolder form-label mb-2 required" for="message">
+                                {{"Message"|trans}}
+                            </label>
+                            <!--end::Label-->
+                            <!--begin::Input-->
+                            <textarea name="message" id="message" rows="8" cols="80" class="form-control form-control-solid" placeholder="{{"Vous pouvez utiliser des paramètres dans le message"|trans}}" required></textarea>
+                            <!--end::Input-->
+                        </div>
+                        <!--end::Input group-->
+                        <!--begin::Actions-->
+                        <div class="d-flex justify-content-end">
+                            <button type="reset" class="btn btn-light btn-active-light-primary fw-bold me-2 px-6" id="reset">{{"Remise à zéro"|trans}}</button>
+                            <button type="submit" class="btn btn-primary fw-bold px-6" id="submit">
+                                <span class="indicator-label">{{'Créer'| trans}}</span>
+                                <span class="indicator-progress">{{'Veuillez patienter'| trans}}...
+                                <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                            </button>
+                        </div>
+                        <!--end::Actions-->
+                    </div>
+                </form>
+            </div>
+            <!--end::Card body-->
+        </div>
+        <!--end::Card-->
+    </div>
+    <!--end::Container-->
+</div>
+<!--end::Post-->
+{% endblock %}
+
+{% block javascripts %}
+<script type="text/javascript">
+    var flatpickr = {
+        minDate: "today",
+        enableTime: true,
+        dateFormat: "Y-m-d H:i:s",
+        enableSeconds: true,
+    };
+    if("{{_locale}}"=="fr") flatpickr["time_24hr"] = true;
+    $("#datetime").flatpickr(flatpickr);
+    const url_get  = "{{ path('sender_all') }}";
+    const url_new  = "{{ path('campaign_sms_created') }}";
+    const url_edit = "{{ path('sender_edit', {'uid':'_1_'}) }}";
+    const url_action = "{{ path('sender_action', {'uid':'_1_'}) }}";
+    const url_show = "{{ path('sender_show', {'uid':'_1_'}) }}";
+    const url_user = "{{ path('sender_user') }}";
+    const _token   = "{{ csrf_token("sender") }}";
+    const pList = {{pList|default(0)}};
+    const clnUser = {{clnUser|default(0)}};
+    const pEdit = {{pEdit|default(0)}};
+    const pDelete = {{pDelete|default(0)}};
+    const pStatus = {{pStatus|default(0)}};
+</script>
+<script type="text/javascript" src="{{ asset('app/plugins/custom/datatables/datatables.bundle.js') }}"></script>
+<script type="text/javascript" src="{{ asset('app/js/queries/sms/campaign.js')}}"></script>
+{% endblock %}

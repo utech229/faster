@@ -60,7 +60,7 @@
                         <!--end::Col-->
                     </div>
                     <!--end::Overview-->
-                   
+                    {% if permission(["DEV3"], app.user) %}
                     <!--begin::Notice-->
                     <div class="notice d-flex bg-light-primary rounded border-primary border border-dashed p-6 mt-8">
                         <!--begin::Icon-->
@@ -92,6 +92,7 @@
                         <!--end::Wrapper-->
                     </div>
                     <!--end::Notice-->
+                    {% endif %}
                 </div>
                 <!--end::Body-->
             </div>

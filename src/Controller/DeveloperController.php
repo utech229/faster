@@ -87,16 +87,32 @@ class DeveloperController extends AbstractController
             if ((!$this->isCsrfTokenValid($user->getUid(), $request->request->get('_token'))) or ($user->getRole()->getCode() == 'AFF')) 
                 return $this->services->no_access($this->intl->trans("Régénération de la clé api"));
 
-            $newapikey = $this->services->idgenerate(30);           
-            $user->setApiKey($newapikey);
-            $user->setUpdatedAt(new \DatetimeImmutable());
-            $this->userRepository->add($user);
-            $affiliates = $this->userRepository->findBy(['admin' => $user, 'isAffiliate' => true]);
-            foreach ($affiliates as $affiliate) {
-                $affiliate->setApiKey($newapikey);
-                $affiliate->setUpdatedAt(new \DatetimeImmutable());
-                $this->userRepository->add($affiliate);
+            $newapikey   = $this->services->idgenerate(30);   
+            if ($user->getAffiliateManager()) {
+                $aff_manager = $user->getAffiliateManager();
+
+                $aff_manager->setApiKey($newapikey);
+                $aff_manager->setUpdatedAt(new \DatetimeImmutable());
+                $this->userRepository->add($aff_manager);
+
+                $affiliates  = $this->userRepository->findBy(['affiliateManager' => $user]);
+                foreach ($affiliates as $affiliate) {
+                    $affiliate->setApiKey($newapikey);
+                    $affiliate->setUpdatedAt(new \DatetimeImmutable());
+                    $this->userRepository->add($affiliate);
+                }
+
+            }else {
+                $user->setApiKey($newapikey);
+                $user->setUpdatedAt(new \DatetimeImmutable());
+                $affiliates  = $this->userRepository->findBy(['affiliateManager' => $user]);
+                foreach ($affiliates as $affiliate) {
+                    $affiliate->setApiKey($newapikey);
+                    $affiliate->setUpdatedAt(new \DatetimeImmutable());
+                    $this->userRepository->add($affiliate);
+                }
             }
+            
             return $this->services->msg_success(
                 $this->intl->trans("Régénération de la clé api"),
                 $this->intl->trans("Clé api regénéré avec succès!"),

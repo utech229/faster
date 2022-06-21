@@ -17,7 +17,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Doctrine\ORM\EntityManagerInterface;
 
-#[Route('{_locale}/api/v1')]
+#[Route('/api/v1')]
 class ApiController extends AbstractController
 {
     public function __construct(TranslatorInterface $intl, EntityManagerInterface $em, Services $src)
@@ -27,7 +27,7 @@ class ApiController extends AbstractController
         $this->src           = $src;
     }
 
-    #[Route('/message/send', name: 'api_send')]
+    #[Route('/sms/send', name: 'api_send')]
     public function created(Request $request, BrickPhone $brick, Message $sMessage)
     {
         $SMSMessage = new SMSMessage();
@@ -40,13 +40,13 @@ class ApiController extends AbstractController
 
         // Vérification de la méthode
         $method = $request->getMethod();
-        if($method != "POST" && $method != "GET") return (new APIResponse())->new(["error"=>$this->intl->trans("Erreur sur la méthode d'evoie des données."), "status"=>405], 405);
+        if($method != "POST" && $method != "GET") return (new APIResponse())->new(["error"=>$this->intl->trans("Erreur sur la méthode d'envoi des données."), "status"=>405], 405);
 
-        $sender = $request->get('sender', null);
-        $message = $request->get('message', '');
-        $phone_number = $request->get('phone', null);
-        $date_heure_send = $request->get('date_heure', null); // format Y-m-d H:i:s
-        $timezone = $request->get('timezone', null);
+        $sender = $request->get('from', null);
+        $message = $request->get('text', '');
+        $phone_number = $request->get('to', null);
+        $date_heure_send = $request->get('dateTime', null); // format Y-m-d H:i:s
+        $timezone = $request->get('timeZone', null);
         $mode = $request->get('mode', '1');
         $canal = $request->get('canal', 'SMS');
 
@@ -55,8 +55,8 @@ class ApiController extends AbstractController
         $mySender = $sMessage->checkSender($manager, $sender);
         if($mySender == null) $msg[] = $this->intl->trans("Mauvais ou aucun identifiant d'envoi défini.");
 
-        list($isValid, $length) = $sMessage->trueLength($message);
-        if(!$isValid) $msg[] = $this->intl->trans("Le nombre maximal de caractère est 160. Le message contient %1% caractère(s).", ["%1%"=>$length]);
+        list($isValid, $newMessage, $length, $page) = $sMessage->trueLength($message);
+        if(!$isValid) $msg[] = $this->intl->trans("Le nombre maximal de caractère est 350. Le message contient %1% caractère(s).", ["%1%"=>$length]);
 
         $phone_data = $brick->getInfosCountryFromCode($phone_number);
         if(!$phone_data) $msg[] = $this->intl->trans("Le numéro de téléphone indiqué est erroné.");
@@ -68,7 +68,7 @@ class ApiController extends AbstractController
 
         if($msg != []) return (new APIResponse())->new(["error"=>$msg, "status"=>403], 403);
 
-        list($valid, $price, $response) = $sMessage->getAmountSMS($message, $manager, $phone_data);
+        list($valid, $price, $response) = $sMessage->getAmountSMS($newMessage, $manager, $phone_data);
         if(!$valid) return (new APIResponse())->new(["error"=>$response, "status"=>403], 403);
 
         if($sendingAt) $SMSMessage->setStatus($this->src->status(0));
@@ -80,7 +80,7 @@ class ApiController extends AbstractController
             ->setCampaign(null)
             ->setSendingAt($sendingAt)
             ->setOriginMessage($message)
-            ->setMessage($message)
+            ->setMessage($newMessage)
             ->setMessageAmount($price)
             ->setSmsType($mode)
             ->setIsParameterized(false)
@@ -149,6 +149,7 @@ class ApiController extends AbstractController
         if(!$auth_token) return [401, "", null];
 
         $auth_token = trim(str_replace("Bearer","",$auth_token));
+        //$to = $request->get('apikey', null);
 
         if($auth_token == "") return [404, "", null];
 
