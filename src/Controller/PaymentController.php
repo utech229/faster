@@ -8,6 +8,7 @@ use App\Service\uBrand;
 use App\Service\BaseUrl;
 use App\Form\PaymentType;
 use App\Service\Services;
+use App\Service\sFedapay;
 use App\Repository\RoleRepository;
 use App\Repository\UserRepository;
 use App\Repository\PaymentRepository;
@@ -29,12 +30,13 @@ class PaymentController extends AbstractController
 {
     public function __construct(BaseUrl $baseUrl, UrlGeneratorInterface $urlGenerator, Services $services, 
     EntityManagerInterface $entityManager, TranslatorInterface $translator, PaymentRepository $paymentRepository,
-    RoleRepository $roleRepository,UserRepository $userRepository, uBrand $brand)
+    RoleRepository $roleRepository,UserRepository $userRepository, uBrand $brand, sFedapay $sFedapay)
     {
         $this->baseUrl         = $baseUrl;
         $this->urlGenerator    = $urlGenerator;
         $this->intl            = $translator;
         $this->services        = $services;
+        $this->sFedapay        = $sFedapay;
         $this->brand           = $brand;
         $this->baseUrl         = $baseUrl;
         $this->paymentRepository  = $paymentRepository;
@@ -72,10 +74,10 @@ class PaymentController extends AbstractController
         {
             $form->handleRequest($request);
             if ($isAdd == true) { //method calling
-                if (!$this->pCreate) return $this->services->ajax_ressources_no_access($this->intl->trans("Demande de paiement"));
+                if (!$this->pCreate) return $this->services->no_access($this->intl->trans("Demande de paiement"));
                 return $this->addPayment($request, $form, $payment);
             }else {
-                if (!$this->pUpdate)   return $this->services->ajax_ressources_no_access($this->intl->trans("Traitement de demande de paiement"));
+                if (!$this->pUpdate)   return $this->services->no_access($this->intl->trans("Traitement de demande de paiement"));
                 return $this->updatePayment($request, $form, $payment);
             }
         }
@@ -103,19 +105,19 @@ class PaymentController extends AbstractController
     {
         if(($form->isSubmitted() && $form->isValid()))
         {
-            $user = $this->getUser();
+            $user   = $this->getUser();
             $amount =  $form->get('amount')->getData();
 
             if($user->getBalance() < $amount) 
             return $this->services->msg_info(
                 $this->intl->trans("Demande de retrait"),
-                $this->intl->trans("Vous ne disposez pas d'assez de fond pour retirer").'10000'.$user->getUsetting()->getCurrency()['code'].' '.$this->intl->trans("de votre compte")
+                $this->intl->trans("Vous ne disposez pas d'assez de fond pour retirer").' '.$amount.' '.$user->getUsetting()->getCurrency()['code'].' '.$this->intl->trans("de votre compte")
             );
 
-            if($user->getBalance() < 10000) 
+            if($user->getBalance() < 1000) 
             return $this->services->msg_info(
                 $this->intl->trans("Demande de retrait"),
-                $this->intl->trans("Vous devez avoir au moins ").'10000'.$this->intl->trans(" avant de procéder à un retrait de fond")
+                $this->intl->trans("Vous devez avoir au moins ").' '.$amount.' '.$user->getUsetting()->getCurrency()['code'].' '.$this->intl->trans("avant de procéder à un retrait de fond")
             );
 
             //data setting
@@ -165,7 +167,7 @@ class PaymentController extends AbstractController
     public function getOne(Request $request,Payment $payment): JsonResponse
     {
         if (!$this->isCsrfTokenValid($this->getUser()->getUid(), $request->request->get('_token'))) 
-        return $this->services->ajax_ressources_no_access($this->intl->trans("Récupération d'une permission"));
+        return $this->services->no_access($this->intl->trans("Récupération d'une permission"));
 
         $cuser = $payment->getUser();
         $row['uid']             = $payment->getUid();
@@ -228,9 +230,9 @@ class PaymentController extends AbstractController
     public function delete(Request $request, Payment $payment): Response
     {
         if (!$this->isCsrfTokenValid($this->getUser()->getUid(), $request->request->get('_token'))) 
-            return $this->services->ajax_ressources_no_access($this->intl->trans("Suppression d'une demande de paiement").': '.$payment->getCode());
+            return $this->services->no_access($this->intl->trans("Suppression d'une demande de paiement").': '.$payment->getCode());
         if ($payment->getStatus() != 0) 
-        return $this->services->ajax_error_crud(
+        return $this->services->msg_error(
             $this->intl->trans("Suppression de la demande de paiement"),$this->intl->trans("Vous ne pouvez pas supprimer une demande de paiement déjà traité"));
 
         if($this->paymentRepository->remove($payment));
@@ -243,10 +245,10 @@ class PaymentController extends AbstractController
     public function reject(Request $request, Payment $payment): Response
     {
         if (!$this->isCsrfTokenValid($this->getUser()->getUid(), $request->request->get('_token')) OR !$this->pUpdate) 
-        return $this->services->ajax_ressources_no_access($this->intl->trans("Rejet de la demande").' : '.$payment->getReference());
+        return $this->services->no_access($this->intl->trans("Rejet de la demande").' : '.$payment->getReference());
             
         if ($payment->getStatus() != 0) 
-        return $this->services->ajax_error_crud(
+        return $this->services->msg_error(
             $this->intl->trans("Rejet de la demande de paiement"),$this->intl->trans("Vous ne pouvez pas rejeter une demande de paiement déjà traité"));
 
         //update payment
@@ -264,14 +266,14 @@ class PaymentController extends AbstractController
     {
         $user = $this->getUser();
         if (!$this->isCsrfTokenValid($user->getUid(), $request->request->get('_token')) OR !$this->pUpdate) 
-        return $this->services->ajax_ressources_no_access($this->intl->trans("Validation de la demande").' : '.$payment->getReference());
+        return $this->services->no_access($this->intl->trans("Validation de la demande").' : '.$payment->getReference());
 
         if ($request->request->get('type') == 0 && !$request->request->get('trid'))
         return $this->services->msg_info(
         $this->intl->trans("Validation de la demande de paiement"),$this->intl->trans("Veuillez renseigner l'ID TRANSACTION"));
 
         if ($payment->getStatus() != 0) 
-        return $this->services->ajax_error_crud(
+        return $this->services->msg_error(
         $this->intl->trans("Validation de la demande de paiement"),$this->intl->trans("Vous ne pouvez pas valider une demande de paiement déjà traité"));
 
         if ($request->request->get('type') == 0) {
