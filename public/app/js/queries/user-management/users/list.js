@@ -182,9 +182,9 @@ var KTUsersList = function() {
                         render: function(data, type, full, meta) {
                             var status = {
                                 'ROLE_AFFILIATE_USER': { 'title': 'Affilié revendeur', 'class': 'warning' },
-                                'ROLE_AFFILIATE_RESELLER': { 'title': 'Affilié revendeur', 'class': 'warning' },
+                                'ROLE_AFFILIATE_RESELLER': { 'title': 'Affilié revendeur', 'class': 'primary' },
                                 'ROLE_RESELLER': { 'title': 'Revendeur', 'class': 'warning' },
-                                'ROLE_USER': { 'title': 'Utilisateur', 'class': 'danger' },
+                                'ROLE_USER': { 'title': 'Utilisateur', 'class': 'info' },
                                 'ROLE_ADMINISTRATOR': { 'title': 'Administrateur', 'class': 'secondary' },
                                 'ROLE_SUPER_ADMINISTRATOR': { 'title': 'Super administrateur', 'class': 'info' },
                             };

@@ -10,6 +10,7 @@ use App\Service\uBrand;
 use App\Service\BaseUrl;
 use App\Service\Services;
 use App\Service\AddEntity;
+use App\Form\AffiliateType;
 use App\Service\BrickPhone;
 use App\Service\DbInitData;
 use App\Repository\RoleRepository;
@@ -58,17 +59,12 @@ class AffiliateController extends AbstractController
         $this->DbInitData        = $dbInitData;
 
 
-        $this->permission      =    ["UTI0", "UTI1", "UTI2", "UTI3", "UTI4","AFFL0", "AFFL1", "AFFL2", "AFFL3", "AFFL4"];
+        $this->permission      =    ["AFFL0","AFFL1", "AFFL2", "AFFL3", "AFFL4"];
         $this->pAccess         =    $this->services->checkPermission($this->permission[0]);
         $this->pCreate         =    $this->services->checkPermission($this->permission[1]);
         $this->pView           =    $this->services->checkPermission($this->permission[2]);
         $this->pUpdate         =    $this->services->checkPermission($this->permission[3]);
         $this->pDelete         =    $this->services->checkPermission($this->permission[4]);
-        $this->pAffiliateAccess         =    $this->services->checkPermission($this->permission[5]);
-        $this->pAffiliateCreate         =    $this->services->checkPermission($this->permission[6]);
-        $this->pAffiliateView           =    $this->services->checkPermission($this->permission[7]);
-        $this->pAffiliateUpdate         =    $this->services->checkPermission($this->permission[8]);
-        $this->pAffiliateDelete         =    $this->services->checkPermission($this->permission[9]);
     }
 
     #[Route('', name: 'app_affiliate_index', methods: ['GET', 'POST'])]
@@ -86,7 +82,7 @@ class AffiliateController extends AbstractController
         $isAffiliateAdd = (!$user) ? true : false;
         $user      = (!$user) ? new User() : $user;
        
-        $form = $this->createForm(UserType::class, $user);
+        $form = $this->createForm(AffiliateType::class, $user);
         if ($request->request->count() > 0)
         {
             $form->handleRequest($request);
@@ -130,6 +126,8 @@ class AffiliateController extends AbstractController
     {
         if(($form->isSubmitted() && $form->isValid()))
         {
+            $admin   = $this->getUser(); //connected user
+
             //profil photo setting begin
             $avatarProcess = $this->addEntity->profilePhotoSetter($request , $user);
             if (isset($avatarProcess['error']) && $avatarProcess['error'] == true){
@@ -145,46 +143,30 @@ class AffiliateController extends AbstractController
                     'code'      => $countryCode,
                     'name'      => $countryDatas['name']
                 ];
-
-                $priceDatas = [
-                    'dial_code' => $countryDatas['dial_code'],
-                    'code'      => $countryCode,
-                    'name'      => $countryDatas['name'],
-                    'price'     => $countryCode == 'BJ' ? 12 : 25
-                ];
             }else
             return $this->services->msg_error(
                 $this->intl->trans("Insertion du tableau de données pays"),
                 $this->intl->trans("La recherche du nom du pays à échoué : BrickPhone"),
             );
-            
-            $currentUser   = $this->getUser(); //connected user
 
-            //brand define
-            if ($request->request->get('uBrand')) {
-                $brand = $this->brandRepository->findOneByUid($request->request->get('uBrand'));
-            }else {
-                $brand = $currentUser->getBrand();
-            }
             //user data setting
-            $user->setBrand($brand);
-            $user->setBalance(100);
-            $user->setPaymentAccount($this->comptes);
-            $user->setApikey($this->services->idgenerate(32));
+            $user->setBrand($admin->getBrand());
+            $user->setBalance($admin->getBalance());
+            $user->setPaymentAccount($admin->getPaymentAccount());
+            $user->setApikey($admin->getApikey());
             $user->setCreatedAt(new \DatetimeImmutable());
-            $user->setPassword($userPasswordHasher->hashPassword($user, strtoupper(123456/*$form->get('firstname')->getData()/*$this->services->idgenerate(8)*/)));
+            $user->setPassword($userPasswordHasher->hashPassword($user, strtoupper(123456)));
             $user->setRoles(['ROLE_'.$form->get('role')->getData()->getName()]);
             $user->setCountry($countryDatas);
-            $user->setPrice([
-                $countryDatas['code'] => $priceDatas,
-            ]);
+            $user->setPrice($admin->getPrice());
             $user->setUid(time().uniqid());
             $user->setProfilePhoto($avatarProcess);
+            dd($user);
             $this->userRepository->add($user);
             $setDefaultSetting = $this->addEntity->defaultUsetting($user,$form->get('firstname')->getData(), $form->get('lastname')->getData());
             return $this->services->msg_success(
                 $this->intl->trans("Création d'un nouvel affilié"),
-                $this->intl->trans("affilié ajouté avec succès")
+                $this->intl->trans("Affilié ajouté avec succès")
             );
         }
         else 
@@ -214,7 +196,6 @@ class AffiliateController extends AbstractController
                 'code'      => $countryCode,
                 'name'      => $countryDatas['name']
             ];
-            $city          = $request->request->get('user_city');
             //user data setting
             $user->setRoles(['ROLE_'.$form->get('role')->getData()->getName()]);
             $user->setCountry($countryDatas);
@@ -340,7 +321,7 @@ class AffiliateController extends AbstractController
     public function getUsersByRoles() 
     {
         list($userType, $masterId, $userRequest) = $this->services->checkThisUser($this->pView);
-        $users = $this->userRepository->getUsersByPermission('',$userType,$masterId,1);
+        $users = $this->userRepository->getUsersByPermission('',$userType,$masterId, 2);
         return $users;
     }
 

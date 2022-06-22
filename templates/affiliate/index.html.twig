@@ -192,35 +192,6 @@
                                                     <!--end::Hint-->
                                                 </div>
                                                 <!--end::Input group-->
-                                                 <!--begin::Input group-->
-                                                <div class="fv-row mb-7" id="brand_input">
-                                                    <!--begin::Col-->
-                                                    <div class="col-lg-12 fv-row">
-                                                        <!--begin::Label-->
-                                                        <label class="fs-6 fw-bold mb-2 form-label" for="kt_user_add_select2_country">
-                                                            <span class="required">{{ 'Marque'| trans }}:</span>
-                                                        </label>
-                                                        <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="{{"Marque blanche de l'affilié à créer"| trans}}"></i>
-                                                        <!--end::Label-->
-                                                        <div class="w-100">
-                                                            <div class="form-floating border rounded">
-                                                                <!--begin::Select2-->
-                                                                <select id="modalbrand" data-dropdown-parent="#kt_modal_add_user" data-allow-clear="true" data-kt-select2="true"  class="form-select form-select-solid lh-2 py-3" name="uBrand" data-placeholder="{{'Choisir une marque' | trans}}"/>
-                                                                    <option value="">{{"Toutes"|trans}}</option>
-                                                                    {% set bcounter = 0  %}
-
-                                                                    {% for brand in brands %}
-                                                                    {% set bcounter = bcounter + 1 %}
-                                                                    <option {% if bcounter == 1 %}selected{% endif %} value="{{ brand.uid }}" data-select2-avatar="{{brand.logo}}" data-select2-alt="{{brand.name}}">{{ brand.name }}</option>
-                                                                    {% endfor %}
-                                                                </select>
-                                                                <!--end::Select2-->
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <!--end::Col-->
-                                                </div>
-                                                <!--end::Input group-->
                                                 <!--begin::Input group-->
                                                 <div class="fv-row mb-7">
                                                      <!--begin::Label-->
@@ -316,49 +287,14 @@
                                                     <!--end::Col-->
                                                 </div>
                                                 <!--end::Input group-->
-                                                 <!--begin::Input group-->
+                                                <!--begin::Input group-->
                                                 <div class="fv-row mb-7">
                                                     <!--begin::Col-->
                                                     <div class="col-lg-12">
                                                         <!--begin::Row-->
                                                         <div class="row">
                                                             <!--begin::Col-->
-                                                            <div class="col-lg-6 fv-row">
-                                                                <!--begin::Label-->
-                                                                <label class="fs-6 fw-bold mb-2 form-label" for="kt_user_add_select2_country">
-                                                                    <span class="required">{{ 'Accusé' | trans }}</span>
-                                                                </label>
-                                                                <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="{{'Accusé de reception des messages' | trans}}"></i>
-                                                                <!--end::Label-->
-                                                                {{ form_row(userform.is_dlr, {'attr': {'class': 'form-select form-select-solid mb-3 mb-lg-0',
-                                                                'data-control':"select2", 'data-placeholder': 'Selectionner'| trans, 'data-allow-clear':"true"
-                                                                ,'data-kt-select2':"true", 'data-dropdown-parent':"#kt_modal_add_user" }}) }}
-                                                            </div>
-                                                            <!--begin::Col-->
-                                                            <div class="col-lg-6 fv-row">
-                                                                <!--begin::Label-->
-                                                                <label class="required fw-bold fs-6 mb-2">{{ 'Prépayé' | trans }}</label>
-                                                                <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="{{"Possibilité pour l'affilié d'avoir un solde négatif"| trans}}"></i>
-                                                                <!--end::Label-->
-                                                                {{ form_row(userform.post_pay, {'attr': {'class': 'form-select form-select-solid mb-3 mb-lg-0',
-                                                                'data-control':"select2", 'data-placeholder': 'Selectionner'| trans, 'data-allow-clear':"true"
-                                                                ,'data-kt-select2':"true", 'data-dropdown-parent':"#kt_modal_add_user","selected" : true}}) }}
-                                                            </div>
-                                                            <!--end::Col-->
-                                                        </div>
-                                                        <!--end::Row-->
-                                                    </div>
-                                                    <!--end::Col-->
-                                                </div>
-                                                <!--end::Input group-->
-                                                 <!--begin::Input group-->
-                                                <div class="fv-row mb-7">
-                                                    <!--begin::Col-->
-                                                    <div class="col-lg-12">
-                                                        <!--begin::Row-->
-                                                        <div class="row">
-                                                            <!--begin::Col-->
-                                                            <div class="col-lg-{% if pViewUser %}6{% else %}12{% endif %} fv-row">
+                                                            <div class="col-lg-12 fv-row">
                                                                 <!--begin::Label-->
                                                                 <label class="fs-6 fw-bold mb-2 form-label" for="kt_user_add_select2_country">
                                                                     <span class="required">{{ 'Rôle' | trans }}</span>
@@ -369,17 +305,6 @@
                                                                 'data-control':"select2", 'data-placeholder': 'Selectionner'| trans, 'data-allow-clear':"true"
                                                                 ,'data-kt-select2':"true", 'data-dropdown-parent':"#kt_modal_add_user" }}) }}
                                                             </div>
-                                                            <!--begin::Col-->
-                                                            <div class="col-lg-6 fv-row" id="router_input">
-                                                                <!--begin::Label-->
-                                                                <label class="required fw-bold fs-6 mb-2">{{ 'Route' | trans }}</label>
-                                                                <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="{{"Route par défaut sur laquelle faire passer les messages de l'affilié"| trans}}"></i>
-                                                                <!--end::Label-->
-                                                                {{ form_row(userform.router, {'attr': {'class': 'form-select form-select-solid mb-3 mb-lg-0',
-                                                                'data-control':"select2", 'data-placeholder': 'Selectionner'| trans, 'data-allow-clear':"true"
-                                                                ,'data-kt-select2':"true", 'data-dropdown-parent':"#kt_modal_add_user","disabled" : false }}) }}
-                                                            </div>
-                                                            <!--end::Col-->
                                                         </div>
                                                         <!--end::Row-->
                                                     </div>
@@ -470,9 +395,8 @@
 	const pViewUser     = {{ pViewUser}};
 	const roleLevel     = "{{ app.user.role.level }}";
 
-    const add_user         = "{{path('app_user_add')}}";
-    const user_list_link   = "{{path('app_user_list')}}";
-    const user_price_link  = "{{ path('app_user_price', {'uid':'_1_'}) }}";
+    const add_user         = "{{path('app_affiliate_add')}}";
+    const user_list_link   = "{{path('app_affiliate_list')}}";
     const statistic_link   = "{{path('get_statistics_data')}}";
     const csrfToken        = "{{ csrf_token(app.user.uid) }}";
 

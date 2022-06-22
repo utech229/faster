@@ -58,8 +58,8 @@ class AffiliateType extends AbstractType
                 'class'=>Role::class,
                 'query_builder'=>function(EntityRepository $er){
                         return $er->createQueryBuilder('r')
-                            ->where('r.code == :text1')
-                            ->andWhere('r.code == :text2')
+                            ->where('r.code = :text1')
+                            ->orWhere('r.code = :text2')
                             ->andWhere('r.level < :level')
                             ->setParameter('text1', 'AFF0')
                             ->setParameter('text2', 'AFF1')
