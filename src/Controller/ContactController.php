@@ -14,9 +14,11 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[IsGranted("IS_AUTHENTICATED_FULLY")]
@@ -91,6 +93,15 @@ class ContactController extends AbstractController
             'pEdit'       => $this->pUpdate,
             'pDelete'     => $this->pDelete,
         ]);
+    }
+
+    #[Route('/contact/list', name: 'app_contact_list', methods: ['POST'])]
+    public function getContactList(Request $request, ContactRepository $contactRepository): Response
+    {
+        $data   =[
+            "data"              =>   []
+        ];
+        return new JsonResponse($data);
     }
 
     #[Route('/contactd', name: 'app_contact_new', methods: ['GET', 'POST'])]
