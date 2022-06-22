@@ -4,16 +4,17 @@ namespace App\Controller;
 
 use App\Entity\Log;
 use App\Entity\User;
+use App\Entity\Brand;
 use App\Form\UserType;
 use App\Service\uBrand;
 use App\Service\BaseUrl;
 use App\Service\Services;
 use App\Service\AddEntity;
-use App\Form\AffiliateType;
 use App\Service\BrickPhone;
 use App\Service\DbInitData;
 use App\Repository\RoleRepository;
 use App\Repository\UserRepository;
+use App\Repository\BrandRepository;
 use App\Repository\StatusRepository;
 use App\Repository\PermissionRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -36,10 +37,10 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 class AffiliateController extends AbstractController
 {
     public function __construct(BaseUrl $baseUrl, UrlGeneratorInterface $urlGenerator, Services $services, BrickPhone $brickPhone,  
-    EntityManagerInterface $entityManager, TranslatorInterface $translator, StatusRepository $statusRepository,
+    EntityManagerInterface $entityManager, TranslatorInterface $translator,
     RoleRepository $roleRepository, UserRepository $userRepository, PermissionRepository $permissionRepository,
     AuthorizationRepository $authorizationRepository, uBrand $brand,ValidatorInterface $validator,
-    DbInitData $dbInitData, AddEntity $addEntity)
+    DbInitData $dbInitData, AddEntity $addEntity, StatusRepository $statusRepository, BrandRepository $brandRepository)
     {
         $this->baseUrl         = $baseUrl;
         $this->urlGenerator    = $urlGenerator;
@@ -48,25 +49,32 @@ class AffiliateController extends AbstractController
         $this->brickPhone      = $brickPhone;
         $this->brand           = $brand;
         $this->em	           = $entityManager;
-        $this->addEntity	     = $addEntity;
-        $this->userRepository    = $userRepository;
+        $this->addEntity	   = $addEntity;
+        $this->userRepository  = $userRepository;
         $this->roleRepository    = $roleRepository;
         $this->statusRepository  = $statusRepository;
+        $this->brandRepository  = $brandRepository;
         $this->validator         = $validator;
         $this->DbInitData        = $dbInitData;
 
-        $this->permission      =    ["AFFL0", "AFFL1", "AFFL2", "AFFL3", "AFFL4"];
+
+        $this->permission      =    ["UTI0", "UTI1", "UTI2", "UTI3", "UTI4","AFFL0", "AFFL1", "AFFL2", "AFFL3", "AFFL4"];
         $this->pAccess         =    $this->services->checkPermission($this->permission[0]);
         $this->pCreate         =    $this->services->checkPermission($this->permission[1]);
         $this->pView           =    $this->services->checkPermission($this->permission[2]);
         $this->pUpdate         =    $this->services->checkPermission($this->permission[3]);
         $this->pDelete         =    $this->services->checkPermission($this->permission[4]);
+        $this->pAffiliateAccess         =    $this->services->checkPermission($this->permission[5]);
+        $this->pAffiliateCreate         =    $this->services->checkPermission($this->permission[6]);
+        $this->pAffiliateView           =    $this->services->checkPermission($this->permission[7]);
+        $this->pAffiliateUpdate         =    $this->services->checkPermission($this->permission[8]);
+        $this->pAffiliateDelete         =    $this->services->checkPermission($this->permission[9]);
     }
 
     #[Route('', name: 'app_affiliate_index', methods: ['GET', 'POST'])]
     #[Route('/new', name: 'app_affiliate_add', methods: ['POST'])]
     #[Route('/{uid}/edit', name: 'app_affiliate_edit', methods: ['POST'])]
-    public function index(Request $request, UserPasswordHasherInterface $userPasswordHasher, User $affiliate = null, 
+    public function index(Request $request, UserPasswordHasherInterface $userPasswordHasher, User $user = null, 
     ValidatorInterface $validator): Response
     {
         if(!$this->pAccess)
@@ -74,110 +82,128 @@ class AffiliateController extends AbstractController
             $this->addFlash('error', $this->intl->trans("Vous n'êtes pas autorisés à accéder à cette page !"));
             return $this->redirectToRoute("app_home");
         }
-
-         /*----------MANAGE user CRU BEGIN -----------*/
         //define if method is user add 
-        $isAffiliateAdd = (!$affiliate) ? true : false;
-        $affiliate      = (!$affiliate) ? new User() : $affiliate;
+        $isAffiliateAdd = (!$user) ? true : false;
+        $user      = (!$user) ? new User() : $user;
        
-        $form = $this->createForm(AffiliateType::class, $affiliate);
+        $form = $this->createForm(UserType::class, $user);
         if ($request->request->count() > 0)
         {
             $form->handleRequest($request);
             if ($isAffiliateAdd == true) { //method calling
-                if (!$this->pCreate) return $this->services->ajax_ressources_no_access($this->intl->trans("Création d'un affilié"));
-                return $this->addAffiliate($request, $form, $affiliate , $userPasswordHasher);
+                if (!$this->pCreate) return $this->services->no_access($this->intl->trans("Création d'un affilié"));
+                return $this->addUser($request, $form, $user, $userPasswordHasher);
             }else {
-                if (!$this->pUpdate)   return $this->services->ajax_ressources_no_access($this->intl->trans("Modification d'un affilié"));
-                return $this->updateAffiliate($request, $form, $affiliate);
+                if (!$this->pUpdate)   return $this->services->no_access($this->intl->trans("Modification d'un affilié"));
+                return $this->updateUser($request, $form, $user);
             }
         }
         
         $statistics =  $this->statisticsData();
         $this->services->addLog($this->intl->trans('Accès au menu affiliés'));
-        return $this->render('user/affiliate.html.twig', [
+
+        list($userType, $masterId, $userRequest) = $this->services->checkThisUser($this->pView);
+        $brands = $this->em->getRepository(Brand::class)->findBrandBy($userType,  $userRequest);
+        
+        return $this->render('affiliate/index.html.twig', [
             'controller_name' => 'UserController',
-            'role'            => $this->roleRepository->findAll(),
+            'role'            => $this->roleRepository->getManageUserRole($this->getUser()->getRole()->getLevel()),
             'title'           => $this->intl->trans('Mes affiliés').' - '. $this->brand->get()['name'],
             'pageTitle'       => [
-                'one'   => $this->intl->trans('affiliés'),
-                'two'   => $this->intl->trans('Mes affiliés'),
-                'none'  => $this->intl->trans('Gestion affilié'),
+                [$this->intl->trans('Affiliés')],
             ],
             'brand'           => $this->brand->get(),
+            'brands'          => $brands,
             'baseUrl'         => $this->baseUrl->init(),
             'users'           => $this->userRepository->findAll(),
             'userform'        => $form->createView(),
             'pCreateUser'     => $this->pCreate,
             'pEditUser'       => $this->pUpdate,
             'pDeleteUser'     => $this->pDelete,
+            'pViewUser'       => $this->pView,
             'stats'           => $statistics,
         ]);
     }
 
     //Add user function
-    public function addAffiliate($request, $form, $affiliate, $userPasswordHasher): Response
+    public function addUser($request, $form, $user, $userPasswordHasher): Response
     {
         if(($form->isSubmitted() && $form->isValid()))
         {
-            $affiliateUid = time().uniqid();
-            $affiliate->setUid($affiliateUid);
             //profil photo setting begin
-            $avatarProcess = $this->addEntity->profilePhotoSetter($request , $affiliate);
+            $avatarProcess = $this->addEntity->profilePhotoSetter($request , $user);
             if (isset($avatarProcess['error']) && $avatarProcess['error'] == true){
-            return $this->services->ajax_error_crud($this->intl->trans('Traitement du fichier image de profile'), $avatarProcess['info']);
+            return $this->services->msg_error($this->intl->trans('Traitement du fichier image de profile'), $avatarProcess['info']);
             } else
             $avatarProcess;
             //profil photo setting end
-
-            $role          = $request->request->get('role');
             $countryCode   = strtoupper($request->request->get('country'));
-            $countryDatas  = $this->brickPhone->getCountryByCode($countryCode);
-            $countryDatas  = [
-                'dial_code' => $countryDatas['dial_code'],
-                'code'      => $countryCode,
-                'name'      => $countryDatas['name']
-            ];
+            $countryDatas  = $this->brickPhone->getInfosCountryFromCode($countryCode);
+            if ($countryDatas) {
+                $countryDatas  = [
+                    'dial_code' => $countryDatas['dial_code'],
+                    'code'      => $countryCode,
+                    'name'      => $countryDatas['name']
+                ];
+
+                $priceDatas = [
+                    'dial_code' => $countryDatas['dial_code'],
+                    'code'      => $countryCode,
+                    'name'      => $countryDatas['name'],
+                    'price'     => $countryCode == 'BJ' ? 12 : 25
+                ];
+            }else
+            return $this->services->msg_error(
+                $this->intl->trans("Insertion du tableau de données pays"),
+                $this->intl->trans("La recherche du nom du pays à échoué : BrickPhone"),
+            );
+            
             $currentUser   = $this->getUser(); //connected user
-            $role          = $this->roleRepository->findOneBy(['code' => 'AFF']);
-            //creation oh referralcode
-            $password = strtoupper($this->services->idgenerate(10));
+
+            //brand define
+            if ($request->request->get('uBrand')) {
+                $brand = $this->brandRepository->findOneByUid($request->request->get('uBrand'));
+            }else {
+                $brand = $currentUser->getBrand();
+            }
             //user data setting
-            $affiliate->setBalance(0);
-            $affiliate->setCreatedAt(new \DatetimeImmutable());
-            $affiliate->setPassword($userPasswordHasher->hashPassword($affiliate, strtolower($password)));
-            $affiliate->setRole($role);
-            $affiliate->setAdmin($currentUser);
-            $affiliate->setRoles(['ROLE_'.$role->getName()]);
-            $affiliate->setCountry($countryDatas);
-            $affiliate->setApiKey($currentUser->getApikey());
-            $affiliate->setIsAffiliate(true);
-            $affiliate->setProfilePhoto($avatarProcess);
-            $this->userRepository->add($affiliate);
-            $this->addEntity->defaultUsetting($affiliate);
+            $user->setBrand($brand);
+            $user->setBalance(100);
+            $user->setPaymentAccount($this->comptes);
+            $user->setApikey($this->services->idgenerate(32));
+            $user->setCreatedAt(new \DatetimeImmutable());
+            $user->setPassword($userPasswordHasher->hashPassword($user, strtoupper(123456/*$form->get('firstname')->getData()/*$this->services->idgenerate(8)*/)));
+            $user->setRoles(['ROLE_'.$form->get('role')->getData()->getName()]);
+            $user->setCountry($countryDatas);
+            $user->setPrice([
+                $countryDatas['code'] => $priceDatas,
+            ]);
+            $user->setUid(time().uniqid());
+            $user->setProfilePhoto($avatarProcess);
+            $this->userRepository->add($user);
+            $setDefaultSetting = $this->addEntity->defaultUsetting($user,$form->get('firstname')->getData(), $form->get('lastname')->getData());
             return $this->services->msg_success(
                 $this->intl->trans("Création d'un nouvel affilié"),
-                $this->intl->trans("Affilié ajouté avec succès")
+                $this->intl->trans("affilié ajouté avec succès")
             );
         }
         else 
         {
             //return $this->services->invalidForm($form, $this->intl);
-            return $this->services->formErrorsNotification($this->validator, $this->intl, $affiliate);
+            return $this->services->formErrorsNotification($this->validator, $this->intl, $user);
         }
-        return $this->services->failedcrud($this->intl->trans("Création d'un nouvel affilié : "  .$affiliate->getEmail()));
+        return $this->services->failedcrud($this->intl->trans("Création d'un nouvel affilié : "  .$user->getEmail()));
     }
  
     //update user function
-    public function updateAffiliate($request, $form, $affiliate): Response
+    public function updateUser($request, $form, $user): Response
     {
         if ($form->isSubmitted() && $form->isValid()) {
         
-            $currentUser   = $this->getUser();
             //profil photo setting begin
-            $avatarProcess = $this->addEntity->profilePhotoSetter($request , $affiliate, true);
+            $avatarProcess = $this->addEntity->profilePhotoSetter($request , $user, true);
             if (isset($avatarProcess['error']) && $avatarProcess['error'] == true){
-            return $this->services->ajax_error_crud($this->intl->trans('Traitement du fichier image de profile'), $avatarProcess['info']);
+            return $this->services->msg_error($this->intl->trans('Traitement du fichier image de profile'), $avatarProcess['info']);
             } else
             $avatarProcess;
             //profil photo setting end
@@ -188,45 +214,63 @@ class AffiliateController extends AbstractController
                 'code'      => $countryCode,
                 'name'      => $countryDatas['name']
             ];
+            $city          = $request->request->get('user_city');
             //user data setting
-            $affiliate->setCountry($countryDatas);
-            $affiliate->setProfilePhoto($avatarProcess);
-            $affiliate->setUpdatedAt(new \DatetimeImmutable());
-       
-            $this->userRepository->add($affiliate);
+            $user->setRoles(['ROLE_'.$form->get('role')->getData()->getName()]);
+            $user->setCountry($countryDatas);
+            $user->setPaymentAccount($this->comptes);
+            $user->setProfilePhoto($avatarProcess);
+            $user->setUpdatedAt(new \DatetimeImmutable());
+            //$user usetting data
+            $user->getUsetting()->setFirstname($form->get('firstname')->getData())
+                                ->setLastname($form->get('lastname')->getData());
+
             return $this->services->msg_success(
-                $this->intl->trans("Modification de l'affilié ").$affiliate->getEmail(),
-                $this->intl->trans("Affilié modifié avec succès").' : '.$affiliate->getEmail()
+                $this->intl->trans("Modification de l'affilié ").$user->getEmail(),
+                $this->intl->trans("affilié modifié avec succès").' : '.$user->getEmail()
             );
         }
         else 
         {
             //return $this->services->invalidForm($form, $this->intl);
-            return $this->services->formErrorsNotification($this->validator, $this->intl, $affiliate);
+            return $this->services->formErrorsNotification($this->validator, $this->intl, $user);
         }
         return $this->services->failedcrud($this->intl->trans("Modification de l'affilié : " .$request->request->get('user_name')));
     }
 
-    #[Route('/{uid}/get', name: 'get_this_affiliate', methods: ['POST'])]
-    public function get_this_affiliate(Request $request, User $affiliate): Response
+    #[Route('/{uid}/get', name: 'get_this_user', methods: ['POST'])]
+    public function get_this_user(Request $request, User $user): Response
     {
         if (!$this->isCsrfTokenValid($this->getUser()->getUid(), $request->request->get('_token'))) 
-        return $this->services->ajax_ressources_no_access($this->intl->trans("Récupération de l'affilié").': '.$affiliate->getEmail());
+        return $this->services->no_access($this->intl->trans("Récupération de l'affilié").': '.$user->getEmail());
+        $usetting            = $user->getUsetting();
+        $role                = $user->getRole();
+        $brand               =  $user->getBrand();
+        $route               =  $user->getRouter();
+        $sender              =  $brand->getDefaultSender();
 
-        $row['orderId']      = $affiliate->getUid();
-        $row['firstname']    = $affiliate->getFirstName();
-        $row['lastname']     = $affiliate->getLastName();
-        $row['email']        = $affiliate->getEmail();
-        $row['photo']        = $affiliate->getProfilePhoto();
-        $row['phone']        = $affiliate->getPhone();
-        $row['gender']       = $affiliate->getGender();
-        $row['role']         = $affiliate->getRole()->getCode();
-        $row['countryCode']  = $affiliate->getCountry()['code'];
-        $row['countryName']  = $affiliate->getCountry()['name'];
-        $row['balance']      = $affiliate->getBalance();
-        $row['status']       = $affiliate->getStatus();
-        $row['lastLogin']    = ($affiliate->getLastLoginAt()) ? $affiliate->getLastLoginAt()->format("c") : null;
-        $row['createdAt']    = $affiliate->getCreatedAt()->format("c");
+
+        $row['orderId']      = $user->getUid();
+        $row['user']         = [   'name'  => $usetting->getFirstname().' '.$usetting->getLastname(),'firstname' => $usetting->getFirstname(),
+                                   'lastname'  => $usetting->getLastname(), 'email' => $user->getEmail(), 'photo' => $user->getProfilePhoto()];
+        $row['role']         =  ['name'  => $role->getName(),'level' => $role->getLevel(),'code' => $role->getCode()];
+        $row['brand']        = [ 'name' => $brand->getName(), 'uid' => $brand->getUid()];
+        $row['route']        = $user->getRouter()->getName();
+        $row['email']        = $user->getEmail();
+        $row['photo']        = $user->getProfilePhoto();
+        $row['phone']        = $user->getPhone();
+        $row['apikey']       = $user->getApikey();
+        $row['isPostPay']    = $user->IsPostPay() ? '1' : '0';
+        $row['isDlr']        = $user->getIsDlr() ? '1' : '0';
+        $row['language']     = $usetting->getLanguage()['code'];
+        $row['currency']     = $usetting->getCurrency()['code'];
+        $row['timezone']     = $usetting->getTimezone();
+        $row['countryCode']  = $user->getCountry()['code'];
+        $row['countryName']  = $user->getCountry()['name'];
+        $row['balance']      = $user->getBalance();
+        $row['status']       = $user->getStatus()->getUid();
+        $row['lastLogin']    = ($user->getLastLoginAt()) ? $user->getLastLoginAt()->format("c") : null;
+        $row['createdAt']    = $user->getCreatedAt()->format("c");
 
         return new JsonResponse([
             'data' => $row, 
@@ -241,23 +285,30 @@ class AffiliateController extends AbstractController
             return $this->services->invalid_token_ajax_list($this->intl->trans('Récupération de la liste des affiliés : token invalide'));
 
         $data = [];
-        $affiliates = $this->userRepository->findBy(['admin' => $this->getUser(), 'isAffiliate' => true]);
-        foreach ($affiliates  as $affiliate) 
+        $users = (!$this->pAccess) ? [] : $this->getUsersByRoles();
+        foreach ($users  as $user) 
 		{          
             $row                 = array();
-            $country = $affiliate->getCountry();
-            $row['orderId']      = $affiliate->getUid();
-            $row['user']         = ['name'  => $affiliate->getFirstName().' '.$affiliate->getLastName(), 
-                                    'email' => $affiliate->getEmail(), 
-                                    'photo' => $affiliate->getProfilePhoto()];
-            $row['phone']        = $affiliate->getPhone();
-            $row['role']         = $affiliate->getRoles()[0];
-            $row['country']      = $affiliate->getCountry()['name'];
-            $row['balance']      = $affiliate->getBalance();
-            $row['status']       = $affiliate->getStatus();
-            $row['lastLogin']    = ($affiliate->getLastLoginAt()) ? $affiliate->getLastLoginAt()->format("c") : null;
-            $row['createdAt']    = $affiliate->getCreatedAt()->format("c");
-            $row['action']       = $affiliate->getUid();
+            $usetting            = $user->getUsetting();
+            $country             = $user->getCountry();
+            $brand               = $user->getBrand();
+            $row['orderId']      = $user->getUid();
+            $row['user']         =  [   'name'  => $usetting->getFirstname().' '.$usetting->getLastname(),
+                                        'firstname' => $usetting->getFirstname(),
+                                        'lastname'  => $usetting->getLastname(), 
+                                        'email' => $user->getEmail(), 
+                                        'photo' => $user->getProfilePhoto()];
+            $row['phone']        = $user->getPhone();
+            $row['brand']        = [   'name'  => $brand->getName(),'uid' => $brand->getUid(),'roleLevel' => $user->getRole()->getLevel()];
+            $row['role']         = $user->getRoles()[0];
+            $row['country']      = $user->getCountry()['name'];
+            $row['postPay']      = $user->IsPostPay();
+            $row['isDlr']        = $user->getIsDlr();
+            $row['balance']      = $user->getBalance();
+            $row['status']       = $user->getStatus()->getCode();
+            $row['lastLogin']    = ($user->getLastLoginAt()) ? $user->getLastLoginAt()->format("Y-m-d H:i:sP") : null;
+            $row['createdAt']    = $user->getCreatedAt()->format("Y-m-d H:i:sP");
+            $row['action']       = $user->getUid();
             $data []             = $row;
 		}
         $this->services->addLog($this->intl->trans('Lecture de la liste des affiliés'));
@@ -266,27 +317,41 @@ class AffiliateController extends AbstractController
     }
 
     #[Route('/{uid}/delete', name: 'app_affiliate_delete', methods: ['POST'])]
-    public function delete(Request $request, User $affiliate): Response
+    public function delete(Request $request, User $user): Response
     {
         if (!$this->isCsrfTokenValid($this->getUser()->getUid(), $request->request->get('_token'))) 
-            return $this->services->ajax_ressources_no_access($this->intl->trans("Suppression d'un affilié").': '.$affiliate->getEmail());
+            return $this->services->no_access($this->intl->trans("Suppression d'un affilié").': '.$user->getEmail());
 
-        $affiliate->setStatus(4);
-        $this->userRepository->add($affiliate);
-        return $this->services->msg_success(
-            $this->intl->trans("Suppression de l'affilié ").$affiliate->getEmail(),
-            $this->intl->trans("Affilié supprimé avec succès").' : '.$affiliate->getEmail(),
+        if ($user->getId() == 1 or $user->getBrand()->getManager() ==  $user) 
+        return $this->services->msg_warning(
+            $this->intl->trans("Suppression de l'affilié ").$user->getEmail(),
+            $this->intl->trans("Vous ne pouvez pas supprimer cet affilié car il s'agit de l'administrateur de la marque active"),
         );
+
+        //$user->setStatus($this->services->status(3));
+        $this->userRepository->remove($user);
+        return $this->services->msg_success(
+            $this->intl->trans("Suppression de l'affilié ").$user->getEmail(),
+            $this->intl->trans("affilié supprimé avec succès").' : '.$user->getEmail(),
+        );
+    }
+
+    //user retriving by permissions
+    public function getUsersByRoles() 
+    {
+        list($userType, $masterId, $userRequest) = $this->services->checkThisUser($this->pView);
+        $users = $this->userRepository->getUsersByPermission('',$userType,$masterId,1);
+        return $users;
     }
 
     public function statisticsData()
     {
-        $allUsers          = $this->userRepository->countAllUsers()[0][1];
-        $pendingUsers      = $this->userRepository->countAllUsersByStatus(0)[0][1];
-        $activeUsers       = $this->userRepository->countAllUsersByStatus(1)[0][1];
+        $allUsers     = $this->userRepository->countAllUsers()[0][1];
+        $pendingUsers = $this->userRepository->countAllUsersByStatus(0)[0][1];
+        $activeUsers  = $this->userRepository->countAllUsersByStatus(1)[0][1];
         $desactivatedUsers = $this->userRepository->countAllUsersByStatus(2)[0][1];
-        $suspendedUsers    = $this->userRepository->countAllUsersByStatus(3)[0][1];
-        $deletedUsers      = $this->userRepository->countAllUsersByStatus(4)[0][1];
+        $suspendedUsers = $this->userRepository->countAllUsersByStatus(3)[0][1];
+        $deletedUsers = $this->userRepository->countAllUsersByStatus(4)[0][1];
 
         return [
             'all'          => $allUsers,
@@ -303,6 +368,14 @@ class AffiliateController extends AbstractController
     {
         $data =  $this->statisticsData();
         return new JsonResponse(['data' =>$data]);
+    }
+
+    #[Route('/brand', name: 'get_statista')]
+    public function stati(Request $request, uBrand $brand): JsonResponse
+    {
+       return new JsonResponse([
+           'dede' => $brand->index()['author']['name']
+       ]);
     }
     
 

@@ -1,8 +1,8 @@
 "use strict";
 
-$(document).on('click', ".userDeleter", function() {
+$(document).on('click', ".priceDeleter", function() {
 	var uid = $(this).data('id');
-	$(document).trigger('entityUpBegin', ['#deleteUserOption', uid, 'fa-trash-alt']);
+	$(document).trigger('entityUpBegin', ['#deletepriceOption', uid, 'fa-trash-alt']);
 	Swal.fire({
 		text: _Deletion_request,
 		icon: "warning",
@@ -22,8 +22,8 @@ $(document).on('click', ".userDeleter", function() {
 				data: {uid : uid, _token : csrfToken},
 				dataType: "json",
 				success: function(response) {
-					$(document).trigger('securityFirewall', [response, '#deleteUserOption', uid, 'fa-trash-alt']);
-					$(document).trigger('entityUpStop', ['#deleteUserOption', uid, 'fa-trash-alt']),
+					$(document).trigger('securityFirewall', [response, '#deletepriceOption', uid, 'fa-trash-alt']);
+					$(document).trigger('entityUpStop', ['#deletepriceOption', uid, 'fa-trash-alt']),
 					Swal.fire({
 						text: response.message,
 						icon: response.status,
@@ -40,11 +40,11 @@ $(document).on('click', ".userDeleter", function() {
 				},
                 error:function(response) {
 					$(document).trigger('onAjaxError');
-					$(document).trigger('entityUpStop', ['#deleteUserOption', uid, 'fa-trash-alt']);
+					$(document).trigger('entityUpStop', ['#deletepriceOption', uid, 'fa-trash-alt']);
 				}
 			});	
 		}
-		$(document).trigger('entityUpStop', ['#deleteUserOption', uid, 'fa-trash-alt']);
+		$(document).trigger('entityUpStop', ['#deletepriceOption', uid, 'fa-trash-alt']);
 		
 	});
 	

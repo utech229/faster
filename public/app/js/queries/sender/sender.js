@@ -259,7 +259,7 @@ const SenderManager = function(){
                 templateResult: select2Format1
             });
             // Charge par ajax les utilisateurs sous la marque sélectionnée
-            //$(brand).on("change", ($this)=>{
+            $(brand).on("change", ($this)=>{
             	$(user).select2({data:[{id:'',text:''}]});
 
             	$(user).css("width","100%");
@@ -279,7 +279,7 @@ const SenderManager = function(){
             		language: _locale,
             		width: 'resolve'
             	});
-            //});
+            });
 
             // Si bouton reset du filtre et cliqué
             $(reset).on("click", ($this)=>{

@@ -11,104 +11,6 @@
     <div class="post d-flex flex-column-fluid" id="kt_post">
         <!--begin::Container-->
         <div id="kt_content_container" class="container-xxl">
-            <!--begin::Row-->
-            <div class="row g-5 g-xl-8">
-                <div class="col-xl-4">
-                    <!--begin::Statistics Widget 4-->
-                    <div class="card card-xl-stretch mb-xl-8">
-                    <!--begin::Body-->
-                    <div class="card-body p-0">
-                        <div class="d-flex flex-stack card-p flex-grow-1">
-                        <span class="symbol symbol-50px symbol-light-info me-2">
-                            <span class="symbol-label">
-                            <!--begin::Icon-->
-                                <div class="m-0">
-                                    <i class="fa fa-users fs-2x text-info"></i>
-                                </div>
-                                <!--end::Icon-->
-                            <span class="pulse-ring"></span>
-                            </span>
-                        </span>
-                        <div class="d-flex flex-column text-end">
-                            <span class="text-dark fw-bolder fs-2" id="stat_all">
-                            {% if stats is defined %}
-                                        {{ stats.all }}
-                                        {% endif %}
-                            </span>
-                            <span class="text-muted fw-bold mt-1">{{ 'Utilisateurs' | trans }}</span>
-                        </div>
-                        </div>
-                        <!--<div class="statistics-widget-allregisteredusers-chart card-rounded-bottom" data-kt-chart-color="info" style="height: 150px"></div>-->
-                    </div>
-                    <!--end::Body-->
-                    </div>
-                    <!--end::Statistics Widget 4-->
-                </div>
-                <div class="col-xl-4">
-                    <!--begin::Statistics Widget 4-->
-                    <div class="card card-xl-stretch mb-xl-8">
-                    <!--begin::Body-->
-                    <div class="card-body p-0">
-                        <div class="d-flex flex-stack card-p flex-grow-1">
-                        <span class="symbol symbol-50px symbol-light-success me-2">
-                            <span class="symbol-label">
-                            <!--begin::Icon-->
-                                <div class="m-0">
-                                    <i class="fa fa-users fs-2x text-success"></i>
-                                </div>
-                                <!--end::Icon-->
-                            <span class="pulse-ring"></span>
-                            <!--end::Svg Icon-->
-                            </span>
-                        </span>
-                        <div class="d-flex flex-column text-end">
-                            <span class="text-dark fw-bolder fs-2" id="stat_active">
-                            {% if stats is defined %}
-                                        {{ stats.active }}
-                                        {% endif %}
-                            </span>
-                            <span class="text-muted fw-bold mt-1">Actifs</span>
-                        </div>
-                        </div>
-                        <!--<div class="statistics-widget-allactivatedusers-chart card-rounded-bottom" data-kt-chart-color="success" style="height: 150px"></div>-->
-                    </div>
-                    <!--end::Body-->
-                    </div>
-                    <!--end::Statistics Widget 4-->
-                </div>
-                <div class="col-xl-4">
-                    <!--begin::Statistics Widget 4-->
-                    <div class="card card-xl-stretch mb-5 mb-xl-8">
-                    <!--begin::Body-->
-                    <div class="card-body p-0">
-                        <div class="d-flex flex-stack card-p flex-grow-1">
-                        <span class="symbol symbol-50px symbol-light-primary me-2">
-                            <span class="symbol-label">
-                            <!--begin::Icon-->
-                                    <div class="m-0">
-                                        <i class="fa fa-users fs-2x text-warning"></i>
-                                    </div>
-                                    <!--end::Icon-->
-                            <span class="pulse-ring"></span>
-                            </span>
-                        </span>
-                        <div class="d-flex flex-column text-end">
-                            <span class="text-dark fw-bolder fs-2" id="stat_all">
-                            {% if stats is defined %}
-                                        {{ stats.pending }}
-                                        {% endif %}
-                            </span>
-                            <span class="text-muted fw-bold mt-1">{{"En attente"|trans}}</span>
-                        </div>
-                        </div>
-                        <!--<div class="statistics-widget-allmonthusers-chart card-rounded-bottom" data-kt-chart-color="primary" style="height: 150px"></div>-->
-                    </div>
-                    <!--end::Body-->
-                    </div>
-                    <!--end::Statistics Widget 4-->
-                </div>
-            </div>
-            <!--end::Row-->
             <!--begin::Card-->
             <div class="card">
                 <!--begin::Card header-->
@@ -201,7 +103,7 @@
                                     <rect x="6.01041" y="10.9247" width="12" height="2" rx="1" fill="currentColor" />
                                 </svg>
                             </span>
-                            <!--end::Svg Icon-->{{ 'Nouvel utilisateur' | trans }} </button>
+                            <!--end::Svg Icon-->{{ 'Nouvel affilié' | trans }} </button>
                             <!--end::Add user-->
                             <button type="button" id="kt_modal_add_user_reload_button" class="btn btn-light-primary d-none">
                             <!--begin::Svg Icon | path: icons/duotune/general/gen035.svg-->
@@ -232,7 +134,7 @@
                                     <!--begin::Modal header-->
                                     <div class="modal-header" id="kt_modal_add_user_header">
                                         <!--begin::Modal title-->
-                                        <h2 class="fw-bolder" id="kt-modal_add_user_title">{{ 'Créer un utilisateur'| trans }}</h2>
+                                        <h2 class="fw-bolder" id="kt-modal_add_user_title">{{ 'Créer un affilié'| trans }}</h2>
                                         <!--end::Modal title-->
                                         <!--begin::Close-->
                                         <div class="btn btn-icon btn-sm btn-active-icon-primary" data-kt-users-modal-action="close">
@@ -298,7 +200,7 @@
                                                         <label class="fs-6 fw-bold mb-2 form-label" for="kt_user_add_select2_country">
                                                             <span class="required">{{ 'Marque'| trans }}:</span>
                                                         </label>
-                                                        <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="{{"Marque blanche de l'utilisateur à créer"| trans}}"></i>
+                                                        <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="{{"Marque blanche de l'affilié à créer"| trans}}"></i>
                                                         <!--end::Label-->
                                                         <div class="w-100">
                                                             <div class="form-floating border rounded">
@@ -384,7 +286,7 @@
                                                                 <label class="fs-6 fw-bold mb-2 form-label" for="kt_user_add_select2_country">
                                                                     <span class="required">{{ 'Pays' | trans }}</span>
                                                                 </label>
-                                                                <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="{{'Pays détecté par le système pour l\'utilisateur' | trans}}"></i>
+                                                                <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="{{'Pays détecté par le système pour l\'affilié' | trans}}"></i>
                                                                 <!--end::Label-->
                                                                 <div class="w-100">
                                                                     <div class="form-floating border rounded">
@@ -436,7 +338,7 @@
                                                             <div class="col-lg-6 fv-row">
                                                                 <!--begin::Label-->
                                                                 <label class="required fw-bold fs-6 mb-2">{{ 'Prépayé' | trans }}</label>
-                                                                <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="{{"Possibilité pour l'utilisateur d'avoir un solde négatif"| trans}}"></i>
+                                                                <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="{{"Possibilité pour l'affilié d'avoir un solde négatif"| trans}}"></i>
                                                                 <!--end::Label-->
                                                                 {{ form_row(userform.post_pay, {'attr': {'class': 'form-select form-select-solid mb-3 mb-lg-0',
                                                                 'data-control':"select2", 'data-placeholder': 'Selectionner'| trans, 'data-allow-clear':"true"
@@ -461,7 +363,7 @@
                                                                 <label class="fs-6 fw-bold mb-2 form-label" for="kt_user_add_select2_country">
                                                                     <span class="required">{{ 'Rôle' | trans }}</span>
                                                                 </label>
-                                                                <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="{{"Rôle de l'utilisateur" | trans}}"></i>
+                                                                <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="{{"Rôle de l'affilié" | trans}}"></i>
                                                                 <!--end::Label-->
                                                                 {{ form_row(userform.role, {'attr': {'class': 'form-select form-select-solid mb-3 mb-lg-0',
                                                                 'data-control':"select2", 'data-placeholder': 'Selectionner'| trans, 'data-allow-clear':"true"
@@ -471,7 +373,7 @@
                                                             <div class="col-lg-6 fv-row" id="router_input">
                                                                 <!--begin::Label-->
                                                                 <label class="required fw-bold fs-6 mb-2">{{ 'Route' | trans }}</label>
-                                                                <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="{{"Route par défaut sur laquelle faire passer les messages de l'utilisateur"| trans}}"></i>
+                                                                <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="{{"Route par défaut sur laquelle faire passer les messages de l'affilié"| trans}}"></i>
                                                                 <!--end::Label-->
                                                                 {{ form_row(userform.router, {'attr': {'class': 'form-select form-select-solid mb-3 mb-lg-0',
                                                                 'data-control':"select2", 'data-placeholder': 'Selectionner'| trans, 'data-allow-clear':"true"
@@ -524,7 +426,7 @@
                                         <input class="form-check-input" type="checkbox" data-kt-check="true" data-kt-check-target="#kt_table_users .form-check-input" value="1" />
                                     </div>
                                 </th>
-                                <th class="min-w-125px">{{'Utilisateur'| trans}}</th>
+                                <th class="min-w-125px">{{'Affilié'| trans}}</th>
                                 <th class="min-w-125px">{{'Téléphone'| trans}}</th>
                                 <th class="min-w-125px">{{'Role'| trans}}</th>
                                 <th class="min-w-125px">{{'Pays'| trans}}</th>
@@ -584,9 +486,8 @@
 <script src="{{ asset('app/js/queries/public-app/country-flag-input.js') }}"></script>
 <!--begin::Page Custom Javascript(used by this page)-->
 <script src="{{ asset('app/plugins/custom/datatables/datatables.bundle.js') }}"></script>
-<script src="{{ asset('app/js/queries/user-management/users/add.js') }}"></script>
-<script src="{{ asset('app/js/queries/user-management/users/delete.js') }}"></script>
-<script src="{{ asset('app/js/queries/user-management/users/update.js') }}"></script>
-<script src="{{ asset('app/js/queries/user-management/prices/price.js') }}"></script>
-<script src="{{ asset('app/js/queries/user-management/users/list.js') }}"></script>
+<script src="{{ asset('app/js/queries/user-management/affiliates/add.js') }}"></script>
+<script src="{{ asset('app/js/queries/user-management/affiliates/delete.js') }}"></script>
+<script src="{{ asset('app/js/queries/user-management/affiliates/update.js') }}"></script>
+<script src="{{ asset('app/js/queries/user-management/affiliates/list.js') }}"></script>
 {% endblock %}

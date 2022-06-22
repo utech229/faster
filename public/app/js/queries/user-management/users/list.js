@@ -288,7 +288,7 @@ var KTUsersList = function() {
     
                     },{
                         targets: 11,
-                        visible: (data.roleLevel < 4) ? false : true,
+                        //visible: (roleLevel < 4) ? false : true,
                         render: function(data, type, full, meta) {
                             return data.name;
                         },
@@ -309,9 +309,16 @@ var KTUsersList = function() {
                                     <i id="deleteUserOption`+data+`" class="text-danger fa fa-trash-alt"></i>
                             </button>
                             <!--end::Delete-->`;
+                            var priceIcon =  `<!--begin::Price-->
+                            <button class="btn btn-icon btn-active-light-primary w-30px h-30px pricer" 
+                                data-id=`+data+` data-kt-users-table-filter="price_row">
+                                    <i id="priceOption`+data+`" class="text-info fas fa-money-bill"></i>
+                            </button>
+                            <!--end::Price-->`;
                             updaterIcon = (pEditUser) ? updaterIcon : '' ;
+                            priceIcon   = (pEditUser) ? priceIcon : '' ;
                             deleterIcon = (pDeleteUser) ? deleterIcon : '' ;
-                            return updaterIcon + deleterIcon;
+                            return updaterIcon + deleterIcon + priceIcon;
                         }
                     }],
                     columns: [
@@ -361,6 +368,7 @@ var KTUsersList = function() {
                 })),
                 document.querySelector('[data-kt-user-table-filter="reset"]').addEventListener("click", (function() {
                     document.querySelector('[data-kt-user-table-filter="form"]').querySelectorAll("select").forEach((e => {
+                             
                             $(e).val("").trigger("change")
                         })),
                         e.search("").draw()
@@ -370,13 +378,17 @@ var KTUsersList = function() {
                         n = t.querySelector('[data-kt-user-table-filter="filter"]'),
                         r = t.querySelectorAll("select");
                     n.addEventListener("click", (function() {
+                        loading(true);
+                        setTimeout(() => {
+                            loading()
+                        }, 300);
                         var t = "";
                         r.forEach(((e, n) => {
                                 e.value && "" !== e.value && (0 !== n && (t += " "),
                                     t += e.value)
                             })),
                             e.search(t).draw()
-                    }))
+                    }));
                 })
                 ())
                 
