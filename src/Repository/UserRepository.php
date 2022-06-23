@@ -142,26 +142,24 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         ;
     }
 
-    public function countAllUsers()
-    {
-        return $this->createQueryBuilder('m')
-        ->select('COUNT(m.id)')
-        ->Where("m.status !=:status")
-        ->setParameter('status', 4)
-        ->getQuery()
-        ->getResult()
-        ;
-    }
 
-    public function countAllUsersByStatus($status)
+    // Retourne les utilisateur ayant un level de role inférieur à celui de l'utilisteur actuel
+    public function findUserByLevel($level, $brand = null)
     {
-        return $this->createQueryBuilder('m')
-        ->Where("m.status =:status")
-        ->setParameter('status', $status)
-        ->select('COUNT(m.id)')
-        ->getQuery()
-        ->getResult()
-        ;
+        $qb = $this->createQueryBuilder('u');
+        $qb->from(Role::class, 'r')
+            ->Where('u.role = r')
+            ->andWhere('r.level < :level')
+            ->setParameter('level', $level);
+
+        if ($brand) {
+            $qb->from(Brand::class, 'b')
+            ->andWhere('u.brand = :brand')
+            ->setParameter('brand', $brand);
+        };
+
+        $query = $qb->getQuery();
+        return $query->getResult();
     }
 
     // Récupérer un utilisateur à partir de son id de transaction au vérification du N° Tel
@@ -196,7 +194,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     /**
     * @return User[] Returns an array of User objects
     */
-    public function getUsersByPermission($codePermission, $userType = null, $user = null, $level = null)
+    public function getUsersByPermission($codePermission, $userType = null, $user = null, $level = null, $status = null)
     {
         $qb = $this->createQueryBuilder('u');
 
@@ -212,7 +210,6 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->andWhere('p.status = s')
             ->andWhere('r.status = s')
             ->andWhere('a.status = s')
-            //->andWhere('u.status = s')
             ->andWhere('u.brand = b');
 
         if($codePermission != "") {

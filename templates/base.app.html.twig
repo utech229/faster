@@ -7,7 +7,7 @@
     <head>
         <!--end::Javascript-->
         <meta charset="UTF-8">
-        <title>{% block title %}{{title|default(brand.name)}}{% endblock %}</title>
+        <title>{% block title %}{{title|default(brand.name)}} {% endblock %}</title>
         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -73,7 +73,7 @@
                                         <i class="bi bi-house fs-3"></i>
                                         <!--end::Svg Icon-->
                                     </span>
-                                    <span class="menu-title">{{ 'Tableau de bord' | trans }} </span>
+                                    <span class="menu-title">{{ 'Tableau de bord' | trans }}</span>
                                 </a>
                             </div>
                             {% if permission(["MET0"], app.user, false) %}
@@ -83,7 +83,7 @@
                                 </div>
                             </div>
                             <div class="menu-item">
-                                <a class="menu-link {{menu(uri, path('app_profile')) }}" href="{{ path('app_profile') }}">
+                                <a class="menu-link {{menu(uri, path('app_payment_index')) }}" href="{{ path('app_payment_index') }}">
                                     <span class="menu-icon">
                                         <!--begin::Svg Icon | path: icons/stockholm/Design/PenAndRuller.svg-->
                                         <i class="bi bi-coin fs-3"></i>
@@ -99,7 +99,7 @@
                                 </div>
                             </div>
                             <div class="menu-item">
-                                <a class="menu-link " href="{{ path('app_profile') }}">
+                                <a class="menu-link " href="{{ path('app_contact_index') }}">
                                     <span class="menu-icon">
                                         <!--begin::Svg Icon | path: icons/stockholm/Design/PenAndRuller.svg-->
                                         <i class="fas fa-address-book fs-3"></i>
@@ -132,7 +132,7 @@
 									</span>
 									<div class="menu-sub menu-sub-accordion">
 										<div class="menu-item">
-											<a class="menu-link" href="../../demo1/dist/apps/contacts/getting-started.html">
+											<a class="menu-link" href="{{path("campaign_sms")}}">
 												<span class="menu-bullet">
 													<span class="bullet bullet-dot"></span>
 												</span>
@@ -144,11 +144,22 @@
 												<span class="menu-bullet">
 													<span class="bullet bullet-dot"></span>
 												</span>
-												<span class="menu-title">{{ "Messages API" | trans }}</span>
+												<span class="menu-title">{{ "Messages API/Unitaires" | trans }}</span>
 											</a>
 										</div>
 									</div>
 								</div>
+
+                                <div class="menu-item">
+                                    <a class="menu-link " href="{{ path('sender') }}">
+                                        <span class="menu-icon">
+                                            <!--begin::Svg Icon | path: icons/stockholm/Design/PenAndRuller.svg-->
+                                            <i class="fas fa-paper-plane fs-3"></i>
+                                            <!--end::Svg Icon-->
+                                        </span>
+                                        <span class="menu-title">{{ 'Expéditeurs' | trans }} </span>
+                                    </a>
+                                </div>
                             <div class="menu-item">
                                 <div class="menu-content pt-8 pb-2">
                                     <span class="menu-section text-muted text-uppercase fs-8 ls-1">{{ 'Transactions' | trans }}</span>
@@ -170,12 +181,14 @@
                                 </a>
                             </div>
 
+                            {% if permission(["CFIG0", "ROUT0", "ROL0"], app.user, false) %}
                             <div class="menu-item">
                                 <div class="menu-content pt-8 pb-2">
                                     <span class="menu-section text-muted text-uppercase fs-8 ls-1">{{ 'Congiguration' | trans }}</span>
                                 </div>
                             </div>
-                            {% if permission(["UTI0"], app.user) %}
+                            {% endif %}
+                            {% if permission(["ROUT0"], app.user) %}
                             <div class="menu-item">
                                 <a class="menu-link {{ menu(uri, path('app_router_index')) }}" href="{{ path('app_router_index') }}">
                                     <span class="menu-icon">
@@ -185,7 +198,7 @@
                                 </a>
                             </div>
                             {% endif %}
-                            {% if permission(["ROL0"], app.user) %}
+                            {% if permission(["STUT0"], app.user) %}
                              <div class="menu-item">
                                 <a class="menu-link {{ menu(uri, path('app_status_index')) }}" href="{{ path('app_status_index') }}">
                                     <span class="menu-icon">
@@ -195,11 +208,23 @@
                                 </a>
                             </div>
                             {% endif %}
+                            {% if permission(["OPRT0"], app.user) %}
+                             <div class="menu-item">
+                                <a class="menu-link {{ menu(uri, path('app_operator_index')) }}" href="{{ path('app_operator_index') }}">
+                                    <span class="menu-icon">
+                                        <i class="bi bi-phone-fill fs-3"></i>
+                                    </span>
+                                    <span class="menu-title">{{ "Opérateur GSM" | trans }}</span>
+                                </a>
+                            </div>
+                            {% endif %}
+                             {% if permission(["ROL0", "UTI0", "AFFL0", "PER0"], app.user, false) %}
                             <div class="menu-item">
                                 <div class="menu-content pt-8 pb-2">
                                     <span class="menu-section text-muted text-uppercase fs-8 ls-1">{{ 'Gestion Utilisateurs' | trans }}</span>
                                 </div>
                             </div>
+                            {% endif %}
                             {% if permission(["UTI0"], app.user) %}
                             <div class="menu-item">
                                 <a class="menu-link {{ menu(uri, path('app_user_index')) }}" href="{{ path('app_user_index') }}">
@@ -264,15 +289,18 @@
                                         <span class="menu-icon">
                                         <i class="bi bi-currency-exchange fs-3"></i>
                                         </span>
-                                        <span class="menu-title">{{ "Commissions" | trans }}</span>
+                                        <span class="menu-title">{{ "Commissions" | trans }} </span>
                                     </a>
                                 </div>
                             {% endif %}
+                            {% if permission(["DEV0", "DEV1", "DEV2"], app.user, false) %}
                             <div class="menu-item">
                                 <div class="menu-content pt-8 pb-2">
                                     <span class="menu-section text-muted text-uppercase fs-8 ls-1">{{ 'Développeur & API' | trans }}</span>
                                 </div>
                             </div>
+                            {% endif %}
+                            {% if permission(["DEV0"], app.user) %}
                             <div class="menu-item">
                                 <a class="menu-link " href="{{ path('app_user_apikey') }}">
                                     <span class="menu-icon">
@@ -283,6 +311,7 @@
                                     <span class="menu-title">{{ 'Intégration & clé API' | trans }} </span>
                                 </a>
                             </div>
+                            {% endif %}
                             <div class="menu-item">
                                 <div class="menu-content pt-8 pb-2">
                                     <span class="menu-section text-muted text-uppercase fs-8 ls-1">{{ 'Aide' | trans }}</span>

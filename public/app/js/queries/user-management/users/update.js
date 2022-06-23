@@ -3,6 +3,10 @@ var mdHTMLTitle      = $("#kt_modal_add_user_title")
 const userUidInput   = $('#user_uid');
 const avatarPath     = window.location.origin+'/app/uploads/avatars/';
 
+$('#modalbrand').select2({
+    templateSelection: select2Format1,
+    templateResult: select2Format1
+});
 
 $(document).on('entityUpBegin', function(e, identifier, id, icon) {
     $(identifier + id).removeClass("fa");
@@ -33,16 +37,20 @@ $(document).on('click', ".userUpdater", function(e) {
                 mdHTMLTitle.html(_Edit);
                 isUserUpdating = true;
                 var phone = r.data.phone;
+                $('#modalbrand').val(r.data.brand.uid).trigger('change');
+                $("#modalbrand").prop('disabled', true);
+                $("#brand_input").hide()
                 $('#user_firstname').val(r.data.user.firstname);
                 $('#user_lastname').val(r.data.user.lastname);
                 $('#user_email').val(r.data.email);
                 $('#user_phone').val(phone.substring(4, 20));
                 $('#user_is_dlr').val(r.data.isDlr).trigger('change');
                 $('#user_post_pay').val(r.data.isPostPay).trigger('change');
+                $('#user_currency').val(r.data.currency).trigger('change');
+                $('#user_currency').prop('disabled', true);
                 $('#user_role').val(r.data.role.code).trigger('change');
                 $('#kt_user_add_select2_country').val(r.data.countryCode).trigger('change');
                 $('#user_status').val(r.data.status).trigger('change');
-                //$("input[name=user_role][value=" + r.data.role.code+ "]").prop('checked', true);
                 var cover = avatarPath + r.data.photo;
                 $("#avatar_input").css("background-image", "url(" + cover + ")");
                 formModalButton.click();
@@ -63,6 +71,9 @@ $('#kt_modal_add_user').on('hidden.bs.modal', function(e) {
     userUidInput.val(0);
     $('#user_is_dlr').val('false').trigger('change');
     $('#user_post_pay').val('false').trigger('change');
+    $("#modalbrand").prop('disabled', false);
+    $('#user_currency').prop('disabled', false);
+    $("#brand_input").show()
 });
 
 
@@ -71,6 +82,12 @@ $(document).on('securityFirewall', function(e, r, identifier, rowData, icon) {
         toastr.error(r.message),
         $(document).trigger('entityUpStop', [identifier, rowData, icon]);
 });
+
+if (!pViewUser) {
+    $('#router_input').hide();
+}
+
+
 
 function statisticsReload(){
     $.ajax({

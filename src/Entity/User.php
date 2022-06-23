@@ -118,8 +118,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToOne(mappedBy: 'user', targetEntity: SoldeNotification::class, cascade: ['persist', 'remove'])]
     private $soldeNotification;
 
-    // #[ORM\ManyToOne(targetEntity: Sender::class, inversedBy: 'users')]
-    // private $defaultSender;
+    #[ORM\Column(type: 'array', nullable: true)]
+    private $paymentAccount = [];
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Payment::class, orphanRemoval: true)]
+    private $payments;
+
+    #[ORM\OneToMany(mappedBy: 'validator', targetEntity: Payment::class)]
+    private $validatorPayments;
 
     #[ORM\OneToMany(mappedBy: 'manager', targetEntity: Sender::class)]
     private $senders;
@@ -166,6 +172,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->sMSCampaigns = new ArrayCollection();
         $this->sMSMessages = new ArrayCollection();
         $this->affiliates = new ArrayCollection();
+        $this->payments = new ArrayCollection();
+        $this->validatorPayments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -1017,4 +1025,78 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    public function getPaymentAccount(): ?array
+    {
+        return $this->paymentAccount;
+    }
+
+    public function setPaymentAccount(?array $paymentAccount): self
+    {
+        $this->paymentAccount = $paymentAccount;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Payment>
+     */
+    public function getPayments(): Collection
+    {
+        return $this->payments;
+    }
+
+    public function addPayment(Payment $payment): self
+    {
+        if (!$this->payments->contains($payment)) {
+            $this->payments[] = $payment;
+            $payment->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removePayment(Payment $payment): self
+    {
+        if ($this->payments->removeElement($payment)) {
+            // set the owning side to null (unless already changed)
+            if ($payment->getUser() === $this) {
+                $payment->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Payment>
+     */
+    public function getValidatorPayments(): Collection
+    {
+        return $this->validatorPayments;
+    }
+
+    public function addValidatorPayment(Payment $validatorPayment): self
+    {
+        if (!$this->validatorPayments->contains($validatorPayment)) {
+            $this->validatorPayments[] = $validatorPayment;
+            $validatorPayment->setValidator($this);
+        }
+
+        return $this;
+    }
+
+    public function removeValidatorPayment(Payment $validatorPayment): self
+    {
+        if ($this->validatorPayments->removeElement($validatorPayment)) {
+            // set the owning side to null (unless already changed)
+            if ($validatorPayment->getValidator() === $this) {
+                $validatorPayment->setValidator(null);
+            }
+        }
+
+        return $this;
+    }
+
+
 }

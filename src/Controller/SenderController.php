@@ -54,7 +54,8 @@ class SenderController extends AbstractController
             $this->src->addLog($this->intl->trans("Acces refusé à Sender"), 417);
             return $this->redirectToRoute("app_home");
         }
-        else if ($request->request->get('_token') && !$this->isCsrfTokenValid('sender', $request->request->get('_token')))
+
+        if ($request->request->get('_token') && !$this->isCsrfTokenValid('sender', $request->request->get('_token')))
             return $this->src->no_access($this->intl->trans("Actions sur sender bloquées à l'utilisateur."));
 
         if(!$sender && $request->request->get("uid", null)) return $this->src->msg_error(
@@ -214,7 +215,7 @@ class SenderController extends AbstractController
             return new JsonResponse($data);
         }
 
-        $brand = $this->em->getRepository(Brand::class)->findOneByUid($request->request->get("brand", "IwyXLGn0gH"));
+        $brand = $this->em->getRepository(Brand::class)->findOneByUid($request->request->get("brand"));
 
         if($brand) $users = $this->em->getRepository(User::class)->getUsersByPermission("", 2, $brand->getManager()->getId(), 1);
         else $users = $this->em->getRepository(User::class)->getUsersByPermission("", null, null, 1);

@@ -329,7 +329,7 @@ class RoleController extends AbstractController
             }
             elseif($authorization && !$isCheck)
             {
-                $authorization->setStatus(0)->setUpdatedAt(new \DateTimeImmutable());
+                $authorization->setStatus($this->services->status(4))->setUpdatedAt(new \DateTimeImmutable())->setUpdatedAt(new \DateTimeImmutable());
             }
             elseif(!$authorization && $isCheck)
             {

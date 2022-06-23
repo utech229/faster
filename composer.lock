@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "786511c0f602ca1a61e3ea0cbdcfe094",
+    "content-hash": "0e6a448f7b25b3461868eefefb356391",
     "packages": [
         {
             "name": "amphp/amp",
@@ -2525,6 +2525,60 @@
                 "source": "https://github.com/ezyang/htmlpurifier/tree/v4.14.0"
             },
             "time": "2021-12-25T01:21:49+00:00"
+        },
+        {
+            "name": "fedapay/fedapay-php",
+            "version": "0.3.10",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fedapay/fedapay-php.git",
+                "reference": "c56ddecae128bb1f5ea75325a8adeeffdee667d1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/fedapay/fedapay-php/zipball/c56ddecae128bb1f5ea75325a8adeeffdee667d1",
+                "reference": "c56ddecae128bb1f5ea75325a8adeeffdee667d1",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "ext-json": "*",
+                "ext-mbstring": "*",
+                "php": ">=5.5"
+            },
+            "require-dev": {
+                "fzaninotto/faker": "^1.7",
+                "phpunit/phpunit": "~4.0",
+                "squizlabs/php_codesniffer": "~2.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "FedaPay\\": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "FedaPay and contributors",
+                    "homepage": "https://github.com/fedapay/fedapay-php/contributors"
+                }
+            ],
+            "description": "PHP library for FedaPay https://fedapay.com",
+            "homepage": "https://fedapay.com/",
+            "keywords": [
+                "api",
+                "fedapay",
+                "payment processing"
+            ],
+            "support": {
+                "issues": "https://github.com/fedapay/fedapay-php/issues",
+                "source": "https://github.com/fedapay/fedapay-php/tree/0.3.10"
+            },
+            "time": "2022-06-09T08:53:13+00:00"
         },
         {
             "name": "friendsofphp/proxy-manager-lts",
@@ -10088,5 +10142,5 @@
         "ext-iconv": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.2.0"
+    "plugin-api-version": "2.3.0"
 }

@@ -18,15 +18,19 @@ class Message extends AbstractController
         $length = strlen($message);
         $page = 0;
         switch (true) {
-            case ($length <= $maxPage1): $page = 1; break;
-            case ($length <= $maxPage2): $page = 2; break;
-            case ($length <= $maxPage3): $page = 3; break;
+            case ($length == 0): $page = 0; break;
+            case ($length <= $this->maxPage1): $page = 1; break;
+            case ($length <= $this->maxPage2): $page = 2; break;
+            case ($length <= $this->maxPage3): $page = 3; break;
             default: $page = 4; break;
         }
-        return [true, $message, $length, $page];
+        return [
+            ($page > 0 && $page < 4) ? true : false,
+            $message, $length, $page
+        ];
     }
 
-    public function getAmountSMS($sms, $user, $phone)
+    public function getAmountSMS($page, $user)
     {
         return [true, 12.0, ""];
     }
@@ -34,20 +38,11 @@ class Message extends AbstractController
     public function checkSender($manager, $sender)
     {
         try {
-            if(is_string($sender))
-            {
-                foreach ($manager->getSenders() as $onSender) {
-                    if($onSender->getName() == $sender) return $onSender;
-                }
-            }
-                else if(is_object($sender) && $manager === $sender->getManager())
-            {
-                return $sender;
+            foreach ($manager->getSenders() as $onSender) {
+                if($onSender->getName() == $sender) return $onSender;
             }
         } catch (\Exception $e) {
-            //
         }
-
         return null;
     }
 
@@ -55,88 +50,40 @@ class Message extends AbstractController
     {
         $server_tz = date_default_timezone_get();
 
-        $startAt = null;
+        $startAt = new \DateTime();
         if($date_heure_send || $timezone){
             // Convertion de la date et heure du client eau time zone du server
             try {
-                $startAt = new \DateTime($date_send." ".$heure_send." ".$timezone);
+                $startAt = new \DateTime($date_heure_send." ".$timezone);
                 $startAt->setTimezone(new \DateTimeZone($server_tz));
-
-                return [true, $startAt];
             } catch (\Exception $e) {
                 return [false, $startAt];
             }
-        }else{
-            return [true, $startAt];
         }
+        return [true, $startAt];
     }
 
     public function corrigeCarac($originMessage)
     {
-        $message = "";
-        for ($i=0; $i < strlen($originMessage); $i++) {
-            switch ($originMessage[$i])
-            {
-                case '(': $message += ''; break;
-                case '+': $message += ''; break;
-                case '*': $message += ''; break;
-                case '-': $message += ''; break;
-                case '_': $message += ''; break;
-                case '=': $message += ''; break;
-                case '~': $message += ''; break;
-                case '#': $message += ''; break;
-                case '{': $message += ''; break;
-                case '[': $message += ''; break;
-                case '|': $message += ''; break;
-                case '`': $message += ''; break;
-                case '\\': $message += ''; break;
-                case '^': $message += ''; break;
-                case '@': $message += ''; break;
-                case ']': $message += ''; break;
-                case '}': $message += ''; break;
-                case '$': $message += ''; break;
-                case 'ù': $message += ''; break;
-                case '*': $message += ''; break;
-                case '!': $message += ''; break;
-                case ';': $message += ''; break;
-                case '¤': $message += ''; break;
-                case '£': $message += ''; break;
-                case '¨': $message += ''; break;
-                case '%': $message += ''; break;
-                case 'µ': $message += ''; break;
-                case '^': $message += ''; break;
-                case '%': $message += ''; break;
-                case 'û': $message += ''; break;
-                case '§': $message += ''; break;
-                case '/': $message += ''; break;
-                case '?': $message += ''; break;
-                case '€': $message += ''; break;
-                case ']': $message += ''; break;
-                case '}': $message += ''; break;
-                case '"': $message += ''; break;
-                case '\'': $message += ''; break;
-                case ')': $message += ''; break;
-                case '&': $message += ''; break;
-                case 'à': $message += 'a'; break;
-                case 'à': $message += 'a'; break;
-                case 'â': $message += 'a'; break;
-                case 'ä': $message += 'a'; break;
-                case 'À': $message += 'A'; break;
-                case 'Â': $message += 'A'; break;
-                case 'Ä': $message += 'A'; break;
-                case 'ç': $message += 'c'; break;
-                case 'é': $message += 'e'; break;
-                case 'ê': $message += 'e'; break;
-                case 'ë': $message += 'e'; break;
-                case 'è': $message += 'e'; break;
-                case 'É': $message += 'E'; break;
-                case 'È': $message += 'E'; break;
-                case 'Ê': $message += 'E'; break;
-                case 'Ë': $message += 'E'; break;
-                default: $message += $originMessage[$i]; break;
-            }
-        }
+        $str = str_replace( array( '<br>', '<br/>', '<br />', "\n", "\r" ), array( ' ', ' ', ' ', ' ', ' ' ), $originMessage );
+        $str = htmlentities($str, ENT_NOQUOTES, 'utf-8');
+        $str = preg_replace('#&([A-za-z])(?:acute|grave|cedil|circ|orn|ring|slash|th|tilde|uml);#', '\1', $str);
+        $str = preg_replace('#&([A-za-z]{2})(?:lig);#', '\1', $str);
+        $str = preg_replace('#&[^;]+;#', '', $str);
 
-        return $message;
+        return $str;
+    }
+
+    public function setParameters($message, $contact)
+    {
+        $keyword = array(
+            '/{param1}/' => $contact["param1"],
+            '/{param2}/' => $contact["param2"],
+            '/{param3}/' => $contact["param3"],
+            '/{param4}/' => $contact["param4"],
+            '/{param5}/' => $contact["param5"],
+        );
+        $sms = preg_replace(array_keys($keyword), array_values($keyword), $message);
+        return $this->trueLength($sms);
     }
 }

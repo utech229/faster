@@ -182,9 +182,9 @@ var KTUsersList = function() {
                         render: function(data, type, full, meta) {
                             var status = {
                                 'ROLE_AFFILIATE_USER': { 'title': 'Affilié revendeur', 'class': 'warning' },
-                                'ROLE_AFFILIATE_RESELLER': { 'title': 'Affilié revendeur', 'class': 'warning' },
-                                'ROLE_RESSELER': { 'title': 'Revendeur', 'class': 'warning' },
-                                'ROLE_USER': { 'title': 'Utilisateur', 'class': 'danger' },
+                                'ROLE_AFFILIATE_RESELLER': { 'title': 'Affilié revendeur', 'class': 'primary' },
+                                'ROLE_RESELLER': { 'title': 'Revendeur', 'class': 'warning' },
+                                'ROLE_USER': { 'title': 'Utilisateur', 'class': 'info' },
                                 'ROLE_ADMINISTRATOR': { 'title': 'Administrateur', 'class': 'secondary' },
                                 'ROLE_SUPER_ADMINISTRATOR': { 'title': 'Super administrateur', 'class': 'info' },
                             };
@@ -287,8 +287,15 @@ var KTUsersList = function() {
                         },
     
                     },{
-                        orderable: !1,
                         targets: 11,
+                        //visible: (roleLevel < 4) ? false : true,
+                        render: function(data, type, full, meta) {
+                            return data.name;
+                        },
+    
+                    },{
+                        orderable: !1,
+                        targets: 12,
                         visible: (!pEditUser && !pDeleteUser) ? false : true,
                         render : function (data,type, full, meta) {
                             var updaterIcon =  `<!--begin::Update-->
@@ -302,9 +309,16 @@ var KTUsersList = function() {
                                     <i id="deleteUserOption`+data+`" class="text-danger fa fa-trash-alt"></i>
                             </button>
                             <!--end::Delete-->`;
+                            var priceIcon =  `<!--begin::Price-->
+                            <button class="btn btn-icon btn-active-light-primary w-30px h-30px pricer" 
+                                data-id=`+data+` data-kt-users-table-filter="price_row">
+                                    <i id="priceOption`+data+`" class="text-info fas fa-money-bill"></i>
+                            </button>
+                            <!--end::Price-->`;
                             updaterIcon = (pEditUser) ? updaterIcon : '' ;
+                            priceIcon   = (pEditUser) ? priceIcon : '' ;
                             deleterIcon = (pDeleteUser) ? deleterIcon : '' ;
-                            return updaterIcon + deleterIcon;
+                            return updaterIcon + deleterIcon + priceIcon;
                         }
                     }],
                     columns: [
@@ -319,7 +333,7 @@ var KTUsersList = function() {
     
                         { data: 'country', responsivePriority: 10 },
     
-                        { data: 'balance' , responsivePriority: -7 },
+                        { data: 'balance' , responsivePriority: -4 },
     
                         { data: 'status' },
     
@@ -331,8 +345,12 @@ var KTUsersList = function() {
 
                         { data: 'postPay',responsivePriority: -5 },
 
+                        { data: 'brand',responsivePriority: -7 },
+
                         { data: 'action',responsivePriority: -9 },
                     ],
+                    "info": true,
+                    lengthMenu: [10, 25, 100, 250, 500, 1000],
                     pageLength: 10,
                     lengthChange: !1,
                     language: {
@@ -352,6 +370,7 @@ var KTUsersList = function() {
                 })),
                 document.querySelector('[data-kt-user-table-filter="reset"]').addEventListener("click", (function() {
                     document.querySelector('[data-kt-user-table-filter="form"]').querySelectorAll("select").forEach((e => {
+                             
                             $(e).val("").trigger("change")
                         })),
                         e.search("").draw()
@@ -361,13 +380,17 @@ var KTUsersList = function() {
                         n = t.querySelector('[data-kt-user-table-filter="filter"]'),
                         r = t.querySelectorAll("select");
                     n.addEventListener("click", (function() {
+                        loading(true);
+                        setTimeout(() => {
+                            loading()
+                        }, 300);
                         var t = "";
                         r.forEach(((e, n) => {
                                 e.value && "" !== e.value && (0 !== n && (t += " "),
                                     t += e.value)
                             })),
                             e.search(t).draw()
-                    }))
+                    }));
                 })
                 ())
                 

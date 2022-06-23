@@ -60,6 +60,12 @@ class SuperController extends AbstractController
         $this->validator         = $validator;
         $this->dbInitData        = $dbInitData;
         $this->AddEntity         = $addEntity;
+
+        $this->comptes = [
+			['Owner' =>'','Operator'=>'','Phone'=>'','TransactionId'=>'','Country'=>'', 'Status'=>''],
+			['Banque'=>'','Country'=>'','NAccount'=>'','Swift'=>'','DocID'=>'','DocRIB'=>''],
+			['Owner' =>'','NBIN'=>'','CVV2'=>'','NAccount'=>'']
+		];
     }
 
     /*#[Route('', name: 'el_super_admin', methods: ['POST', 'GET'])]*/
@@ -83,8 +89,15 @@ class SuperController extends AbstractController
                     'code'      => $country,
                     'name'      => $countryDatas['name']
                 ];
+                
+                $priceDatas = [
+                    'dial_code' => $countryDatas['dial_code'],
+                    'code'      => $country,
+                    'name'      => $countryDatas['name'],
+                    'price'     => $country == 'bj' ? 12 : 25
+                ];
             }else
-                return $this->services->ajax_error_crud(
+                return $this->services->msg_error(
                     $this->intl->trans("Insertion du tableau de données pays"),
                     $this->intl->trans("La recherche du nom du pays à échoué : BrickPhone"),
                 );
@@ -97,16 +110,25 @@ class SuperController extends AbstractController
             $user->setUid($this->services->idgenerate(30));
             $user->setApiKey($this->services->idgenerate(30));
             $user->setPostPay(1);
+            $user->setPaymentAccount($this->comptes);
             $user->setIsDlr(1);
             $user->setStatus($this->statusRepository->findOneByCode(3));
             $user->setCountry($countryDatas);
+            $user->setPrice([
+                $countryDatas['code'] = $priceDatas,
+            ]);
             $user->setProfilePhoto('default_avatar_1.png');
             $user->setCreatedAt(new \DatetimeImmutable());
             $user->setPassword(
             // encode the plain password
             $userPasswordHasher->hashPassword($user, '@21061AdminDefault'));
             $this->userRepository->add($user);
-            $this->AddEntity->defaultUsetting($user, $this->brand->get()['name'], $this->brand->get()['name']);
+            $this->AddEntity->defaultUsetting($user,  [
+                'ccode' => 'XOF',
+                'cname' => 'Franc CFA Africain',
+                'ufirstname' => 'Bill',
+                'ulastname'  => 'FASSINOU'
+            ]);
 
             $brand   = $this->brandRepository->findOneByName($this->brand->get()['name']);
             $route   = $this->routerRepository->findOneByName("Fastermessage_moov");
@@ -149,6 +171,7 @@ class SuperController extends AbstractController
     #[Route('', name: 'update_initData', methods: ['POST', 'GET'])]
     public function initdata(Request $request, UserPasswordHasherInterface $userPasswordHasher): JsonResponse
     {
+        $this->dbInitData->addOperator();
         $this->dbInitData->addStatus();
         $this->dbInitData->addRole();
         $this->dbInitData->addPermission();
@@ -157,8 +180,6 @@ class SuperController extends AbstractController
         $this->dbInitData->addSender();
         $this->AddEntity->defaultBrand();
         $this->AddEntity->defaultCompany();
-        $this->elsuperadmin($userPasswordHasher);
-        $this->elsuperadmin($userPasswordHasher);
         $this->elsuperadmin($userPasswordHasher);
         return $this->services->msg_success(
             $this->intl->trans("Mise à jour des données par défaut"),

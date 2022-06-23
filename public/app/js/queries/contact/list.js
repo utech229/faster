@@ -1,10 +1,10 @@
+
 "use strict";
 
-
-var KTUsersList = function() {
-    var e, t, n, r, o = document.getElementById("kt_table_users"),
+var KTTransactionsList = function() {
+    var e, t, n, r, o = document.getElementById("kt_contacts_table"),
         c = () => {
-            o.querySelectorAll('[data-kt-users-table-filter="delete_row"]').forEach((t => {
+            o.querySelectorAll('[data-kt-contact-table-filter="delete_row"]').forEach((t => {
                 t.addEventListener("click", (function(t) {
                     t.preventDefault();
                     const n = t.target.closest("tr"),
@@ -48,10 +48,10 @@ var KTUsersList = function() {
         },
         l = () => {
             const c = o.querySelectorAll('[type="checkbox"]');
-            t = document.querySelector('[data-kt-user-table-toolbar="base"]'),
-                n = document.querySelector('[data-kt-user-table-toolbar="selected"]'),
-                r = document.querySelector('[data-kt-user-table-select="selected_count"]');
-            const s = document.querySelector('[data-kt-user-table-select="delete_selected"]');
+            t = document.querySelector('[data-kt-contact-table-toolbar="base"]'),
+                n = document.querySelector('[data-kt-contact-table-toolbar="selected"]'),
+                r = document.querySelector('[data-kt-contact-table-toolbar="selected_count"]');
+            const s = document.querySelector('[data-kt-contact-table-toolbar="delete_selected"]');
             c.forEach((e => {
                     e.addEventListener("click", (function() {
                         setTimeout((function() {
@@ -100,7 +100,7 @@ var KTUsersList = function() {
                     }))
                 }))
         };
-    const a = () => {
+        const a = () => {
         const e = o.querySelectorAll('tbody [type="checkbox"]');
         let c = !1,
             l = 0;
@@ -133,201 +133,109 @@ var KTUsersList = function() {
                 (e = $(o).DataTable({
                     responsive: true,
                     ajax: {
-                        url: user_list_link,
+                        url: contact_list,
                         type: "POST",
                         data: {
                             _token: function(){ return csrfToken; }
                         },
                         error: function () { 
-                            $(document).trigger('toastr.tableListError');
-                        }
-                    },
-                    info: !1,
-                    order: [[ 8, "desc" ]],
-                    columnDefs: [{
-                        orderable: !1,
-                        targets: 0, 
-                        render: function (data, type, full, meta) {
-                            return  `<div class="form-check form-check-sm form-check-custom form-check-solid">
-                                        <input class="form-check-input" type="checkbox" value="`+data+`" />
-                                    </div>`;
-                        }
-                    },
-                    {
-                        orderable: !1,
-                        targets: 1, 
-                        render: function (data, type, full, meta) {
-                            return `<!--begin::User=-->
-									<div class="d-flex align-items-center">
-                                        <!--begin:: Avatar -->
-                                        <div class="symbol symbol-circle symbol-50px overflow-hidden me-3">
-                                            <a href="javascript:;">
-                                                <div class="symbol-label">
-                                                    <img src="`+window.location.origin+`/app/uploads/avatars/`+data.photo+`" alt="`+data.name+`" class="w-100" />
-                                                </div>
-                                            </a>
-                                        </div>
-                                        <!--end::Avatar-->
-                                        <!--begin::User details-->
-                                        <div class="d-flex flex-column">
-                                            <a href="javascript:;" class="text-gray-800 text-hover-primary mb-1">`+data.name+`</a>
-                                            <span>`+data.email+`</span>
-                                        </div>
-                                        <!--begin::User details-->
-                                    </div>`;
-                        }
-                    },
-                    {
-                        targets: 3,
-                        render: function(data, type, full, meta) {
-                            var status = {
-                                'ROLE_AFFILIATE_USER': { 'title': 'Affilié revendeur', 'class': 'warning' },
-                                'ROLE_AFFILIATE_RESELLER': { 'title': 'Affilié revendeur', 'class': 'warning' },
-                                'ROLE_RESSELER': { 'title': 'Revendeur', 'class': 'warning' },
-                                'ROLE_USER': { 'title': 'Utilisateur', 'class': 'danger' },
-                                'ROLE_ADMINISTRATOR': { 'title': 'Administrateur', 'class': 'secondary' },
-                                'ROLE_SUPER_ADMINISTRATOR': { 'title': 'Super administrateur', 'class': 'info' },
-                            };
-                            if (typeof status[data] === 'undefined') {
-                                return data;
-                            }
-                            return '<span class="badge badge-light-' + status[data].class + '">' + status[data].title + '</span>';
+                            $(document).trigger('toastr.onAjaxError');
                         },
+                        dataSrc: function(json) {
 
-                    }, {
-                        targets: 1,
-                        render: function(data, type, full, meta) {
-                           return '<img src="'+window.location.origin+'/app/media/flags/'+data+'.svg" class="rounded-circle me-2"  style="height:19px;" alt="'+data+'" />'+data
-                        },
-
+                            return json.data;
+                        }
+                        
                     },
-                    {
-                        targets: 2,
-                        render: function(data, type, full, meta) {
-                            var status = {
-                                true : { 'title': _Activated, 'class': 'success' },
-                                false : { 'title': _Disabled, 'class': 'danger' },
-                            };
-                            if (typeof status[data] === 'undefined') {
+                    order: [[ 5, "desc" ]],
+                    'columnDefs': [
+                       
+                        // Numéro
+                        {
+                            responsivePriority: 0,
+                            targets: 0, 
+                            render: function (data, type, full, meta) {
+                                return  data[0];
+                            }
+                        },
+                        // Champ1
+                        {
+                            responsivePriority: 1,
+                            targets: 1, 
+                            render: function (data, type, full, meta) {
                                 return data;
                             }
-                            return '<span class="badge badge-light-' + status[data].class + '">' + status[data].title + '</span>';
                         },
-    
-                    },
-                    {
-                        targets: 4,
-                        render: function(data, type, full, meta) {
-                            var status = {
-                                true : { 'title': _Activated, 'class': 'success' },
-                                false : { 'title': _Disabled, 'class': 'danger' },
-                            };
-                            if (typeof status[data] === 'undefined') {
+                        // Champ2
+                        {
+                            responsivePriority: 2,
+                            targets: 2, 
+                            render: function (data, type, full, meta) {
                                 return data;
                             }
-                            return '<span class="badge badge-light-' + status[data].class + '">' + status[data].title + '</span>';
                         },
-    
-                    },
-                    {
-                        targets: 6,
-                        render: function(data, type, full, meta) {
-                            var status = {
-                                0 : { 'title': _Pending, 'class': 'warning' },
-                                1 : { 'title': _Actif, 'class': 'success' },
-                                2 : { 'title': _Disabled, 'class': 'primary' },
-                                3 : { 'title': _Rejected, 'class': 'info' },
-                                4 : { 'title': _Deleted, 'class': 'danger' },
-                            };
-                            if (typeof status[data] === 'undefined') {
+                        // Champ3
+                        {
+                            responsivePriority: 3,
+                            targets: 3, 
+                            render: function (data, type, full, meta) {
                                 return data;
                             }
-                            return '<span class="badge badge-light-' + status[data].class + '">' + status[data].title + '</span>';
                         },
-    
-                    },
-                    {
-                        orderable: 1,
-                        targets: 7,
-                        render: function(data, type, full, meta) {
+                        // Champ4
+                        {
+                            responsivePriority: 4,
+                            targets: 4, 
+                            render: function (data, type, full, meta) {
+                                return data;
+                            }
+                        },
+                        // Date de création
+                        {
+                            responsivePriority: 5,
+                            targets: 5, 
+                            render: function (data, type, full, meta) {
                             return  dateFormat(moment(data, "YYYY-MM-DDTHH:mm:ssZZ").format());
+                            }
+                        },
+                        // Action
+                        {
+                            responsivePriority: 6,
+                            targets: 6, 
+                            render: function (data, type, full, meta) {
+                                return  dateFormat(moment(data, "YYYY-MM-DDTHH:mm:ssZZ").format());
+                            }
                         }
-                    },
-                    {
-                        orderable: 1,
-                        targets: 8,
-                        render: function(data, type, full, meta) {
-                            return  dateFormat(moment(data, "YYYY-MM-DDTHH:mm:ssZZ").format());
-                        }
-                    },{
-                        orderable: !1,
-                        targets: 9,
-                        visible: (!pEditUser && !pDeleteUser) ? false : true,
-                        render : function (data,type, full, meta) {
-                            var updaterIcon =  `<!--begin::Update-->
-                            <button class="btn btn-icon btn-active-light-primary w-30px h-30px me-3 userUpdater" data-id=`+data+`>
-                                <i id="editUserOption`+data+`" class="fa fa-edit"></i>
-                            </button>
-                            <!--end::Update-->`;
-                            var deleterIcon =  `<!--begin::Delete-->
-                            <button class="btn btn-icon btn-active-light-primary w-30px h-30px userDeleter" 
-                                data-id=`+data+` data-kt-users-table-filter="delete_row">
-                                    <i id="deleteUserOption`+data+`" class="text-danger fa fa-trash-alt"></i>
-                            </button>
-                            <!--end::Delete-->`;
-                            updaterIcon = (pEditUser) ? updaterIcon : '' ;
-                            deleterIcon = (pDeleteUser) ? deleterIcon : '' ;
-                            return updaterIcon + deleterIcon;
-                        }
-                    }],
-                    columns: [
-    
-                        { data: 'orderId' },
-    
-                        { data: 'user', responsivePriority: -10},
-    
-                        { data: 'phone' },
-    
-                        { data: 'role', responsivePriority: -8},
-    
-                        { data: 'country', responsivePriority: 10 },
-    
-                        { data: 'balance' , responsivePriority: -7 },
-    
-                        { data: 'status' },
-    
-                        { data: 'lastLogin' },
-
-                        { data: 'createdAt' , responsivePriority: 0},
-    
-                        { data: 'action',responsivePriority: -9 },
                     ],
-                    pageLength: 5,
-                    lengthChange: !1,
-                   
+                    pageLength: 10,
+                    lengthChange: true,
+                    "info": true,
+                    lengthMenu: [10, 25, 100, 250, 500, 1000],                   
                 }),
-                $('#kt_modal_add_user_reload_button').on('click', function() {
+                $('#kt_modal_add_contact_reload_button').on('click', function() {
                     e.ajax.reload(null, false);
                 })).on("draw", (function() { l(), c(), a()
                 })), l(),
-                document.querySelector('[data-kt-user-table-filter="search"]').addEventListener("keyup", (function(t) {
+                document.querySelector('[data-kt-contact-table-filter="search"]').addEventListener("keyup", (function(t) {
                     e.search(t.target.value).draw()
+
                 })),
-                document.querySelector('[data-kt-user-table-filter="reset"]').addEventListener("click", (function() {
-                    document.querySelector('[data-kt-user-table-filter="form"]').querySelectorAll("select").forEach((e => {
-                            $(e).val("").trigger("change")
+                document.querySelector('[data-kt-contact-table-filter="reset"]').addEventListener("click", (function() {
+                    document.querySelector('[data-kt-contact-table-filter="form"]').querySelectorAll("select").forEach((e => {
+                            $(e).val("").trigger("change");
                         })),
                         e.search("").draw()
                 })),
                 c(), (() => {
-                    const t = document.querySelector('[data-kt-user-table-filter="form"]'),
-                        n = t.querySelector('[data-kt-user-table-filter="filter"]'),
+                    const t = document.querySelector('[data-kt-contact-table-filter="form"]'),
+                        n = t.querySelector('[data-kt-contact-table-filter="filter"]'),
                         r = t.querySelectorAll("select");
                     n.addEventListener("click", (function() {
                         var t = "";
                         r.forEach(((e, n) => {
                                 e.value && "" !== e.value && (0 !== n && (t += " "),
                                     t += e.value)
+                                    
                             })),
                             e.search(t).draw()
                     }))
@@ -336,6 +244,9 @@ var KTUsersList = function() {
         }
     }
 }();
+
 KTUtil.onDOMContentLoaded((function() {
-    KTUsersList.init();
+    KTTransactionsList.init();
 }));
+
+

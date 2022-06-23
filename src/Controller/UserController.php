@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Log;
 use App\Entity\User;
+use App\Entity\Brand;
 use App\Form\UserType;
 use App\Service\uBrand;
 use App\Service\BaseUrl;
@@ -13,6 +14,7 @@ use App\Service\BrickPhone;
 use App\Service\DbInitData;
 use App\Repository\RoleRepository;
 use App\Repository\UserRepository;
+use App\Repository\BrandRepository;
 use App\Repository\StatusRepository;
 use App\Repository\PermissionRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -38,7 +40,7 @@ class UserController extends AbstractController
     EntityManagerInterface $entityManager, TranslatorInterface $translator,
     RoleRepository $roleRepository, UserRepository $userRepository, PermissionRepository $permissionRepository,
     AuthorizationRepository $authorizationRepository, uBrand $brand,ValidatorInterface $validator,
-    DbInitData $dbInitData, AddEntity $addEntity, StatusRepository $statusRepository)
+    DbInitData $dbInitData, AddEntity $addEntity, StatusRepository $statusRepository, BrandRepository $brandRepository)
     {
         $this->baseUrl         = $baseUrl;
         $this->urlGenerator    = $urlGenerator;
@@ -51,8 +53,15 @@ class UserController extends AbstractController
         $this->userRepository  = $userRepository;
         $this->roleRepository    = $roleRepository;
         $this->statusRepository  = $statusRepository;
+        $this->brandRepository  = $brandRepository;
         $this->validator         = $validator;
         $this->DbInitData        = $dbInitData;
+
+        $this->comptes = [
+			['Owner' =>'','Operator'=>'','Phone'=>'','TransactionId'=>'','Country'=>'', 'Status'=>''],
+			['Banque'=>'','Country'=>'','NAccount'=>'','Swift'=>'','DocID'=>'','DocRIB'=>''],
+			['Owner' =>'','NBIN'=>'','CVV2'=>'','NAccount'=>'']
+		];
 
         $this->permission      =    ["UTI0", "UTI1", "UTI2", "UTI3", "UTI4","AFFL0", "AFFL1", "AFFL2", "AFFL3", "AFFL4"];
         $this->pAccess         =    $this->services->checkPermission($this->permission[0]);
@@ -87,31 +96,34 @@ class UserController extends AbstractController
         {
             $form->handleRequest($request);
             if ($isUserAdd == true) { //method calling
-                if (!$this->pCreate) return $this->services->ajax_ressources_no_access($this->intl->trans("Création d'un utilisateur"));
+                if (!$this->pCreate) return $this->services->no_access($this->intl->trans("Création d'un utilisateur"));
                 return $this->addUser($request, $form, $user , $userPasswordHasher);
             }else {
-                if (!$this->pUpdate)   return $this->services->ajax_ressources_no_access($this->intl->trans("Modification d'un utilisateur"));
+                if (!$this->pUpdate)   return $this->services->no_access($this->intl->trans("Modification d'un utilisateur"));
                 return $this->updateUser($request, $form, $user);
             }
         }
-        
-        $statistics =  $this->statisticsData();
+
         $this->services->addLog($this->intl->trans('Accès au menu utilisateurs'));
+        list($userType, $masterId, $userRequest) = $this->services->checkThisUser($this->pView);
+        $brands = $this->em->getRepository(Brand::class)->findBrandBy($userType,  $userRequest);
+        
         return $this->render('user/index.html.twig', [
             'controller_name' => 'UserController',
-            'role'            => $this->roleRepository->findAll(),
+            'role'            => $this->roleRepository->getManageUserRole($this->getUser()->getRole()->getLevel()),
             'title'           => $this->intl->trans('Mes utilisateurs').' - '. $this->brand->get()['name'],
             'pageTitle'       => [
                 [$this->intl->trans('Utilisateurs')],
             ],
             'brand'           => $this->brand->get(),
+            'brands'          => $brands,
             'baseUrl'         => $this->baseUrl->init(),
             'users'           => $this->userRepository->findAll(),
             'userform'        => $form->createView(),
             'pCreateUser'     => $this->pCreate,
             'pEditUser'       => $this->pUpdate,
             'pDeleteUser'     => $this->pDelete,
-            'stats'           => $statistics,
+            'pViewUser'       => $this->pView,
         ]);
     }
 
@@ -119,34 +131,74 @@ class UserController extends AbstractController
     public function addUser($request, $form, $user, $userPasswordHasher): Response
     {
         if(($form->isSubmitted() && $form->isValid()))
-        {
+        {  
+            //brand define
+            if ($request->request->get('uBrand')) {
+                $brand = $this->brandRepository->findOneByUid($request->request->get('uBrand'));
+            }else {
+                $brand = $currentUser->getBrand();
+            }//and verify email
+            $email = $form->get('email')->getData();
+            $isExistedUser = $this->userRepository->findOneBy(['email' => $email, 'brand' => $brand]);
+            if ($isExistedUser) {
+                return $this->services->msg_error(
+                    $this->intl->trans("Ajout d'un nouvel utilisateur"),
+                    $this->intl->trans("Cet adresse email appartient à un compte existant, veuillez le changer"),
+                );
+            }
+
             //profil photo setting begin
             $avatarProcess = $this->addEntity->profilePhotoSetter($request , $user);
             if (isset($avatarProcess['error']) && $avatarProcess['error'] == true){
-            return $this->services->ajax_error_crud($this->intl->trans('Traitement du fichier image de profile'), $avatarProcess['info']);
+            return $this->services->msg_error($this->intl->trans('Traitement du fichier image de profile'), $avatarProcess['info']);
             } else
             $avatarProcess;
             //profil photo setting end
             $countryCode   = strtoupper($request->request->get('country'));
             $countryDatas  = $this->brickPhone->getInfosCountryFromCode($countryCode);
-            $countryDatas  = [
-                'dial_code' => $countryDatas['dial_code'],
-                'code'      => $countryCode,
-                'name'      => $countryDatas['name']
-            ];
+            if ($countryDatas) {
+                $countryDatas  = [
+                    'dial_code' => $countryDatas['dial_code'],
+                    'code'      => $countryCode,
+                    'name'      => $countryDatas['name']
+                ];
+
+                $priceDatas = [
+                    'dial_code' => $countryDatas['dial_code'],
+                    'code'      => $countryCode,
+                    'name'      => $countryDatas['name'],
+                    'price'     => $countryCode == 'BJ' ? 12 : 25
+                ];
+            }else
+            return $this->services->msg_error(
+                $this->intl->trans("Insertion du tableau de données pays"),
+                $this->intl->trans("La recherche du nom du pays à échoué : BrickPhone"),
+            );
+            
             $currentUser   = $this->getUser(); //connected user
+
             //user data setting
-            $user->setBalance(0);
-            $user->setApikey($this->services->idgenerate(32));
+            $user->setBrand($brand);
+            $user->setBalance(100);
+            $user->setPaymentAccount($this->comptes);
+            $user->setApikey(bin2hex(random_bytes(32)));
             $user->setCreatedAt(new \DatetimeImmutable());
-            $user->setPassword($userPasswordHasher->hashPassword($user, strtoupper($this->services->idgenerate(8))));
+            $user->setPassword($userPasswordHasher->hashPassword($user, strtoupper(123456/*$form->get('firstname')->getData()/*$this->services->idgenerate(8)*/)));
             $user->setRoles(['ROLE_'.$form->get('role')->getData()->getName()]);
             $user->setCountry($countryDatas);
-            $user->setCountry($countryDatas);
+            $user->setPrice([
+                $countryDatas['code'] => $priceDatas,
+            ]);
             $user->setUid(time().uniqid());
             $user->setProfilePhoto($avatarProcess);
             $this->userRepository->add($user);
-            $setDefaultSetting = $this->addEntity->defaultUsetting($user,$form->get('firstname')->getData(), $form->get('lastname')->getData());
+            $settingData = [
+                'ccode' => $request->request->get('currency'),
+                'cname' => $request->request->get('currency_name'),
+                'ufirstname' => $form->get('firstname')->getData(),
+                'ulastname'  => $form->get('lastname')->getData(),
+            ];
+            $setDefaultSetting = $this->addEntity->defaultUsetting($user, $settingData);
             return $this->services->msg_success(
                 $this->intl->trans("Création d'un nouvel utilisateur"),
                 $this->intl->trans("Utilisateur ajouté avec succès")
@@ -168,7 +220,7 @@ class UserController extends AbstractController
             //profil photo setting begin
             $avatarProcess = $this->addEntity->profilePhotoSetter($request , $user, true);
             if (isset($avatarProcess['error']) && $avatarProcess['error'] == true){
-            return $this->services->ajax_error_crud($this->intl->trans('Traitement du fichier image de profile'), $avatarProcess['info']);
+            return $this->services->msg_error($this->intl->trans('Traitement du fichier image de profile'), $avatarProcess['info']);
             } else
             $avatarProcess;
             //profil photo setting end
@@ -206,7 +258,7 @@ class UserController extends AbstractController
     public function get_this_user(Request $request, User $user): Response
     {
         if (!$this->isCsrfTokenValid($this->getUser()->getUid(), $request->request->get('_token'))) 
-        return $this->services->ajax_ressources_no_access($this->intl->trans("Récupération de l'utilisateur").': '.$user->getEmail());
+        return $this->services->no_access($this->intl->trans("Récupération de l'utilisateur").': '.$user->getEmail());
         $usetting            = $user->getUsetting();
         $role                = $user->getRole();
         $brand               =  $user->getBrand();
@@ -218,7 +270,7 @@ class UserController extends AbstractController
         $row['user']         = [   'name'  => $usetting->getFirstname().' '.$usetting->getLastname(),'firstname' => $usetting->getFirstname(),
                                    'lastname'  => $usetting->getLastname(), 'email' => $user->getEmail(), 'photo' => $user->getProfilePhoto()];
         $row['role']         =  ['name'  => $role->getName(),'level' => $role->getLevel(),'code' => $role->getCode()];
-        $row['brand']        = $brand->getName();
+        $row['brand']        = [ 'name' => $brand->getName(), 'uid' => $brand->getUid()];
         $row['route']        = $user->getRouter()->getName();
         $row['email']        = $user->getEmail();
         $row['photo']        = $user->getProfilePhoto();
@@ -255,6 +307,7 @@ class UserController extends AbstractController
             $row                 = array();
             $usetting            = $user->getUsetting();
             $country             = $user->getCountry();
+            $brand               = $user->getBrand();
             $row['orderId']      = $user->getUid();
             $row['user']         =  [   'name'  => $usetting->getFirstname().' '.$usetting->getLastname(),
                                         'firstname' => $usetting->getFirstname(),
@@ -262,6 +315,7 @@ class UserController extends AbstractController
                                         'email' => $user->getEmail(), 
                                         'photo' => $user->getProfilePhoto()];
             $row['phone']        = $user->getPhone();
+            $row['brand']        = [   'name'  => $brand->getName(),'uid' => $brand->getUid(),'roleLevel' => $user->getRole()->getLevel()];
             $row['role']         = $user->getRoles()[0];
             $row['country']      = $user->getCountry()['name'];
             $row['postPay']      = $user->IsPostPay();
@@ -282,7 +336,7 @@ class UserController extends AbstractController
     public function delete(Request $request, User $user): Response
     {
         if (!$this->isCsrfTokenValid($this->getUser()->getUid(), $request->request->get('_token'))) 
-            return $this->services->ajax_ressources_no_access($this->intl->trans("Suppression d'un utilisateur").': '.$user->getEmail());
+            return $this->services->no_access($this->intl->trans("Suppression d'un utilisateur").': '.$user->getEmail());
 
         if ($user->getId() == 1 or $user->getBrand()->getManager() ==  $user) 
         return $this->services->msg_warning(
@@ -290,40 +344,22 @@ class UserController extends AbstractController
             $this->intl->trans("Vous ne pouvez pas supprimer cet utilisateur car il s'agit de l'administrateur de la marque active"),
         );
 
-        $user->setStatus(4);
-        $this->userRepository->add($user);
+        //$user->setStatus($this->services->status(3));
+        $this->userRepository->remove($user);
         return $this->services->msg_success(
             $this->intl->trans("Suppression de l'utilisateur ").$user->getEmail(),
             $this->intl->trans("Utilisateur supprimé avec succès").' : '.$user->getEmail(),
         );
     }
 
+    //user retriving by permissions
     public function getUsersByRoles() 
     {
-        /*list($userType, $masterId, $userRequest) = $this->services->checkThisUser($this->pView);
-        $users = $this->em->getRepository(User::class)->getUsersByPermission("", $userType, $masterId, 1);*/
-        $users = $this->em->getRepository(User::class)->findAll();
+        list($userType, $masterId, $userRequest) = $this->services->checkThisUser($this->pView);
+        $users = $this->userRepository->getUsersByPermission('',$userType,$masterId,1);
         return $users;
     }
 
-    public function statisticsData()
-    {
-        $allUsers     = $this->userRepository->countAllUsers()[0][1];
-        $pendingUsers = $this->userRepository->countAllUsersByStatus(0)[0][1];
-        $activeUsers  = $this->userRepository->countAllUsersByStatus(1)[0][1];
-        $desactivatedUsers = $this->userRepository->countAllUsersByStatus(2)[0][1];
-        $suspendedUsers = $this->userRepository->countAllUsersByStatus(3)[0][1];
-        $deletedUsers = $this->userRepository->countAllUsersByStatus(4)[0][1];
-
-        return [
-            'all'          => $allUsers,
-            'pending'      => $pendingUsers,
-            'active'       => $activeUsers,
-            'desactivated' => $desactivatedUsers,
-            'suspended'    => $suspendedUsers,
-            'deleted'      => $deletedUsers,
-        ];
-    }
 
     #[Route('/statisticsDataByAjax', name: 'get_statistics_data', methods: ['POST'])]
     public function statisticsDataByAjax(Request $request): Response

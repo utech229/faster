@@ -6,22 +6,6 @@
 {% block stylesheets %} {% endblock %}
 
 {% block body %}
-<!--begin::Content-->
-<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
-    <!--begin::Toolbar-->
-    <div class="toolbar" id="kt_toolbar"> 
-        <!--begin::Container-->
-        <div id="kt_toolbar_container" class="container-fluid d-flex flex-stack">
-            <!--begin::Page title-->
-           {% include 'app.title.html.twig' %}
-            <!--end::Page title-->
-            <!--begin::Actions-->
-
-            <!--end::Actions-->
-        </div>
-        <!--end::Container-->
-    </div>
-    <!--end::Toolbar-->
     <!--begin::Post-->
     <div class="post d-flex flex-column-fluid" id="kt_post">
         <!--begin::Container-->
@@ -76,7 +60,7 @@
                         <!--end::Col-->
                     </div>
                     <!--end::Overview-->
-                   
+                    {% if permission(["DEV3"], app.user) %}
                     <!--begin::Notice-->
                     <div class="notice d-flex bg-light-primary rounded border-primary border border-dashed p-6 mt-8">
                         <!--begin::Icon-->
@@ -108,6 +92,7 @@
                         <!--end::Wrapper-->
                     </div>
                     <!--end::Notice-->
+                    {% endif %}
                 </div>
                 <!--end::Body-->
             </div>
@@ -189,10 +174,10 @@
                                     <!--begin::Section-->
                                     <div class="d-flex align-items-center flex-wrap">
                                         <!--begin::Title-->
-                                        <h3 class="text-gray-800 fw-bold cursor-pointer me-3 mb-0">How Extended Licese works?</h3>
+                                        <h3 class="text-gray-800 fw-bold cursor-pointer me-3 mb-0">{% trans %}Envoyer un SMS{% endtrans %} </h3>
                                         <!--end::Title-->
                                         <!--begin::Label-->
-                                        <span class="badge badge-light my-1 d-block">Laravel</span>
+                                        <span class="badge badge-light-danger my-1 d-block">{{brand.name}}</span>
                                         <!--end::Label-->
                                     </div>
                                     <!--end::Section-->
@@ -203,10 +188,32 @@
                                     <!--begin::Block-->
                                     <div class="mb-4">
                                         <!--begin::Text-->
-                                        <span class="text-muted fw-bold fs-5">By Keenthemes to save tons and more to time money projects are listed and outstanding</span>
+                                        <span class="text-muted fw-bold fs-5">{% trans %}Pour envoyer un SMS par l’intermédiaire de l’API, 
+                                        il vous faut lancer une requête HTTP vers l’adresse{% endtrans %}
+                                        <a href="{{brand.site_url}}/v1/sms/send" target="_blank" rel="noopener noreferrer">« {{brand.site_url}}/v1/sms/send »</a> , 
+                                        {% trans %}en spécifiant certains paramètres (texte à envoyer, numéro de téléphone, destinataire, expéditeur, etc.). 
+                                        L’API retournera une réponse sur l’état de la requête soumise : une confirmation de réponse si tout s’est 
+                                        bien passé ou une erreur si elle n’a pas les options de configuration disponibles{% endtrans %}.
+                                        <hr>
+                                        <p>{% trans %}Les paramètres prisent en compte pour l’envoi de SMS via l’API sont :{% endtrans %}</p>
+                                        <ul>
+                                            <li> 
+                                                <span class="badge badge-light-danger">X-API-KEY</span> : {% trans %}ce paramètre est la clé d’authentification de l’API associée à votre compte. Il vous permet de vous identifier à travers la requête HTTP ;{% endtrans %}
+                                            </li>
+                                             <li> 
+                                                <span class="badge badge-light-danger my-1">text</span> : {% trans %}c’est le message à envoyer. Une page SMS est de 160 caractères théoriques et de 153 caractères pratiques. Certains caractères sont comptés en double comme le caractère de retour chariot. Le nombre maximum de page SMS que vous pouvez envoyer en une fois est 3 donc 459 caractères{% endtrans %}
+                                            </li>
+                                             <li> 
+                                                <span class="badge badge-light-danger my-1">from</span> : {% trans %}c’est l’expéditeur du message. C’est un paramètre de type alphanumérique qui peut être un nom, un numéro de téléphone, etc. Les caractères spéciaux sont interdits. Il est d’au plus 11 caractères ;{% endtrans %}
+                                            </li>
+                                            <li> 
+                                                <span class="badge badge-light-danger my-1">to</span> : {% trans %} c’est le destinataire du message. Il s’agit du numéro de téléphone de celui qui reçoit le SMS précédé de l’indicatif de son pays. Exemple : 22990909090;{% endtrans %}
+                                            </li>
+                                        </ul>
+                                        </span>
                                         <!--end::Text-->
                                         <!--begin::Link-->
-                                        <a href="#" class="fs-5 link-primary fw-bold">Check Out</a>
+                                        <a href="javascript:;" class="fs-5 link-primary fw-bold"></a>
                                         <!--end::Link-->
                                     </div>
                                     <!--end::Block-->
@@ -368,7 +375,6 @@
         <!--end::Container-->
     </div>
     <!--end::Post-->
-</div>
 {% endblock %}
 
 

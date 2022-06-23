@@ -1,10 +1,10 @@
 "use strict";
 
-
-var KTUsersList = function() {
-    var e, t, n, r, o = document.getElementById("kt_table_users"),
+var allU = $('#stat_all'), allUPending = $('#stat_pending'), allUActive = $('#stat_ctive');
+var KTAffiliatesList = function() {
+    var e, t, n, r, x = document.querySelector("#export"), y = ".bt-export", o = document.getElementById("kt_table_affiliates"),
         c = () => {
-            o.querySelectorAll('[data-kt-users-table-filter="delete_row"]').forEach((t => {
+            o.querySelectorAll('[data-kt-affiliates-table-filter="delete_row"]').forEach((t => {
                 t.addEventListener("click", (function(t) {
                     t.preventDefault();
                     const n = t.target.closest("tr"),
@@ -48,10 +48,10 @@ var KTUsersList = function() {
         },
         l = () => {
             const c = o.querySelectorAll('[type="checkbox"]');
-            t = document.querySelector('[data-kt-user-table-toolbar="base"]'),
-                n = document.querySelector('[data-kt-user-table-toolbar="selected"]'),
-                r = document.querySelector('[data-kt-user-table-select="selected_count"]');
-            const s = document.querySelector('[data-kt-user-table-select="delete_selected"]');
+            t = document.querySelector('[data-kt-affiliate-table-toolbar="base"]'),
+                n = document.querySelector('[data-kt-affiliate-table-toolbar="selected"]'),
+                r = document.querySelector('[data-kt-affiliate-table-select="selected_count"]');
+            const s = document.querySelector('[data-kt-affiliate-table-select="delete_selected"]');
             c.forEach((e => {
                     e.addEventListener("click", (function() {
                         setTimeout((function() {
@@ -157,7 +157,7 @@ var KTUsersList = function() {
                         orderable: !1,
                         targets: 1, 
                         render: function (data, type, full, meta) {
-                            return `<!--begin::User=-->
+                            return `<!--begin::Affiliate=-->
 									<div class="d-flex align-items-center">
                                         <!--begin:: Avatar -->
                                         <div class="symbol symbol-circle symbol-50px overflow-hidden me-3">
@@ -168,12 +168,12 @@ var KTUsersList = function() {
                                             </a>
                                         </div>
                                         <!--end::Avatar-->
-                                        <!--begin::User details-->
+                                        <!--begin::Affiliate details-->
                                         <div class="d-flex flex-column">
                                             <a href="javascript:;" class="text-gray-800 text-hover-primary mb-1">`+data.name+`</a>
                                             <span>`+data.email+`</span>
                                         </div>
-                                        <!--begin::User details-->
+                                        <!--begin::Affiliate details-->
                                     </div>`;
                         }
                     },
@@ -181,10 +181,8 @@ var KTUsersList = function() {
                         targets: 3,
                         render: function(data, type, full, meta) {
                             var status = {
-                                'ROLE_USER': { 'title': 'Utilisateur', 'class': 'danger' },
-                                'ROLE_ACCOUNTING': { 'title': 'Comptable', 'class': 'primary' },
-                                'ROLE_ADMIN': { 'title': 'Administrateur', 'class': 'secondary' },
-                                'ROLE_SUPER_ADMIN': { 'title': 'Super administrateur', 'class': 'info' },
+                                'ROLE_AFFILIATE_USER': { 'title': 'Affilié utilisateur', 'class': 'primary' },
+                                'ROLE_AFFILIATE_RESELLER': { 'title': 'Affilié revendeur', 'class': 'info' },
                             };
                             if (typeof status[data] === 'undefined') {
                                 return data;
@@ -231,11 +229,10 @@ var KTUsersList = function() {
                         targets: 6,
                         render: function(data, type, full, meta) {
                             var status = {
-                                0 : { 'title': _Pending, 'class': 'warning' },
-                                1 : { 'title': _Actif, 'class': 'success' },
-                                2 : { 'title': _Disabled, 'class': 'primary' },
-                                3 : { 'title': _Rejected, 'class': 'info' },
-                                4 : { 'title': _Deleted, 'class': 'danger' },
+                                2 : { 'title': _Pending, 'class': 'warning' },
+                                3 : { 'title': _Actif, 'class': 'success' },
+                                4 : { 'title': _Disabled, 'class': 'primary' },
+                                6 : { 'title': _Suspended, 'class': 'primary' },
                             };
                             if (typeof status[data] === 'undefined') {
                                 return data;
@@ -248,92 +245,154 @@ var KTUsersList = function() {
                         orderable: 1,
                         targets: 7,
                         render: function(data, type, full, meta) {
-                            return  dateFormat(moment(data, "YYYY-MM-DDTHH:mm:ssZZ").format());
+                            return viewTime(data);
+                            //return  dateFormat(moment(data, "YYYY-MM-DDTHH:mm:ssZZ").format());
                         }
                     },
                     {
                         orderable: 1,
                         targets: 8,
                         render: function(data, type, full, meta) {
-                            return  dateFormat(moment(data, "YYYY-MM-DDTHH:mm:ssZZ").format());
+                            return viewTime(data);
+                            //return  dateFormat(moment(data, "YYYY-MM-DDTHH:mm:ssZZ").format());
                         }
                     },{
-                        orderable: !1,
                         targets: 9,
-                        visible: (!pEditUser && !pDeleteUser) ? false : true,
+                        render: function(data, type, full, meta) {
+                            var status = {
+                                true : { 'title': _Activated, 'class': 'success' },
+                                false : { 'title': _Disabled, 'class': 'danger' },
+                            };
+                            if (typeof status[data] === 'undefined') {
+                                return data;
+                            }
+                            return '<span class="badge badge-light-' + status[data].class + '">' + status[data].title + '</span>';
+                        },
+    
+                    },{
+                        targets: 10,
+                        render: function(data, type, full, meta) {
+                            var status = {
+                                true : { 'title': _Activated, 'class': 'success' },
+                                false : { 'title': _Disabled, 'class': 'danger' },
+                            };
+                            if (typeof status[data] === 'undefined') {
+                                return data;
+                            }
+                            return '<span class="badge badge-light-' + status[data].class + '">' + status[data].title + '</span>';
+                        },
+    
+                    },{
+                        targets: 11,
+                        //visible: (roleLevel < 4) ? false : true,
+                        render: function(data, type, full, meta) {
+                            return data.name;
+                        },
+    
+                    },{
+                        orderable: !1,
+                        targets: 12,
+                        visible: (!pEditAffiliate && !pDeleteAffiliate) ? false : true,
                         render : function (data,type, full, meta) {
                             var updaterIcon =  `<!--begin::Update-->
-                            <button class="btn btn-icon btn-active-light-primary w-30px h-30px me-3 userUpdater" data-id=`+data+`>
-                                <i id="editUserOption`+data+`" class="fa fa-edit"></i>
+                            <button class="btn btn-icon btn-active-light-primary w-30px h-30px me-3 affiliateUpdater" data-id=`+data+`>
+                                <i id="editAffiliateOption`+data+`" class="fa fa-edit"></i>
                             </button>
                             <!--end::Update-->`;
                             var deleterIcon =  `<!--begin::Delete-->
-                            <button class="btn btn-icon btn-active-light-primary w-30px h-30px userDeleter" 
-                                data-id=`+data+` data-kt-users-table-filter="delete_row">
-                                    <i id="deleteUserOption`+data+`" class="text-danger fa fa-trash-alt"></i>
+                            <button class="btn btn-icon btn-active-light-primary w-30px h-30px affiliateDeleter" 
+                                data-id=`+data+` data-kt-affiliates-table-filter="delete_row">
+                                    <i id="deleteAffiliateOption`+data+`" class="text-danger fa fa-trash-alt"></i>
                             </button>
                             <!--end::Delete-->`;
-                            updaterIcon = (pEditUser) ? updaterIcon : '' ;
-                            deleterIcon = (pDeleteUser) ? deleterIcon : '' ;
-                            return updaterIcon + deleterIcon;
+                            var priceIcon =  `<!--begin::Price-->
+                            <button class="btn btn-icon btn-active-light-primary w-30px h-30px pricer" 
+                                data-id=`+data+` data-kt-affiliates-table-filter="price_row">
+                                    <i id="priceOption`+data+`" class="text-info fas fa-money-bill"></i>
+                            </button>
+                            <!--end::Price-->`;
+                            updaterIcon = (pEditAffiliate) ? updaterIcon : '' ;
+                            priceIcon   = (pEditAffiliate) ? priceIcon : '' ;
+                            deleterIcon = (pDeleteAffiliate) ? deleterIcon : '' ;
+                            return updaterIcon + deleterIcon + priceIcon;
                         }
                     }],
                     columns: [
     
                         { data: 'orderId' },
     
-                        { data: 'user', responsivePriority: -10},
+                        { data: 'affiliate', responsivePriority: -10},
     
                         { data: 'phone' },
     
-                        { data: 'role' },
+                        { data: 'role', responsivePriority: -8},
     
-                        { data: 'country', responsivePriority: 0 },
+                        { data: 'country', responsivePriority: 10 },
     
-                        { data: 'balance'  },
+                        { data: 'balance' , responsivePriority: -4 },
     
                         { data: 'status' },
     
-                        { data: 'lastLogin' },
+                        { data: 'lastLogin', responsivePriority: 0 },
 
-                        { data: 'createdAt' , responsivePriority: 0},
-    
+                        { data: 'createdAt' },
+
+                        { data: 'isDlr',responsivePriority: -6 },
+
+                        { data: 'postPay',responsivePriority: -5 },
+
+                        { data: 'brand',responsivePriority: -7 },
+
                         { data: 'action',responsivePriority: -9 },
                     ],
-                    pageLength: 5,
+                    pageLength: 10,
+                    "info": true,
+                    lengthMenu: [10, 25, 100, 250, 500, 1000],
                     lengthChange: !1,
+                    language: {
+                        url: _language_datatables,
+                    },
+                    dom: '<"top text-end bt-export d-none"B>rtF<"row"<"col-sm-6"l><"col-sm-6"p>>',
                    
                 }),
+                // Action sur bouton export
+                $(x).on('click', ($this)=>{ $this.preventDefault(); return $(y).hasClass('d-none')?$(y).removeClass('d-none'):$(y).addClass('d-none'); }),
                 $('#kt_modal_add_affiliate_reload_button').on('click', function() {
                     e.ajax.reload(null, false);
                 })).on("draw", (function() { l(), c(), a()
                 })), l(),
-                document.querySelector('[data-kt-user-table-filter="search"]').addEventListener("keyup", (function(t) {
+                document.querySelector('[data-kt-affiliate-table-filter="search"]').addEventListener("keyup", (function(t) {
                     e.search(t.target.value).draw()
                 })),
-                document.querySelector('[data-kt-user-table-filter="reset"]').addEventListener("click", (function() {
-                    document.querySelector('[data-kt-user-table-filter="form"]').querySelectorAll("select").forEach((e => {
+                document.querySelector('[data-kt-affiliate-table-filter="reset"]').addEventListener("click", (function() {
+                    document.querySelector('[data-kt-affiliate-table-filter="form"]').querySelectorAll("select").forEach((e => {
+                             
                             $(e).val("").trigger("change")
                         })),
                         e.search("").draw()
                 })),
                 c(), (() => {
-                    const t = document.querySelector('[data-kt-user-table-filter="form"]'),
-                        n = t.querySelector('[data-kt-user-table-filter="filter"]'),
+                    const t = document.querySelector('[data-kt-affiliate-table-filter="form"]'),
+                        n = t.querySelector('[data-kt-affiliate-table-filter="filter"]'),
                         r = t.querySelectorAll("select");
                     n.addEventListener("click", (function() {
+                        loading(true);
+                        setTimeout(() => {
+                            loading()
+                        }, 300);
                         var t = "";
                         r.forEach(((e, n) => {
                                 e.value && "" !== e.value && (0 !== n && (t += " "),
                                     t += e.value)
                             })),
                             e.search(t).draw()
-                    }))
+                    }));
                 })
                 ())
+                
         }
     }
 }();
 KTUtil.onDOMContentLoaded((function() {
-    KTUsersList.init();
+    KTAffiliatesList.init();
 }));

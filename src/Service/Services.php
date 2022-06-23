@@ -5,6 +5,7 @@ namespace App\Service;
 use App\Entity\Log;
 use App\Entity\User;
 use App\Entity\Permission;
+use App\Entity\Authorization;
 
 use App\Repository\StatusRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -199,33 +200,29 @@ class Services extends AbstractController
     /**
     * @param mixed $codePermission
     * codePermission peut être une chaine ou un tableau de chaine
-    * @param User|null $user
+	* @param User|null $user
+    * @param bool $granted
+	* true : vérification strict losque $codePermission est un tableau
     * @return mixed
     * Retourne le status de la dernière permission trouvée
     */
-	public function checkPermission($codePermission, $user = null/*, bool $destroy = false, */)
+	public function checkPermission($codePermission, $user = null, $granted = true)
     {
-		if (!$user) $user	=	$this ->	getUser();
+		if (!$user) $user	=	$this -> getUser();
 		if (!$user) return 0;
-        $return = 0;
 
-		if ($user)
-        {
-			$role			=	$user	->	getRole();
-			$authorizations	=	$role	->	getAuthorizations();
-			foreach ($authorizations as $key => $value)
-            {
-	            if(is_array($codePermission))
-                {
-	                if(in_array($value->getPermission()->getCode(), $codePermission, true))
-	                    $return =   $value->getStatus()->getCode() === 3 ? true : false;
-	            }else{
-				    if($value->getPermission()->getCode()	==	$codePermission)
-	                    $return =   $value->getStatus()->getCode() === 3 ? true : false;
-	            }
+		if(is_array($codePermission)){
+			$permission = null;
+			foreach ($codePermission as $code) {
+				$permission = $this->em->getRepository(Authorization::class)->findByCodePermission($code, $user->getId());
+
+				if($granted && !$permission) return 0;
+				else if(!$granted && $permission) return 1;
 			}
-		}
-        return $return;
+		}else
+			$permission = $this->em->getRepository(Authorization::class)->findByCodePermission($codePermission, $user->getId());
+
+		return $permission ? 1 : 0;
     }
 
 	// $level == 1 (Uniquement les sous marques) $level == 2 (Uniquement les Affiliés) $level == 0 || autres (Tous)
@@ -343,6 +340,11 @@ class Services extends AbstractController
     public function status($code)
     {
        return $this->statusRepository->findOneByCode($code);
+    }
+
+    public function connectedUser()
+    {
+       return $this->getUser();
     }
 
 	// : Les signatures de la fonction

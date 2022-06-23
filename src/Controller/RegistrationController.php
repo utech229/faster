@@ -25,6 +25,11 @@ class RegistrationController extends AbstractController
     {
         $this->emailVerifier     = $emailVerifier;
         $this->statusRepository  = $statusRepository;
+        $this->comptes = [
+			['Owner' =>'','Operator'=>'','Phone'=>'','TransactionId'=>'','Country'=>'', 'Status'=>''],
+			['Banque'=>'','Country'=>'','NAccount'=>'','Swift'=>'','DocID'=>'','DocRIB'=>''],
+			['Owner' =>'','NBIN'=>'','CVV2'=>'','NAccount'=>'']
+		];
     }
 
     #[Route('/{_locale}/register', name: 'app_register')]
@@ -43,7 +48,8 @@ class RegistrationController extends AbstractController
             // A commenter revoir lorsque l'envoi des mail est activé
             $user->setCreatedAt(new \DatetimeImmutable());
             $user->setBalance(0);
-            $user->setApikey($this->services->idgenerate(32));
+            $user->setPaymentAccount($this->comptes);
+            $user->setApikey(bin2hex(random_bytes(32)));
             $user->setUid(time().uniqid());
             $user->setIsAffiliate(true);
             $user->setIsVerified(true);

@@ -1,0 +1,843 @@
+{% extends 'base.app.html.twig' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block stylesheets %} {% endblock %}
+
+{% block body %}
+    <!--begin::Post-->
+    <div class="post d-flex flex-column-fluid" id="kt_post">
+        <!--begin::Container-->
+        <div id="kt_content_container" class="container-xxl">
+        
+            <!--begin::Row-->
+            <div class="row g-5 g-xl-8">
+                    <div class="col-xl-6">
+                        <!--begin: Statistics Widget 6-->
+                        <div class="card bg-light-success card-xl-stretch mb-xl-8">
+                            <!--begin::Body-->
+                            <div class="card-body my-3">
+                                <a href="#" class="card-title fw-bolder text-success fs-5 mb-3 d-block">Total paiements retirés</a>
+                                <div class="py-1">
+                                    <span class="text-dark fs-1 fw-bolder me-2"><span class="amountAp">3225000</span> XOF</span>
+                                </div>
+                                <div class="progress h-7px bg-success bg-opacity-50 mt-7">
+                                    <div class="progress-bar bg-success" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                            </div>
+                            <!--end:: Body-->
+                        </div>
+                        <!--end: Statistics Widget 6-->
+                    </div>
+
+                    <div class="col-xl-6">
+                        <!--begin: Statistics Widget 6-->
+                        <div class="card bg-light-warning card-xl-stretch mb-xl-8">
+                            <!--begin::Body-->
+                            <div class="card-body my-3">
+                                <a href="#" class="card-title fw-bolder text-warning fs-5 mb-3 d-block">Total paiement en attentes</a>
+                                <div class="py-1">
+                                    <span class="text-dark fs-1 fw-bolder me-2"><span class="amountPe">0</span> XOF</span>
+                                </div>
+                                <div class="progress h-7px bg-warning bg-opacity-50 mt-7">
+                                    <div class="progress-bar bg-warning" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                            </div>
+                            <!--end:: Body-->
+                        </div>
+                        <!--end: Statistics Widget 6-->
+                    </div>
+                </div>
+                <!--begin::Card-->
+            <!--end::Row-->
+
+             <!--begin::Hero card-->
+            <div class="card mb-12">
+                <!--begin::Hero body-->
+                <div class="card-body flex-column p-2">
+                    <!--begin::Hero nav-->
+                    <div class="card-rounded bg-light d-flex flex-stack flex-wrap p-5">
+                        <!--begin::Nav-->
+                        <ul class="nav
+                         flex-wrap border-transparent fw-bolder">
+                            <!--begin::Nav item-->
+                            <li class="nav-item my-1">
+                                <a id="payment_button" class="btn btn-color-gray-600 btn-active-white btn-active-color-primary fw-boldest fs-8 fs-lg-base nav-link px-3 px-lg-8 mx-1 text-uppercase active" href="javascript:;">{% trans %}Demande de paiment{% endtrans %}</a>
+                            </li>
+                            <!--end::Nav item-->
+                            <!--begin::Nav item-->
+                            <li class="nav-item my-1">
+                                <a id="payment_method_button" class="btn btn-color-gray-600 btn-active-white btn-active-color-primary fw-boldest fs-8 fs-lg-base nav-link px-3 px-lg-8 mx-1 text-uppercase" href="javascript:;">{% trans %}Méthode de paiement{% endtrans %}</a>
+                            </li>
+                            <!--end::Nav item-->
+                        </ul>
+                        <!--end::Nav-->
+                    </div>
+                    <!--end::Hero nav-->
+                </div>
+                <!--end::Hero body-->
+                {% if app.user.paymentAccount == [] or app.user.paymentAccount[0]['Status'] is defined and app.user.paymentAccount[0]['Status'] != 'approved' %}
+                <!--begin::Card body-->
+                <div class="card-body">
+                    <!--begin::Row-->
+                    <div class="row">
+                         <!--begin::Alert-->
+                        <div class="alert alert-dismissible bg-light-primary border border-primary border  h-lg-100 d-flex flex-column flex-sm-row w-100 p-5">
+                            <!--begin::Icon-->
+                            <!--begin::Svg Icon | path: icons/duotune/communication/com003.svg-->
+                            <span class="svg-icon svg-icon-2hx svg-icon-primary me-4 mb-5 mb-sm-0">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                    <path opacity="0.3" d="M2 4V16C2 16.6 2.4 17 3 17H13L16.6 20.6C17.1 21.1 18 20.8 18 20V17H21C21.6 17 22 16.6 22 16V4C22 3.4 21.6 3 21 3H3C2.4 3 2 3.4 2 4Z" fill="currentColor" />
+                                    <path d="M18 9H6C5.4 9 5 8.6 5 8C5 7.4 5.4 7 6 7H18C18.6 7 19 7.4 19 8C19 8.6 18.6 9 18 9ZM16 12C16 11.4 15.6 11 15 11H6C5.4 11 5 11.4 5 12C5 12.6 5.4 13 6 13H15C15.6 13 16 12.6 16 12Z" fill="currentColor" />
+                                </svg>
+                            </span>
+                            <!--end::Svg Icon-->
+                            <!--end::Icon-->
+                            <!--begin::Content-->
+                            <div class="d-flex flex-column pe-0 pe-sm-10">
+                                <h4 class="text-gray-900 fw-bolder">{% trans %} Nous avons besoins de votre attention !{% endtrans %}</h4>
+                                <div class="fs-6 text-gray-700">{% trans %}Vous devez configurer votre {% endtrans %}
+                                <a href="javascript:;" class="fw-bolder" data-bs-toggle="modal" data-bs-target="#kt_modal_momo"> 
+                                {% trans %} méthode de paiement{% endtrans %}</a> {% trans %}avant de procéder{% endtrans %} à des retrait de vos commissions</div>
+                            </div>
+                            <!--end::Content-->
+                            <!--begin::Close-->
+                            <button type="button" class="position-absolute position-sm-relative m-2 m-sm-0 top-0 end-0 btn btn-icon ms-sm-auto" data-bs-dismiss="alert">
+                                <i class="bi bi-x fs-1 text-primary"></i>
+                            </button>
+                            <!--end::Close-->
+                        </div>
+                        <!--end::Alert-->
+                    </div>
+                    <!--end::Row-->
+                </div>
+                <!--end::Card body-->
+                {% endif %}
+            </div>
+            <!--end::Hero card-->
+
+            <!--begin::Card-->
+            <div class="card" id="payment_section_2">
+                <!--begin::Card header-->
+                <div class="card-header border-0 pt-6">
+                    <!--begin::Card title-->
+                    <div class="card-title">
+                        <!--begin::Search-->
+                        <div class="d-flex align-items-center position-relative my-1">
+                            <!--begin::Svg Icon | path: icons/duotune/general/gen021.svg-->
+                            <span class="svg-icon svg-icon-1 position-absolute ms-6">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                    <rect opacity="0.5" x="17.0365" y="15.1223" width="8.15546" height="2" rx="1" transform="rotate(45 17.0365 15.1223)" fill="currentColor" />
+                                    <path d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z" fill="currentColor" />
+                                </svg>
+                            </span>
+                            <!--end::Svg Icon-->
+                            <input type="text" data-kt-payment-table-filter="search" class="form-control form-control-solid w-250px ps-14" placeholder="{{'Chercher'| trans}}" />
+                        </div>
+                        <!--end::Search-->
+                    </div>
+                    <!--begin::Card title-->
+                    <!--begin::Card toolbar-->
+                    <div class="card-toolbar">
+                        <!--begin::Toolbar-->
+                        <div class="d-flex justify-content-end" data-kt-payment-table-toolbar="base">
+                            <!--begin::Filter-->
+                            <button type="button" class="btn btn-light-primary me-3" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
+                            <!--begin::Svg Icon | path: icons/duotune/general/gen031.svg-->
+                            <span class="svg-icon svg-icon-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                    <path d="M19.0759 3H4.72777C3.95892 3 3.47768 3.83148 3.86067 4.49814L8.56967 12.6949C9.17923 13.7559 9.5 14.9582 9.5 16.1819V19.5072C9.5 20.2189 10.2223 20.7028 10.8805 20.432L13.8805 19.1977C14.2553 19.0435 14.5 18.6783 14.5 18.273V13.8372C14.5 12.8089 14.8171 11.8056 15.408 10.964L19.8943 4.57465C20.3596 3.912 19.8856 3 19.0759 3Z" fill="currentColor" />
+                                </svg>
+                            </span>
+                            <!--end::Svg Icon-->{% trans %}Filtrer{% endtrans %}</button>
+                            <!--begin::Menu 1-->
+                            <div class="menu menu-sub menu-sub-dropdown w-300px w-md-325px" data-kt-menu="true">
+                                <!--begin::Header-->
+                                <div class="px-7 py-5">
+                                    <div class="fs-5 text-dark fw-bolder">{% trans %}Option de filtre{% endtrans %}</div>
+                                </div>
+                                <!--end::Header-->
+                                <!--begin::Separator-->
+                                <div class="separator border-gray-200"></div>
+                                <!--end::Separator-->
+                                <!--begin::Content-->
+                                <div class="px-7 py-5" data-kt-payment-table-filter="form">
+                                    <!--begin::Input group-->
+                                    <div class="mb-10">
+                                        <label class="form-label fs-6 fw-bold">{% trans %}Type de paiement{% endtrans %}</label>
+                                        <select class="form-select form-select-solid fw-bolder" data-kt-select2="true" data-placeholder="Select option" data-allow-clear="true" data-kt-payment-table-filter="month" data-hide-search="true">
+                                            <option></option>
+                                            <option value="jan">January</option>
+                                            <option value="feb">February</option>
+                                        </select>
+                                    </div>
+                                    <!--end::Input group-->
+                                    <!--begin::Input group-->
+                                    <div class="mb-10">
+                                        <label class="form-label fs-6 fw-bold">Status:</label>
+                                        <select class="form-select form-select-solid fw-bolder" data-kt-select2="true" data-placeholder="Select option" data-allow-clear="true" data-kt-payment-table-filter="status" data-hide-search="true">
+                                            <option></option>
+                                            <option value="Active">Active</option>
+                                            <option value="Expiring">Expiring</option>
+                                            <option value="Suspended">Suspended</option>
+                                        </select>
+                                    </div>
+                                    <!--end::Input group-->
+                                    <!--begin::Actions-->
+                                    <div class="d-flex justify-content-end">
+                                        <button type="reset" class="btn btn-light btn-active-light-primary fw-bold me-2 px-6" data-kt-menu-dismiss="true" data-kt-payment-table-filter="reset">Reset</button>
+                                        <button type="submit" class="btn btn-primary fw-bold px-6" data-kt-menu-dismiss="true" data-kt-payment-table-filter="filter">Apply</button>
+                                    </div>
+                                    <!--end::Actions-->
+                                </div>
+                                <!--end::Content-->
+                            </div>
+                            <!--end::Menu 1-->
+                            <!--end::Filter-->
+                            <!--end::Export-->
+
+                            <!--begin::Add request-->
+                            <a href="javascript:;" class="btn btn-primary"  {% if app.user and app.user.balance <= 0 %}disabled{% endif %} 
+                            {% if app.user.paymentAccount == [] or app.user.paymentAccount[0]['Status'] and app.user.paymentAccount[0]['Status'] != 'approved' %} disabled{% endif %}  data-bs-toggle="modal" data-bs-target="#kt_modal_payment_request">
+                            <!--begin::Svg Icon | path: icons/duotune/arrows/arr075.svg-->
+                            <span class="svg-icon svg-icon-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                    <rect opacity="0.5" x="11.364" y="20.364" width="16" height="2" rx="1" transform="rotate(-90 11.364 20.364)" fill="currentColor" />
+                                    <rect x="4.36396" y="11.364" width="16" height="2" rx="1" fill="currentColor" />
+                                </svg>
+                            </span>
+                            <!--end::Svg Icon-->{{'Demande de retrait'| trans}}</a>
+
+                            <button type="button" class="btn btn-warning d-none" id="kt_modal_payment_request_treat_button" data-bs-toggle="modal" data-bs-target="#kt_modal_payment_request_treat">
+                                <span class="svg-icon svg-icon-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                        <rect opacity="0.5" x="11.364" y="20.364" width="16" height="2" rx="1" transform="rotate(-90 11.364 20.364)" fill="currentColor" />
+                                        <rect x="4.36396" y="11.364" width="16" height="2" rx="1" fill="currentColor" />
+                                    </svg>
+                                </span>
+                                {{'Traiter une demande'| trans}}
+                            </button>
+
+                            <button type="button" id="kt_modal_add_payment_reload_button" class="btn btn-light-primary d-none">
+                            <!--begin::Svg Icon | path: icons/duotune/general/gen035.svg-->
+                            <span class="svg-icon svg-icon-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="black" />
+                                    <rect x="10.8891" y="17.8033" width="12" height="2" rx="1" transform="rotate(-90 10.8891 17.8033)" fill="black" />
+                                    <rect x="6.01041" y="10.9247" width="12" height="2" rx="1" fill="black" />
+                                </svg>
+                            </span>
+                            <!--end::Svg Icon-->{% trans %}Nouvelle{% endtrans %}</button>
+                            <!--end::Add subscription-->
+                        </div>
+                        <!--end::Toolbar-->
+                        <!--begin::Group actions-->
+                        <div class="d-flex justify-content-end align-items-center d-none" data-kt-payment-table-toolbar="selected">
+                            <div class="fw-bolder me-5">
+                            <span class="me-2" data-kt-payment-table-select="selected_count"></span>Selected</div>
+                            <button type="button" class="btn btn-danger" data-kt-payment-table-select="delete_selected">Delete Selected</button>
+                        </div>
+                        <!--end::Group actions-->
+                    </div>
+                    <!--end::Card toolbar-->
+                </div>
+                <!--end::Card header-->
+                <!--begin::Card body-->
+                <div class="card-body pt-0">
+                    <!--begin::Table-->
+                    <table class="table align-middle table-row-dashed fs-6 gy-5" id="kt_payments_table">
+                        <!--begin::Table head-->
+                        <thead>
+                            <!--begin::Table row-->
+                            <tr class="text-start text-muted fw-bolder fs-7 text-uppercase gs-0">
+                                <th class="w-10px pe-2">
+                                    <div class="form-check form-check-sm form-check-custom form-check-solid me-3">
+                                        <input class="form-check-input" type="checkbox" data-kt-check="true" data-kt-check-target="#kt_payments_table .form-check-input" value="1" />
+                                    </div>
+                                </th>
+                                <th class="min-w-125px th-table">{% trans %}Référence{% endtrans %}</th>
+                                <th class="min-w-125px th-table">{% trans %}Id de transaction{% endtrans %}</th>
+                                <th class="min-w-125px th-table">{% trans %}Demandé par{% endtrans %}</th>
+                                <th class="min-w-125px th-table">{% trans %}Méthode{% endtrans %}</th>
+                                <th class="min-w-125px th-table">{% trans %}Montant{% endtrans %}</th>
+                                <th class="min-w-125px th-table">{% trans %}Valider par{% endtrans %}</th>
+                                <th class="min-w-125px th-table">{% trans %}Demandé le{% endtrans %}</th>
+                                <th class="min-w-125px th-table">{% trans %}Statut{% endtrans %}</th>
+                                <th class="min-w-125px th-table text-center">{% trans %}Action{% endtrans %}</th>
+                            </tr>
+                            <!--end::Table row-->
+                        </thead>
+                        <!--end::Table head-->
+                        <!--begin::Table body-->
+                        <tbody class="text-gray-600 fw-bold">
+                            
+                        </tbody>
+                        <!--end::Table body-->
+                    </table>
+                    <!--end::Table-->
+                </div>
+                <!--end::Card body-->
+            </div>
+            <!--end::Card-->
+            <!--begin::Payment methods-->
+            <div class="card mb-5 mb-xl-10 d-none" id="payment_methode">
+                <!--begin::Card header-->
+                <div class="card-header card-header-stretch pb-0">
+                    <!--begin::Title-->
+                    <div class="card-title">
+                        <h3 class="m-0">{% trans %}Méthodes de paiement{% endtrans %}</h3>
+                    </div>
+                    <!--end::Title-->
+                    <!--begin::Toolbar-->
+                    <div class="card-toolbar m-0">
+                        <!--begin::Tab nav-->
+                        <ul class="nav nav-stretch nav-line-tabs border-transparent" role="tablist">
+                            <!--begin::Tab item-->
+                            <li class="nav-item" role="presentation">
+                                <a id="kt_billing_creditcard_tab" class="nav-link fs-5 fw-bolder me-5 active" data-bs-toggle="tab" role="tab" href="#kt_billing_creditcard">
+                                {% trans %}Compte Mobile {% endtrans %}</a> {#& Carte - Banque#}
+                            </li>
+                            <!--end::Tab item-->
+                        </ul>
+                        <!--end::Tab nav-->
+                    </div>
+                    <!--end::Toolbar-->
+                </div>
+                <!--end::Card header-->
+                <!--begin::Tab content-->
+                <div id="kt_billing_payment_tab_content" class="card-body tab-content">
+                    <!--begin::Tab panel-->
+                    <div id="kt_billing_creditcard" class="tab-pane fade show active" role="tabpanel">
+                        <!--begin::Row-->
+                        <div class="row gx-9 gy-6">
+                            <!--begin::Col-->
+                            <div class="col-xl-6">
+                                <!--begin::Card-->
+                                <div class="card card-dashed h-xl-100 flex-row flex-stack flex-wrap p-6">
+                                    <!--begin::Info-->
+                                    <div class="d-flex flex-column py-2">
+                                        <!--begin::Owner-->
+                                        <div class="d-flex align-items-center fs-4 fw-bolder mb-5">{{'Mobile money'|upper|trans}}
+                                        {% if app.user.paymentAccount != []  %}
+                                            {% if app.user.paymentAccount[0]['Status'] == 'approved' %}
+                                            <span class="badge badge-light-success fs-7 ms-2">
+                                            {% trans %}Actif{% endtrans %}
+                                            </span>
+                                            {% else %}
+                                            <span class="badge badge-light-danger fs-7 ms-2">
+                                            {% trans %}Non vérifié{% endtrans %}
+                                            </span>
+                                            {% endif %}
+                                        {% else %}
+                                            <span class="badge badge-light-warning fs-7 ms-2">
+                                            {% trans %}Non configuré{% endtrans %}
+                                            </span>
+                                        {% endif %}
+                                        </div>
+                                        <!--end::Owner-->
+                                        <!--begin::Wrapper-->
+                                        <div class="d-flex align-items-center">
+                                            <!--begin::Icon-->
+                                            <img src="{{ asset('app/media/svg/card-logos/mobile.svg') }}" alt="" width="75" class="me-4" />
+                                            <!--end::Icon-->
+                                            <!--begin::Details-->
+                                            <div>
+                                                {% if app.user.paymentAccount != [] and app.user.paymentAccount[0]['Owner'] %}
+                                                    {% if  app.user.paymentAccount[0]['Status'] == 'approved' %}
+                                                    <div class="fs-4 fw-bolder">{{ app.user.paymentAccount[0]['Operator'] }}</div>
+                                                    <div class="fs-6 fw-bold text-gray-400">{{ app.user.paymentAccount[0]['Phone'] }}</div>
+                                                    {% else %}
+                                                     <div class="fs-4 fw-bolder">{{ app.user.paymentAccount[0]['newOperator'] }}</div>
+                                                    <div class="fs-6 fw-bold text-gray-400">{{ app.user.paymentAccount[0]['newPhone'] }}</div>
+                                                    {% endif %}
+                                                {% else %}
+                                                <div class="d-flex align-items-center  text-danger py-2">
+                                                <span class="bullet bg-danger me-3"></span>{% trans %}Méthode non configuré{% endtrans %}</div>
+                                                {% endif %}
+                                            </div>
+                                            <!--end::Details-->
+                                        </div>
+                                        <!--end::Wrapper-->
+                                    </div>
+                                    <!--end::Info-->
+                                    <!--begin::Actions-->
+                                    <div class="d-flex align-items-center py-2">
+                                    {% if (pDelete and pDelete == true) and app.user.paymentAccount != [] and app.user.paymentAccount[0]['Owner'] %}
+                                        <button type="reset" data-id="momo" class="btn btn-sm btn-light btn-active-light-primary delete-payment-method-momo-button me-3">{% trans %}Supprimer{% endtrans %}</button>
+                                    {% endif %}
+
+                                    {% if (pCreate and pCreate == true) or (pEdit and  pEdit == true)  %}
+                                        <button class="btn btn-sm btn-light btn-active-light-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_momo">
+                                        {% if app.user.paymentAccount != [] and app.user.paymentAccount[0]['Owner']%}
+                                                {% trans %}Modifier{% endtrans %}
+                                        {% else %}
+                                                {% trans %}Ajouter{% endtrans %}
+                                        {% endif %}
+                                        </button>
+                                    {% endif %}
+                                    </div>
+                                    <!--end::Actions-->
+                                </div>
+                                <!--end::Card-->
+                            </div>
+                            <!--end::Col-->
+                            <!--begin::Col-->
+                            <div class="col-xl-6">
+                                 <!--begin::Alert-->
+                                <div class="alert alert-dismissible bg-light-danger border border-danger border-dashed  h-lg-100 d-flex flex-column flex-sm-row w-100 p-5 mb-10">
+                                    <!--begin::Icon-->
+                                    <!--begin::Svg Icon | path: icons/duotune/communication/com003.svg-->
+                                    <span class="svg-icon svg-icon-2hx svg-icon-danger me-4 mb-5 mb-sm-0">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                            <path opacity="0.3" d="M2 4V16C2 16.6 2.4 17 3 17H13L16.6 20.6C17.1 21.1 18 20.8 18 20V17H21C21.6 17 22 16.6 22 16V4C22 3.4 21.6 3 21 3H3C2.4 3 2 3.4 2 4Z" fill="currentColor" />
+                                            <path d="M18 9H6C5.4 9 5 8.6 5 8C5 7.4 5.4 7 6 7H18C18.6 7 19 7.4 19 8C19 8.6 18.6 9 18 9ZM16 12C16 11.4 15.6 11 15 11H6C5.4 11 5 11.4 5 12C5 12.6 5.4 13 6 13H15C15.6 13 16 12.6 16 12Z" fill="currentColor" />
+                                        </svg>
+                                    </span>
+                                    <!--end::Svg Icon-->
+                                    <!--end::Icon-->
+                                    <!--begin::Content-->
+                                    <div class="d-flex flex-column pe-0 pe-sm-10">
+                                        <h5 class="mb-1">{% trans %}Note{% endtrans %} </h5>
+                                        <span>{% trans %} Editer vos méthodes de paiements vous permet de retirer vos commissions suivant plusieurs méthodes tel Mobile money, Carte et compte bancaire. {% endtrans %}</span>
+                                    </div>
+                                    <!--end::Content-->
+                                    <!--begin::Close-->
+                                    <button type="button" class="position-absolute position-sm-relative m-2 m-sm-0 top-0 end-0 btn btn-icon ms-sm-auto" data-bs-dismiss="alert">
+                                        <i class="bi bi-x fs-1 text-danger"></i>
+                                    </button>
+                                    <!--end::Close-->
+                                </div>
+                                <!--end::Alert-->
+                            </div>
+                            <!--end::Col-->
+                        </div>
+                        <!--end::Row-->
+                    </div>
+                    <!--end::Tab panel-->
+                </div>
+                <!--end::Tab content-->
+            </div>
+            <!--end::Payment methods-->
+
+            <!--begin::Modals-->
+            <!--begin::Modal - New Card-->
+            <div class="modal fade" id="kt_modal_momo" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+                <!--begin::Modal dialog-->
+                <div class="modal-dialog modal-dialog-centered mw-650px">
+                    <!--begin::Modal content-->
+                    <div class="modal-content">
+                        <!--begin::Modal header-->
+                        <div class="modal-header">
+                            <!--begin::Modal title-->
+                            <h2>{{'Mobile money'|upper|trans}}</h2>
+                            <!--end::Modal title-->
+                            <!--begin::Close-->
+                            <div class="btn btn-sm btn-icon btn-active-color-primary"  data-kt-momo-action="close">
+                                <!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
+                                <span class="svg-icon svg-icon-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                        <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor" />
+                                        <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor" />
+                                    </svg>
+                                </span>
+                                <!--end::Svg Icon-->
+                            </div>
+                            <!--end::Close-->
+                        </div>
+                        <!--end::Modal header-->
+                        <!--begin::Modal body-->
+                        <div class="modal-body scroll-y mx-5 mx-xl-15 my-7">
+                         <!--begin::Alert-->
+                                <div class="alert alert-dismissible bg-light-danger border border-danger border-dashed  h-lg-100 d-flex flex-column flex-sm-row w-100 p-5 mb-10">
+                                    <!--begin::Icon-->
+                                    <!--begin::Svg Icon | path: icons/duotune/communication/com003.svg-->
+                                    <span class="svg-icon svg-icon-2hx svg-icon-danger me-4 mb-5 mb-sm-0">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                            <path opacity="0.3" d="M2 4V16C2 16.6 2.4 17 3 17H13L16.6 20.6C17.1 21.1 18 20.8 18 20V17H21C21.6 17 22 16.6 22 16V4C22 3.4 21.6 3 21 3H3C2.4 3 2 3.4 2 4Z" fill="currentColor" />
+                                            <path d="M18 9H6C5.4 9 5 8.6 5 8C5 7.4 5.4 7 6 7H18C18.6 7 19 7.4 19 8C19 8.6 18.6 9 18 9ZM16 12C16 11.4 15.6 11 15 11H6C5.4 11 5 11.4 5 12C5 12.6 5.4 13 6 13H15C15.6 13 16 12.6 16 12Z" fill="currentColor" />
+                                        </svg>
+                                    </span>
+                                    <!--end::Svg Icon-->
+                                    <!--end::Icon-->
+                                    <!--begin::Content-->
+                                    <div class="d-flex flex-column pe-0 pe-sm-10">
+                                        <h5 class="mb-1">{% trans %}Information{% endtrans %} </h5>
+                                        <span>{% trans %}Configurez un numéro de téléphone MTN BENIN pour que votre demande soit traité 
+                                            automatiquement dans les minutes qui suivent. {% endtrans %}</span>
+                                    </div>
+                                    <!--end::Content-->
+                                    <!--begin::Close-->
+                                    <button type="button" class="position-absolute position-sm-relative m-2 m-sm-0 top-0 end-0 btn btn-icon ms-sm-auto" data-bs-dismiss="alert">
+                                        <i class="bi bi-x fs-1 text-danger"></i>
+                                    </button>
+                                    <!--end::Close-->
+                                </div>
+                                <!--end::Alert-->
+                            <!--begin::Form-->
+                            <form id="kt_modal_momo_form" class="form">
+                                <!--begin::Input group-->
+                                <div class="d-flex flex-column mb-7 fv-row">
+                                    <!--begin::Label-->
+                                    <label class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
+                                        <span class="required">{% trans %}Nom du titulaire{% endtrans %}</span>
+                                        <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="{{'Nom du titulaire du compte mobile money'|trans}}"></i>
+                                    </label>
+                                    <!--end::Label-->
+                                    <input type="text" class="form-control form-control-solid" placeholder="" name="owner_name" 
+                                    value="{% if app.user.paymentAccount != [] and app.user.paymentAccount[0]['Owner'] %}{% if app.user.paymentAccount[0]['Status'] == 'approved' %}{{app.user.paymentAccount[0]['Owner']}}{% else %}{{app.user.paymentAccount[0]['newOwner']}}{% endif %}{% else %}{{app.user.usetting.firstname}} {{app.user.usetting.lastname}}{% endif %}"/>
+                                    <input type="hidden" name="_token" value="{{ csrf_token(app.user.uid) }}" /> 
+                                </div>
+                                <!--end::Input group-->
+                                <!--begin::Input group-->
+                                <div class="row mb-10">
+                                    <!--begin::Col-->
+                                    <div class="col-md-12 fv-row">
+                                        <!--begin::Row-->
+                                        <div class="row fv-row">
+                                            <!--begin::Col-->
+                                            <div class="col-6">
+                                                <!--begin::Label-->
+                                                <label class="required fs-6 fw-bold form-label mb-2">{% trans %}Réseau GSM{% endtrans %}</label>
+                                                <!--end::Label-->
+                                                <select name="operator" id="momo_method_operator" data-kt-select2="true" data-placeholder="{{'Sélection de votre opérateur GSM' | trans}}"  data-dropdown-parent="#kt_modal_momo"  aria-label="{{'Sélection de devise' | trans}}" data-control="select2" data-placeholder="{{'Sélection de votre opérateur GSM' | trans}}" class="form-select form-select-solid form-select-lg">
+                                                    <option value=""></option>
+                                                    {% if gsmoperators is defined %}
+                                                        {% set opcounter = 0  %}
+                                                        {% for operator in gsmoperators %}
+                                                            {% set opcounter = opcounter + 1 %}
+                                                            <option {% if opcounter == 1 %}selected{% endif %} value="{{ operator.name }}">{{ operator.name }}</option>
+                                                        {% endfor %}
+                                                    {% endif %}
+                                                </select>
+                                            </div>
+                                            <!--end::Col-->
+                                            <!--begin::Col-->
+                                            <div class="col-6">
+                                                 <!--begin::Label-->
+                                                <label class="required fs-6 fw-bold form-label mb-2">{% trans %}Téléphone{% endtrans %}</label>
+                                                <!--end::Label-->
+                                                <!--begin::Col-->
+                                                <input type="tel" name="phone" id="mobile_phone" class="form-control tel form-control-lg form-control-solid" placeholder={{'Téléphone'|trans}} 
+                                                value="{% if app.user.paymentAccount != [] and app.user.paymentAccount[0]['Owner'] %}{% if app.user.paymentAccount[0]['Status'] == 'approved' %}{{app.user.paymentAccount[0]['Phone']}}{% else %}{{app.user.paymentAccount[0]['newPhone']}}{% endif %}{% else %}{{app.user.phone}}{% endif %}"/>
+                                                <!--end::Col-->
+                                            </div>
+                                            <!--end::Col-->
+                                        </div>
+                                        <!--end::Row-->
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <!--end::Input group-->
+                                <hr>
+                                <!--begin::Actions-->
+                                <div class="text-center pt-15">
+                                    <button type="reset" id="kt_modal_momo_cancel" data-kt-momo-action="cancel" class="btn btn-light me-3">{{'Fermer'| trans}}</button>
+                                    <button type="submit" id="kt_modal_momo_submit" class="btn btn-primary" data-kt-momo-action="submit">
+                                        <span class="indicator-label">{{"Enregister"|trans }}</span>
+                                        <span class="indicator-progress">{{"Veuillez patienter..."| trans }}
+                                        <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                                    </button>
+                                </div>
+                                <!--end::Actions-->
+                            </form>
+                            <!--end::Form-->
+                        </div>
+                        <!--end::Modal body-->
+                    </div>
+                    <!--end::Modal content-->
+                </div>
+                <!--end::Modal dialog-->
+            </div>
+            <!--end::Modal - New Card-->
+
+            <!--begin::Modal - Paiement request-->
+            <div class="modal fade" id="kt_modal_payment_request" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+                <!--begin::Modal dialog-->
+                <div class="modal-dialog modal-dialog-centered mw-800px">
+                    <!--begin::Modal content-->
+                    <div class="modal-content">
+                        <!--begin::Modal header-->
+                        <div class="modal-header">
+                            <!--begin::Modal title-->
+                            <h2>{{'Mobile money'|upper|trans}}</h2>
+                            <!--end::Modal title-->
+                            <!--begin::Close-->
+                            <div class="btn btn-sm btn-icon btn-active-color-primary"  data-kt-payment-modal-action="close">
+                                <!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
+                                <span class="svg-icon svg-icon-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                        <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor" />
+                                        <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor" />
+                                    </svg>
+                                </span>
+                                <!--end::Svg Icon-->
+                            </div>
+                            <!--end::Close-->
+                        </div>
+                        <!--end::Modal header-->
+                        <!--begin::Modal body-->
+                        <div class="modal-body scroll-y mx-5 mx-xl-15 my-7">
+                            <!--begin::Alert-->
+                            <div class="alert alert-dismissible bg-light-primary border border-primary border-dashed  h-lg-100 d-flex flex-column flex-sm-row w-100 p-5 mb-10">
+                                <!--begin::Icon-->
+                                <!--begin::Svg Icon | path: icons/duotune/communication/com003.svg-->
+                                <span class="svg-icon svg-icon-2hx svg-icon-primary me-4 mb-5 mb-sm-0">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                        <path opacity="0.3" d="M2 4V16C2 16.6 2.4 17 3 17H13L16.6 20.6C17.1 21.1 18 20.8 18 20V17H21C21.6 17 22 16.6 22 16V4C22 3.4 21.6 3 21 3H3C2.4 3 2 3.4 2 4Z" fill="currentColor" />
+                                        <path d="M18 9H6C5.4 9 5 8.6 5 8C5 7.4 5.4 7 6 7H18C18.6 7 19 7.4 19 8C19 8.6 18.6 9 18 9ZM16 12C16 11.4 15.6 11 15 11H6C5.4 11 5 11.4 5 12C5 12.6 5.4 13 6 13H15C15.6 13 16 12.6 16 12Z" fill="currentColor" />
+                                    </svg>
+                                </span>
+                                <!--end::Svg Icon-->
+                                <!--end::Icon-->
+                                <!--begin::Content-->
+                                <div class="d-flex flex-column pe-0 pe-sm-10">
+                                    <h5 class="mb-1">Nous avons besoins de votre attention ! </h5>
+                                    <span>Le traitement de vos retraits peuvent prendre jusqu'à 72 Heures après la demande. </span>
+                                </div>
+                                <!--end::Content-->
+                                <!--begin::Close-->
+                                <button type="button" class="position-absolute position-sm-relative m-2 m-sm-0 top-0 end-0 btn btn-icon ms-sm-auto" data-bs-dismiss="alert">
+                                    <i class="bi bi-x fs-1 text-primary"></i>
+                                </button>
+                                <!--end::Close-->
+                            </div>
+                            <!--end::Alert-->
+                            <!--begin::Form-->
+                            {{ form_start(paymentform, {'attr':{'id':'kt_modal_payment_request_form'}}) }}
+                                <!--begin::Input group-->
+                                <div class="d-flex flex-column mb-7 fv-row">
+                                    <!--begin::Label-->
+                                    <label class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
+                                        <span class="required">{% trans %}Montant disponible{% endtrans %}</span>
+                                        <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="{{'Montant disponible dans votre compte'|trans}}"></i>
+                                    </label>
+                                    <!--end::Label-->
+                                    <input type="text" disabled class="form-control form-control-solid" value="{{app.user.balance}}" /> 
+                                </div>
+                                <!--end::Input group-->
+                                <!--begin::Input group-->
+                                <div class="row mb-10">
+                                    <!--begin::Col-->
+                                    <div class="col-md-12 fv-row">
+                                        <!--begin::Row-->
+                                        <div class="row fv-row">
+                                            <!--begin::Col-->
+                                            <div class="col-6">
+                                                <!--begin::Label-->
+                                                <label class="required fs-6 fw-bold form-label mb-2">{% trans %}Méthode de paiement{% endtrans %}</label>
+                                                <!--end::Label-->
+                                                <select disabled name="operator" id="momo_method_operator" class="form-select form-select-solid" data-control="select2" data-hide-search="true">
+                                                    <option value="Mobile Money">Mobile Money</option>
+                                                </select>
+                                            </div>
+                                            <!--end::Col-->
+                                            <!--begin::Col-->
+                                            <div class="col-6">
+                                                 <!--begin::Label-->
+                                                <label class="required fs-6 fw-bold form-label mb-2">{% trans %}Montant à retirer{% endtrans %}</label>
+                                                <!--end::Label-->
+                                                <!--begin::Col-->
+                                                {#<input type="tel" name="amount" id="amount" class="form-control form-control-lg form-control-solid" placeholder="{{'10000'| trans}}"/>#}
+                                                {{ form_row(paymentform.amount, {'attr': {'class': 'form-control form-control-lg form-control-solid mb-3 mb-lg-0','placeholder': '10000'|trans }}) }}
+                                                <!--end::Col-->
+                                            </div>
+                                            <!--end::Col-->
+                                        </div>
+                                        <!--end::Row-->
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <!--end::Input group-->
+                                <!--begin::Actions-->
+                                <hr>
+                                <div class="text-center pt-2">
+                                    <button type="reset" id="kt_modal_payment_request_cancel" data-kt-payment-modal-action="cancel" class="btn btn-light-danger me-3">{{'Fermer'| trans}}</button>
+                                    <button type="submit" id="kt_modal_payment_request_submit" class="btn btn-success" data-kt-payment-modal-action="submit">
+                                        <span class="indicator-label">{{"Enregister"|trans }}</span>
+                                        <span class="indicator-progress">{{"Veuillez patienter..."| trans }}
+                                        <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                                    </button>
+                                </div>
+                                <!--end::Actions-->
+                            {{ form_end(paymentform) }}
+                            <!--end::Form-->
+                        </div>
+                        <!--end::Modal body-->
+                    </div>
+                    <!--end::Modal content-->
+                </div>
+                <!--end::Modal dialog-->
+            </div>
+            <!--end::Modal - Paiement request-->
+
+            <!--begin::Modal - View-->
+			<div class="modal fade" id="kt_modal_payment_request_treat" data-kt-modal="view" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+				<!--begin::Modal dialog-->
+				<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable mw-850px">
+					<!--begin::Modal content-->
+					<div class="modal-content">
+						<!--begin::Modal header-->
+						<div class="modal-header">
+							<!--begin::Modal title-->
+							<h2 class="fw-bolder">{% trans %}Demande{% endtrans %} <span class="badge badge-secondary fs-5 sr-only" id="reference"></span></h2>
+							<!--end::Modal title-->
+							<!--begin::Close-->
+                            <div class="btn btn-sm btn-icon btn-active-color-primary"  data-kt-payment-treat-modal-action="close">
+                                <!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
+                                <span class="svg-icon svg-icon-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                        <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor" />
+                                        <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor" />
+                                    </svg>
+                                </span>
+                                <!--end::Svg Icon-->
+                            </div>
+                            <!--end::Close-->
+						</div>
+						<!--end::Modal header-->
+						<!--begin::Modal body-->
+						<div class="modal-body scroll-y mx-5 mx-xl-15 my-7">
+                            <form method="post" id="kt_modal_payment_request_treat_form">
+                            <!--begin::Input group-->
+							<div class="row mb-10">
+                                <table id="kt_datatable_example_3" class="table table-striped table-row-bordered gy-5 gs-7">
+                                    <tbody>
+                                        <tr>
+                                            <td>{% trans %}Utilisateur{% endtrans %}</td><td id="d_user"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>{% trans %}Référence{% endtrans %}</td><td id="d_reference"></td>
+                                        </tr>
+                                         <tr>
+                                            <td>{% trans %}Montant{% endtrans %}</td><td id="d_amount"></td>
+                                        </tr>
+                                         <tr>
+                                            <td>{% trans %}Moyen{% endtrans %}</td><td id="d_moyen"></td>
+                                        </tr>
+                                         <tr>
+                                            <td>{% trans %}Titulaire du compte{% endtrans %}</td><td id="d_owner"></td>
+                                        </tr>
+                                         <tr>
+                                            <td>{% trans %}Opérateur{% endtrans %}</td><td id="d_operator"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>{% trans %}Téléphone{% endtrans %}</td><td id="d_phone"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>{% trans %}Status{% endtrans %}</td><td id="d_status"></td>
+                                        </tr>
+                                        <tr id="s_validator">
+                                            <td>{% trans %}Traité par{% endtrans %}</td><td id="d_validator"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <!--begin::Input group-->
+                                <div class="fv-row mb-7">
+                                    <!--begin::Wrapper-->
+                                    <div class="d-flex flex-stack">
+                                        <!--begin::Label-->
+                                        <div class="me-5">
+                                            <!--begin::Label-->
+                                            <label class="fs-6 fw-bold">{% trans %}Type de paiement{% endtrans %}</label>
+                                            <!--end::Label-->
+                                            <!--begin::Input-->
+                                            <div class="fs-7 fw-bold text-gray-400">{% trans %}Paiement automatique{% endtrans %}</div>
+                                            <!--end::Input-->
+                                        </div>
+                                        <!--end::Label-->
+                                        <!--begin::Switch-->
+                                        <label class="form-check form-switch form-check-custom form-check-solid">
+                                            <!--begin::Input-->
+                                            <input class="form-check-input" name="checker" type="checkbox" value="1" id="kt_modal_payment_type"/>
+                                            <!--end::Input-->
+                                            <!--begin::Label-->
+                                            <span class="form-check-label fw-bold text-gray-400" for="kt_modal_payment_type"> {% trans %}Oui{% endtrans %} </span>
+                                            <!--end::Label-->
+                                        </label>
+                                        <!--end::Switch-->
+                                    </div>
+                                    <!--begin::Wrapper-->
+                                </div>
+                                <!--end::Input group-->
+								
+							</div>
+							<!--end::Input group-->
+                            
+						</div>
+						<!--end::Modal body-->
+						<!--begin::Modal footer-->
+						<div class="modal-footer">
+							<!--begin::Input group-->
+							<div class="row">
+                                <div  class="col-4">
+                                    <input id="idtransaction" name="trid" class="form-control form-sm me-3" placeholder="Id de transaction" />
+                                </div>
+                                <!--begin::Col-->
+                                <div class="col-8 fv-row text-end">
+                                     <input type="hidden" id="payment_id"/>
+                                     <button type="reset" id="kt_modal_payment_request_treat_cancel" data-kt-payment-treat-modal-action="cancel" class="btn btn-light me-3">{{'Fermer'| trans}}</button>
+                                     <button type="submit" id="kt_modal_payment_request_treat_submit_reject" class="btn btn-danger me-3" data-kt-payment-treat-modal-action-r="submit">
+                                        <span class="indicator-label">{{"Rejeter"|trans }}</span>
+                                        <span class="indicator-progress">{{"En cours"| trans }} 
+                                        <span class="spinner-border spinner-border-sm align-middle"></span></span>
+                                    </button>
+                                    <button type="submit" id="kt_modal_payment_request_treat_submit_validate" class="btn btn-success me-3" data-kt-payment-treat-modal-action-v="submit">
+                                        <span class="indicator-label">{{"Payer"|trans }}</span>
+                                        <span class="indicator-progress">{{"En cours"| trans }}
+                                        <span class="spinner-border spinner-border-sm align-middle"></span></span>
+                                    </button>
+                                </div>
+                                <!--end::Col-->
+							</div>
+							<!--end::Input group-->
+						</div>
+						<!--end::Modal footer-->
+                        </form>
+					</div>
+					<!--end::Modal content-->
+				</div>
+				<!--end::Modal dialog-->
+			</div>
+			<!--end::Modal - View-->
+
+        </div>
+        <!--end::Container-->
+    </div>
+    <!--end::Post-->
+
+{% endblock %}
+
+
+{% block javascripts %} 
+<script type="text/javascript">
+    const pEdit    = {{pEdit}};
+	const pDelete  = {{pDelete}};
+
+    const formMModalButton      = $("#kt_modal_payment_request_treat_button");
+    const mobile_payment_link   = "{{path('app_mobile_paiement')}}";
+    const delete_method_link    = "{{path('paymentDataDelete')}}";
+    const get_methods_link      = "{{path('app_payment_methods_get')}}";
+    const payments_list_link    = "{{ path('app_payment_list') }}";
+    const add_payment_link      = "{{ path('app_payment_add') }}";
+    const reject_payment_link   = "{{ path('app_payment_reject',{'uid': app.user.uid }) }}";
+    const validate_payment_link = "{{ path('app_payment_validate', {'uid': app.user.uid }) }}";
+    const csrfToken             = "{{ csrf_token(app.user.uid) }}";
+</script>
+<!--end::Page Custom Javascript-->
+<!--begin::Page Vendors Javascript(used by this page)-->
+<script src="{{ asset('app/plugins/custom/datatables/datatables.bundle.js') }}"></script>
+<!--end::Page Vendors Javascript-->
+<!--begin::Page Vendors Javascript(used by this page)-->
+<script src="{{ asset('app/js/queries/paiement/mobile/list.js') }}"></script>
+<script src="{{ asset('app/js/queries/paiement/mobile/method_add.js') }}"></script>
+<script src="{{ asset('app/js/queries/paiement/mobile/method_delete.js') }}"></script>
+<script src="{{ asset('app/js/queries/paiement/mobile/method_update.js') }}"></script>
+<script src="{{ asset('app/js/queries/paiement/mobile/add.js') }}"></script>
+<script src="{{ asset('app/js/queries/paiement/mobile/treat.js') }}"></script>
+<script src="{{ asset('app/js/queries/paiement/mobile/update.js') }}"></script>
+<script src="{{ asset('app/js/queries/paiement/mobile/delete.js') }}"></script>
+<script src="{{ asset('app/js/queries/paiement/mobile/overview.js') }}"></script>
+<!--end::Page Vendors Javascript-->
+<!--end::Page Custom Javascript-->
+{% endblock %}
+
