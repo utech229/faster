@@ -219,11 +219,8 @@ class Services extends AbstractController
 				if($granted && !$permission) return 0;
 				else if(!$granted && $permission) return 1;
 			}
-		}else{
+		}else
 			$permission = $this->em->getRepository(Authorization::class)->findByCodePermission($codePermission, $user->getId());
-
-			return $permission ? 1 : 0;
-		}
 
 		return $permission ? 1 : 0;
     }

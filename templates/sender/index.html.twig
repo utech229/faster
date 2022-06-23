@@ -261,8 +261,9 @@
     const url_edit = "{{ path('sender_edit', {'uid':'_1_'}) }}";
     const url_action = "{{ path('sender_action', {'uid':'_1_'}) }}";
     const url_show = "{{ path('sender_show', {'uid':'_1_'}) }}";
-    const url_user = "{{ path('sender_user') }}";
+    const url_user = "{{ path('filter_user') }}";
     const _token   = "{{ csrf_token("sender") }}";
+    const filter_token   = "{{ csrf_token("") }}";
     const pList = {{pList|default(0)}};
     const clnUser = {{clnUser|default(0)}};
     const pEdit = {{pEdit|default(0)}};
