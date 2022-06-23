@@ -58,6 +58,13 @@ var KTUsersAddUser = function() {
                                 
                             }
                         },
+                        'currency': {
+                            validators: {
+                                notEmpty: {
+                                    message: _Required_Field
+                                },
+                            }
+                        },
                         'user[email]': {
                             validators: {
                                 notEmpty: {
@@ -116,6 +123,7 @@ var KTUsersAddUser = function() {
                             loading(true),
                            ajax_url = (isUserUpdating == false) ? add_user : window.location.href + '/' + userUidInput.val()+ '/edit',
                             $('#user_phone').val(intl['user_phone'].getNumber()),
+                            $('#user_currency_name').val($("#user_currency option:selected" ).text()),
                             $.ajax({
                                 url: ajax_url,
                                 type: 'post',

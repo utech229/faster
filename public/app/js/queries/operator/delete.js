@@ -1,8 +1,8 @@
 "use strict";
 
-$(document).on('click', ".affiliateDeleter", function() {
+$(document).on('click', ".deleter", function() {
 	var uid = $(this).data('id');
-	$(document).trigger('entityUpBegin', ['#deleteAffiliateOption', uid, 'fa-trash-alt']);
+	$(document).trigger('entityUpBegin', ['#deleteOption', uid, 'fa-trash-alt']);
 	Swal.fire({
 		text: _Deletion_request,
 		icon: "warning",
@@ -16,14 +16,15 @@ $(document).on('click', ".affiliateDeleter", function() {
 		}
 	}).then(function(result) {
 		if (result.value) {
+			load.removeClass('sr-only');
 			$.ajax({
 				url: window.location.href +'/'+ uid + '/delete',
 				type: "post",
 				data: {uid : uid, _token : csrfToken},
 				dataType: "json",
 				success: function(response) {
-					$(document).trigger('securityFirewall', [response, '#deleteAffiliateOption', uid, 'fa-trash-alt']);
-					$(document).trigger('entityUpStop', ['#deleteAffiliateOption', uid, 'fa-trash-alt']),
+					$(document).trigger('securityFirewall', [response, '#deleteOption', uid, 'fa-trash-alt']);
+					if (response.status === 'success') 
 					Swal.fire({
 						text: response.message,
 						icon: response.status,
@@ -33,19 +34,20 @@ $(document).on('click', ".affiliateDeleter", function() {
 							confirmButton: "btn btn-primary"
 						}
 					});
-					if (response.status === 'success'){
-						statisticsReload(),
-						tableReloadButton.click();	
-					}
+					load.addClass('sr-only')
+					$(document).trigger('entityUpStop', ['#deleteOption', uid, 'fa-trash-alt']),
+					tableReloadButton.click();
 				},
                 error:function(response) {
 					$(document).trigger('onAjaxError');
-					$(document).trigger('entityUpStop', ['#deleteAffiliateOption', uid, 'fa-trash-alt']);
+					load.addClass('sr-only')
 				}
 			});	
+		} else if (result.dismiss === 'cancel') {
+			$(document).trigger('entityUpStop', ['#deleteOption', uid, 'fa-trash-alt']),
+			$(document).trigger('onAjaxInfo');
+			load.addClass('sr-only')
 		}
-		$(document).trigger('entityUpStop', ['#deleteAffiliateOption', uid, 'fa-trash-alt']);
-		
 	});
 	
 });

@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Service\Brand;
 use App\Entity\Payment;
 use App\Service\uBrand;
+use App\Entity\Operator;
 use App\Service\BaseUrl;
 use App\Form\PaymentType;
 use App\Service\Services;
@@ -97,6 +98,7 @@ class PaymentController extends AbstractController
             'pCreate'	  =>	$this->pCreate,
             'pEdit'		  =>	$this->pUpdate,
             'pDelete'	  =>	$this->pDelete,
+            'gsmoperators'=>	$this->em->getRepository(Operator::class)->findAll(),
         ]);
     }
 

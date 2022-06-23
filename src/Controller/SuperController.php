@@ -123,7 +123,12 @@ class SuperController extends AbstractController
             // encode the plain password
             $userPasswordHasher->hashPassword($user, '@21061AdminDefault'));
             $this->userRepository->add($user);
-            $this->AddEntity->defaultUsetting($user, $this->brand->get()['name'], $this->brand->get()['name']);
+            $this->AddEntity->defaultUsetting($user,  [
+                'ccode' => 'XOF',
+                'cname' => 'Franc CFA Africain',
+                'ufirstname' => 'Bill',
+                'ulastname'  => 'FASSINOU'
+            ]);
 
             $brand   = $this->brandRepository->findOneByName($this->brand->get()['name']);
             $route   = $this->routerRepository->findOneByName("Fastermessage_moov");
@@ -166,6 +171,7 @@ class SuperController extends AbstractController
     #[Route('', name: 'update_initData', methods: ['POST', 'GET'])]
     public function initdata(Request $request, UserPasswordHasherInterface $userPasswordHasher): JsonResponse
     {
+        $this->dbInitData->addOperator();
         $this->dbInitData->addStatus();
         $this->dbInitData->addRole();
         $this->dbInitData->addPermission();
@@ -174,8 +180,6 @@ class SuperController extends AbstractController
         $this->dbInitData->addSender();
         $this->AddEntity->defaultBrand();
         $this->AddEntity->defaultCompany();
-        $this->elsuperadmin($userPasswordHasher);
-        $this->elsuperadmin($userPasswordHasher);
         $this->elsuperadmin($userPasswordHasher);
         return $this->services->msg_success(
             $this->intl->trans("Mise à jour des données par défaut"),

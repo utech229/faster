@@ -49,7 +49,7 @@ class RegistrationController extends AbstractController
             $user->setCreatedAt(new \DatetimeImmutable());
             $user->setBalance(0);
             $user->setPaymentAccount($this->comptes);
-            $user->setApikey($this->services->idgenerate(32));
+            $user->setApikey(bin2hex(random_bytes(32)));
             $user->setUid(time().uniqid());
             $user->setIsAffiliate(true);
             $user->setIsVerified(true);

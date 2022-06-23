@@ -1,7 +1,7 @@
 "use strict";
-var KTUsersAddUser = function() {
-    const t = document.getElementById("kt_modal_add_user"),
-        e = t.querySelector("#kt_modal_add_user_form"),
+var KTAffiliatesAddAffiliate = function() {
+    const t = document.getElementById("kt_modal_add_affiliate"),
+        e = t.querySelector("#kt_modal_add_affiliate_form"),
         n = new bootstrap.Modal(t)
         ;
     var ajax_url;
@@ -19,7 +19,7 @@ var KTUsersAddUser = function() {
                                 },
                             }
                         },
-                        'user[firstName]': {
+                        'affiliate[firstName]': {
                             validators: {
                                 notEmpty: {
                                     message: _FirstName_Required
@@ -36,7 +36,7 @@ var KTUsersAddUser = function() {
             
                             }
                         },
-                        'user[lastName]': {
+                        'affiliate[lastName]': {
                             validators: {
                                 notEmpty: {
                                     message: _LastName_Required
@@ -58,7 +58,7 @@ var KTUsersAddUser = function() {
                                 
                             }
                         },
-                        'user[email]': {
+                        'affiliate[email]': {
                             validators: {
                                 notEmpty: {
                                     message: _Email_NotEmpty_Connexion
@@ -68,7 +68,7 @@ var KTUsersAddUser = function() {
                                 }
                             }
                         },
-                        'user[phone]': {
+                        'affiliate[phone]': {
                             validators: {
                                 notEmpty: {
                                     message: _Phone_Required
@@ -78,21 +78,21 @@ var KTUsersAddUser = function() {
                                 }
                             }
                         },
-                        'user[role]': {
+                        'affiliate[role]': {
                             validators: {
                                 notEmpty: {
                                     message: _Role_Required
                                 }
                             }
                         },
-                        'user[is_dlr]': {
+                        'affiliate[is_dlr]': {
                             validators: {
                                 notEmpty: {
                                     message: _Required_Field
                                 }
                             }
                         },
-                        'user[post_pay]': {
+                        'affiliate[post_pay]': {
                             validators: {
                                 notEmpty: {
                                     message: _Required_Field
@@ -109,13 +109,13 @@ var KTUsersAddUser = function() {
                         })
                     }
                 });
-                const i = t.querySelector('[data-kt-users-modal-action="submit"]');
+                const i = t.querySelector('[data-kt-affiliates-modal-action="submit"]');
                 i.addEventListener("click", (t => {
                     t.preventDefault(), o && o.validate().then((function(t) {
                         console.log("validated!"), "Valid" == t ? (i.setAttribute("data-kt-indicator", "on"), i.disabled = !0, 
                             loading(true),
-                           ajax_url = (isUserUpdating == false) ? add_user : window.location.href + '/' + userUidInput.val()+ '/edit',
-                            $('#user_phone').val(intl['user_phone'].getNumber()),
+                           ajax_url = (isAffiliateUpdating == false) ? add_affiliate : window.location.href + '/' + affiliateUidInput.val()+ '/edit',
+                            $('#affiliate_phone').val(intl['affiliate_phone'].getNumber()),
                             $.ajax({
                                 url: ajax_url,
                                 type: 'post',
@@ -139,9 +139,9 @@ var KTUsersAddUser = function() {
                                     })
                                     if (response.type === 'success') {
                                         t.isConfirmed,e.reset(),tableReloadButton.click();
-                                        (isUserUpdating == true) ? n.hide() : null;
+                                        (isAffiliateUpdating == true) ? n.hide() : null;
                                         statisticsReload();
-                                        $('#user_is_dlr').val('0').trigger('change'), $('#user_post_pay').val('0').trigger('change');
+                                        $('#affiliate_is_dlr').val('0').trigger('change'), $('#affiliate_post_pay').val('0').trigger('change');
                                     }
                                 },
                                 error: function (response) {
@@ -152,9 +152,9 @@ var KTUsersAddUser = function() {
                             })) : $(document).trigger('onFormError'),loading();
                     }))
                 })), 
-                t.querySelector('[data-kt-users-modal-action="cancel"]').addEventListener("click", (t => {
+                t.querySelector('[data-kt-affiliates-modal-action="cancel"]').addEventListener("click", (t => {
                     t.preventDefault(), e.reset(), n.hide()
-                })), t.querySelector('[data-kt-users-modal-action="close"]').addEventListener("click", (t => {
+                })), t.querySelector('[data-kt-affiliates-modal-action="close"]').addEventListener("click", (t => {
                     t.preventDefault(), e.reset(), n.hide()
                 }))
             })()
@@ -162,5 +162,5 @@ var KTUsersAddUser = function() {
     }
 }();
 KTUtil.onDOMContentLoaded((function() {
-    KTUsersAddUser.init();
+    KTAffiliatesAddAffiliate.init();
 }));

@@ -73,7 +73,7 @@
                                         <i class="bi bi-house fs-3"></i>
                                         <!--end::Svg Icon-->
                                     </span>
-                                    <span class="menu-title">{{ 'Tableau de bord' | trans }} {{ app.user.price.BJ.price }} </span>
+                                    <span class="menu-title">{{ 'Tableau de bord' | trans }}</span>
                                 </a>
                             </div>
                             {% if permission(["MET0"], app.user, false) %}
@@ -187,13 +187,23 @@
                                 </a>
                             </div>
                             {% endif %}
-                            {% if permission(["ROL0"], app.user) %}
+                            {% if permission(["STUT0"], app.user) %}
                              <div class="menu-item">
                                 <a class="menu-link {{ menu(uri, path('app_status_index')) }}" href="{{ path('app_status_index') }}">
                                     <span class="menu-icon">
                                         <i class="bi bi-arrow-repeat fs-3"></i>
                                     </span>
                                     <span class="menu-title">{{ "Statuts" | trans }}</span>
+                                </a>
+                            </div>
+                            {% endif %}
+                            {% if permission(["OPRT0"], app.user) %}
+                             <div class="menu-item">
+                                <a class="menu-link {{ menu(uri, path('app_operator_index')) }}" href="{{ path('app_operator_index') }}">
+                                    <span class="menu-icon">
+                                        <i class="bi bi-phone-fill fs-3"></i>
+                                    </span>
+                                    <span class="menu-title">{{ "Opérateur GSM" | trans }}</span>
                                 </a>
                             </div>
                             {% endif %}

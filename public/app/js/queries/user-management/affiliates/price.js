@@ -15,19 +15,19 @@ $(document).on('entityUpStopP', function(event, identifier, id, icon) {
 $(document).on('click', ".pricer", function(e) {
     var uid = $(this).data('id');
     $(document).trigger('entityUpBegin', ['#priceOption', uid, 'fa-money-bill']);
-    if (permissionVerifier(pEditUser) == true){
-        window.location.href = user_price_link.replace("_1_", uid);
+    if (permissionVerifier(pEditAffiliate) == true){
+        window.location.href = affiliate_price_link.replace("_1_", uid);
     }else
-        $(document).trigger('entityUpStop', ['#editUserOption', uid, 'fa-money-bill']);
+        $(document).trigger('entityUpStop', ['#editAffiliateOption', uid, 'fa-money-bill']);
 });
 
-$('#kt_modal_add_user').on('hidden.bs.modal', function(e) {
-    $(document).trigger('entityUpStop', ['#editUserOption', userUidInput.val(), 'fa-money-bill']);
+$('#kt_modal_add_affiliate').on('hidden.bs.modal', function(e) {
+    $(document).trigger('entityUpStop', ['#editAffiliateOption', affiliateUidInput.val(), 'fa-money-bill']);
     mdHTMLTitle.html(_Add);
-    isUserUpdating = false;
-    userUidInput.val(0);
-    $('#user_is_dlr').val('false').trigger('change');
-    $('#user_post_pay').val('false').trigger('change');
+    isAffiliateUpdating = false;
+    affiliateUidInput.val(0);
+    $('#affiliate_is_dlr').val('false').trigger('change');
+    $('#affiliate_post_pay').val('false').trigger('change');
     $("#modalbrand").prop('disabled', false);
     $("#brand_input").show()
 });
@@ -39,7 +39,7 @@ $(document).on('securityFirewall', function(e, r, identifier, rowData, icon) {
         $(document).trigger('entityUpStop', [identifier, rowData, icon]);
 });
 
-if (!pViewUser) {
+if (!pViewAffiliate) {
     $('#router_input').hide();
 }
 

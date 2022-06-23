@@ -499,10 +499,15 @@
                                                 <!--begin::Label-->
                                                 <label class="required fs-6 fw-bold form-label mb-2">{% trans %}Réseau GSM{% endtrans %}</label>
                                                 <!--end::Label-->
-                                                <select name="operator" id="momo_method_operator" class="form-select form-select-solid" data-control="select2" data-hide-search="true">
-                                                    <option value="MTN BENIN">MTN BENIN</option>
-                                                    <option value="MOOV AFRICA BENIN">MOOV AFRICA BENIN</option>
-                                                    
+                                                <select name="operator" id="momo_method_operator" data-kt-select2="true" data-placeholder="{{'Sélection de votre opérateur GSM' | trans}}"  data-dropdown-parent="#kt_modal_momo"  aria-label="{{'Sélection de devise' | trans}}" data-control="select2" data-placeholder="{{'Sélection de votre opérateur GSM' | trans}}" class="form-select form-select-solid form-select-lg">
+                                                    <option value=""></option>
+                                                    {% if gsmoperators is defined %}
+                                                        {% set opcounter = 0  %}
+                                                        {% for operator in gsmoperators %}
+                                                            {% set opcounter = opcounter + 1 %}
+                                                            <option {% if opcounter == 1 %}selected{% endif %} value="{{ operator.name }}">{{ operator.name }}</option>
+                                                        {% endfor %}
+                                                    {% endif %}
                                                 </select>
                                             </div>
                                             <!--end::Col-->
@@ -808,15 +813,15 @@
     const pEdit    = {{pEdit}};
 	const pDelete  = {{pDelete}};
 
-    const formMModalButton       = $("#kt_modal_payment_request_treat_button");
+    const formMModalButton      = $("#kt_modal_payment_request_treat_button");
     const mobile_payment_link   = "{{path('app_mobile_paiement')}}";
     const delete_method_link    = "{{path('paymentDataDelete')}}";
     const get_methods_link      = "{{path('app_payment_methods_get')}}";
     const payments_list_link    = "{{ path('app_payment_list') }}";
     const add_payment_link      = "{{ path('app_payment_add') }}";
-    const reject_payment_link    = "{{ path('app_payment_reject',{'uid': app.user.uid }) }}";
-    const validate_payment_link  = "{{ path('app_payment_validate', {'uid': app.user.uid }) }}";
-    const csrfToken              = "{{ csrf_token(app.user.uid) }}";
+    const reject_payment_link   = "{{ path('app_payment_reject',{'uid': app.user.uid }) }}";
+    const validate_payment_link = "{{ path('app_payment_validate', {'uid': app.user.uid }) }}";
+    const csrfToken             = "{{ csrf_token(app.user.uid) }}";
 </script>
 <!--end::Page Custom Javascript-->
 <!--begin::Page Vendors Javascript(used by this page)-->

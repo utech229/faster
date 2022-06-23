@@ -212,7 +212,7 @@
                             <!--begin::Input group-->
                             <div class="row mb-6">
                                 <!--begin::Label-->
-                                <label class="col-lg-4 col-form-label required fw-bold fs-6">{% trans %}Nom complet{% endtrans %}</label>
+                                <label class="col-lg-4 col-form-label required fw-bold fs-6">{% trans %}Nom & Prénoms{% endtrans %}</label>
                                 <!--end::Label-->
                                 <!--begin::Col-->
                                 <div class="col-lg-8">
@@ -220,12 +220,12 @@
                                     <div class="row">
                                         <!--begin::Col-->
                                         <div class="col-lg-6 fv-row">
-                                            <input type="text" name="fname" id="user_fname" class="form-control form-control-lg form-control-solid mb-4 mb-lg-0" placeholder="{{'Prénoms'|trans}}" value="{{app.user.usetting.firstname}}" />
+                                            <input type="text" name="fname" id="user_fname" class="form-control form-control-lg form-control-solid mb-4 mb-lg-0" placeholder="{{'Prénoms'|trans}}" value="{{ app.user.usetting.firstname }}" />
                                         </div>
                                         <!--end::Col-->
                                         <!--begin::Col-->
                                         <div class="col-lg-6 fv-row">
-                                            <input type="text" name="lname" id="user_lname" class="form-control form-control-lg form-control-solid" placeholder="{{'Noms'|trans}}" value="{{app.user.usetting.lastname}}" />
+                                            <input type="text" name="lname" id="user_lname" class="form-control form-control-lg form-control-solid" placeholder="{{'Noms'|trans}}" value="{{ app.user.usetting.lastname }}" />
                                         </div>
                                         <!--end::Col-->
                                     </div>
@@ -276,10 +276,8 @@
                                     <div class="row">
                                         <!--begin::Col-->
                                         <div class="col-lg-6 fv-row">
-                                             <select name="currency" id="user_currency" aria-label="{{'Selectionnez une devise'}}" data-control="select2" data-placeholder="{{'Choissez une devise'}}.." class="form-select form-select-solid form-select-lg mb-4">
-                                                <option value="">{{'Choisir une devise'}}..</option>
-                                                <option data-kt-select2-country="{{ asset('app/media/flags/united-states.svg') }}" value="XOF">XOF</option>
-                                                <option data-kt-select2-country="{{ asset('app/media/flags/united-kingdom.svg') }}" value="XAF">XAF</option>
+                                            <select name="currency" id="user_currency" data-kt-user-settings-type="select2_flags" data-placeholder="{{'Sélection de devise' | trans}}"  data-dropdown-parent="#kt_modal_add_user" aria-label="{{'Sélection de devise' | trans}}" data-control="select2" data-placeholder="Select a currency.." class="form-select form-select-solid form-select-lg">
+                                                {% include 'section/currency.option.html.twig' %}
                                             </select>
                                         </div>
                                         <!--end::Col-->

@@ -82,12 +82,15 @@ class AddEntity extends AbstractController
 	}
 
     //usetting datas for new user
-    public function defaultUsetting($user, $firstname = null, $lastname = null)
+    public function defaultUsetting($user, $data)
     {
         $usetting = new Usetting();
 
         $language  = [ 'code' => 'fr', 'name' => 'French'];
-        $currency  = [ 'code' => 'XOF', 'name' => "West African CFA Franc"];
+        $currency  = [ 'code' => $data['ccode'], 'name' => $data['cname']];
+
+        $firstname = ($data['ufirstname']) ? $data['ufirstname'] : null;
+        $lastname = ($data['ulastname']) ? $data['ulastname'] : null;
 
         $usetting->setUid($this->services->idgenerate(11))
                 ->setFirstname($firstname)
@@ -97,7 +100,6 @@ class AddEntity extends AbstractController
                 ->setTimezone('+01:00')
                 ->setCreatedAt(new \DatetimeImmutable())
                 ->setUser($user);
-
         $this->usettingRepository->add($usetting);
     }
 

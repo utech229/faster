@@ -28,14 +28,14 @@
                             </span>
                             <!--end::Svg Icon-->
                         </div>
-                            <input type="text" data-kt-user-table-filter="search" class="form-control form-control-solid w-250px ps-14" placeholder="{{'Rechercher'| trans}}" />
+                            <input type="text" data-kt-affiliate-table-filter="search" class="form-control form-control-solid w-250px ps-14" placeholder="{{'Rechercher'| trans}}" />
                         <!--end::Search-->
                     </div>
                     <!--begin::Card title-->
                     <!--begin::Card toolbar-->
                     <div class="card-toolbar">
                         <!--begin::Toolbar-->
-                        <div class="d-flex justify-content-end" data-kt-user-table-toolbar="base">
+                        <div class="d-flex justify-content-end" data-kt-affiliate-table-toolbar="base">
                             <!--begin::Filter-->
                             <button type="button" class="btn btn-light-primary me-3" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
                             <!--begin::Svg Icon | path: icons/duotune/general/gen031.svg-->
@@ -56,11 +56,11 @@
                                 <div class="separator border-gray-200"></div>
                                 <!--end::Separator-->
                                 <!--begin::Content-->
-                                <div class="px-7 py-5" data-kt-user-table-filter="form">
+                                <div class="px-7 py-5" data-kt-affiliate-table-filter="form">
                                     <!--begin::Input group-->
                                     <div class="mb-10">
                                          <label class="form-label fs-6 fw-bold">{{'Marque'|trans}}:</label>
-                                        <select class="form-select form-select-solid fw-bolder" data-kt-select2="true" data-placeholder="{{"Choisissez la marque"}}" data-allow-clear="true" id="brand_filter" data-kt-user-table-filter="brand" data-hide-search="true">>
+                                        <select class="form-select form-select-solid fw-bolder" data-kt-select2="true" data-placeholder="{{"Choisissez la marque"}}" data-allow-clear="true" id="brand_filter" data-kt-affiliate-table-filter="brand" data-hide-search="true">>
                                             <option value="">{{"Toutes"|trans}}</option>
                                             {% for brand in brands %}
                                                 <option value="{{ brand.name }}" data-select2-avatar="{{brand.logo}}" data-select2-alt="{{brand.name}}">{{ brand.name }}</option>
@@ -70,8 +70,8 @@
                                     <!--end::Input group-->
                                     <!--begin::Actions-->
                                     <div class="d-flex justify-content-end">
-                                        <button type="reset" class="btn btn-light btn-active-light-primary fw-bold me-2 px-6" data-kt-menu-dismiss="true" data-kt-user-table-filter="reset">{% trans %}Annuler{% endtrans %}</button>
-                                        <button type="submit" class="btn btn-primary fw-bold px-6" data-kt-menu-dismiss="true" data-kt-user-table-filter="filter">{% trans %}Filtrer{% endtrans %}</button>
+                                        <button type="reset" class="btn btn-light btn-active-light-primary fw-bold me-2 px-6" data-kt-menu-dismiss="true" data-kt-affiliate-table-filter="reset">{% trans %}Annuler{% endtrans %}</button>
+                                        <button type="submit" class="btn btn-primary fw-bold px-6" data-kt-menu-dismiss="true" data-kt-affiliate-table-filter="filter">{% trans %}Filtrer{% endtrans %}</button>
                                     </div>
                                     <!--end::Actions-->
                                 </div>
@@ -92,9 +92,9 @@
                             <!--end::Svg Icon-->{{'Exportation'|trans}}</button>
                             <!--end::Export-->
                            
-                            <!--begin::Add user-->
-                            <button type="button" id="kt_modal_add_user_button" class="btn btn-primary
-                             {% if pCreateUser is defined and pCreateUser == false %}d-none{% endif %}" data-bs-toggle="modal" data-bs-target="#kt_modal_add_user">
+                            <!--begin::Add affiliate-->
+                            <button type="button" id="kt_modal_add_affiliate_button" class="btn btn-primary
+                             {% if pCreateAffiliate is defined and pCreateAffiliate == false %}d-none{% endif %}" data-bs-toggle="modal" data-bs-target="#kt_modal_add_affiliate">
                             <!--begin::Svg Icon | path: icons/duotune/arrows/arr075.svg-->
                             <span class="svg-icon svg-icon-3">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -104,8 +104,8 @@
                                 </svg>
                             </span>
                             <!--end::Svg Icon-->{{ 'Nouvel affilié' | trans }} </button>
-                            <!--end::Add user-->
-                            <button type="button" id="kt_modal_add_user_reload_button" class="btn btn-light-primary d-none">
+                            <!--end::Add affiliate-->
+                            <button type="button" id="kt_modal_add_affiliate_reload_button" class="btn btn-light-primary d-none">
                             <!--begin::Svg Icon | path: icons/duotune/general/gen035.svg-->
                             <span class="svg-icon svg-icon-3">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -119,25 +119,25 @@
                         </div>
                         <!--end::Toolbar-->
                         <!--begin::Group actions-->
-                        <div class="d-flex justify-content-end align-items-center d-none" data-kt-user-table-toolbar="selected">
+                        <div class="d-flex justify-content-end align-items-center d-none" data-kt-affiliate-table-toolbar="selected">
                             <div class="fw-bolder me-5">
-                            <span class="me-2" data-kt-user-table-select="selected_count"></span>{{ 'Selectionné(s)'| trans }}</div>
-                            <button type="button" class="btn btn-danger" data-kt-user-table-select="delete_selected">{{ 'Supprimer la sélection'| trans }}</button>
+                            <span class="me-2" data-kt-affiliate-table-select="selected_count"></span>{{ 'Selectionné(s)'| trans }}</div>
+                            <button type="button" class="btn btn-danger" data-kt-affiliate-table-select="delete_selected">{{ 'Supprimer la sélection'| trans }}</button>
                         </div>
                         <!--end::Group actions-->
                         <!--begin::Modal - Add task-->
-                        <div class="modal fade" id="kt_modal_add_user" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+                        <div class="modal fade" id="kt_modal_add_affiliate" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
                             <!--begin::Modal dialog-->
                             <div class="modal-dialog modal-dialog-centered mw-950px">
                                 <!--begin::Modal content-->
                                 <div class="modal-content">
                                     <!--begin::Modal header-->
-                                    <div class="modal-header" id="kt_modal_add_user_header">
+                                    <div class="modal-header" id="kt_modal_add_affiliate_header">
                                         <!--begin::Modal title-->
-                                        <h2 class="fw-bolder" id="kt-modal_add_user_title">{{ 'Créer un affilié'| trans }}</h2>
+                                        <h2 class="fw-bolder" id="kt-modal_add_affiliate_title">{{ 'Créer un affilié'| trans }}</h2>
                                         <!--end::Modal title-->
                                         <!--begin::Close-->
-                                        <div class="btn btn-icon btn-sm btn-active-icon-primary" data-kt-users-modal-action="close">
+                                        <div class="btn btn-icon btn-sm btn-active-icon-primary" data-kt-affiliates-modal-action="close">
                                             <!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
                                             <span class="svg-icon svg-icon-1">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -153,9 +153,9 @@
                                     <!--begin::Modal body-->
                                     <div class="modal-body modal-lg scroll-y mx-5 mx-xl-15 my-7">
                                         <!--begin::Form-->
-                                        {{ form_start(userform, {'attr':{'id':'kt_modal_add_user_form'}}) }}
+                                        {{ form_start(affiliateform, {'attr':{'id':'kt_modal_add_affiliate_form'}}) }}
                                             <!--begin::Scroll-->
-                                            <div class="d-flex flex-column scroll-y me-n7 pe-7" id="kt_modal_add_user_scroll" data-kt-scroll="true" data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-max-height="auto" data-kt-scroll-dependencies="#kt_modal_add_user_header" data-kt-scroll-wrappers="#kt_modal_add_user_scroll" data-kt-scroll-offset="300px">
+                                            <div class="d-flex flex-column scroll-y me-n7 pe-7" id="kt_modal_add_affiliate_scroll" data-kt-scroll="true" data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-max-height="auto" data-kt-scroll-dependencies="#kt_modal_add_affiliate_header" data-kt-scroll-wrappers="#kt_modal_add_affiliate_scroll" data-kt-scroll-offset="300px">
                                                 <!--begin::Input group-->
                                                 <div class="fv-row mb-7">
                                                     <!--begin::Label-->
@@ -203,13 +203,13 @@
                                                     <div class="row">
                                                         <!--begin::Col-->
                                                         <div class="col-lg-6 fv-row">
-                                                            {{ form_row(userform.firstname, {'attr': {'class': 'form-control form-control-lg form-control-solid mb-3 mb-lg-0','placeholder': 'Prénoms'|trans }}) }}
-                                                            {{ form_row(userform.uid, {'attr': {'class': 'form-control form-control-lg form-control-solid mb-3 mb-lg-0','value': 0 }}) }}
+                                                            {{ form_row(affiliateform.firstname, {'attr': {'class': 'form-control form-control-lg form-control-solid mb-3 mb-lg-0','placeholder': 'Prénoms'|trans }}) }}
+                                                            {{ form_row(affiliateform.uid, {'attr': {'class': 'form-control form-control-lg form-control-solid mb-3 mb-lg-0','value': 0 }}) }}
                                                         </div>
                                                         <!--end::Col-->
                                                         <!--begin::Col-->
                                                         <div class="col-lg-6 fv-row">
-                                                            {{ form_row(userform.lastname, {'attr': {'class': 'form-control form-control-lg form-control-solid','placeholder': 'Nom de famille'|trans }}) }}
+                                                            {{ form_row(affiliateform.lastname, {'attr': {'class': 'form-control form-control-lg form-control-solid','placeholder': 'Nom de famille'|trans }}) }}
                                                         </div>
                                                         <!--end::Col-->
                                                     </div>
@@ -230,7 +230,7 @@
                                                                 <label class="required fw-bold fs-6 mb-2">{{'Email' | trans }}</label>
                                                                 <!--end::Label-->
                                                                 <!--begin::Input-->
-                                                                {{ form_row(userform.email, {'attr': {'class': 'form-control form-control-solid mb-3 mb-lg-0','placeholder': 'example@domain.com'|trans }}) }}
+                                                                {{ form_row(affiliateform.email, {'attr': {'class': 'form-control form-control-solid mb-3 mb-lg-0','placeholder': 'example@domain.com'|trans }}) }}
                                                                 <!--end::Input-->                                                                    
                                                             </div>
                                                             <div class="col-lg-6 fv-row">
@@ -238,7 +238,7 @@
                                                                 <label class="required fw-bold fs-6 mb-2">{{ 'Téléphone' | trans }}</label>
                                                                 <!--end::Label-->
                                                                 <!--begin::Input-->
-                                                                {{ form_row(userform.phone, {'attr': {'class': 'form-control tel form-control-solid mb-3 mb-lg-0'  }}) }}
+                                                                {{ form_row(affiliateform.phone, {'attr': {'class': 'form-control tel form-control-solid mb-3 mb-lg-0'  }}) }}
                                                                 <!--end::Input-->
                                                             </div>
                                                         </div>
@@ -262,7 +262,7 @@
                                                                 <div class="w-100">
                                                                     <div class="form-floating border rounded">
                                                                         <!--begin::Select2-->
-                                                                        <select id="kt_user_add_select2_country" data-dropdown-parent="#kt_modal_add_user" data-allow-clear="true" data-control="select2"
+                                                                        <select id="kt_user_add_select2_country" data-dropdown-parent="#kt_modal_add_affiliate" data-allow-clear="true" data-control="select2"
                                                                         class="form-select form-select-solid lh-1 py-3" name="country" data-placeholder="{{'Sélection de pays' | trans}}" 
                                                                         data-kt-user-settings-type="select2_flags"/>
                                                                            {% include 'section/country.option.html.twig' %}
@@ -276,9 +276,9 @@
                                                                 <!--begin::Label-->
                                                                 <label class="required fw-bold fs-6 mb-2">{{ 'Status' | trans }}</label>
                                                                 <!--end::Label-->
-                                                                {{ form_row(userform.status, {'attr': {'class': 'form-select form-select-solid mb-3 mb-lg-0',
+                                                                {{ form_row(affiliateform.status, {'attr': {'class': 'form-select form-select-solid mb-3 mb-lg-0',
                                                                 'data-control':"select2", 'data-placeholder': 'Selectionner'| trans, 'data-allow-clear':"true"
-                                                                ,'data-kt-select2':"true", 'data-dropdown-parent':"#kt_modal_add_user" }}) }}
+                                                                ,'data-kt-select2':"true", 'data-dropdown-parent':"#kt_modal_add_affiliate" }}) }}
                                                             </div>
                                                             <!--end::Col-->
                                                         </div>
@@ -287,44 +287,21 @@
                                                     <!--end::Col-->
                                                 </div>
                                                 <!--end::Input group-->
-                                                <!--begin::Input group-->
-                                                <div class="fv-row mb-7">
-                                                    <!--begin::Col-->
-                                                    <div class="col-lg-12">
-                                                        <!--begin::Row-->
-                                                        <div class="row">
-                                                            <!--begin::Col-->
-                                                            <div class="col-lg-12 fv-row">
-                                                                <!--begin::Label-->
-                                                                <label class="fs-6 fw-bold mb-2 form-label" for="kt_user_add_select2_country">
-                                                                    <span class="required">{{ 'Rôle' | trans }}</span>
-                                                                </label>
-                                                                <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="{{"Rôle de l'affilié" | trans}}"></i>
-                                                                <!--end::Label-->
-                                                                {{ form_row(userform.role, {'attr': {'class': 'form-select form-select-solid mb-3 mb-lg-0',
-                                                                'data-control':"select2", 'data-placeholder': 'Selectionner'| trans, 'data-allow-clear':"true"
-                                                                ,'data-kt-select2':"true", 'data-dropdown-parent':"#kt_modal_add_user" }}) }}
-                                                            </div>
-                                                        </div>
-                                                        <!--end::Row-->
-                                                    </div>
-                                                    <!--end::Col-->
-                                                </div>
-                                                <!--end::Input group-->
+                                              
                                             </div>
                                             <!--end::Scroll-->
                                             <!--begin::Actions-->
                                             <hr>
                                             <div class="text-center pt-5">
-                                                <button type="reset" class="btn btn-light me-3" data-kt-users-modal-action="cancel">{{"Fermer"| trans }}</button>
-                                                <button type="submit" class="btn btn-primary" data-kt-users-modal-action="submit">
+                                                <button type="reset" class="btn btn-light me-3" data-kt-affiliates-modal-action="cancel">{{"Fermer"| trans }}</button>
+                                                <button type="submit" class="btn btn-primary" data-kt-affiliates-modal-action="submit">
                                                     <span class="indicator-label">{{"Soumettre"|trans }}</span>
                                                     <span class="indicator-progress">{{"Veuillez patienter..."| trans }}
                                                     <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
                                                 </button>
                                             </div>
                                             <!--end::Actions-->
-                                        {{ form_end(userform) }}
+                                        {{ form_end(affiliateform) }}
                                         <!--end::Form-->
                                     </div>
                                     <!--end::Modal body-->
@@ -341,14 +318,14 @@
                 <!--begin::Card body-->
                 <div class="card-body py-4">
                     <!--begin::Table-->
-                    <table class="table align-middle table-row-dashed fs-6 gy-5" id="kt_table_users">
+                    <table class="table align-middle table-row-dashed fs-6 gy-5" id="kt_table_affiliates">
                         <!--begin::Table head-->
                         <thead>
                             <!--begin::Table row-->
                             <tr class="text-start text-muted fw-bolder fs-7 text-uppercase gs-0">
                                 <th class="w-10px pe-2">
                                     <div class="form-check form-check-sm form-check-custom form-check-solid me-3">
-                                        <input class="form-check-input" type="checkbox" data-kt-check="true" data-kt-check-target="#kt_table_users .form-check-input" value="1" />
+                                        <input class="form-check-input" type="checkbox" data-kt-check="true" data-kt-check-target="#kt_table_affiliates .form-check-input" value="1" />
                                     </div>
                                 </th>
                                 <th class="min-w-125px">{{'Affilié'| trans}}</th>
@@ -390,22 +367,22 @@
 
 {% block javascripts %} 
 <script type="text/javascript">
-    const pEditUser     = {{ pEditUser}};
-	const pDeleteUser   = {{ pDeleteUser}};
-	const pViewUser     = {{ pViewUser}};
+    const pEditAffiliate     = {{ pEditAffiliate}};
+	const pDeleteAffiliate   = {{ pDeleteAffiliate}};
+	const pViewAffiliate     = {{ pViewAffiliate}};
 	const roleLevel     = "{{ app.user.role.level }}";
 
-    const add_user         = "{{path('app_affiliate_add')}}";
-    const user_list_link   = "{{path('app_affiliate_list')}}";
+    const add_affiliate         = "{{path('app_affiliate_add')}}";
+    const affiliate_list_link   = "{{path('app_affiliate_list')}}";
     const statistic_link   = "{{path('get_statistics_data')}}";
     const csrfToken        = "{{ csrf_token(app.user.uid) }}";
 
 
-    var isUserUpdating       = false;
-    const formModalButton    = $("#kt_modal_add_user_button");
-    const tableReloadButton  = $('#kt_modal_add_user_reload_button');
+    var isAffiliateUpdating       = false;
+    const formModalButton    = $("#kt_modal_add_affiliate_button");
+    const tableReloadButton  = $('#kt_modal_add_affiliate_reload_button');
     const countrySelecter    = document.querySelector('#kt_user_add_select2_country');
-    const userCountryCode    = "{{ app.user.country.code }}";
+    const affiliateCountryCode    = "{{ app.user.country.code }}";
 </script>
 <script src="{{ asset('app/js/queries/public-app/country-flag-input.js') }}"></script>
 <!--begin::Page Custom Javascript(used by this page)-->

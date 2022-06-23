@@ -1,6 +1,6 @@
 "use strict";
-var mdHTMLTitle      = $("#kt_modal_add_user_title")
-const userUidInput   = $('#user_uid');
+var mdHTMLTitle      = $("#kt_modal_add_affiliate_title")
+const affiliateUidInput   = $('#affiliate_uid');
 const avatarPath     = window.location.origin+'/app/uploads/avatars/';
 
 $('#modalbrand').select2({
@@ -21,11 +21,11 @@ $(document).on('entityUpStop', function(event, identifier, id, icon) {
 });
 
 
-$(document).on('click', ".userUpdater", function(e) {
+$(document).on('click', ".affiliateUpdater", function(e) {
     var uid = $(this).data('id');
-    $(document).trigger('entityUpBegin', ['#editUserOption', uid, 'fa-edit']);
-    if (permissionVerifier(pEditUser) == true){
-        userUidInput.val(uid);
+    $(document).trigger('entityUpBegin', ['#editAffiliateOption', uid, 'fa-edit']);
+    if (permissionVerifier(pEditAffiliate) == true){
+        affiliateUidInput.val(uid);
         const url = window.location.href +'/'+ uid + '/get';
         $.ajax({
             url: url,
@@ -33,42 +33,41 @@ $(document).on('click', ".userUpdater", function(e) {
             data: {uid : uid, _token : csrfToken},
             dataType: "json",
             success: function(r) {
-                $(document).trigger('securityFirewall', [r, '#editUserOption', uid, 'fa-edit']);
+                $(document).trigger('securityFirewall', [r, '#editAffiliateOption', uid, 'fa-edit']);
                 mdHTMLTitle.html(_Edit);
-                isUserUpdating = true;
+                isAffiliateUpdating = true;
                 var phone = r.data.phone;
                 $('#modalbrand').val(r.data.brand.uid).trigger('change');
                 $("#modalbrand").prop('disabled', true);
                 $("#brand_input").hide()
-                $('#user_firstname').val(r.data.user.firstname);
-                $('#user_lastname').val(r.data.user.lastname);
-                $('#user_email').val(r.data.email);
-                $('#user_phone').val(phone.substring(4, 20));
-                $('#user_is_dlr').val(r.data.isDlr).trigger('change');
-                $('#user_post_pay').val(r.data.isPostPay).trigger('change');
-                $('#user_role').val(r.data.role.code).trigger('change');
+                $('#affiliate_firstname').val(r.data.affiliate.firstname);
+                $('#affiliate_lastname').val(r.data.affiliate.lastname);
+                $('#affiliate_email').val(r.data.email);
+                $('#affiliate_phone').val(phone.substring(4, 20));
+                $('#affiliate_is_dlr').val(r.data.isDlr).trigger('change');
+                $('#affiliate_post_pay').val(r.data.isPostPay).trigger('change');
                 $('#kt_user_add_select2_country').val(r.data.countryCode).trigger('change');
-                $('#user_status').val(r.data.status).trigger('change');
+                $('#affiliate_status').val(r.data.status).trigger('change');
                 var cover = avatarPath + r.data.photo;
                 $("#avatar_input").css("background-image", "url(" + cover + ")");
                 formModalButton.click();
             },
             error: function () { 
-                $(document).trigger('entityUpStop', ['#editUserOption', uid, 'fa-edit']);
+                $(document).trigger('entityUpStop', ['#editAffiliateOption', uid, 'fa-edit']);
                 $(document).trigger('toastr.onAjaxError');
             }
         });
     }else
-        $(document).trigger('entityUpStop', ['#editUserOption', uid, 'fa-edit']);
+        $(document).trigger('entityUpStop', ['#editAffiliateOption', uid, 'fa-edit']);
 });
 
-$('#kt_modal_add_user').on('hidden.bs.modal', function(e) {
-    $(document).trigger('entityUpStop', ['#editUserOption', userUidInput.val(), 'fa-edit']);
+$('#kt_modal_add_affiliate').on('hidden.bs.modal', function(e) {
+    $(document).trigger('entityUpStop', ['#editAffiliateOption', affiliateUidInput.val(), 'fa-edit']);
     mdHTMLTitle.html(_Add);
-    isUserUpdating = false;
-    userUidInput.val(0);
-    $('#user_is_dlr').val('false').trigger('change');
-    $('#user_post_pay').val('false').trigger('change');
+    isAffiliateUpdating = false;
+    affiliateUidInput.val(0);
+    $('#affiliate_is_dlr').val('false').trigger('change');
+    $('#affiliate_post_pay').val('false').trigger('change');
     $("#modalbrand").prop('disabled', false);
     $("#brand_input").show()
 });
@@ -80,7 +79,7 @@ $(document).on('securityFirewall', function(e, r, identifier, rowData, icon) {
         $(document).trigger('entityUpStop', [identifier, rowData, icon]);
 });
 
-if (!pViewUser) {
+if (!pViewAffiliate) {
     $('#router_input').hide();
 }
 

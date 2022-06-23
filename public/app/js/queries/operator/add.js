@@ -1,30 +1,27 @@
 "use strict";
-var KTModalMomo = function() {
-    const t = document.getElementById("kt_modal_momo"),
-        e = t.querySelector("#kt_modal_momo_form"),
+var KTUsersAddoperator = function() {
+    const t = document.getElementById("kt_modal_add_operator"),
+        e = t.querySelector("#kt_modal_add_operator_form"),
         n = new bootstrap.Modal(t);
     return {
         init: function() {
             (() => {
                 var o = FormValidation.formValidation(e, {
                     fields: {
-                        'owner_name': {
+                        'operator[name]': {
                             validators: {
                                 notEmpty: {
-                                    message: '' 
+                                    message: _Required_Field
                                 }
                             }
                         },
-                        'phone': {
+                        description: {
                             validators: {
                                 notEmpty: {
-                                    message: _Phone_Required
-                                },
-                                validePhone: {
-                                    message: _Phone_Not_Valid,
+                                    message: _Required_Field 
                                 }
                             }
-                        },
+                        }
                     },
                     plugins: {
                         trigger: new FormValidation.plugins.Trigger,
@@ -35,19 +32,21 @@ var KTModalMomo = function() {
                         })
                     }
                 });
-                t.querySelector('[data-kt-momo-action="close"]').addEventListener("click", (t => {
+                t.querySelector('[data-kt-operators-modal-action="close"]').addEventListener("click", (t => {
                     t.preventDefault(),
                         t.value , n.hide()
-                })), t.querySelector('[data-kt-momo-action="cancel"]').addEventListener("click", (t => {
-                    t.preventDefault(), (e.reset(), n.hide()) 
+                  
+                })), t.querySelector('[data-kt-operators-modal-action="cancel"]').addEventListener("click", (t => {
+                    t.preventDefault()
+                    (e.reset(), n.hide())
                 }));
-                const i = t.querySelector('[data-kt-momo-action="submit"]');
+                const i = t.querySelector('[data-kt-operators-modal-action="submit"]');
                 i.addEventListener("click", (function(t) {
                     t.preventDefault(), o && o.validate().then((function(t) {
                         console.log("validated!"), "Valid" == t ? (i.setAttribute("data-kt-indicator", "on"), i.disabled = !0, 
-                        $('#mobile_phone').val(intl['mobile_phone'].getNumber()),
+                        loading(true),
                         $.ajax({
-                            url: mobile_payment_link ,
+                            url: (isUpdating == true) ? window.location.href +'/'+ operatorIDInput.val() + '/update_operator' : add_link,
                             type: 'post',
                             data: new FormData(e),
                             dataType: 'json',
@@ -56,8 +55,9 @@ var KTModalMomo = function() {
                             cache: false,
                             success: function(response) {
                                     i.removeAttribute("data-kt-indicator"), i.disabled = !1;
+                                    loading()
                                     Swal.fire({
-                                        title: response.title,
+                                        title: _Swal_success,
                                         text: response.message,
                                         icon: response.type,
                                         buttonsStyling: false,
@@ -65,22 +65,22 @@ var KTModalMomo = function() {
                                         customClass: {
                                             confirmButton: "btn btn-primary"
                                         }
-                                    })
-                                    if (response.type === 'success') {
-                                        t.isConfirmed && e.reset(), n.hide();
-                                    }
-                                    setTimeout(() => {
-                                        if ((response.data && response.data.token !== "undefined")){
-                                            window.location.href = response.data.token.url;
+                                    }).then((function(t) {
+                                        if (response.type === 'success') {
+                                            t.isConfirmed && e.reset();
+                                            e.reset(),tableReloadButton.click();
+                                            (isUpdating == true) ? n.hide() : null;
                                         }
-                                    }, 1000);
+                                    }))
                             },
                             error: function () { 
                                 $(document).trigger('onAjaxError');
                                 i.removeAttribute("data-kt-indicator"), i.disabled = !1;
+                                loading()
                             },
                         })) : 
-                        $(document).trigger('onFormError');
+                        $(document).trigger('onFormError'),
+                        loading();
                     }))
                 }))
             })()
@@ -88,5 +88,5 @@ var KTModalMomo = function() {
     }
 }();
 KTUtil.onDOMContentLoaded((function() {
-    KTModalMomo.init()
+    KTUsersAddoperator.init()
 }));

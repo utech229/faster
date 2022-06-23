@@ -349,6 +349,8 @@ var KTUsersList = function() {
 
                         { data: 'action',responsivePriority: -9 },
                     ],
+                    "info": true,
+                    lengthMenu: [10, 25, 100, 250, 500, 1000],
                     pageLength: 10,
                     lengthChange: !1,
                     language: {

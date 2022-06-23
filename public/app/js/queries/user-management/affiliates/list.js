@@ -1,10 +1,10 @@
 "use strict";
 
-
-var KTUsersList = function() {
-    var e, t, n, r, x = document.querySelector("#export"), y = ".bt-export", o = document.getElementById("kt_table_users"),
+var allU = $('#stat_all'), allUPending = $('#stat_pending'), allUActive = $('#stat_ctive');
+var KTAffiliatesList = function() {
+    var e, t, n, r, x = document.querySelector("#export"), y = ".bt-export", o = document.getElementById("kt_table_affiliates"),
         c = () => {
-            o.querySelectorAll('[data-kt-users-table-filter="delete_row"]').forEach((t => {
+            o.querySelectorAll('[data-kt-affiliates-table-filter="delete_row"]').forEach((t => {
                 t.addEventListener("click", (function(t) {
                     t.preventDefault();
                     const n = t.target.closest("tr"),
@@ -48,10 +48,10 @@ var KTUsersList = function() {
         },
         l = () => {
             const c = o.querySelectorAll('[type="checkbox"]');
-            t = document.querySelector('[data-kt-user-table-toolbar="base"]'),
-                n = document.querySelector('[data-kt-user-table-toolbar="selected"]'),
-                r = document.querySelector('[data-kt-user-table-select="selected_count"]');
-            const s = document.querySelector('[data-kt-user-table-select="delete_selected"]');
+            t = document.querySelector('[data-kt-affiliate-table-toolbar="base"]'),
+                n = document.querySelector('[data-kt-affiliate-table-toolbar="selected"]'),
+                r = document.querySelector('[data-kt-affiliate-table-select="selected_count"]');
+            const s = document.querySelector('[data-kt-affiliate-table-select="delete_selected"]');
             c.forEach((e => {
                     e.addEventListener("click", (function() {
                         setTimeout((function() {
@@ -133,7 +133,7 @@ var KTUsersList = function() {
                 (e = $(o).DataTable({
                     responsive: true,
                     ajax: {
-                        url: user_list_link,
+                        url: affiliate_list_link,
                         type: "POST",
                         data: {
                             _token: function(){ return csrfToken; }
@@ -157,7 +157,7 @@ var KTUsersList = function() {
                         orderable: !1,
                         targets: 1, 
                         render: function (data, type, full, meta) {
-                            return `<!--begin::User=-->
+                            return `<!--begin::Affiliate=-->
 									<div class="d-flex align-items-center">
                                         <!--begin:: Avatar -->
                                         <div class="symbol symbol-circle symbol-50px overflow-hidden me-3">
@@ -168,12 +168,12 @@ var KTUsersList = function() {
                                             </a>
                                         </div>
                                         <!--end::Avatar-->
-                                        <!--begin::User details-->
+                                        <!--begin::Affiliate details-->
                                         <div class="d-flex flex-column">
                                             <a href="javascript:;" class="text-gray-800 text-hover-primary mb-1">`+data.name+`</a>
                                             <span>`+data.email+`</span>
                                         </div>
-                                        <!--begin::User details-->
+                                        <!--begin::Affiliate details-->
                                     </div>`;
                         }
                     },
@@ -181,7 +181,7 @@ var KTUsersList = function() {
                         targets: 3,
                         render: function(data, type, full, meta) {
                             var status = {
-                                'ROLE_AFFILIATE_USER': { 'title': 'Affilié revendeur', 'class': 'primary' },
+                                'ROLE_AFFILIATE_USER': { 'title': 'Affilié utilisateur', 'class': 'primary' },
                                 'ROLE_AFFILIATE_RESELLER': { 'title': 'Affilié revendeur', 'class': 'info' },
                             };
                             if (typeof status[data] === 'undefined') {
@@ -292,28 +292,28 @@ var KTUsersList = function() {
                     },{
                         orderable: !1,
                         targets: 12,
-                        visible: (!pEditUser && !pDeleteUser) ? false : true,
+                        visible: (!pEditAffiliate && !pDeleteAffiliate) ? false : true,
                         render : function (data,type, full, meta) {
                             var updaterIcon =  `<!--begin::Update-->
-                            <button class="btn btn-icon btn-active-light-primary w-30px h-30px me-3 userUpdater" data-id=`+data+`>
-                                <i id="editUserOption`+data+`" class="fa fa-edit"></i>
+                            <button class="btn btn-icon btn-active-light-primary w-30px h-30px me-3 affiliateUpdater" data-id=`+data+`>
+                                <i id="editAffiliateOption`+data+`" class="fa fa-edit"></i>
                             </button>
                             <!--end::Update-->`;
                             var deleterIcon =  `<!--begin::Delete-->
-                            <button class="btn btn-icon btn-active-light-primary w-30px h-30px userDeleter" 
-                                data-id=`+data+` data-kt-users-table-filter="delete_row">
-                                    <i id="deleteUserOption`+data+`" class="text-danger fa fa-trash-alt"></i>
+                            <button class="btn btn-icon btn-active-light-primary w-30px h-30px affiliateDeleter" 
+                                data-id=`+data+` data-kt-affiliates-table-filter="delete_row">
+                                    <i id="deleteAffiliateOption`+data+`" class="text-danger fa fa-trash-alt"></i>
                             </button>
                             <!--end::Delete-->`;
                             var priceIcon =  `<!--begin::Price-->
                             <button class="btn btn-icon btn-active-light-primary w-30px h-30px pricer" 
-                                data-id=`+data+` data-kt-users-table-filter="price_row">
+                                data-id=`+data+` data-kt-affiliates-table-filter="price_row">
                                     <i id="priceOption`+data+`" class="text-info fas fa-money-bill"></i>
                             </button>
                             <!--end::Price-->`;
-                            updaterIcon = (pEditUser) ? updaterIcon : '' ;
-                            priceIcon   = (pEditUser) ? priceIcon : '' ;
-                            deleterIcon = (pDeleteUser) ? deleterIcon : '' ;
+                            updaterIcon = (pEditAffiliate) ? updaterIcon : '' ;
+                            priceIcon   = (pEditAffiliate) ? priceIcon : '' ;
+                            deleterIcon = (pDeleteAffiliate) ? deleterIcon : '' ;
                             return updaterIcon + deleterIcon + priceIcon;
                         }
                     }],
@@ -321,7 +321,7 @@ var KTUsersList = function() {
     
                         { data: 'orderId' },
     
-                        { data: 'user', responsivePriority: -10},
+                        { data: 'affiliate', responsivePriority: -10},
     
                         { data: 'phone' },
     
@@ -346,6 +346,8 @@ var KTUsersList = function() {
                         { data: 'action',responsivePriority: -9 },
                     ],
                     pageLength: 10,
+                    "info": true,
+                    lengthMenu: [10, 25, 100, 250, 500, 1000],
                     lengthChange: !1,
                     language: {
                         url: _language_datatables,
@@ -355,23 +357,23 @@ var KTUsersList = function() {
                 }),
                 // Action sur bouton export
                 $(x).on('click', ($this)=>{ $this.preventDefault(); return $(y).hasClass('d-none')?$(y).removeClass('d-none'):$(y).addClass('d-none'); }),
-                $('#kt_modal_add_user_reload_button').on('click', function() {
+                $('#kt_modal_add_affiliate_reload_button').on('click', function() {
                     e.ajax.reload(null, false);
                 })).on("draw", (function() { l(), c(), a()
                 })), l(),
-                document.querySelector('[data-kt-user-table-filter="search"]').addEventListener("keyup", (function(t) {
+                document.querySelector('[data-kt-affiliate-table-filter="search"]').addEventListener("keyup", (function(t) {
                     e.search(t.target.value).draw()
                 })),
-                document.querySelector('[data-kt-user-table-filter="reset"]').addEventListener("click", (function() {
-                    document.querySelector('[data-kt-user-table-filter="form"]').querySelectorAll("select").forEach((e => {
+                document.querySelector('[data-kt-affiliate-table-filter="reset"]').addEventListener("click", (function() {
+                    document.querySelector('[data-kt-affiliate-table-filter="form"]').querySelectorAll("select").forEach((e => {
                              
                             $(e).val("").trigger("change")
                         })),
                         e.search("").draw()
                 })),
                 c(), (() => {
-                    const t = document.querySelector('[data-kt-user-table-filter="form"]'),
-                        n = t.querySelector('[data-kt-user-table-filter="filter"]'),
+                    const t = document.querySelector('[data-kt-affiliate-table-filter="form"]'),
+                        n = t.querySelector('[data-kt-affiliate-table-filter="filter"]'),
                         r = t.querySelectorAll("select");
                     n.addEventListener("click", (function() {
                         loading(true);
@@ -392,5 +394,5 @@ var KTUsersList = function() {
     }
 }();
 KTUtil.onDOMContentLoaded((function() {
-    KTUsersList.init();
+    KTAffiliatesList.init();
 }));
