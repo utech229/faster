@@ -40,15 +40,14 @@ class RechargeController extends AbstractController
         $this->tRepository     = $transactionRepository;
         $this->rRepository     = $rechargeRepository;
         $this->bRepository     = $brandRepository;
-        $this->permission      = ["REC0", "REC1", "REC2", "REC3", "REC4", "REC5"];
+        $this->permission      = ["REC0", "REC1", "REC2", "REC3"];
         $this->pAccess         = $this->services->checkPermission($this->permission[0]);
         $this->pRecharge       = $this->services->checkPermission($this->permission[1]);
-        $this->pAllAccess      = $this->services->checkPermission($this->permission[5]);
         $this->pRechargeUser   = $this->services->checkPermission($this->permission[2]);
-        $this->pManager        = $this->services->checkPermission($this->permission[4]);
+        $this->pAllAccess      = $this->services->checkPermission($this->permission[3]);
+
         //0--> Vérifier le statut; 1--> Annuler une recharge;
         $updateRecharge        = ['DPF3qslEgI46', 'cglN0BPfxX33'];
-
         $this->typeRecharge    = ['jbIEz1651764268', 'jbIEz1651764268_', 'cGkJD1651766620'];
         $this->minimumRecharge = 500;
     }
@@ -56,16 +55,18 @@ class RechargeController extends AbstractController
     #[Route('{_locale}/recharge', name: 'app_recharge')]
     public function index(): Response
     {
-        // dd($this->pRechargeUser);
-        if(!$this->pAccess)
-        {
-            $this->addFlash('error', $this->intl->trans("Vous n'êtes pas autorisé pour accéder à cette page !"));
-            return $this->redirectToRoute("app_home");
+        if(!$this->pAccess){
+            $this->addFlash('error', $this->intl->trans("Tentative d'accès à la page marque échouée.")); return $this->redirectToRoute("app_home");
         }
-
-        $actions =[$this->pRechargeUser, $this->pManager, ];
-        //$user    = $this->services->getUserByPermission();
-
+        $checkEtat = $this->services->checkThisUser($this->pAllAccess);
+        $users = [];
+        switch($checkEtat[0]){
+            case 0: $users = $this->uRepository->findBy(['status'=> $this->services->status(3)]); break;
+            case 1: $users = $this->services->getUserByPermission('MANGR'); break;
+            case 2: $users = $this->services->getUserByPermission('BRND1'); break;
+            case 3: $users = $this->services->getUserByPermission('BRND1'); break;
+            default: break;
+        }
         return $this->render('recharge/index.html.twig', [
             'controller_name'    => 'RechargeController',
             'brand'              => $this->brand->get(),
@@ -75,97 +76,148 @@ class RechargeController extends AbstractController
                                         [$this->intl->trans('Gestion des recharges')],
                                         [$this->intl->trans('Recharger compte')],
             ],
-            'canRechargeUser'        => $this->pRechargeUser,
-            'pAllAccess'             => $this->pAllAccess
+            'canRechargeUser'    => $this->pRechargeUser,
+            'pAllAccess'         => $this->pAllAccess,
+            'users'              => $users
         ]);
     }
     //We use this function to create a new recharge for user
     #[Route('{_locale}/createrecharge', name: 'create_recharge')]
     public function createRecharge(Request $request){
-        // dd($this->getUser());
-        if(!$this->isCsrfTokenValid($this->getUser()->getUid(), $request->request->get('_token'))) return $this->services->no_access($this->intl->trans("Initialisation d'une recharge pour l'utiliateur ").': '.$this->getUser()->getEmail());
+
+        // $description = $request->request->get('description', 'Un test');
+        // $amount = (float)$request->request->get('amount', 200);
+        // $firstname = $request->request->get('firstname', 'GERAUD');
+        // $lastname = $request->request->get('lastname', 'OUANKPO');
+        // $email = $request->request->get('email', 'support@gmail.com');
+        // $phone_number = $request->request->get('phone_number', '+22964082731');
+        // $internal_ref = $request->request->get('internal_ref', 'redd_OJJ_fdf');
+        // $process = $request->request->get('process', "CARD");
+        $expired = $request->request->get('expired', date('dd-mm-y h:i'));
+
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, "https://pay.zekin.app/api/v1/transactions/create");
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_ENCODING, "");
+        curl_setopt($curl, CURLOPT_MAXREDIRS, 10);
+        curl_setopt($curl, CURLOPT_TIMEOUT, 0);
+        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($curl, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+        curl_setopt($curl, CURLOPT_POST, true);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode([
+            "description"=>"Un est",
+            "amount"=> "200",
+            "firstname"=>"Géraud",
+            "lastname"=>"OUANKPO",
+            "email"=>"geraud@urban-technology.net",
+            "phone_number"=>"+2295273444",
+            "process"=> "CARD",
+            "expired"=> date("Y-m-d H:i:s")
+        ]));
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array('Accept: application/json',
+        'Content-Type: application/json',
+        'Authorization: Bearer l0899bzWX40trcpqxwC545'));
+
+        $response = curl_exec($curl);
+        curl_close($curl);
+        dd($response);
+
+
         if(!$this->pRecharge){
             return $this->services->no_access($this->intl->trans("Utilisateur non autorisé pour effectuer un rechargement.").': '.$this->getUser()->getEmail(), $this->intl->trans("Ooops... Vous n'êtes pas autorisé(e) à effectuer cette action."));
         }
+        if(!$this->isCsrfTokenValid($this->getUser()->getUid(), $request->request->get('_token'))) return $this->services->no_access($this->intl->trans("Initialisation d'une recharge pour l'utiliateur ").': '.$this->getUser()->getEmail());
         $typeRecharge   = (!$request->request->get('typeProcess')) ? $this->typeRecharge[0] : $request->request->get('typeProcess');
-        if(!in_array($typeRecharge, $this->typeRecharge)) return $this->services->msg_error($this->intl->trans("Tentative de modification des méthodes de paiement.").': '.$this->getUser()->getEmail(), $this->intl->trans("Tentative de modification de méthode de paiement échouée."));
+        if(!in_array($typeRecharge, $this->typeRecharge)) return $this->services->msg_error($this->intl->trans("Tentative de modification des méthodes de paiement."), $this->intl->trans("Tentative de modification de méthode de paiement échouée."));
         $isSelect       = $request->request->get('uSelect');
-        if(!$isSelect){
-            $userTransaction = $user = $rechargeBy = $this->getUser();
+        if(!$isSelect){$userTransaction = $user = $rechargeBy = $this->getUser();
         }else{
-            if(!$this->pRechargeUser) return $this->services->no_access($this->intl->trans("Utilisateur non autorisé pour recharger un utilisateur.").': '.$this->getUser()->getEmail(), $this->intl->trans("Ooops... Vous n'êtes pas autorisé(e) à effectuer cette action."));
-
-            $user= $this->uRepository->findOneBy(['uid'=> $isSelect, 'status'=> $this->services->status(3)]);
-            //$extractBalance = false;
-            if(!$user) return $this->services->msg_error($this->intl->trans("Utilisateur incorrect.").': '.$this->getUser()->getEmail(), $this->intl->trans("L'utilisateur sélectionné n'existe pas ou n'est pas actif."));
-            if($this->pAllAccess){
-                $canContinious  = true;
-            }else{
-                if($this->pManager){
-                    if($this->getUser()->getId() != $user->getId()){
-                        return $this->services->msg_error($this->intl->trans("Tentative de rechargement par.").': '.$this->getUser()->getEmail(), $this->intl->trans("Vous ne pouvez par recharger cet utilisateur car vous n'êtes pas son gestionnaire de compte."));
-                    }
-                }else{
-                    if($user->getBrand()->getManager()->getUid() != $this->getUser()->getUid()){
-                        return $this->services->msg_error($this->intl->trans("Tentative de rechargement échouée par.").': '.$this->getUser()->getEmail(), $this->intl->trans("Vous ne pouvez par recharger cet utilisateur. Vous n'êtes pas son administrateur."));
-                    }
-                }
-                $canContinious = true;
-            }
+            $user = $this->uRepository->findOneBy(['uid' => $isSelect, 'status'=> $this->services->status(3)]);
+            if(!$user){ return $this->services->msg_error($this->intl->trans("Utilisateur non trouvé."), $this->intl->trans("L'utilisateur sélectionné est introuvable."));}
         }
-        if(!$canContinious) return $this->services->msg_error($this->intl->trans("Tentative de rechargement échouée par.").': '.$this->getUser()->getEmail(), $this->intl->trans("Une erreur a été identifié. Si vous n'êtes pas l'administrateur, veuillez contacter +22952735555"));
-
-
         $amount         = $request->request->get('amount');
         if(!is_numeric($amount) || $amount < $this->minimumRecharge){
             return $this->services->msg_error($this->intl->trans("Recharge montant incorrect.").': '.$this->getUser()->getEmail(), $this->intl->trans("Le montant que vous avez renseigné est incorrect. Corrigez pour continuer."));
         }
         //Mode paiment:::: [0] => paiement mobile;  [1] => rechargement par balance;
-        $linkRedirect   = $updateDate = '';
-        $info           = $this->intl->trans('Rechargement effectué avec succès.');
-        $idTransaction  = $reference = '';
         $creatDate      = new \DatetimeImmutable();
-        $priceManager = $afterCommission = $beforeCommission = $commission = 0;
-        // En attente de la bonne récupération $priceUser       = $user->getPrice()[0] ;
-        $priceUser       = 15 ;
-        if($typeRecharge == $this->typeRecharge[0]){
-            if($this->pAllAccess || $this->pManager ){
-                $canContinious=true;
-            }else{
-                if($user->getBrand()->getManager()->getId() == $this->getUser()->getId()){
-                    $priceManager    = 10 ;
-                    $commission      = $priceUser - $priceManager;
-                    $afterCommission = 5000 ;
-                    $beforeCommission= $user->getBrand()->getCommission();
-                    $canContinious   = true;
-                }else{
-                    return $this->services->msg_error($this->intl->trans("Tentative de rechargement échoué.").': '.$this->getUser()->getEmail(), $this->intl->trans("Vous n'êtes pas autorisé(e) à effectuer cette action. S'il s'agit d'une erreur, veuillez contacter votre gestionnaire de compte."));
-                }
-            }
-            if($canContinious){
-                if ($this->getUser()->getBalance() < $amount) return $this->services->msg_error($this->intl->trans("Balance du revendeur incorrect.").': '.$this->getUser()->getEmail(), $this->intl->trans("Le montant à recharger est supérieur à votre balance. Veuillez approvisionner votre compte pour continuer."));
-                $beforeBalance   = $this->getUser()->getBalance();
-                $afterBalance    = $this->getUser()->getBalance() - $amount;
-                $this->getUser()->setBalance($afterBalance);
-                $this->uRepository->add($this->getUser());
-                $user->setBalance(($user->getBalance()+$amount));
+        $idTransaction = $reference = NULL;
+        $beforeCommission= $afterCommission = $commission = 0;
+        $checkEtat = $this->services->checkThisUser($this->pAllAccess, $user);
+        //Vérifier si montant supérieur
+        if(in_array($checkEtat[0], [0, 1, 2, 3])){
+            if($typeRecharge == $this->typeRecharge[0]){
+                if($amount > $this->getUser()->getBalance()){return $this->services->msg_error($this->intl->trans("Balance du revendeur incorrect.").': '.$this->getUser()->getEmail(), $this->intl->trans("Le montant à recharger est supérieur à votre balance. Veuillez approvisionner votre compte pour continuer."));}
+                $userTransaction     = $this->getUser();
+                $statusEntity        = $this->checkStatus("approved");
+                $updateDate          = new \DatetimeImmutable();
+                $rechargeBy          = $this->getUser();
+                $beforeBalance       = $this->getUser()->getBalance();
+                $afterBalance        = $nBalance = $beforeBalance - $amount;
+                $this->getUser()->setBalance(($nBalance));
+                $user->setBalance($user->getBalance() + $amount );
                 $this->uRepository->add($user);
-                $this->getUser()->getBrand()->setCommission(($this->getUser()->getBrand()->getCommission() + $commission));
-                $this->bRepository->add($this->getUser()->getBrand());
-                $status          = 'approved';
-                $userTransaction = $rechargeBy = $this->getUser();
-                $updateDate      = $creatDate;
+                $this->uRepository->add($this->getUser());
+                if($checkEtat[0]==0 || $checkEtat[0]==1 ){
+                    if($user->getBrand()->getName() == "FASTERMESSAGE"){
+                        $brand           = $this->bRepository->findOneBy(['manager'=> $user]);
+                        if($brand){$beforeCommission= $afterCommission = $commission = $brand->getCommission();}
+                    }else{
+                        $diffPrice       = $user->getPrice() - $user->getBrand()->getManager()->getPrice();
+                        $diffAmount      = ($amount / $user->getPrice()) - ($amount / $user->getBrand()->getManager()->getPrice());
+                        $commission      = $diffAmount * $diffPrice ;
+                        $beforeCommission= $brand->getCommission();
+                        $afterCommission = $nCommission = $beforeCommission + $commission;
+                        $user->getBrand()->setCommission($nCommission);
+                        $this->bRepository->add($user->getBrand());
+                    }
+                }
+                $info            = $this->intl->trans("Rechargement de l'utilisateur ").$user->getEmail().$this->intl->trans(" effectué avec succès.");
+                $linkRedirect    = NULL;
+            }else{
+                $processMobile = true;
             }
         }else{
-            //Récupération API
-            $beforeBalance   = $this->getUser()->getBalance();
-            $afterBalance    = $this->getUser()->getBalance() - $amount;
-            $status          = 'pending';
-            $userTransaction = $rechargeBy = $this->getUser();
-            $idTransaction   = '20123456';
-            $reference       = '20108902';
-            $linkRedirect    = 'recharge.test';
+            //Initialisation du paiement mobile
         }
+
+        if(!$idTransaction){ $idTransaction = 'IFAS'.$this->services->getUniqid();};
+        if(!$reference){ $reference = 'IFAS'.$this->services->getUniqid();};
+
+        $newTransaction =  new Transaction;
+        $newTransaction -> setUser($userTransaction)
+                        -> setStatus($statusEntity)
+                        -> setTransactionId($idTransaction)
+                        -> setReference($reference)
+                        -> setAmount($amount)
+                        -> setCreatedAt($creatDate)
+                        -> setUpdatedAt($updateDate)
+                        -> setBeforeBalance($beforeBalance)
+                        -> setAfterBalance($afterBalance);
+        $this->tRepository->add($newTransaction);
+
+        $newRecharge    =  new Recharge;
+        $newRecharge    -> setTransaction($newTransaction)
+                        -> setUser($user)
+                        -> SetRechargeBy($rechargeBy)
+                        -> setStatus($statusEntity)
+                        -> setUid('RFAS'.$this->services->getUniqid())
+                        -> setCreatedAt($creatDate)
+                        -> setUpdatedAt($updateDate)
+                        -> setBeforeCommission($beforeCommission)
+                        -> setCommission($commission)
+                        -> setAfterCommission($afterCommission);
+        $this->rRepository->add($newRecharge);
+
+        return $this->services->msg_success(
+            $this->intl->trans("Initialisation d'une recharge pour l'utiliateur ").': '.$this->getUser()->getEmail(),
+            $info,
+            $linkRedirect,
+        );
+    }
+
+    //Use this function to check Status
+    public function checkStatus($status){
         switch($status){
             //à completer si d'autres statut
             case 'pending':
@@ -181,83 +233,93 @@ class RechargeController extends AbstractController
                 $status = $this->services->status(1);
                 break;
         }
-
-        if(!$idTransaction){ $idTransaction = 'fas_id'.$this->services->getUniqid();};
-        if(!$reference){ $reference = 'fas_ref'.$this->services->getUniqid();};
-        $newTransaction =  new Transaction;
-        $newTransaction -> setUser($userTransaction)
-                        -> setStatus($status)
-                        -> setTransactionId($idTransaction)
-                        -> setReference($reference)
-                        -> setAmount($amount)
-                        -> setCreatedAt($creatDate)
-                        -> setUpdatedAt($updateDate)
-                        -> setBeforeBalance($beforeBalance)
-                        -> setAfterBalance($afterBalance);
-        $this->tRepository->add($newTransaction);
-
-        $newRecharge    =  new Recharge;
-        $newRecharge    -> setTransaction($newTransaction)
-                        -> setUser($user)
-                        -> SetRechargeBy($rechargeBy)
-                        -> setStatus($status)
-                        -> setUid('REC'.$this->services->getUniqid())
-                        -> setCreatedAt($creatDate)
-                        -> setUpdatedAt($updateDate)
-                        -> setBeforeCommission($beforeCommission)
-                        -> setCommission($commission)
-                        -> setAfterCommission($afterCommission);
-        $this->rRepository->add($newRecharge);
-
-        return $this->services->msg_success(
-            $this->intl->trans("Initialisation d'une recharge pour l'utiliateur ").': '.$this->getUser()->getEmail(),
-            $info,
-            $linkRedirect,
-        );
+        return $status;
     }
-    #[Route('{_locale}/setrecharge', name: 'set_recharge')]
+    #[Route('{_locale}/reloadrecharge', name: 'reload_recharge')]
     public function setRecharge(Request $request){
-        if(!$this->isCsrfTokenValid($this->getUser()->getUid(), $request->request->get('_token'))) return $this->services->no_access($this->intl->trans("Initialisation d'une recharge pour l'utiliateur ").': '.$this->getUser()->getEmail());
-        if(!$this->pRecharge){
-            return $this->services->no_access($this->intl->trans("Utilisateur non autorisé pour effectuer une actualisation rechargement.").': '.$this->getUser()->getEmail(), $this->intl->trans("Ooops... Vous n'êtes pas autorisé(e) à effectuer cette action."));
+        // if(!$this->isCsrfTokenValid($this->getUser()->getUid(), $request->request->get('_token'))) return $this->services->no_access($this->intl->trans("Initialisation d'une recharge pour l'utiliateur ").': '.$this->getUser()->getEmail());
+        // if(!$this->pRecharge){
+        //     return $this->services->no_access($this->intl->trans("Utilisateur non autorisé pour effectuer une actualisation rechargement.").': '.$this->getUser()->getEmail(), $this->intl->trans("Ooops... Vous n'êtes pas autorisé(e) à effectuer cette action."));
+        // }
+        $executeReq = $this->services->checkThisUser($this->pAllAccess, $user = null, $pManager = null, $pBrand = null);
+        switch($executeReq[0]){
+            case '2':
+
         }
-        if(!$isSelect){
-            $userTransaction = $user = $rechargeBy = $this->getUser();
-        }else{
-            if(!$this->pRechargeUser) return $this->services->no_access($this->intl->trans("Utilisateur non autorisé pour actualiser le rechargement d'un utilisateur.").': '.$this->getUser()->getEmail(), $this->intl->trans("Ooops... Vous n'êtes pas autorisé(e) à effectuer cette action."));
-            $user= $this->uRepository->findOneBy(['uid'=> $isSelect, 'status'=> $this->services->status(3)]);
-            //$extractBalance = false;
-            if(!$user) return $this->services->msg_error($this->intl->trans("Utilisateur incorrect.").': '.$this->getUser()->getEmail(), $this->intl->trans("L'utilisateur sélectionné n'existe pas ou n'est pas actif."));
-            if($this->pAllAccess){
-                $canContinious  = true;
-            }else{
-                if($this->pManager){
-                    if($this->getUser()->getId() != $user->getId()){
-                        return $this->services->msg_error($this->intl->trans("Tentative d'actualisation de rechargement échouée par.").': '.$this->getUser()->getEmail(), $this->intl->trans("Vous ne pouvez par recharger cet utilisateur car vous n'êtes pas son gestionnaire de compte."));
-                    }
-                }else{
-                    if($user->getBrand()->getManager()->getUid() != $this->getUser()->getUid()){
-                        return $this->services->msg_error($this->intl->trans("Tentative d'actualisation de rechargement échouée par.").': '.$this->getUser()->getEmail(), $this->intl->trans("Vous ne pouvez par recharger cet utilisateur. Vous n'êtes pas son administrateur."));
-                    }
-                }
-                $canContinious = true;
-            }
+        if($request->request->get('ref')){
+            return $this->services->msg_error($this->intl->trans("La recharge n'existe pas.").': '.$this->getUser()->getEmail(), $this->intl->trans("Recharge inexistante."));
         }
-        if($canContinious){
-            //Fonction pour vérifier l'état d'une transaction chez l'agrégateur
-            switch($action){
-                case $updateRecharge[0]:
-                break;
-                case $updateRecharge[1]:
-                break;
-                case $updateRecharge[2]:
-                break;
-                default:
+        $checkTransaction = $this->tRepository->findOneBy(['reference'=> $request->get('ref'), 'status'=> $this->services->status(2)]);
+        //Appel de la vérification de l'état de la transaction
+        //$statusEntity = $this->checkStatus($checkRecharge->status);
+        //$checkRecharge->getTransaction()->getStatus()->getName();
+        //checkTransaction
+        // dd($checkTransaction);
+        //Simulation $checkTransaction->status = En attente
+        $status = ($checkTransaction->getStatus()->getName() == 'En attente') ? 'pending' : $checkTransaction->getStatus()->getName();
+
+
+        $status = 'approved';
+        switch($status){
+            //à completer si d'autres statut
+            case 'pending':
+                return $this->services->msg_error($this->intl->trans("Votre recharge est toujours en attente. Si vous pensez à une erreur, veuillez patienter un peu ou contacter le support.").': '.$this->getUser()->getEmail(), $this->intl->trans("Vérification de statut de transaction."));
                 break;
 
-            }
+            case 'approved':
+                $beforeCommission = $afterCommission = $commission = $comRecharge = 0;
+                $updateDate       = new \DatetimeImmutable();
+                $nBalance = $checkTransaction->getUser()->getBalance() + $checkTransaction->getAmount();
+
+                $checkTransaction ->setStatus($this->services->status(6))
+                                  ->setBeforeBalance($checkTransaction->getUser()->getBalance())
+                                  ->setAfterBalance($nBalance)
+                                  ->setUpdatedAt($updateDate);
+                $this->tRepository->add($checkTransaction);
+
+
+                $checkRecharge = $this->rRepository->findOneBy(['transaction'=> $checkTransaction]);
+                $checkCommision  = $this->bRepository->findOneBy(['manager'=> $admin]);
+                if(!$checkCommision){
+                    $checkCommision  = $this->bRepository->findOneBy(['manager'=> $admin]);
+                }
+                // dd($checkRecharge->getCommission());
+                if($checkCommision){
+                    $comRecharge      = $checkRecharge->getCommission();
+                    $beforeCommission = $checkCommision->getCommission();
+                    $afterCommission  = ($checkCommision->getCommission() + $comRecharge);
+                    $checkCommision->setCommission($afterCommission);
+                    $this->bRepository->add($checkCommision);
+                }
+
+                $checkRecharge -> setStatus($this->services->status(6))
+                               -> setUpdatedAt($updateDate)
+                               -> setBeforeCommission($beforeCommission)
+                               -> setAfterCommission($afterCommission);
+                $this->rRepository->add($checkRecharge);
+
+                $checkTransaction->getUser()->setBalance($nBalance);
+                $this->uRepository->add($checkTransaction->getUser());
+
+                break;
+
+            case 'canceled':
+                $checkTransaction->setStatus($this->services->status(7));
+                $this->rRepository->add($checkRecharge);
+                break;
+            default:
+                $status = $this->services->status(1);
+                break;
         }
+        return $this->services->msg_success(
+            $this->intl->trans("Votre rechargement a été effectuée avec succès.").': '.$this->getUser()->getEmail(),
+            'patienter',
+            'fgggf',
+        );
+
+
     }
+
 
     #[Route('{_locale}/getrecharge', name: 'get_recharge')]
     public function getRecharge($allAcess = NULL, $isSelect = NULL, $user = NULL){
@@ -310,18 +372,21 @@ class RechargeController extends AbstractController
         $data = [];
         if($allRecharges){
             foreach($allRecharges as $getRecharge){
-                $row                 = array();
-                $row[]               = null;
-                $row[]               = $getRecharge->getUid();
-                $row[]               = $getRecharge->getTransaction()->getAmount();
-                $row[]               = $getRecharge->getUser()->getEmail();
-                $row[]               = $getRecharge->getRechargeBy()->getEmail();
-                $row[]               = ($this->intl->trans($getRecharge->getStatus()->getName()));
-                $row[]               = $getRecharge->getCreatedAt()->format("d-m-Y H:i");
-                $row[]               = ($getRecharge->getStatus()->getName()== 'En attente' && $this->pAllAccess) ? '<a data-u="'.$getRecharge->getUid().'" href="#"><i class="fa fa-delete">Actualisé</i></a>' : 'download';
-                $data[]              = $row;
+                $row              = array();
+                $row['ref']       = $getRecharge->getUid();
+                $row['amount']    = $getRecharge->getTransaction()->getAmount();
+                $row['emailS']    = $getRecharge->getUser()->getEmail();
+                $row['emailR']    = $getRecharge->getRechargeBy()->getEmail();
+                $row['status']    = $getRecharge->getStatus()->getCode();
+                $row['date']      = $getRecharge->getCreatedAt()->format("d-m-Y H:i");
+                $row['action' ]   = [
+                                        'uid'    =>  $getRecharge->getTransaction()->getReference(),
+                                        'status' => $getRecharge->getStatus()->getCode()
+                ];
+                $data[]           = $row;
             }
         }
+        $this->services->addLog($this->intl->trans('Lecture de la liste des recharges'));
         $output = array("data" => $data);
         return new JsonResponse($output);
 
