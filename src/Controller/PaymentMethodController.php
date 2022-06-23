@@ -95,7 +95,6 @@ class PaymentMethodController extends AbstractController
                     'object_uid'    => 'mobile_'.$user->getUid(),
                 ];
                 //$initPay = $this->sAgregatorRouter->processRouter($countrycode, $data);
-
 				$user->setPaymentAccount($this->comptes);
 				$this->em->persist($user);
 				$this->em->flush();

@@ -47,5 +47,40 @@ class sAgregatorRouter extends AbstractController
             );
         }
     }
+
+    public function uPay(){
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+        CURLOPT_URL => 'https://pay.zekin.app/api/v1/transactions/create',
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'POST',
+        CURLOPT_POSTFIELDS => array(),
+        CURLOPT_HTTPHEADER => array(
+            'Accept: application/json',
+            'Content-Type: application/json',
+            'Authorization: Bearer l0899bzWX40trcpqxwC545'
+        ),
+        ));
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+        echo $response;
+
+        $description = $request->request->get('description', '');
+        $amount = (float)$request->request->get('amount', 0);
+        $firstname = $request->request->get('firstname', null);
+        $lastname = $request->request->get('lastname', null);
+        $email = $request->request->get('email', null);
+        $phone_number = $request->request->get('phone_number', null);
+        $internal_ref = $request->request->get('internal_ref', null);
+        $process = $request->request->get('process', "");
+        $expired = $request->request->get('expired', null);
+    }
     
 }

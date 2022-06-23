@@ -120,7 +120,7 @@ class SuperController extends AbstractController
             $user->setProfilePhoto('default_avatar_1.png');
             $user->setCreatedAt(new \DatetimeImmutable());
             $user->setPassword(
-            // encode the plain password
+            //encode the plain password
             $userPasswordHasher->hashPassword($user, '@21061AdminDefault'));
             $this->userRepository->add($user);
             $this->AddEntity->defaultUsetting($user,  [

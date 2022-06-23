@@ -50,6 +50,7 @@ class uBrand extends AbstractController
            ],
            'year'               => date('Y'),
            'brand'              =>  $brand,
+           'formview'           => ($brand->getName() == "FASTERMESSAGE") ? "login.html.twig" : "blanck.login.html.twig",
 
            
        ];
