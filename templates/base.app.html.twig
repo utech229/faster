@@ -132,7 +132,7 @@
 									</span>
 									<div class="menu-sub menu-sub-accordion">
 										<div class="menu-item">
-											<a class="menu-link" href="../../demo1/dist/apps/contacts/getting-started.html">
+											<a class="menu-link" href="{{path("campaign_sms")}}">
 												<span class="menu-bullet">
 													<span class="bullet bullet-dot"></span>
 												</span>
@@ -144,11 +144,22 @@
 												<span class="menu-bullet">
 													<span class="bullet bullet-dot"></span>
 												</span>
-												<span class="menu-title">{{ "Messages API" | trans }}</span>
+												<span class="menu-title">{{ "Messages API/Unitaires" | trans }}</span>
 											</a>
 										</div>
 									</div>
 								</div>
+
+                                <div class="menu-item">
+                                    <a class="menu-link " href="{{ path('sender') }}">
+                                        <span class="menu-icon">
+                                            <!--begin::Svg Icon | path: icons/stockholm/Design/PenAndRuller.svg-->
+                                            <i class="fas fa-paper-plane fs-3"></i>
+                                            <!--end::Svg Icon-->
+                                        </span>
+                                        <span class="menu-title">{{ 'Expéditeurs' | trans }} </span>
+                                    </a>
+                                </div>
                             <div class="menu-item">
                                 <div class="menu-content pt-8 pb-2">
                                     <span class="menu-section text-muted text-uppercase fs-8 ls-1">{{ 'Transactions' | trans }}</span>

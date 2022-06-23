@@ -1,7 +1,7 @@
 "use strict";
 const SenderManager = function(){
-    // t : datatable; e : permission edit; d : permission delete; b : permission de changer de statut, l : permission voir tous, j : visibilité de la column Utilisateur; g : url de soumission du formulaire; h : tableau des données récupérées ayant pour index l'uid de la ligne
-    var t, e = pEdit, d = pDelete, b = pStatus, l = pList, j = clnUser, g, h = [];
+    // t : datatable; e : permission edit; d : permission delete; b : permission de changer de statut, l : permission voir tous, j : visibilité de la column Utilisateur; h : tableau des données récupérées ayant pour index l'uid de la ligne
+    var t, e = pEdit, d = pDelete, b = pStatus, l = pList, j = clnUser, h = [];
     const el = document.querySelector("#tb_sender"), // el : selecteur de la table html
     cls = [
         { // order
@@ -116,8 +116,8 @@ const SenderManager = function(){
     filling = (target)=>{ // filling : function pour remplir le formulaire sur click d'un bouton ayant data-id = uid de la ligne
         const $this = target.closest("button");
         if($($this).length == 0) return false;
-        const id = $($this).attr("data-id"),
-        g = url_edit.replace("_1_", id);
+        const id = $($this).attr("data-id");
+        $(form).attr("action",url_edit.replace("_1_", id));
         $(f.querySelector("#sender_manager")).val(h[id][4][1]); $(f.querySelector("#sender_manager")).trigger("change");
         $(f.querySelector("#sender_name")).val(h[id][1]);
         $(f.querySelector("#sender_status")).val(h[id][2]["uid"]); $(f.querySelector("#sender_status")).trigger("change");
@@ -219,7 +219,7 @@ const SenderManager = function(){
 
             $(s).on('keyup', ($this)=>{ t.search($this.target.value).draw(); }); // Recherche dans l'input search
 
-            $(a).on("click", ($this)=>{ $this.preventDefault(); r(); g = url_new; o.show(); }); // click sur le bouton Ajout de sender
+            $(a).on("click", ($this)=>{ $this.preventDefault(); r(); $(form).attr("action",url_new); o.show(); }); // click sur le bouton Ajout de sender
 
             $(c).on("click", ($this)=>{ $this.preventDefault(); o.hide(); }); // click sur le bouton annuler du modal
 
@@ -227,9 +227,9 @@ const SenderManager = function(){
 
             $(document).on("submit", f, ($this)=>{ // soumission du formulaire
                 $this.preventDefault();
-                btnAnimation(i, true);
+                btnAnimation(i, true);console.log(g);
                 $.ajax({
-                    url: g,
+                    url: $(form).attr("action"),
                     type: 'post',
                     data: new FormData(f),
                     processData: false,
@@ -259,18 +259,17 @@ const SenderManager = function(){
                 templateResult: select2Format1
             });
             // Charge par ajax les utilisateurs sous la marque sélectionnée
+            $(user).css("width","100%");
             $(brand).on("change", ($this)=>{
             	$(user).select2({data:[{id:'',text:''}]});
-
-            	$(user).css("width","100%");
-
+                $(user).val("").trigger("change");
             	$(user).select2({
             		ajax: {
             			url: url_user,
             			type: "post",
             			data: {
-            				_token: _token,
-            				brand: $(brand).val(),
+            				token: filter_token,
+            				brand: $($this.target).val(),
             			},
             			/*success: function(response){
             				return response;

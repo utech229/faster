@@ -37,14 +37,14 @@
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: _confirm_success
+            confirmButtonText: _confirm_success,
+            cancelButtonText: _No,
         }).then((result) => {
             if (result.isConfirmed && callback) callback(); else if (cancelCallback) cancelCallback();
         });
     }
 
     const select2Format1 = function(item) {
-        console.log(item)
         if ( !item.id ) {
             return item.text;
         }
