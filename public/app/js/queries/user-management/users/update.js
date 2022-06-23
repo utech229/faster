@@ -7,6 +7,7 @@ $('#modalbrand').select2({
     templateSelection: select2Format1,
     templateResult: select2Format1
 });
+
 $(document).on('entityUpBegin', function(e, identifier, id, icon) {
     $(identifier + id).removeClass("fa");
 	$(identifier + id).removeClass("fa");
@@ -78,6 +79,12 @@ $(document).on('securityFirewall', function(e, r, identifier, rowData, icon) {
         toastr.error(r.message),
         $(document).trigger('entityUpStop', [identifier, rowData, icon]);
 });
+
+if (!pViewUser) {
+    $('#router_input').hide();
+}
+
+
 
 function statisticsReload(){
     $.ajax({

@@ -53,6 +53,11 @@ var KTUsersAddUser = function() {
             
                             }
                         },
+                        'uBrand': {
+                            validators: {
+                                
+                            }
+                        },
                         'user[email]': {
                             validators: {
                                 notEmpty: {

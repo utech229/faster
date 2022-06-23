@@ -2,7 +2,7 @@
 
 
 var KTUsersList = function() {
-    var e, t, n, r, o = document.getElementById("kt_table_users"),
+    var e, t, n, r, x = document.querySelector("#export"), y = ".bt-export", o = document.getElementById("kt_table_users"),
         c = () => {
             o.querySelectorAll('[data-kt-users-table-filter="delete_row"]').forEach((t => {
                 t.addEventListener("click", (function(t) {
@@ -133,7 +133,7 @@ var KTUsersList = function() {
                 (e = $(o).DataTable({
                     responsive: true,
                     ajax: {
-                        url: affiliate_list_link,
+                        url: user_list_link,
                         type: "POST",
                         data: {
                             _token: function(){ return csrfToken; }
@@ -181,10 +181,8 @@ var KTUsersList = function() {
                         targets: 3,
                         render: function(data, type, full, meta) {
                             var status = {
-                                'ROLE_USER': { 'title': 'Utilisateur', 'class': 'danger' },
-                                'ROLE_ACCOUNTING': { 'title': 'Comptable', 'class': 'primary' },
-                                'ROLE_ADMIN': { 'title': 'Administrateur', 'class': 'secondary' },
-                                'ROLE_SUPER_ADMIN': { 'title': 'Super administrateur', 'class': 'info' },
+                                'ROLE_AFFILIATE_USER': { 'title': 'Affilié revendeur', 'class': 'primary' },
+                                'ROLE_AFFILIATE_RESELLER': { 'title': 'Affilié revendeur', 'class': 'info' },
                             };
                             if (typeof status[data] === 'undefined') {
                                 return data;
@@ -231,11 +229,10 @@ var KTUsersList = function() {
                         targets: 6,
                         render: function(data, type, full, meta) {
                             var status = {
-                                0 : { 'title': _Pending, 'class': 'warning' },
-                                1 : { 'title': _Actif, 'class': 'success' },
-                                2 : { 'title': _Disabled, 'class': 'primary' },
-                                3 : { 'title': _Rejected, 'class': 'info' },
-                                4 : { 'title': _Deleted, 'class': 'danger' },
+                                2 : { 'title': _Pending, 'class': 'warning' },
+                                3 : { 'title': _Actif, 'class': 'success' },
+                                4 : { 'title': _Disabled, 'class': 'primary' },
+                                6 : { 'title': _Suspended, 'class': 'primary' },
                             };
                             if (typeof status[data] === 'undefined') {
                                 return data;
@@ -248,18 +245,53 @@ var KTUsersList = function() {
                         orderable: 1,
                         targets: 7,
                         render: function(data, type, full, meta) {
-                            return  dateFormat(moment(data, "YYYY-MM-DDTHH:mm:ssZZ").format());
+                            return viewTime(data);
+                            //return  dateFormat(moment(data, "YYYY-MM-DDTHH:mm:ssZZ").format());
                         }
                     },
                     {
                         orderable: 1,
                         targets: 8,
                         render: function(data, type, full, meta) {
-                            return  dateFormat(moment(data, "YYYY-MM-DDTHH:mm:ssZZ").format());
+                            return viewTime(data);
+                            //return  dateFormat(moment(data, "YYYY-MM-DDTHH:mm:ssZZ").format());
                         }
                     },{
-                        orderable: !1,
                         targets: 9,
+                        render: function(data, type, full, meta) {
+                            var status = {
+                                true : { 'title': _Activated, 'class': 'success' },
+                                false : { 'title': _Disabled, 'class': 'danger' },
+                            };
+                            if (typeof status[data] === 'undefined') {
+                                return data;
+                            }
+                            return '<span class="badge badge-light-' + status[data].class + '">' + status[data].title + '</span>';
+                        },
+    
+                    },{
+                        targets: 10,
+                        render: function(data, type, full, meta) {
+                            var status = {
+                                true : { 'title': _Activated, 'class': 'success' },
+                                false : { 'title': _Disabled, 'class': 'danger' },
+                            };
+                            if (typeof status[data] === 'undefined') {
+                                return data;
+                            }
+                            return '<span class="badge badge-light-' + status[data].class + '">' + status[data].title + '</span>';
+                        },
+    
+                    },{
+                        targets: 11,
+                        //visible: (roleLevel < 4) ? false : true,
+                        render: function(data, type, full, meta) {
+                            return data.name;
+                        },
+    
+                    },{
+                        orderable: !1,
+                        targets: 12,
                         visible: (!pEditUser && !pDeleteUser) ? false : true,
                         render : function (data,type, full, meta) {
                             var updaterIcon =  `<!--begin::Update-->
@@ -273,9 +305,16 @@ var KTUsersList = function() {
                                     <i id="deleteUserOption`+data+`" class="text-danger fa fa-trash-alt"></i>
                             </button>
                             <!--end::Delete-->`;
+                            var priceIcon =  `<!--begin::Price-->
+                            <button class="btn btn-icon btn-active-light-primary w-30px h-30px pricer" 
+                                data-id=`+data+` data-kt-users-table-filter="price_row">
+                                    <i id="priceOption`+data+`" class="text-info fas fa-money-bill"></i>
+                            </button>
+                            <!--end::Price-->`;
                             updaterIcon = (pEditUser) ? updaterIcon : '' ;
+                            priceIcon   = (pEditUser) ? priceIcon : '' ;
                             deleterIcon = (pDeleteUser) ? deleterIcon : '' ;
-                            return updaterIcon + deleterIcon;
+                            return updaterIcon + deleterIcon + priceIcon;
                         }
                     }],
                     columns: [
@@ -286,25 +325,37 @@ var KTUsersList = function() {
     
                         { data: 'phone' },
     
-                        { data: 'role' },
+                        { data: 'role', responsivePriority: -8},
     
-                        { data: 'country', responsivePriority: 0 },
+                        { data: 'country', responsivePriority: 10 },
     
-                        { data: 'balance'  },
+                        { data: 'balance' , responsivePriority: -4 },
     
                         { data: 'status' },
     
-                        { data: 'lastLogin' },
+                        { data: 'lastLogin', responsivePriority: 0 },
 
-                        { data: 'createdAt' , responsivePriority: 0},
-    
+                        { data: 'createdAt' },
+
+                        { data: 'isDlr',responsivePriority: -6 },
+
+                        { data: 'postPay',responsivePriority: -5 },
+
+                        { data: 'brand',responsivePriority: -7 },
+
                         { data: 'action',responsivePriority: -9 },
                     ],
-                    pageLength: 5,
+                    pageLength: 10,
                     lengthChange: !1,
+                    language: {
+                        url: _language_datatables,
+                    },
+                    dom: '<"top text-end bt-export d-none"B>rtF<"row"<"col-sm-6"l><"col-sm-6"p>>',
                    
                 }),
-                $('#kt_modal_add_affiliate_reload_button').on('click', function() {
+                // Action sur bouton export
+                $(x).on('click', ($this)=>{ $this.preventDefault(); return $(y).hasClass('d-none')?$(y).removeClass('d-none'):$(y).addClass('d-none'); }),
+                $('#kt_modal_add_user_reload_button').on('click', function() {
                     e.ajax.reload(null, false);
                 })).on("draw", (function() { l(), c(), a()
                 })), l(),
@@ -313,6 +364,7 @@ var KTUsersList = function() {
                 })),
                 document.querySelector('[data-kt-user-table-filter="reset"]').addEventListener("click", (function() {
                     document.querySelector('[data-kt-user-table-filter="form"]').querySelectorAll("select").forEach((e => {
+                             
                             $(e).val("").trigger("change")
                         })),
                         e.search("").draw()
@@ -322,15 +374,20 @@ var KTUsersList = function() {
                         n = t.querySelector('[data-kt-user-table-filter="filter"]'),
                         r = t.querySelectorAll("select");
                     n.addEventListener("click", (function() {
+                        loading(true);
+                        setTimeout(() => {
+                            loading()
+                        }, 300);
                         var t = "";
                         r.forEach(((e, n) => {
                                 e.value && "" !== e.value && (0 !== n && (t += " "),
                                     t += e.value)
                             })),
                             e.search(t).draw()
-                    }))
+                    }));
                 })
                 ())
+                
         }
     }
 }();

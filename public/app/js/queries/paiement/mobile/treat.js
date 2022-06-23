@@ -95,7 +95,7 @@ var KTUsersManagePayment = function() {
                         console.log("validated!"), "Valid" == t ? (v.setAttribute("data-kt-indicator", "on"), v.disabled = !0, 
                         loading(true),
                         Swal.fire({
-                            text: _Validate_request,
+                            text: _Validation_request,
                             icon: "warning",
                             showCancelButton: true,
                             buttonsStyling: false,
@@ -134,7 +134,7 @@ var KTUsersManagePayment = function() {
                                     },
                                     error: function () { 
                                         $(document).trigger('onAjaxError');
-                                        i.removeAttribute("data-kt-indicator"), i.disabled = !1;
+                                        v.removeAttribute("data-kt-indicator"), v.disabled = !1;
                                         loading()
                                     },
                                 });
@@ -145,6 +145,7 @@ var KTUsersManagePayment = function() {
                             }
                         })) : 
                         $(document).trigger('onFormError'),
+                        v.removeAttribute("data-kt-indicator"), v.disabled = !1;
                         loading();
                     }))
                 }))

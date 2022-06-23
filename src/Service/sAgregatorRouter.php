@@ -2,7 +2,7 @@
 
 namespace App\Service;
 
-use App\Service\uBrand;
+use App\Service\Brand;
 use App\Service\BaseUrl;
 use App\Service\Services;
 use App\Service\sFedapay;

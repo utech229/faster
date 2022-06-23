@@ -1,10 +1,10 @@
-
 "use strict";
 
-var KTTransactionsList = function() {
-    var e, t, n, r, o = document.getElementById("kt_contacts_table"),
+
+var KTpricesList = function() {
+    var e, t, n, r, x = document.querySelector("#export"), y = ".bt-export", o = document.getElementById("kt_table_prices"),
         c = () => {
-            o.querySelectorAll('[data-kt-contact-table-filter="delete_row"]').forEach((t => {
+            o.querySelectorAll('[data-kt-prices-table-filter="delete_row"]').forEach((t => {
                 t.addEventListener("click", (function(t) {
                     t.preventDefault();
                     const n = t.target.closest("tr"),
@@ -48,10 +48,10 @@ var KTTransactionsList = function() {
         },
         l = () => {
             const c = o.querySelectorAll('[type="checkbox"]');
-            t = document.querySelector('[data-kt-contact-table-toolbar="base"]'),
-                n = document.querySelector('[data-kt-contact-table-toolbar="selected"]'),
-                r = document.querySelector('[data-kt-contact-table-toolbar="selected_count"]');
-            const s = document.querySelector('[data-kt-contact-table-toolbar="delete_selected"]');
+            t = document.querySelector('[data-kt-price-table-toolbar="base"]'),
+                n = document.querySelector('[data-kt-price-table-toolbar="selected"]'),
+                r = document.querySelector('[data-kt-price-table-select="selected_count"]');
+            const s = document.querySelector('[data-kt-price-table-select="delete_selected"]');
             c.forEach((e => {
                     e.addEventListener("click", (function() {
                         setTimeout((function() {
@@ -100,7 +100,7 @@ var KTTransactionsList = function() {
                     }))
                 }))
         };
-        const a = () => {
+    const a = () => {
         const e = o.querySelectorAll('tbody [type="checkbox"]');
         let c = !1,
             l = 0;
@@ -133,120 +133,81 @@ var KTTransactionsList = function() {
                 (e = $(o).DataTable({
                     responsive: true,
                     ajax: {
-                        url: contact_list,
+                        url: price_list_link.replace("_1_", user_uid),
                         type: "POST",
                         data: {
                             _token: function(){ return csrfToken; }
                         },
                         error: function () { 
-                            $(document).trigger('toastr.onAjaxError');
-                        },
-                        dataSrc: function(json) {
-
-                            return json.data;
+                            $(document).trigger('toastr.tableListError');
                         }
-                        
                     },
-                    order: [[ 5, "desc" ]],
-                    'columnDefs': [
-                       
-                        // Numéro
-                        {
-                            responsivePriority: 0,
-                            targets: 0, 
-                            render: function (data, type, full, meta) {
-                                return  data[0];
-                            }
-                        },
-                        // Champ1
-                        {
-                            responsivePriority: 1,
-                            targets: 1, 
-                            render: function (data, type, full, meta) {
-                                return data;
-                            }
-                        },
-                        // Champ2
-                        {
-                            responsivePriority: 2,
-                            targets: 2, 
-                            render: function (data, type, full, meta) {
-                                return data;
-                            }
-                        },
-                        // Champ3
-                        {
-                            responsivePriority: 3,
-                            targets: 3, 
-                            render: function (data, type, full, meta) {
-                                return data;
-                            }
-                        },
-                        // Champ4
-                        {
-                            responsivePriority: 4,
-                            targets: 4, 
-                            render: function (data, type, full, meta) {
-                                return data;
-                            }
-                        },
-                        // Date de création
-                        {
-                            responsivePriority: 5,
-                            targets: 5, 
-                            render: function (data, type, full, meta) {
-                            return  dateFormat(moment(data, "YYYY-MM-DDTHH:mm:ssZZ").format());
-                            }
-                        },
-                        // Action
-                        {
-                            responsivePriority: 6,
-                            targets: 6, 
-                            render: function (data, type, full, meta) {
-                                return  dateFormat(moment(data, "YYYY-MM-DDTHH:mm:ssZZ").format());
-                            }
+                    info: !1,
+                    order: [[ 3, "desc" ]],
+                    columnDefs: [{
+                        orderable: !1,
+                        targets: 0, 
+                        render: function (data, type, full, meta) {
+                            return  `<div class="form-check form-check-sm form-check-custom form-check-solid">
+                                        <input class="form-check-input" type="checkbox" value="`+data+`" />
+                                    </div>`;
                         }
+                    },
+                    {
+                        targets: 1,
+                        render: function(data, type, full, meta) {
+                           return '<img src="'+window.location.origin+'/app/media/flags/'+data+'.svg" class="rounded-circle me-2"  style="height:19px;" alt="'+data+'" />'+data
+                        },
+
+                    },
+                    {
+                        orderable: !1,
+                        targets: 5,
+                        render : function (data,type, full, meta) {
+                            var updaterIcon =  `<!--begin::Update-->
+                            <button class="btn btn-icon btn-active-light-primary w-30px h-30px me-3 priceUpdater" data-id=`+data+`>
+                                <i id="editpriceOption`+data+`" class="fa fa-edit"></i>
+                            </button>
+                            <!--end::Update-->`;
+                            return updaterIcon;
+                        }
+                    }],
+                    columns: [
+    
+                        { data: 'orderId' },
+    
+                        { data: 'name', responsivePriority: -5},
+
+                        { data: 'dial', responsivePriority: -8},
+
+                        { data: 'code', responsivePriority: -7},
+                        
+                        { data: 'price', responsivePriority: -6},
+    
+                        { data: 'action',responsivePriority: -9 },
                     ],
                     pageLength: 10,
-                    lengthChange: true,
-                    "info": true,
-                    lengthMenu: [10, 25, 100, 250, 500, 1000],                   
+                    lengthChange: !1,
+                    language: {
+                        url: _language_datatables,
+                    },
+                    dom: '<"top text-end bt-export d-none"B>rtF<"row"<"col-sm-6"l><"col-sm-6"p>>',
+                   
                 }),
-                $('#kt_modal_add_contact_reload_button').on('click', function() {
+                // Action sur bouton export
+                $(x).on('click', ($this)=>{ $this.preventDefault(); return $(y).hasClass('d-none')?$(y).removeClass('d-none'):$(y).addClass('d-none'); }),
+                $('#kt_modal_add_price_reload_button').on('click', function() {
                     e.ajax.reload(null, false);
                 })).on("draw", (function() { l(), c(), a()
                 })), l(),
-                document.querySelector('[data-kt-contact-table-filter="search"]').addEventListener("keyup", (function(t) {
+                document.querySelector('[data-kt-price-table-filter="search"]').addEventListener("keyup", (function(t) {
                     e.search(t.target.value).draw()
-
-                })),
-                document.querySelector('[data-kt-contact-table-filter="reset"]').addEventListener("click", (function() {
-                    document.querySelector('[data-kt-contact-table-filter="form"]').querySelectorAll("select").forEach((e => {
-                            $(e).val("").trigger("change");
-                        })),
-                        e.search("").draw()
-                })),
-                c(), (() => {
-                    const t = document.querySelector('[data-kt-contact-table-filter="form"]'),
-                        n = t.querySelector('[data-kt-contact-table-filter="filter"]'),
-                        r = t.querySelectorAll("select");
-                    n.addEventListener("click", (function() {
-                        var t = "";
-                        r.forEach(((e, n) => {
-                                e.value && "" !== e.value && (0 !== n && (t += " "),
-                                    t += e.value)
-                                    
-                            })),
-                            e.search(t).draw()
-                    }))
-                })
-                ())
+                })) 
+                )
+                
         }
     }
 }();
-
 KTUtil.onDOMContentLoaded((function() {
-    KTTransactionsList.init();
+    KTpricesList.init();
 }));
-
-

@@ -94,7 +94,7 @@ class DbInitData extends AbstractController
             "SMSS0", "SMSS1", "SMSS2","SMSS3","SMSS4","SMSC0", "SMSC1", "SMSC2","SMSC3","SMSC4","CTGF0", "CTGF1", "CTGF2","CTGF3","CTGF4",
             "CNPY0", "CNPY1", "CNPY2","CNPY3","CNPY4","BRND0", "BRND1", "BRND2","BRND3","BRND4","XPER0", "XPER1", "XPER2","XPER3","XPER4",
             "REC0", "REC1", "REC2","REC3","REC4", "DEV0", "DEV1", "DEV2","DEV3","DEV4",
-            "MANGR",
+            "MANGR","COMM0", "COMM1", "COMM2","COMM3","COMM4",
         ];
         $permissionNames = [
             "Menu utilisateur", "Ajout utilisateur", "Voir utilisateur", "Modification utilisateur",
@@ -120,7 +120,7 @@ class DbInitData extends AbstractController
             "Menu permission extra", "Ajout permission extra", "Voir permission extra","Modification permission extra", "Suppression permission extra",
             "Menu recharge", "Ajout recharge", "Voir recharge","Modification recharge", "Suppression recharge",
             "Menu développeur", "Ajout développeur (clé api)", "Voir développeur (clé api)","Modification développeur (clé api)", "Suppression développeur (clé api)",
-            "Gestionnaire de compte",
+            "Gestionnaire de compte","Menu commission", "Ajout commission", "Voir commission","Modification commission", "Suppression commission",
         ];
         $permissionDescription = [
             "Permet d\'afficher la page utilisateurs",
@@ -242,6 +242,12 @@ class DbInitData extends AbstractController
             "Permet de modifier un ou plusieurs developper(s)",
             "Permet de supprimer un ou plusieurs developper(s)",
             "Permet de gérer le compte d'un ou de plusieurs utilisateur(s)",
+            "Permet d\'afficher le menu commission", 
+            "Permet d\'ajouter un ou plusieurs commission(s)", 
+            "Permet de voir toutes les  commissions", 
+            "Permet de modifier un ou plusieurs commission(s)",
+            "Permet de supprimer un ou plusieurs commission(s)",
+            "Permet de gérer le compte d'un ou de plusieurs utilisateur(s)",
         ];
         $status = $this->statusRepository->findOneByCode(3);
         for ($i=0; $i < (count($permissionCodes)); $i++) {
@@ -267,7 +273,7 @@ class DbInitData extends AbstractController
         $permissionId = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,
         31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,
         71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,103,104,105,106,107,108,109,110,111,112,
-    113,114,115,116,117];
+        113,114,115,116,117];
         $status = $this->statusRepository->findOneByCode(3);
         for ($i=0; $i < (count($roleId)); $i++)
         {
