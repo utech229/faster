@@ -518,7 +518,7 @@
                                                 <!--end::Label-->
                                                 <!--begin::Col-->
                                                 <input type="tel" name="phone" id="mobile_phone" class="form-control tel form-control-lg form-control-solid" placeholder={{'Téléphone'|trans}} 
-                                                value="{% if app.user.paymentAccount != [] and app.user.paymentAccount[0]['Owner'] %}{% if app.user.paymentAccount[0]['Status'] == 'approved' %}{{app.user.paymentAccount[0]['Phone']}}{% else %}{{app.user.paymentAccount[0]['newPhone']}}{% endif %}{% else %}{{app.user.phone}}{% endif %}"/>
+                                                value="{% if app.user.paymentAccount != [] and app.user.paymentAccount[0]['Owner'] %}{% if app.user.paymentAccount[0]['Status'] == 'approved' %}{{app.user.paymentAccount[0]['Phone']}}{% else %}{{app.user.paymentAccount[0]['newPhone']}}{% endif %}{% endif %}"/>
                                                 <!--end::Col-->
                                             </div>
                                             <!--end::Col-->

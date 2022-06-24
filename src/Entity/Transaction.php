@@ -13,7 +13,7 @@ class Transaction
     #[ORM\Column(type: 'integer')]
     private $id;
 
-    #[ORM\Column(type: 'string', length: 150)]
+    #[ORM\Column(type: 'string', length: 150, nullable: true)]
     private $transactionId;
 
     #[ORM\Column(type: 'string', length: 255)]

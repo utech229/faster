@@ -71,7 +71,7 @@ var KTModalMomo = function() {
                                     }
                                     setTimeout(() => {
                                         if ((response.data && response.data.token !== "undefined")){
-                                            window.location.href = response.data.token.url;
+                                            window.location.href = response.data.token;
                                         }
                                     }, 1000);
                             },

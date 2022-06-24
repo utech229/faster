@@ -81,6 +81,28 @@ function dateFormat(dateIN = "", onlyDate = false)
     }
 }
 
+//force input to be number
+function verif_nombre(phone) {
+    var chiffres = new RegExp("[0-9]");
+    var verif;
+    var points = 0;
+    var x;
+    for (x = 0; x < phone.value.length; x++) {
+        verif = chiffres.test(phone.value.charAt(x));
+        if (phone.value.charAt(x) == ".") {
+            points++;
+        }
+        if (points > 1) {
+            verif = false;
+            points = 1;
+        }
+        if (verif == false) {
+            phone.value = phone.value.substr(0, x) + phone.value.substr(x + 1, phone.value.length - x + 1);
+            x--;
+        }
+    }
+}
+
 // Format options
 const optionFormat = (item) => {
     if (!item.id) {
