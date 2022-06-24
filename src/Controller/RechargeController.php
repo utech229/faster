@@ -58,6 +58,7 @@ class RechargeController extends AbstractController
         if(!$this->pAccess){
             $this->addFlash('error', $this->intl->trans("Tentative d'accès à la page marque échouée.")); return $this->redirectToRoute("app_home");
         }
+
         $checkEtat = $this->services->checkThisUser($this->pAllAccess);
         $users = [];
         switch($checkEtat[0]){
@@ -81,47 +82,33 @@ class RechargeController extends AbstractController
             'users'              => $users
         ]);
     }
+    //API function
+    public function callApi($info){
+        $url = "http://pay.zekin.app/api/v1/transactions/create";
+        $headers = [
+                    "Accept: application/json", "Authorization: Bearer l0899bzWX40trcpqxwC545", "Content-Type: application/json",
+                    "Environment: prod"
+        ];
+        // dd($info);
+        $data = [
+            "description"   => $info['description'], "amount"          => $info['amount'], "firstname"    => $info['firstname'], "lastname" => $info['lastname'],
+            "email"         => $info['email'], "phone_number"  => $info['phone_number'], "internal_ref"  => $info['internal_ref'],
+            "process"       => $info['process'],"expired"      => $info['expired']
+        ];
+        $url = $url."?".http_build_query($data); $curl = curl_init(); curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($curl, CURLOPT_URL, $url); curl_setopt($curl, CURLOPT_HEADER, false);
+        curl_setopt($curl, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1); curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        $resp = curl_exec($curl); $status = curl_getinfo($curl, CURLINFO_HTTP_CODE); curl_close($curl); $dataDecode = json_decode($resp);
+        $return = [
+                    'link'          => $dataDecode->response->api->url, 'status'        => $dataDecode->status,
+                    'id_transaction'=> $dataDecode->id_transaction, 'external_ref'      => $dataDecode->external_ref
+        ];
+        // dd($return);
+        return $return;
+    }
     //We use this function to create a new recharge for user
     #[Route('{_locale}/createrecharge', name: 'create_recharge')]
     public function createRecharge(Request $request){
-
-        // $description = $request->request->get('description', 'Un test');
-        // $amount = (float)$request->request->get('amount', 200);
-        // $firstname = $request->request->get('firstname', 'GERAUD');
-        // $lastname = $request->request->get('lastname', 'OUANKPO');
-        // $email = $request->request->get('email', 'support@gmail.com');
-        // $phone_number = $request->request->get('phone_number', '+22964082731');
-        // $internal_ref = $request->request->get('internal_ref', 'redd_OJJ_fdf');
-        // $process = $request->request->get('process', "CARD");
-        $expired = $request->request->get('expired', date('dd-mm-y h:i'));
-
-        $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL, "https://pay.zekin.app/api/v1/transactions/create");
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_ENCODING, "");
-        curl_setopt($curl, CURLOPT_MAXREDIRS, 10);
-        curl_setopt($curl, CURLOPT_TIMEOUT, 0);
-        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
-        curl_setopt($curl, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
-        curl_setopt($curl, CURLOPT_POST, true);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode([
-            "description"=>"Un est",
-            "amount"=> "200",
-            "firstname"=>"Géraud",
-            "lastname"=>"OUANKPO",
-            "email"=>"geraud@urban-technology.net",
-            "phone_number"=>"+2295273444",
-            "process"=> "CARD",
-            "expired"=> date("Y-m-d H:i:s")
-        ]));
-        curl_setopt($curl, CURLOPT_HTTPHEADER, array('Accept: application/json',
-        'Content-Type: application/json',
-        'Authorization: Bearer l0899bzWX40trcpqxwC545'));
-
-        $response = curl_exec($curl);
-        curl_close($curl);
-        dd($response);
-
 
         if(!$this->pRecharge){
             return $this->services->no_access($this->intl->trans("Utilisateur non autorisé pour effectuer un rechargement.").': '.$this->getUser()->getEmail(), $this->intl->trans("Ooops... Vous n'êtes pas autorisé(e) à effectuer cette action."));
@@ -144,41 +131,78 @@ class RechargeController extends AbstractController
         $idTransaction = $reference = NULL;
         $beforeCommission= $afterCommission = $commission = 0;
         $checkEtat = $this->services->checkThisUser($this->pAllAccess, $user);
+
+        // $data = [
+        //     "description"   => "Rechargement de compte", "amount"=> 100, "firstname"    => "Support", "lastname" => 'fastermessage',
+        //     "email"         => "support@fastermessage.com", "phone_number"  => '+22952734444', "internal_ref"  => 'ji89oiji31',
+        //     "process"       => "MOBILE","expired"      => date("Y-m-d H:i:s")
+        // ];
+
+        // $initPay = $this->callApi($data);
+        // return $this->services->msg_success(
+        //     $this->intl->trans("Initialisation d'une recharge pour l'utiliateur ").': '.$this->getUser()->getEmail(),
+        //     $initPay,
+        //     $initPay['link'],
+        // );
         //Vérifier si montant supérieur
         if(in_array($checkEtat[0], [0, 1, 2, 3])){
             if($typeRecharge == $this->typeRecharge[0]){
                 if($amount > $this->getUser()->getBalance()){return $this->services->msg_error($this->intl->trans("Balance du revendeur incorrect.").': '.$this->getUser()->getEmail(), $this->intl->trans("Le montant à recharger est supérieur à votre balance. Veuillez approvisionner votre compte pour continuer."));}
+
                 $userTransaction     = $this->getUser();
                 $statusEntity        = $this->checkStatus("approved");
                 $updateDate          = new \DatetimeImmutable();
                 $rechargeBy          = $this->getUser();
                 $beforeBalance       = $this->getUser()->getBalance();
                 $afterBalance        = $nBalance = $beforeBalance - $amount;
+
+                // dd($user->getPrice()['BJ']['price'], $user->getBrand()->getManager()->getPrice()['BJ']['price']);
                 $this->getUser()->setBalance(($nBalance));
-                $user->setBalance($user->getBalance() + $amount );
                 $this->uRepository->add($user);
+                $user->setBalance($user->getBalance() + $amount );
                 $this->uRepository->add($this->getUser());
-                if($checkEtat[0]==0 || $checkEtat[0]==1 ){
-                    if($user->getBrand()->getName() == "FASTERMESSAGE"){
-                        $brand           = $this->bRepository->findOneBy(['manager'=> $user]);
-                        if($brand){$beforeCommission= $afterCommission = $commission = $brand->getCommission();}
-                    }else{
-                        $diffPrice       = $user->getPrice() - $user->getBrand()->getManager()->getPrice();
-                        $diffAmount      = ($amount / $user->getPrice()) - ($amount / $user->getBrand()->getManager()->getPrice());
-                        $commission      = $diffAmount * $diffPrice ;
-                        $beforeCommission= $brand->getCommission();
-                        $afterCommission = $nCommission = $beforeCommission + $commission;
-                        $user->getBrand()->setCommission($nCommission);
-                        $this->bRepository->add($user->getBrand());
-                    }
-                }
+
+                $diffPrice       = ($user->getPrice()['BJ']['price']) - ($user->getBrand()->getManager()->getPrice()['BJ']['price']);
+                $diffAmount      = ($amount / $user->getPrice()['BJ']['price']) - ($amount / $user->getBrand()->getManager()->getPrice()['BJ']['price']);
+                $commission      = $diffAmount * $diffPrice;
+                $beforeCommission= $user->getBrand()->getCommission();
+                $afterCommission = $nCommission = $beforeCommission + $commission;
+                $user->getBrand()->setCommission($nCommission);
+                $this->bRepository->add($user->getBrand());
+
+                // if($checkEtat[0]==0 || $checkEtat[0]==1 ){
+                    // if($user->getBrand()->getName() == "FASTERMESSAGE"){
+                    //     $brand           = $this->bRepository->findOneBy(['manager'=> $user]);
+                    //     // if($brand){$beforeCommission= $afterCommission = $commission = $brand->getCommission();}
+                    // }else{
+                        // $diffPrice       = $user->getPrice() - $user->getBrand()->getManager()->getPrice();
+                        // $diffAmount      = ($amount / $user->getPrice()) - ($amount / $user->getBrand()->getManager()->getPrice());
+                        // $commission      = $diffAmount * $diffPrice;
+                        // $beforeCommission= $brand->getCommission();
+                        // $afterCommission = $nCommission = $beforeCommission + $commission;
+                        // $user->getBrand()->setCommission($nCommission);
+                        // $this->bRepository->add($user->getBrand());
+                    // }
+                // }
                 $info            = $this->intl->trans("Rechargement de l'utilisateur ").$user->getEmail().$this->intl->trans(" effectué avec succès.");
                 $linkRedirect    = NULL;
             }else{
                 $processMobile = true;
             }
         }else{
-            //Initialisation du paiement mobile
+            // //Initialisation du paiement mobile
+            // $data = [
+            //     "description"   => "Rechargement de compte", "amount"=> 100, "firstname"    => 'Support', "lastname" => 'fastermessage',
+            //     "email"         => "support@fastermessage.com", "phone_number"  => '+22952734444', "internal_ref"  => 'ji89oiji31',
+            //     "process"       => "MOBILE","expired"      => date("Y-m-d H:i:s")
+            // ];
+
+            // $initPay = $this->callApi($data);
+            // return $this->services->msg_success(
+            //     $this->intl->trans("Initialisation d'une recharge pour l'utiliateur ").': '.$this->getUser()->getEmail(),
+            //     $initPay,
+            //     $initPay->link,
+            // );
         }
 
         if(!$idTransaction){ $idTransaction = 'IFAS'.$this->services->getUniqid();};
@@ -214,6 +238,12 @@ class RechargeController extends AbstractController
             $info,
             $linkRedirect,
         );
+    }
+
+    //Fonction de calcul de commission
+    public function sumCommission(){
+
+        return $commission;
     }
 
     //Use this function to check Status
