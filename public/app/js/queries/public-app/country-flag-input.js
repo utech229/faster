@@ -15,8 +15,41 @@ var KTAppCountrySelectWithFlags= {
         $('[data-kt-user-settings-type="select2_flags"]').select2({
             placeholder:"Select a country", minimumResultsForSearch:1/0, templateSelection:t, templateResult:t
         })
+    },
+
+    init2:function(){
+        // Format options
+        var optionFormat = function(item) {
+            if ( !item.id ) {
+                return item.text;
+            }
+
+            var span = document.createElement('span');
+            var imgUrl = item.element.getAttribute('data-kt-select2-country');
+            var template = '';
+
+            template += '<img src="' + imgUrl + '" class="rounded-circle h-20px me-2" alt="image"/>';
+            template += item.text;
+
+            span.innerHTML = template;
+
+            return $(span);
+        }
+
+        // Init Select2 --- more info: https://select2.org/
+        $('#user_currency').select2({
+            templateSelection: optionFormat,
+            templateResult: optionFormat
+        });
+
+        $('#kt_user_add_select2_country').select2({
+            templateSelection: optionFormat,
+            templateResult: optionFormat
+        });
     }
 };
 KTUtil.onDOMContentLoaded((function() {
     KTAppCountrySelectWithFlags.init()
+    KTAppCountrySelectWithFlags.init2()
 }));
+

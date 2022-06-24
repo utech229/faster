@@ -9,6 +9,7 @@ use App\Service\uBrand;
 use App\Service\BaseUrl;
 use App\Service\Services;
 use App\Service\BrickPhone;
+use App\Service\sTransaction;
 use App\Service\sAgregatorRouter;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -26,11 +27,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 #[Route('/{_locale}/home/user/payment_methods')]
 class PaymentMethodController extends AbstractController
 {
-    private $validateAmount = 1;
+    private $validateAmount = 100;
 
     public function __construct(Services $services, EntityManagerInterface $entityManager, TranslatorInterface $translator,
     UrlGeneratorInterface $urlGenerator, uBrand $brand, ValidatorInterface $validator, UserRepository $userRepository,
-    BrickPhone $brickPhone, BaseUrl $baseUrl, /*sAgregatorRouter $sAgregatorRouter*/){
+    BrickPhone $brickPhone, BaseUrl $baseUrl, sAgregatorRouter $sAgregatorRouter, sTransaction $sTransaction){
         $this->urlGenerator    = $urlGenerator;
         $this->intl            = $translator;
         $this->services        = $services;
@@ -40,7 +41,8 @@ class PaymentMethodController extends AbstractController
         $this->validator       = $validator;
         $this->brickPhone      = $brickPhone;
         $this->baseUrl         = $baseUrl;
-        //$this->sAgregatorRouter  = $sAgregatorRouter;
+        $this->sAgregatorRouter  = $sAgregatorRouter;
+        $this->sTransaction  = $sTransaction;
 
         $this->permission = [
             "MET0", "MET1",  "MET2", "MET3", "MET4"
@@ -85,27 +87,53 @@ class PaymentMethodController extends AbstractController
 			$countrycode                        =   $brickPhone->getRegionCode($phone);
 			$this->comptes[0]["newCountry"]	    =   $brickPhone->getCountryByCode($countrycode)['name'];
 			try{
-                $data = [
-                    'phone'         => $phone,
-                    'amount'        => $this->validateAmount,
-                    'description'   => $this->intl->trans('Verification du N° de Téléphone'),
-                    'canal'         => "online",
-                    'method'        => 'mobile',
-                    'object'        => '#MET0_number_validation',
-                    'object_uid'    => 'mobile_'.$user->getUid(),
-                ];
-                //$initPay = $this->sAgregatorRouter->processRouter($countrycode, $data);
+
+				$tdata = [ "amount" =>  $this->validateAmount, "afterBalance" => $user->getBalance() + $this->validateAmount];
+				$createdTrans = $this->sTransaction->create($tdata);
+				$data= array(
+					'description'      => $this->intl->trans('Verification du N° de Téléphone'),
+					'amount'           => $this->validateAmount,
+					'firstname'        => $user->getUsetting()->getFirstname(),
+					'lastname'         => $user->getUsetting()->getLastname(),
+					'email'            => $user->getEmail(),
+					'phone_number'     => $phone,
+					'internal_ref'     => $createdTrans['reference'],
+					'process'          => "Mobile",
+					'expired'          => date("Y-m-d H:i:s"),
+				);
+
+                $initPay = $this->sAgregatorRouter->processRouter($countrycode, $data);
 
 				$user->setPaymentAccount($this->comptes);
 				$this->em->persist($user);
 				$this->em->flush();
 
+
+				if ($initPay['response']['status'] == true) 
+				{
+					if (isset($initPay['link'])) {
+						return $this->services->msg_success(
+							$this->intl->trans("Mise à jour de données de la méthode de paiement Mobile"),
+							$initPay['response']['message'],["token" => $initPay['link']]
+						);
+					}else {
+						return $this->services->msg_success(
+							$this->intl->trans("Mise à jour de données de la méthode de paiement Mobile"),
+							$initPay['response']['message']
+						);
+					}
+				}
+				else {
+					return $this->services->msg_info(
+						$this->intl->trans("Mise à jour de données de la méthode de paiement Mobile"),
+						$initPay['response']['message']
+					);
+				}
+
 				return $this->services->msg_success(
 					$this->intl->trans("Mise à jour de données de la méthode de paiement Mobile"),
 					$this->intl->trans("Enrégistrés avec succès")
 				);
-
-				//return $initPay;
 			}
 			catch(Exception $e)
 			{

@@ -50,8 +50,8 @@ class uBrand extends AbstractController
            ],
            'year'               => date('Y'),
            'brand'              =>  $brand,
-
-           
+           'loginform'           => ($brand->getName() == "FASTERMESSAGE") ? "login.html.twig" : "login2.html.twig",           
+           'regisform'           => ($brand->getName() == "FASTERMESSAGE") ? "register.html.twig" : "register2.html.twig",           
        ];
     }
   

@@ -25,8 +25,8 @@ class sBrand extends AbstractController
            'logo_link'          => $this->baseUrl->init().'/vitrine/img/logo.png',
            'text_logo_link'     => $this->baseUrl->init().'/vitrine/img/logo-text.png',
            'white_logo_link'    => $this->baseUrl->init().'/vitrine/img/logo-white.png',
-           'favicon_link'       => $this->baseUrl->init().'/vitrine/img/favicon.png',
-           'apple_touch_icon_link' => $this->baseUrl->init().'/vitrine/img/apple-touch-icon.png',
+           'favicon_link'           => $this->baseUrl->init().'/vitrine/img/favicon.png',
+           'apple_touch_icon_link'  => $this->baseUrl->init().'/vitrine/img/apple-touch-icon.png',
            'logo_cover_link'    => $this->baseUrl->init().'/vitrine/img/logo-cover.jpg',
            'phone'              => [
                                     'bj' => '+22952735555',

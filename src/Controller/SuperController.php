@@ -108,7 +108,7 @@ class SuperController extends AbstractController
             $user->setPhone($phone_number);
             $user->setEmail($this->brand->get()['emails']['support']);
             $user->setUid($this->services->idgenerate(30));
-            $user->setApiKey($this->services->idgenerate(30));
+            $user->setApiKey(bin2hex(random_bytes(32)));
             $user->setPostPay(1);
             $user->setPaymentAccount($this->comptes);
             $user->setIsDlr(1);
@@ -120,7 +120,7 @@ class SuperController extends AbstractController
             $user->setProfilePhoto('default_avatar_1.png');
             $user->setCreatedAt(new \DatetimeImmutable());
             $user->setPassword(
-            // encode the plain password
+            //encode the plain password
             $userPasswordHasher->hashPassword($user, '@21061AdminDefault'));
             $this->userRepository->add($user);
             $this->AddEntity->defaultUsetting($user,  [
@@ -152,8 +152,10 @@ class SuperController extends AbstractController
             $brand->setCreator($existed_user);
             $brand->setValidator($existed_user);
             $brand->setDefaultSender($sender);
+
             $this->companyRepository->add($company, true);
             $this->brandRepository->add($brand, true);
+            
             $existed_user->setAccountManager($existed_user)->setBrand($brand);
             $this->userRepository->add($existed_user);
             return $this->services->msg_success(

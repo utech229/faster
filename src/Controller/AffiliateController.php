@@ -94,8 +94,6 @@ class AffiliateController extends AbstractController
                 return $this->updateAffiliate($request, $form, $affiliate);
             }
         }
-        
-        $statistics =  $this->statisticsData();
         $this->services->addLog($this->intl->trans('Accès au menu affiliés'));
 
         list($affiliateType, $masterId, $affiliateRequest) = $this->services->checkThisUser($this->pView);
@@ -116,7 +114,6 @@ class AffiliateController extends AbstractController
             'pEditAffiliate'       => $this->pUpdate,
             'pDeleteAffiliate'     => $this->pDelete,
             'pViewAffiliate'       => $this->pView,
-            'stats'           => $statistics,
         ]);
     }
 
@@ -345,25 +342,6 @@ class AffiliateController extends AbstractController
         list($affiliateType, $masterId, $affiliateRequest) = $this->services->checkThisUser($this->pView);
         $affiliates = $this->userRepository->getUsersByPermission('',$affiliateType,$masterId, 2);
         return $affiliates;
-    }
-
-    public function statisticsData()
-    {
-        $allAffiliates     = $this->userRepository->countAllUsers()[0][1];
-        $pendingAffiliates = $this->userRepository->countAllUsersByStatus(0)[0][1];
-        $activeAffiliates  = $this->userRepository->countAllUsersByStatus(1)[0][1];
-        $desactivatedAffiliates = $this->userRepository->countAllUsersByStatus(2)[0][1];
-        $suspendedAffiliates = $this->userRepository->countAllUsersByStatus(3)[0][1];
-        $deletedAffiliates = $this->userRepository->countAllUsersByStatus(4)[0][1];
-
-        return [
-            'all'          => $allAffiliates,
-            'pending'      => $pendingAffiliates,
-            'active'       => $activeAffiliates,
-            'desactivated' => $desactivatedAffiliates,
-            'suspended'    => $suspendedAffiliates,
-            'deleted'      => $deletedAffiliates,
-        ];
     }
 
     #[Route('/statisticsDataByAjax', name: 'get_statistics_data', methods: ['POST'])]

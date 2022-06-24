@@ -32,20 +32,11 @@ class RegistrationFormType extends AbstractType
     {
         $builder
             ->add('phone', TelType::class, [
-                "attr"=>["class"=>"form-control input-radius", "placeholder"=>"Téléphone", "required"=>true], "label"=>false
+                "attr"=>["class"=>"form-control input-radius tel", "placeholder"=>"Téléphone", "required"=>true], "label"=>false
             ])
             ->add('email', EmailType::class,[
                 "attr"=>["class"=>"form-control input-radius", "placeholder"=>"Email", "required"=>true
             ], "label"=>false
-            ])
-            ->add('agreeTerms', CheckboxType::class, [
-                'mapped' => false,
-                'label' => false,
-                'constraints' => [
-                    new IsTrue([
-                        'message' => $this->intl->trans('Vous devez accepter les Termes et Conditions'),
-                    ]),
-                ],
             ])
             ->add('plainPassword', PasswordType::class, [
                 // instead of being set onto the object directly,
