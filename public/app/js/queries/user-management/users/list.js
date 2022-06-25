@@ -250,7 +250,6 @@ var KTUsersList = function() {
                         targets: 7,
                         render: function(data, type, full, meta) {
                             return viewTime(data);
-                            //return  dateFormat(moment(data, "YYYY-MM-DDTHH:mm:ssZZ").format());
                         }
                     },
                     {
@@ -258,7 +257,6 @@ var KTUsersList = function() {
                         targets: 8,
                         render: function(data, type, full, meta) {
                             return viewTime(data);
-                            //return  dateFormat(moment(data, "YYYY-MM-DDTHH:mm:ssZZ").format());
                         }
                     },{
                         targets: 9,
@@ -349,7 +347,7 @@ var KTUsersList = function() {
 
                         { data: 'action',responsivePriority: -9 },
                     ],
-                    "info": true,
+                    info: true,
                     lengthMenu: [10, 25, 100, 250, 500, 1000],
                     pageLength: 10,
                     lengthChange: !1,
