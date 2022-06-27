@@ -3,6 +3,8 @@
 namespace App\Repository;
 
 use App\Entity\Recharge;
+use App\Entity\User;
+use App\Entity\Brand;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -39,6 +41,20 @@ class RechargeRepository extends ServiceEntityRepository
         }
     }
 
+    //Manager id
+    public function getRechargeByManager($idManager){
+        return
+        $this->createQueryBuilder('r')
+        ->from(User::class, "u")
+        ->andWhere('r.user = u.id')
+        ->andWhere('u.accountManager = :id')
+        ->setParameter('id', $idManager)->orderBy('r.id', 'DESC')->getQuery()->getResult();
+    }
+    //Reselle id
+    public function getRechargeByReseller($idReseller){
+        return $this->createQueryBuilder('r')->from(User::class, "u")->from(Brand::class, "b")->andWhere('r.user = u.id')->andWhere('u.brand = b.id')
+        ->andWhere('b.manager = :id')->setParameter('id', $idReseller)->orderBy('r.id', 'DESC')->getQuery()->getResult();
+    }
 //    /**
 //     * @return Recharge[] Returns an array of Recharge objects
 //     */
