@@ -8,7 +8,8 @@
     {% endfor %}
     
     <!--begin::Wrapper-->
-    <div class="w-lg-600px bg-body rounded shadow-sm p-10 p-lg-15 mx-auto">
+    <div class="w-lg-600px bg-body rounded shadow-sm p-10 p-lg-15 mx-auto border border-dashed border-primary">
+        {% include 'section/login.intl.dropdown.html.twig' %}
         <!--begin::Form-->
          {{ form_start(registrationForm,{'attr': {'class': 'form w-100','novalidate': 'novalidate','id':'kt_sign_up_form' }}) }}
         {#<form class="form w-100" novalidate="novalidate" id="kt_sign_up_form">#}

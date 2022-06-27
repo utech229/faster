@@ -1,0 +1,22 @@
+<div class="dropdown" style="text-align: right !important; margin-right: -35px !important; list-style: none !important; margin-bottom: 0px;margin-top: -35px;">
+			<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="true">
+				{% if _locale == 'fr' %}
+					FR  <img src="{{ asset('app/media/flags/france.svg') }}" style="border-radius: 2px" width="17" height="17" alt="{% trans %}Marketing digital{% endtrans %}">
+				{% else %}
+					EN <img src="{{ asset('app/media/flags/england.svg') }}" style="border-radius: 2px" width="17" height="17" alt="{% trans %}Publicité{% endtrans %}">
+				{% endif %}
+			</button>
+			<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+				 {% if _locale == 'fr' %}
+					<li><a href="{{path(app.request.get('_route'), app.request.get('_route_params')|merge({'_locale':'en'}))}}" class="dropdown-item" id="textBackMHdrop1">
+						<img src="{{ asset('app/media/flags/england.svg') }}" style="border-radius: 10px" width="15" height="15" alt="{% trans %}annonce en ligne{% endtrans %}">
+						<b>{% trans %} Anglais{% endtrans %}</b>
+					</a></li>
+				{% else %}
+					<li><a href="{{path(app.request.get('_route'), app.request.get('_route_params')|merge({'_locale':'fr'}))}}" class="dropdown-item" id="textBackMHdrop2">
+						<img src="{{ asset('app/media/flags/france.svg') }}" style="border-radius: 10px" width="15" height="15" alt="{% trans %}Base de contact{% endtrans %}">
+						<b>{% trans %} Français{% endtrans %}</b>
+					</a></li>
+				{% endif %}
+			</ul>
+		</div>

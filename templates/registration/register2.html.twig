@@ -8,6 +8,7 @@
     {% endfor %}
     <!--begin::Wrapper-->
     <div class="d-flex flex-center p-15 shadow-sm bg-body rounded w-100 w-md-550px mx-auto ms-xl-20">
+        {% include 'section/login.intl.dropdown.html.twig' %}
         <!--begin::Form-->
         {{ form_start(registrationForm,{'attr': {'class': 'form w-100','novalidate': 'novalidate','id':'kt_sign_up_form' }}) }}
      

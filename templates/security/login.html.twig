@@ -15,7 +15,8 @@
           <input type="hidden" name="flashMessages" id="flashMessages" value="{{ error.messageKey|trans(error.messageData, 'security') }}"></input>
     {% endif %}
 	<!--begin::Wrapper-->
-	<div class="w-lg-500px p-10 p-lg-15 mx-auto">
+	<div class="w-lg-500px p-10 p-lg-15 mx-auto  rounded shadow-sm p-10 p-lg-15 mx-auto border border-dashed border-primary">
+		{% include 'section/login.intl.dropdown.html.twig' %}
 		<!--begin::Form-->
 		<form class="form w-100" novalidate="novalidate" id="kt_sign_in_form" method="post">
 			<!--begin::Heading-->
