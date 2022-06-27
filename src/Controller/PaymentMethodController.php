@@ -63,11 +63,11 @@ class PaymentMethodController extends AbstractController
     #[Route('/payment/mobile', name: 'app_mobile_paiement')]
 	public function payment_mobile(Request $request, sAgregatorRouter $sAgregatorRouter, BrickPhone $brickPhone): JsonResponse
 	{
-		if (!$this->pCreate) return $this->services->ajax_ressources_no_access($this->intl->trans('Mise à jour de la méthode de paiement mobile'));
+		if (!$this->pCreate) return $this->services->no_access($this->intl->trans('Mise à jour de la méthode de paiement mobile'));
 		//Vérification du tokken
 		$token		=	$request->request->get("_token");
 		if(!$this->isCsrfTokenValid($this->getUser()->getUid(), $token))
-        return $this->services->ajax_ressources_no_access($this->intl->trans("Mise à jour de la méthode de paiement mobile"));
+        return $this->services->no_access($this->intl->trans("Mise à jour de la méthode de paiement mobile"));
 
 		//user entity
 		$user = $this->getUser();
@@ -103,12 +103,16 @@ class PaymentMethodController extends AbstractController
 				);
 
                 $initPay = $this->sAgregatorRouter->processRouter($countrycode, $data);
+				$trid = $initPay['id_transaction'];
+				//dd($initPay['id_transaction']);
+				//dd($trid);
+				$trans = $createdTrans['entity'];
+				$trans->setTransactionId($trid);
+				$this->em->persist($trans);
 
 				$user->setPaymentAccount($this->comptes);
 				$this->em->persist($user);
 				$this->em->flush();
-
-
 				if ($initPay['response']['status'] == true) 
 				{
 					if (isset($initPay['link'])) {
@@ -145,7 +149,7 @@ class PaymentMethodController extends AbstractController
 
 		}else{
 			$this->comptes[0]["Owner"]	    =	$ownerName;
-			$this->comptes[0]["Operator"]		=	$operator;
+			$this->comptes[0]["Operator"]	=	$operator;
 			$user->setPaymentAccount($this->comptes);
 			$this->em->persist($user);
 			$this->em->flush();
@@ -162,7 +166,7 @@ class PaymentMethodController extends AbstractController
 	{
 		//Vérification du tokken
 		if (!$this->isCsrfTokenValid($this->getUser()->getUid(), $request->request->get('_token'))) 
-		return $this->services->ajax_ressources_no_access($this->intl->trans("Suppression d'une méthode de paiement"));
+		return $this->services->no_access($this->intl->trans("Suppression d'une méthode de paiement"));
 
 		if(!$this->pDelete){
 			return $this->services->msg_error(
@@ -208,7 +212,7 @@ class PaymentMethodController extends AbstractController
     {
 		$user = $this->getUser();
         if (!$this->isCsrfTokenValid($this->getUser()->getUid(), $request->request->get('_token'))) 
-        return $this->services->ajax_ressources_no_access($this->intl->trans("Récupération de des méthods de paiements").': '.$user->getEmail());
+        return $this->services->no_access($this->intl->trans("Récupération de des méthods de paiements").' : '.$user->getEmail());
 
 		$momo = $user->getPaymentAccount()[0];
         $row['momo'] =  [
@@ -220,4 +224,6 @@ class PaymentMethodController extends AbstractController
             'data' => $row, 
             'message' => $this->intl->trans('Vos données sont chargés avec succès.')]);
     }  
+
+	
 }

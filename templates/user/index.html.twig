@@ -31,9 +31,7 @@
                         </span>
                         <div class="d-flex flex-column text-end">
                             <span class="text-dark fw-bolder fs-2" id="stat_all">
-                            {% if stats is defined %}
-                                        {{ stats.all }}
-                                        {% endif %}
+                            0
                             </span>
                             <span class="text-muted fw-bold mt-1">{{ 'Utilisateurs' | trans }}</span>
                         </div>
@@ -62,10 +60,8 @@
                             </span>
                         </span>
                         <div class="d-flex flex-column text-end">
-                            <span class="text-dark fw-bolder fs-2" id="stat_active">
-                            {% if stats is defined %}
-                                        {{ stats.active }}
-                                        {% endif %}
+                            <span class="text-dark fw-bolder fs-2" id="stat_actif">
+                            0
                             </span>
                             <span class="text-muted fw-bold mt-1">Actifs</span>
                         </div>
@@ -93,10 +89,8 @@
                             </span>
                         </span>
                         <div class="d-flex flex-column text-end">
-                            <span class="text-dark fw-bolder fs-2" id="stat_all">
-                            {% if stats is defined %}
-                                        {{ stats.pending }}
-                                        {% endif %}
+                            <span class="text-dark fw-bolder fs-2" id="stat_pending">
+                            0
                             </span>
                             <span class="text-muted fw-bold mt-1">{{"En attente"|trans}}</span>
                         </div>

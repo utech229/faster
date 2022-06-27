@@ -34,13 +34,14 @@ class sTransaction extends AbstractController
         $transaction->setAmount($data['amount']);
         $transaction->setBeforeBalance($user->getBalance());
         $transaction->setAfterBalance($data['afterBalance']);
-        $transaction->setStatus($this->services->status(3));
+        $transaction->setStatus($this->services->status(2));
         $transaction->setCreatedAt(new \DatetimeImmutable());
         $this->transactionRepository->add($transaction);
         $this->services->addLog($this->intl->trans("Création de la transaction").' : '.$ref);
         return [
             'reference' => $ref,
-            'status'    => true
+            'status'    => true,
+            'entity'    => $transaction
         ];
     }
     

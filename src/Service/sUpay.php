@@ -114,6 +114,7 @@ class sUpay extends AbstractController
                         "status"  => false,
                         "message" => $dataDecode->response->api->message
                     ],
+                    'id_transaction'=> $dataDecode->id_transaction, 
                     'message'          => $dataDecode->response->api->message,
                 ];
                     break;
@@ -131,38 +132,106 @@ class sUpay extends AbstractController
         return $return;
     }
 
- 
-    public function callApi($info){
-        $url = "http://pay.zekin.app/api/v1/transactions/create";
-        $headers = [
-                    "Accept: application/json", 
-                    "Authorization: Bearer l0899bzWX40trcpqxwC545", 
-                    "Content-Type: application/json",
-                    "Environment: prod"
-        ];
-        // dd($info);
-        $data = [
-            "description"   => $info['description'], "amount"          => $info['amount'], "firstname"    => $info['firstname'], "lastname" => $info['lastname'],
-            "email"         => $info['email'], "phone_number"  => $info['phone_number'], "internal_ref"  => $info['internal_ref'],
-            "process"       => $info['process'],"expired"      => $info['expired']
-        ];
-        $url = $url."?".http_build_query($data); 
-        $curl = curl_init(); 
-        curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($curl, CURLOPT_URL, $url); 
-        curl_setopt($curl, CURLOPT_HEADER, false);
-        curl_setopt($curl, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1); 
+    public function status($transactionId)
+    {
+        
+
+        $sendtransacurl_prefix  = "http://pay.zekin.app/api/v1/transaction/status";
+        $apikey                 = "l0899bzWX40t65JE45SrcpqxwZ42";
+        $headers                = [
+                                        "Accept: application/json", 
+                                        'Authorization: Bearer '.$apikey, 
+                                        "Content-Type: application/json",
+                                        "Environment: prod"
+                                ];
+
+        $curl = curl_init();
+        $transacurl_params = array(
+            'id_transaction'  => $transactionId,
+        );
+        $sendsmsurl = $sendtransacurl_prefix."?".http_build_query($transacurl_params);
+     
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        $resp = curl_exec($curl); 
+        curl_setopt($curl, CURLOPT_URL, $sendsmsurl);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($curl, CURLOPT_ENCODING, '');
+        curl_setopt($curl, CURLOPT_MAXREDIRS, 10);
+        curl_setopt($curl, CURLOPT_TIMEOUT ,0);
+        curl_setopt($curl, CURLOPT_HTTP_VERSION,  CURL_HTTP_VERSION_1_1);
+       
+        $resp   = curl_exec($curl); 
         $status = curl_getinfo($curl, CURLINFO_HTTP_CODE); 
         curl_close($curl); 
-        $dataDecode = json_decode($resp);
-        $return = [
-                        'link'          => $dataDecode->response->api->url, 'status'        => $dataDecode->status,
-                        'id_transaction'=> $dataDecode->id_transaction, 'external_ref'      => $dataDecode->external_ref
-        ];
-        // dd($return);
-        return $return;
+
+
+        dd($resp, $status);
+        /*$dataDecode = json_decode($resp);
+
+        if(isset($dataDecode->response))
+        {
+            switch ($dataDecode->response->status) 
+            {
+                case 200:
+                    $return = [ 
+                        'response' => [
+                            "status"  => true,
+                            "message" => $this->intl->trans("Veuillez confirmer le paiement initialisé sur votre numéro pour valider l'opération")
+                        ], 
+                        'status'        => $dataDecode->status,
+                        'id_transaction'=> $dataDecode->id_transaction, 
+                        'external_ref'  => $dataDecode->external_ref,
+                        'message'       => $dataDecode->response->api->message,
+                    ];
+                    break;
+                case 300:
+                    $return = [ 
+                        'response' => [
+                            "status"  => true,
+                            "message" => $this->intl->trans("Paiement initialisé, redirection ...")
+                        ],
+                        'link'          => $dataDecode->response->api->url, 
+                        'status'        => $dataDecode->status,
+                        'id_transaction'=> $dataDecode->id_transaction, 
+                        'external_ref'  => $dataDecode->external_ref,
+                        'message'       => $dataDecode->response->api->message,
+                    ];
+                    break;
+                case 301:
+                    $return = [ 
+                        'response' => [
+                            "status"  => true,
+                            "message" => $this->intl->trans("Paiement initialisé, redirection ...")
+                        ],
+                        'link'          => $dataDecode->response->api->url, 
+                        'status'        => $dataDecode->status,
+                        'id_transaction'=> $dataDecode->id_transaction, 
+                        'external_ref'  => $dataDecode->external_ref,
+                        'message'          => $dataDecode->response->api->message,
+                    ];
+                    break;
+                default:
+                $return = [ 
+                    'response' => [
+                        "status"  => false,
+                        "message" => $dataDecode->response->api->message
+                    ],
+                    'id_transaction'=> $dataDecode->id_transaction, 
+                    'message'          => $dataDecode->response->api->message,
+                ];
+                    break;
+            }
+        }
+        else 
+        {
+            $return = [ 
+                'response' => [
+                                "status"  => false,
+                                "message" => $this->intl->trans("Error or bad response")
+                            ]
+            ];
+        }
+        return $return;*/
     }
 
     
