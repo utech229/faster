@@ -302,8 +302,20 @@ class UserController extends AbstractController
 
         $data = [];
         $users = (!$this->pAccess) ? [] : $this->getUsersByRoles();
+        $all = count($users); $actif = 0; $pending = 0;
         foreach ($users  as $user) 
 		{          
+            switch ($user->getStatus()->getCode()) {
+                case 3:
+                    $actif++;
+                    break;
+                case 2:
+                    $pending++;
+                    break;
+                default:
+                    # code...
+                    break;
+            }
             $row                 = array();
             $usetting            = $user->getUsetting();
             $country             = $user->getCountry();
@@ -328,7 +340,7 @@ class UserController extends AbstractController
             $data []             = $row;
 		}
         $this->services->addLog($this->intl->trans('Lecture de la liste des utilisateurs'));
-        $output = array("data" => $data);
+        $output = array("data" => $data, "stats" => ['all' => $all, "pending" => $pending , "actif" => $actif ]);
         return new JsonResponse($output);
     }
 

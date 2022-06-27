@@ -1,5 +1,5 @@
 "use strict";
-
+var spanStatAll =	document.getElementById("stat_all"),spanStatActif = document.getElementById("stat_actif"), spanStatPending	= document.getElementById("stat_pending");
 
 var KTUsersList = function() {
     var e, t, n, r, x = document.querySelector("#export"), y = ".bt-export", o = document.getElementById("kt_table_users"),
@@ -138,6 +138,10 @@ var KTUsersList = function() {
                         data: {
                             _token: function(){ return csrfToken; }
                         },
+                        dataSrc: function(json) {
+                            spanStatAll.textContent = json.stats.all, spanStatActif.textContent = json.stats.actif, spanStatPending.textContent	= json.stats.pending
+                            return json.data;
+                        },
                         error: function () { 
                             $(document).trigger('toastr.tableListError');
                         }
@@ -250,7 +254,6 @@ var KTUsersList = function() {
                         targets: 7,
                         render: function(data, type, full, meta) {
                             return viewTime(data);
-                            //return  dateFormat(moment(data, "YYYY-MM-DDTHH:mm:ssZZ").format());
                         }
                     },
                     {
@@ -258,7 +261,6 @@ var KTUsersList = function() {
                         targets: 8,
                         render: function(data, type, full, meta) {
                             return viewTime(data);
-                            //return  dateFormat(moment(data, "YYYY-MM-DDTHH:mm:ssZZ").format());
                         }
                     },{
                         targets: 9,
@@ -349,7 +351,7 @@ var KTUsersList = function() {
 
                         { data: 'action',responsivePriority: -9 },
                     ],
-                    "info": true,
+                    info: true,
                     lengthMenu: [10, 25, 100, 250, 500, 1000],
                     pageLength: 10,
                     lengthChange: !1,
@@ -367,6 +369,8 @@ var KTUsersList = function() {
                 })), l(),
                 document.querySelector('[data-kt-user-table-filter="search"]').addEventListener("keyup", (function(t) {
                     e.search(t.target.value).draw()
+                    // console.log(e['context'][0])
+                    UpdateStat(e)         
                 })),
                 document.querySelector('[data-kt-user-table-filter="reset"]').addEventListener("click", (function() {
                     document.querySelector('[data-kt-user-table-filter="form"]').querySelectorAll("select").forEach((e => {
@@ -374,6 +378,7 @@ var KTUsersList = function() {
                             $(e).val("").trigger("change")
                         })),
                         e.search("").draw()
+                        UpdateStat(e)
                 })),
                 c(), (() => {
                     const t = document.querySelector('[data-kt-user-table-filter="form"]'),
@@ -390,6 +395,7 @@ var KTUsersList = function() {
                                     t += e.value)
                             })),
                             e.search(t).draw()
+                            UpdateStat(e)
                     }));
                 })
                 ())
@@ -400,3 +406,22 @@ var KTUsersList = function() {
 KTUtil.onDOMContentLoaded((function() {
     KTUsersList.init();
 }));
+
+function UpdateStat(e) {
+    // console.log(e['context'][0])
+    let filtre_tab = e['context'][0]['aoData']
+    let sum_tr_all = 0, sum_tr_pending = 0, sum_tr_actif = 0
+    e['context'][0]['aiDisplay'].forEach(function(item){
+    sum_tr_all      +=  1;
+
+    if (parseInt(filtre_tab[item]['_aData'][6]) == 3) {
+        sum_tr_actif        +=  1;
+
+    }
+    else if(parseInt(filtre_tab[item]['_aData'][6]) == 2){
+        sum_tr_pending          +=  1;
+        
+    }
+    });
+    spanStatAll.textContent = sum_tr_all, spanStatPending.textContent = sum_tr_pending, spanStatActif.textContent = sum_tr_actif   
+}

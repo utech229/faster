@@ -28,7 +28,7 @@ class sAgregatorRouter extends AbstractController
         $this->intl     = $intl;
         $this->em       = $entityManager;
         $this->services = $services;
-        $this->sUpay = $sUpay;
+        $this->sUpay    = $sUpay;
     }
 
     public function processRouter($countrycode, $data)

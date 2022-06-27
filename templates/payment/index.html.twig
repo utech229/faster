@@ -197,7 +197,7 @@
                             <!--end::Export-->
 
                             <!--begin::Add request-->
-                            <a href="javascript:;" class="btn btn-primary"  {% if app.user and app.user.balance <= 0 %}disabled{% endif %} 
+                            <button class="btn btn-primary"{% if app.user and app.user.balance <= 0 %}disabled ="disabled"{% endif %} 
                             {% if app.user.paymentAccount == [] or app.user.paymentAccount[0]['Status'] and app.user.paymentAccount[0]['Status'] != 'approved' %} disabled{% endif %}  data-bs-toggle="modal" data-bs-target="#kt_modal_payment_request">
                             <!--begin::Svg Icon | path: icons/duotune/arrows/arr075.svg-->
                             <span class="svg-icon svg-icon-2">
@@ -206,7 +206,7 @@
                                     <rect x="4.36396" y="11.364" width="16" height="2" rx="1" fill="currentColor" />
                                 </svg>
                             </span>
-                            <!--end::Svg Icon-->{{'Demande de retrait'| trans}}</a>
+                            <!--end::Svg Icon-->{{'Demande de retrait 5'| trans}}</button>
 
                             <button type="button" class="btn btn-warning d-none" id="kt_modal_payment_request_treat_button" data-bs-toggle="modal" data-bs-target="#kt_modal_payment_request_treat">
                                 <span class="svg-icon svg-icon-2">
@@ -518,7 +518,7 @@
                                                 <!--end::Label-->
                                                 <!--begin::Col-->
                                                 <input type="tel" name="phone" id="mobile_phone" class="form-control tel form-control-lg form-control-solid" placeholder={{'Téléphone'|trans}} 
-                                                value="{% if app.user.paymentAccount != [] and app.user.paymentAccount[0]['Owner'] %}{% if app.user.paymentAccount[0]['Status'] == 'approved' %}{{app.user.paymentAccount[0]['Phone']}}{% else %}{{app.user.paymentAccount[0]['newPhone']}}{% endif %}{% endif %}"/>
+                                                value="{% if app.user.paymentAccount != [] and app.user.paymentAccount[0]['Owner'] %}{{app.user.paymentAccount[0]['Phone']}}{% else %}{{app.user.paymentAccount[0]['newPhone']}} {% endif %}"/>
                                                 <!--end::Col-->
                                             </div>
                                             <!--end::Col-->
