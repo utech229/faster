@@ -31,15 +31,27 @@ class ContactGroup
     #[ORM\JoinColumn(nullable: false)]
     private $manager;
 
-    #[ORM\OneToOne(mappedBy: 'contactGroup', targetEntity: ContactGroupField::class, cascade: ['persist', 'remove'])]
-    private $contactGroupField;
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $field1;
 
-    #[ORM\OneToMany(mappedBy: 'contactGroup', targetEntity: ContactIndex::class, orphanRemoval: true)]
-    private $contactIndices;
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $field2;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $field3;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $field4;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $field5;
+
+    #[ORM\OneToMany(mappedBy: 'contactGroup', targetEntity: Contact::class, orphanRemoval: true)]
+    private $contacts;
 
     public function __construct()
     {
-        $this->contactIndices = new ArrayCollection();
+        $this->contacts = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -107,50 +119,94 @@ class ContactGroup
         return $this;
     }
 
-    public function getContactGroupField(): ?ContactGroupField
+    public function getField1(): ?string
     {
-        return $this->contactGroupField;
+        return $this->field1;
     }
 
-    public function setContactGroupField(ContactGroupField $contactGroupField): self
+    public function setField1(?string $field1): self
     {
-        // set the owning side of the relation if necessary
-        if ($contactGroupField->getContactGroup() !== $this) {
-            $contactGroupField->setContactGroup($this);
-        }
+        $this->field1 = $field1;
 
-        $this->contactGroupField = $contactGroupField;
+        return $this;
+    }
+
+    public function getField2(): ?string
+    {
+        return $this->field2;
+    }
+
+    public function setField2(?string $field2): self
+    {
+        $this->field2 = $field2;
+
+        return $this;
+    }
+
+    public function getField3(): ?string
+    {
+        return $this->field3;
+    }
+
+    public function setField3(?string $field3): self
+    {
+        $this->field3 = $field3;
+
+        return $this;
+    }
+
+    public function getField4(): ?string
+    {
+        return $this->field4;
+    }
+
+    public function setField4(?string $field4): self
+    {
+        $this->field4 = $field4;
+
+        return $this;
+    }
+
+    public function getField5(): ?string
+    {
+        return $this->field5;
+    }
+
+    public function setField5(?string $field5): self
+    {
+        $this->field5 = $field5;
 
         return $this;
     }
 
     /**
-     * @return Collection<int, ContactIndex>
+     * @return Collection<int, Contact>
      */
-    public function getContactIndices(): Collection
+    public function getContacts(): Collection
     {
-        return $this->contactIndices;
+        return $this->contacts;
     }
 
-    public function addContactIndex(ContactIndex $contactIndex): self
+    public function addContact(Contact $contact): self
     {
-        if (!$this->contactIndices->contains($contactIndex)) {
-            $this->contactIndices[] = $contactIndex;
-            $contactIndex->setContactGroup($this);
+        if (!$this->contacts->contains($contact)) {
+            $this->contacts[] = $contact;
+            $contact->setContactGroup($this);
         }
 
         return $this;
     }
 
-    public function removeContactIndex(ContactIndex $contactIndex): self
+    public function removeContact(Contact $contact): self
     {
-        if ($this->contactIndices->removeElement($contactIndex)) {
+        if ($this->contacts->removeElement($contact)) {
             // set the owning side to null (unless already changed)
-            if ($contactIndex->getContactGroup() === $this) {
-                $contactIndex->setContactGroup(null);
+            if ($contact->getContactGroup() === $this) {
+                $contact->setContactGroup(null);
             }
         }
 
         return $this;
     }
+
 }
