@@ -274,7 +274,6 @@ class DbInitData extends AbstractController
         $this->em->flush();
     }
 
-    #[Route('/addauthorization', name: 'app_authorization')]
     public function addAuthorization(): void
     {
         $roleId = [7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,
