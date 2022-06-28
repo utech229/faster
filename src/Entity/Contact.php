@@ -33,13 +33,24 @@ class Contact
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     private $updatedAt;
 
-    #[ORM\OneToMany(mappedBy: 'contact', targetEntity: ContactIndex::class, orphanRemoval: true)]
-    private $contactIndices;
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $field1;
 
-    public function __construct()
-    {
-        $this->contactIndices = new ArrayCollection();
-    }
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $field2;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $field3;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $field4;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $field5;
+
+    #[ORM\ManyToOne(targetEntity: ContactGroup::class, inversedBy: 'contacts')]
+    #[ORM\JoinColumn(nullable: false)]
+    private $contactGroup;
 
     public function getId(): ?int
     {
@@ -118,33 +129,76 @@ class Contact
         return $this;
     }
 
-    /**
-     * @return Collection<int, ContactIndex>
-     */
-    public function getContactIndices(): Collection
+    public function getField1(): ?string
     {
-        return $this->contactIndices;
+        return $this->field1;
     }
 
-    public function addContactIndex(ContactIndex $contactIndex): self
+    public function setField1(?string $field1): self
     {
-        if (!$this->contactIndices->contains($contactIndex)) {
-            $this->contactIndices[] = $contactIndex;
-            $contactIndex->setContact($this);
-        }
+        $this->field1 = $field1;
 
         return $this;
     }
 
-    public function removeContactIndex(ContactIndex $contactIndex): self
+    public function getField2(): ?string
     {
-        if ($this->contactIndices->removeElement($contactIndex)) {
-            // set the owning side to null (unless already changed)
-            if ($contactIndex->getContact() === $this) {
-                $contactIndex->setContact(null);
-            }
-        }
+        return $this->field2;
+    }
+
+    public function setField2(?string $field2): self
+    {
+        $this->field2 = $field2;
 
         return $this;
     }
+
+    public function getField3(): ?string
+    {
+        return $this->field3;
+    }
+
+    public function setField3(?string $field3): self
+    {
+        $this->field3 = $field3;
+
+        return $this;
+    }
+
+    public function getField4(): ?string
+    {
+        return $this->field4;
+    }
+
+    public function setField4(?string $field4): self
+    {
+        $this->field4 = $field4;
+
+        return $this;
+    }
+
+    public function getField5(): ?string
+    {
+        return $this->field5;
+    }
+
+    public function setField5(?string $field5): self
+    {
+        $this->field5 = $field5;
+
+        return $this;
+    }
+
+    public function getContactGroup(): ?ContactGroup
+    {
+        return $this->contactGroup;
+    }
+
+    public function setContactGroup(?ContactGroup $contactGroup): self
+    {
+        $this->contactGroup = $contactGroup;
+
+        return $this;
+    }
+
 }

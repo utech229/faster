@@ -1,7 +1,8 @@
 
 "use strict";
+var allHidden = [];
 
-var KTTransactionsList = function() {
+var KTContactList = function() {
     var e, t, n, r, o = document.getElementById("kt_contacts_table"),
         c = () => {
             o.querySelectorAll('[data-kt-contact-table-filter="delete_row"]').forEach((t => {
@@ -246,7 +247,38 @@ var KTTransactionsList = function() {
 }();
 
 KTUtil.onDOMContentLoaded((function() {
-    KTTransactionsList.init();
+    KTContactList.init();
 }));
 
+$('#kt_docs_repeater_basic').repeater({
+    initEmpty: true,
+
+    defaultValues: {
+        'text-input': 'foo'
+    },
+
+    show: function () {
+        $(this).slideDown();
+        var inputs = document.querySelectorAll("[data-name=phone]");
+
+        inputs.forEach((input, index) => {
+            var div = input.closest("div.fv");
+            var tel = allHidden[$(input).attr("data-index")];
+            var phone = tel ? tel.getNumber() : intl[0].getNumber();
+            var iti = div.querySelector(".iti");
+            $(iti).remove();
+            if(inputs.length == index+1){ phone = "";}
+            $(div).html(`<input type="tel" value="`+phone+`" name="kt_docs_repeater_basic[`+index+`][phone]" data-index="`+index+`" data-name="phone" class="form-control " placeholder="97979797" />`)
+        });
+        inputs = document.querySelectorAll("[data-name=phone]");
+        allHidden = [];
+        inputs.forEach((input, index) => {
+            allHidden[$(input).attr("data-index")] =  intlPhone(input);
+        });
+    },
+
+    hide: function (deleteElement) {
+        $(this).slideUp(deleteElement);
+    }
+});
 
