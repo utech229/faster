@@ -11,7 +11,7 @@ var KTSignupGeneral = function() {
     const isValidPhone = function() {
         return {
             validate: function(input) {
-                const full = intl.getNumber();
+                const full = intl['registration_form_phone'].getNumber();
                 if (full.length == 12 && full.substr(0, 6) == "+22952") {
                     return {
                         valid: true,
@@ -103,7 +103,7 @@ var KTSignupGeneral = function() {
                             }
                         }
                     },
-                    'registration_form[agreeTerms]': {
+                    'toc': {
                         validators: {
                             notEmpty: {
                                 message: _Condition_Confirm
@@ -139,8 +139,9 @@ var KTSignupGeneral = function() {
                     // Simulate ajax request
                     console.log(intl)
                     var data = $('#kt_sign_up_form').serializeArray();
-                    data.push({ name: 'full_number', value: intl.getNumber() })
-                    data.push({ name: 'country', value: intl.getSelectedCountryData()['iso2'] })
+                    data.push({ name: 'full_number', value: intl['registration_form_phone'].getNumber() })
+                    data.push({ name: 'country', value: intl['registration_form_phone'].getSelectedCountryData()['iso2'] })
+                    $('#user_currency_name').val($("#user_currency option:selected" ).text())
                     $.ajax({
                         url: register_url,
                         type: 'post',
@@ -152,7 +153,6 @@ var KTSignupGeneral = function() {
                                 submitButton.removeAttribute('data-kt-indicator');
                                 // Enable button
                                 submitButton.disabled = false;
-                                // Show message popup. For more info check the plugin's official documentation: https://sweetalert2.github.io/
                                 Swal.fire({
                                     title: response.title,
                                     text: response.message,
@@ -191,17 +191,7 @@ var KTSignupGeneral = function() {
                             }
                         },
                         error: function(response) {
-                            //$(document).trigger('ajaxError');
-                            Swal.fire({
-                                text: _ajaxErrorText,
-                                icon: "error",
-                                buttonsStyling: false,
-                                confirmButtonText: _Form_Ok_Swal_Button_Text_Notification,
-                                customClass: {
-                                    confirmButton: "btn btn-danger"
-
-                                }
-                            });
+                            $(document).trigger('ajaxError');
                             // Hide loading indication
                             submitButton.removeAttribute('data-kt-indicator');
                             // Enable button

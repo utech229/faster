@@ -11,6 +11,13 @@ $(document).on('click', '.cursor-mobile-carte', function(e){
     $('.phone-required').show();
 });
 
+$(document).on('click', '#self_recharge', function(e){
+    $('.uAction').hide();
+    $('#cursorBalance').hide();
+    $('input:radio[name=typeProcess]')[1].checked=true;
+    $('#kt_modal_recharge').modal('show');
+});
+
 
 var KTUsersRechargeUser = function() {
     const t = document.getElementById("kt_modal_recharge"),
@@ -25,6 +32,13 @@ var KTUsersRechargeUser = function() {
                             validators: {
                                 notEmpty: {
                                     message: msg_amount_required
+                                }
+                            }
+                        },
+                        'phone': {
+                            validators: {
+                                notEmpty: {
+                                    message: msg_phone_required
                                 }
                             }
                         },
@@ -82,7 +96,6 @@ var KTUsersRechargeUser = function() {
         }
     }
 }();
-
 //Load list
 var KTUsersLoadRecharge = function() {
     var t, e, n, r, o;
@@ -101,20 +114,22 @@ var KTUsersLoadRecharge = function() {
                     },
                     error: function () {
                         $(document).trigger('toastr.tableListError');
-                    }
+                    },
                 },
                 info: !1,
                 order: [[ 5, "desc" ]],
+
                 columnDefs: [{
                     orderable: !1,
                     targets: 0,
                 },
                 {
-                    targets: 3,
+                    targets: 4,
                     render: function(data, type, full, meta) {
                         var status = {
-                            true : { 'title': _Actif, 'class': 'success' },
-                            false : { 'title': _Disabled, 'class': 'danger' },
+                            2 : { 'title': _Pending, 'class': 'warning' },
+                            6 : { 'title': _approved, 'class': 'success' },
+                            7 : { 'title': _canceled, 'class': 'danger' },
                         };
                         if (typeof status[data] === 'undefined') {
                             return data;
@@ -122,7 +137,43 @@ var KTUsersLoadRecharge = function() {
                         return '<span class="badge badge-light-' + status[data].class + '">' + status[data].title + '</span>';
                     },
 
-                }]
+                },
+                {
+                    orderable: !1,
+                    targets: 6,
+                    visible: (!pDownload && !pRefresh) ? false : true,
+                    render : function (data,type, full, meta) {
+                        var downloadIcon =  `<button class="btn btn-icon btn-active-light-primary w-30px h-30px me-3 download" data-id=`+data.uid+`>
+                            <i id="editUserOption`+data.uid+`" aDownload title="`+_downloadMsg+`" class="fa fa-download"></i>
+                        </button>`;
+                        var reloadIcon =`
+                        <button class="btn btn-icon btn-active-light-primary w-30px h-30px reloadRecharge"
+                            data-id=`+data.uid+` data-kt-users-table-filter="delete_row">
+                                <i id="deleteUserOption`+data.uid+`" title="`+_reloadMsg+`" class="text-danger fonticon-repeat"></i>
+                        </button>`;
+
+                        var etat = (data.status== 6) ? downloadIcon : (data.status==7) ? '': reloadIcon ;
+
+                        return etat;
+                    }
+                }
+            ],
+                columns: [
+
+                    { data: 'ref'},
+
+                    { data: 'amount', responsivePriority: -5},
+
+                    { data: 'emailS', responsivePriority: -4  },
+
+                    { data: 'emailR' , responsivePriority: 0},
+
+                    { data: 'status'},
+
+                    { data: 'date'},
+
+                    { data: 'action',responsivePriority: -9 },
+                ],
             }),
             $('#kt_table_recharge_reload_button').on('click', function() {
                 t.ajax.reload(null, false);

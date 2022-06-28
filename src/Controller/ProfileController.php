@@ -162,23 +162,6 @@ class ProfileController extends AbstractController
                 $user->getProfilePhoto(),
             );
         }
-
-        /*$this->services->addLog($this->intl->trans('Accès au menu paramètre de compte'));
-        return $this->render('profile/setting.html.twig', [
-            'controller_name' => 'ProfileController',
-            'title'           => $this->intl->trans('Paramètre de compte').' - '. $this->brand->get()['name'],
-            'pageTitle'       => [
-                'one'   => $this->intl->trans('Paramètre'),
-                'two'   => $this->intl->trans('Mes Paramètres'),
-                'none'  => $this->intl->trans('Gestion de compte'),
-            ],
-            'brand'           => $this->brand->get(),
-            'baseUrl'         => $this->baseUrl->init(),
-            'cemailForm'      => $cemailform->createView(),
-            'pCreateUser'     => $this->pCreate,
-            'pEditUser'       => $this->pEdit,
-            'pDeleteUser'     => $this->pDelete,
-        ]);*/
         return $this->services->msg_success(
             $this->intl->trans("Gestion de profil : ").$user->getEmail(),
             $this->intl->trans("Gestion de profil exécuté"),

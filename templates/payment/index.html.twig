@@ -82,10 +82,10 @@
                     <!--begin::Row-->
                     <div class="row">
                          <!--begin::Alert-->
-                        <div class="alert alert-dismissible bg-light-primary border border-primary border  h-lg-100 d-flex flex-column flex-sm-row w-100 p-5">
+                        <div class="alert alert-dismissible bg-light-danger border border-danger border-dashed  h-lg-100 d-flex flex-column flex-sm-row w-100 p-5">
                             <!--begin::Icon-->
                             <!--begin::Svg Icon | path: icons/duotune/communication/com003.svg-->
-                            <span class="svg-icon svg-icon-2hx svg-icon-primary me-4 mb-5 mb-sm-0">
+                            <span class="svg-icon svg-icon-2hx svg-icon-danger me-4 mb-5 mb-sm-0">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
                                     <path opacity="0.3" d="M2 4V16C2 16.6 2.4 17 3 17H13L16.6 20.6C17.1 21.1 18 20.8 18 20V17H21C21.6 17 22 16.6 22 16V4C22 3.4 21.6 3 21 3H3C2.4 3 2 3.4 2 4Z" fill="currentColor" />
                                     <path d="M18 9H6C5.4 9 5 8.6 5 8C5 7.4 5.4 7 6 7H18C18.6 7 19 7.4 19 8C19 8.6 18.6 9 18 9ZM16 12C16 11.4 15.6 11 15 11H6C5.4 11 5 11.4 5 12C5 12.6 5.4 13 6 13H15C15.6 13 16 12.6 16 12Z" fill="currentColor" />
@@ -197,7 +197,7 @@
                             <!--end::Export-->
 
                             <!--begin::Add request-->
-                            <a href="javascript:;" class="btn btn-primary"  {% if app.user and app.user.balance <= 0 %}disabled{% endif %} 
+                            <button class="btn btn-primary"{% if app.user and app.user.balance <= 0 %}disabled ="disabled"{% endif %} 
                             {% if app.user.paymentAccount == [] or app.user.paymentAccount[0]['Status'] and app.user.paymentAccount[0]['Status'] != 'approved' %} disabled{% endif %}  data-bs-toggle="modal" data-bs-target="#kt_modal_payment_request">
                             <!--begin::Svg Icon | path: icons/duotune/arrows/arr075.svg-->
                             <span class="svg-icon svg-icon-2">
@@ -206,7 +206,7 @@
                                     <rect x="4.36396" y="11.364" width="16" height="2" rx="1" fill="currentColor" />
                                 </svg>
                             </span>
-                            <!--end::Svg Icon-->{{'Demande de retrait'| trans}}</a>
+                            <!--end::Svg Icon-->{{'Demande de retrait 5'| trans}}</button>
 
                             <button type="button" class="btn btn-warning d-none" id="kt_modal_payment_request_treat_button" data-bs-toggle="modal" data-bs-target="#kt_modal_payment_request_treat">
                                 <span class="svg-icon svg-icon-2">
@@ -499,10 +499,15 @@
                                                 <!--begin::Label-->
                                                 <label class="required fs-6 fw-bold form-label mb-2">{% trans %}Réseau GSM{% endtrans %}</label>
                                                 <!--end::Label-->
-                                                <select name="operator" id="momo_method_operator" class="form-select form-select-solid" data-control="select2" data-hide-search="true">
-                                                    <option value="MTN BENIN">MTN BENIN</option>
-                                                    <option value="MOOV AFRICA BENIN">MOOV AFRICA BENIN</option>
-                                                    
+                                                <select name="operator" id="momo_method_operator" data-kt-select2="true" data-placeholder="{{'Sélection de votre opérateur GSM' | trans}}"  data-dropdown-parent="#kt_modal_momo"  aria-label="{{'Sélection de devise' | trans}}" data-control="select2" data-placeholder="{{'Sélection de votre opérateur GSM' | trans}}" class="form-select form-select-solid form-select-lg">
+                                                    <option value=""></option>
+                                                    {% if gsmoperators is defined %}
+                                                        {% set opcounter = 0  %}
+                                                        {% for operator in gsmoperators %}
+                                                            {% set opcounter = opcounter + 1 %}
+                                                            <option {% if opcounter == 1 %}selected{% endif %} value="{{ operator.name }}">{{ operator.name }}</option>
+                                                        {% endfor %}
+                                                    {% endif %}
                                                 </select>
                                             </div>
                                             <!--end::Col-->
@@ -513,7 +518,7 @@
                                                 <!--end::Label-->
                                                 <!--begin::Col-->
                                                 <input type="tel" name="phone" id="mobile_phone" class="form-control tel form-control-lg form-control-solid" placeholder={{'Téléphone'|trans}} 
-                                                value="{% if app.user.paymentAccount != [] and app.user.paymentAccount[0]['Owner'] %}{% if app.user.paymentAccount[0]['Status'] == 'approved' %}{{app.user.paymentAccount[0]['Phone']}}{% else %}{{app.user.paymentAccount[0]['newPhone']}}{% endif %}{% else %}{{app.user.phone}}{% endif %}"/>
+                                                value="{% if app.user.paymentAccount != [] and app.user.paymentAccount[0]['Owner'] %}{{app.user.paymentAccount[0]['Phone']}}{% else %}{{app.user.paymentAccount[0]['newPhone']}} {% endif %}"/>
                                                 <!--end::Col-->
                                             </div>
                                             <!--end::Col-->
@@ -808,15 +813,15 @@
     const pEdit    = {{pEdit}};
 	const pDelete  = {{pDelete}};
 
-    const formMModalButton       = $("#kt_modal_payment_request_treat_button");
+    const formMModalButton      = $("#kt_modal_payment_request_treat_button");
     const mobile_payment_link   = "{{path('app_mobile_paiement')}}";
     const delete_method_link    = "{{path('paymentDataDelete')}}";
     const get_methods_link      = "{{path('app_payment_methods_get')}}";
     const payments_list_link    = "{{ path('app_payment_list') }}";
     const add_payment_link      = "{{ path('app_payment_add') }}";
-    const reject_payment_link    = "{{ path('app_payment_reject',{'uid': app.user.uid }) }}";
-    const validate_payment_link  = "{{ path('app_payment_validate', {'uid': app.user.uid }) }}";
-    const csrfToken              = "{{ csrf_token(app.user.uid) }}";
+    const reject_payment_link   = "{{ path('app_payment_reject',{'uid': app.user.uid }) }}";
+    const validate_payment_link = "{{ path('app_payment_validate', {'uid': app.user.uid }) }}";
+    const csrfToken             = "{{ csrf_token(app.user.uid) }}";
 </script>
 <!--end::Page Custom Javascript-->
 <!--begin::Page Vendors Javascript(used by this page)-->

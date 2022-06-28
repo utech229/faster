@@ -46,6 +46,12 @@ class Recharge
     #[ORM\Column(type: 'float')]
     private $afterCommission;
 
+    #[ORM\Column(type: 'float')]
+    private $beforeBalance;
+
+    #[ORM\Column(type: 'float', nullable: true)]
+    private $afterBalance;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -167,6 +173,30 @@ class Recharge
     public function setAfterCommission(float $afterCommission): self
     {
         $this->afterCommission = $afterCommission;
+
+        return $this;
+    }
+
+    public function getBeforeBalance(): ?float
+    {
+        return $this->beforeBalance;
+    }
+
+    public function setBeforeBalance(float $beforeBalance): self
+    {
+        $this->beforeBalance = $beforeBalance;
+
+        return $this;
+    }
+
+    public function getAfterBalance(): ?float
+    {
+        return $this->afterBalance;
+    }
+
+    public function setAfterBalance(?float $afterBalance): self
+    {
+        $this->afterBalance = $afterBalance;
 
         return $this;
     }

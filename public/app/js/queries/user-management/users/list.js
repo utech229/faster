@@ -1,5 +1,5 @@
 "use strict";
-
+var spanStatAll =	document.getElementById("stat_all"),spanStatActif = document.getElementById("stat_actif"), spanStatPending	= document.getElementById("stat_pending");
 
 var KTUsersList = function() {
     var e, t, n, r, x = document.querySelector("#export"), y = ".bt-export", o = document.getElementById("kt_table_users"),
@@ -138,6 +138,10 @@ var KTUsersList = function() {
                         data: {
                             _token: function(){ return csrfToken; }
                         },
+                        dataSrc: function(json) {
+                            spanStatAll.textContent = json.stats.all, spanStatActif.textContent = json.stats.actif, spanStatPending.textContent	= json.stats.pending
+                            return json.data;
+                        },
                         error: function () { 
                             $(document).trigger('toastr.tableListError');
                         }
@@ -182,9 +186,9 @@ var KTUsersList = function() {
                         render: function(data, type, full, meta) {
                             var status = {
                                 'ROLE_AFFILIATE_USER': { 'title': 'Affilié revendeur', 'class': 'warning' },
-                                'ROLE_AFFILIATE_RESELLER': { 'title': 'Affilié revendeur', 'class': 'warning' },
+                                'ROLE_AFFILIATE_RESELLER': { 'title': 'Affilié revendeur', 'class': 'primary' },
                                 'ROLE_RESELLER': { 'title': 'Revendeur', 'class': 'warning' },
-                                'ROLE_USER': { 'title': 'Utilisateur', 'class': 'danger' },
+                                'ROLE_USER': { 'title': 'Utilisateur', 'class': 'info' },
                                 'ROLE_ADMINISTRATOR': { 'title': 'Administrateur', 'class': 'secondary' },
                                 'ROLE_SUPER_ADMINISTRATOR': { 'title': 'Super administrateur', 'class': 'info' },
                             };
@@ -250,7 +254,6 @@ var KTUsersList = function() {
                         targets: 7,
                         render: function(data, type, full, meta) {
                             return viewTime(data);
-                            //return  dateFormat(moment(data, "YYYY-MM-DDTHH:mm:ssZZ").format());
                         }
                     },
                     {
@@ -258,7 +261,6 @@ var KTUsersList = function() {
                         targets: 8,
                         render: function(data, type, full, meta) {
                             return viewTime(data);
-                            //return  dateFormat(moment(data, "YYYY-MM-DDTHH:mm:ssZZ").format());
                         }
                     },{
                         targets: 9,
@@ -288,7 +290,7 @@ var KTUsersList = function() {
     
                     },{
                         targets: 11,
-                        visible: (data.roleLevel < 4) ? false : true,
+                        //visible: (roleLevel < 4) ? false : true,
                         render: function(data, type, full, meta) {
                             return data.name;
                         },
@@ -309,9 +311,16 @@ var KTUsersList = function() {
                                     <i id="deleteUserOption`+data+`" class="text-danger fa fa-trash-alt"></i>
                             </button>
                             <!--end::Delete-->`;
+                            var priceIcon =  `<!--begin::Price-->
+                            <button class="btn btn-icon btn-active-light-primary w-30px h-30px pricer" 
+                                data-id=`+data+` data-kt-users-table-filter="price_row">
+                                    <i id="priceOption`+data+`" class="text-info fas fa-money-bill"></i>
+                            </button>
+                            <!--end::Price-->`;
                             updaterIcon = (pEditUser) ? updaterIcon : '' ;
+                            priceIcon   = (pEditUser) ? priceIcon : '' ;
                             deleterIcon = (pDeleteUser) ? deleterIcon : '' ;
-                            return updaterIcon + deleterIcon;
+                            return updaterIcon + deleterIcon + priceIcon;
                         }
                     }],
                     columns: [
@@ -342,6 +351,8 @@ var KTUsersList = function() {
 
                         { data: 'action',responsivePriority: -9 },
                     ],
+                    info: true,
+                    lengthMenu: [10, 25, 100, 250, 500, 1000],
                     pageLength: 10,
                     lengthChange: !1,
                     language: {
@@ -358,25 +369,34 @@ var KTUsersList = function() {
                 })), l(),
                 document.querySelector('[data-kt-user-table-filter="search"]').addEventListener("keyup", (function(t) {
                     e.search(t.target.value).draw()
+                    // console.log(e['context'][0])
+                    UpdateStat(e)         
                 })),
                 document.querySelector('[data-kt-user-table-filter="reset"]').addEventListener("click", (function() {
                     document.querySelector('[data-kt-user-table-filter="form"]').querySelectorAll("select").forEach((e => {
+                             
                             $(e).val("").trigger("change")
                         })),
                         e.search("").draw()
+                        UpdateStat(e)
                 })),
                 c(), (() => {
                     const t = document.querySelector('[data-kt-user-table-filter="form"]'),
                         n = t.querySelector('[data-kt-user-table-filter="filter"]'),
                         r = t.querySelectorAll("select");
                     n.addEventListener("click", (function() {
+                        loading(true);
+                        setTimeout(() => {
+                            loading()
+                        }, 300);
                         var t = "";
                         r.forEach(((e, n) => {
                                 e.value && "" !== e.value && (0 !== n && (t += " "),
                                     t += e.value)
                             })),
                             e.search(t).draw()
-                    }))
+                            UpdateStat(e)
+                    }));
                 })
                 ())
                 
@@ -386,3 +406,22 @@ var KTUsersList = function() {
 KTUtil.onDOMContentLoaded((function() {
     KTUsersList.init();
 }));
+
+function UpdateStat(e) {
+    // console.log(e['context'][0])
+    let filtre_tab = e['context'][0]['aoData']
+    let sum_tr_all = 0, sum_tr_pending = 0, sum_tr_actif = 0
+    e['context'][0]['aiDisplay'].forEach(function(item){
+    sum_tr_all      +=  1;
+
+    if (parseInt(filtre_tab[item]['_aData'][6]) == 3) {
+        sum_tr_actif        +=  1;
+
+    }
+    else if(parseInt(filtre_tab[item]['_aData'][6]) == 2){
+        sum_tr_pending          +=  1;
+        
+    }
+    });
+    spanStatAll.textContent = sum_tr_all, spanStatPending.textContent = sum_tr_pending, spanStatActif.textContent = sum_tr_actif   
+}

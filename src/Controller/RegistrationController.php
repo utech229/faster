@@ -3,8 +3,15 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Entity\Router;
+use App\Service\uBrand;
+use App\Service\BaseUrl;
+use App\Service\Services;
+use App\Service\AddEntity;
+use App\Service\BrickPhone;
 use App\Security\EmailVerifier;
 use App\Form\RegistrationFormType;
+use App\Repository\UserRepository;
 use Symfony\Component\Mime\Address;
 use App\Repository\StatusRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -21,15 +28,23 @@ class RegistrationController extends AbstractController
 {
     private EmailVerifier $emailVerifier;
 
-    public function __construct(EmailVerifier $emailVerifier, StatusRepository $statusRepository)
+    public function __construct(EmailVerifier $emailVerifier, UserRepository $userRepository, StatusRepository $statusRepository, 
+    uBrand $brand, TranslatorInterface $intl, BaseUrl $baseUrl, Services $services, BrickPhone $brickPhone, AddEntity $addEntity)
     {
         $this->emailVerifier     = $emailVerifier;
         $this->statusRepository  = $statusRepository;
+        $this->userRepository    =  $userRepository;
         $this->comptes = [
 			['Owner' =>'','Operator'=>'','Phone'=>'','TransactionId'=>'','Country'=>'', 'Status'=>''],
 			['Banque'=>'','Country'=>'','NAccount'=>'','Swift'=>'','DocID'=>'','DocRIB'=>''],
 			['Owner' =>'','NBIN'=>'','CVV2'=>'','NAccount'=>'']
 		];
+        $this->brand = $brand;
+        $this->intl  = $intl;
+        $this->baseUrl = $baseUrl->init();
+        $this->services = $services;
+        $this->addEntity = $addEntity;
+        $this->brickPhone = $brickPhone;
     }
 
     #[Route('/{_locale}/register', name: 'app_register')]
@@ -40,24 +55,69 @@ class RegistrationController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            //emil verify 
+            $email = $form->get('email')->getData();
+            $isExistedUser = $this->userRepository->findOneBy(['email' => $email, 'brand' => $this->brand->get()['brand']]);
+            if ($isExistedUser) {
+                return $this->services->msg_error(
+                    $this->intl->trans("Ajout d'un nouvel utilisateur"),
+                    $this->intl->trans("Cet adresse email appartient à un compte existant, veuillez le changer"),
+                );
+            }
+
             // encode the plain password
             $user->setPassword(
             $userPasswordHasher->hashPassword($user, $form->get('plainPassword')->getData())
+            );
+
+            $countryCode   = strtoupper($request->request->get('country'));
+            $countryDatas  = $this->brickPhone->getInfosCountryFromCode($countryCode);
+            if ($countryDatas) {
+                $countryDatas  = [
+                    'dial_code' => $countryDatas['dial_code'],
+                    'code'      => $countryCode,
+                    'name'      => $countryDatas['name']
+                ];
+
+                $priceDatas = [
+                    'dial_code' => $countryDatas['dial_code'],
+                    'code'      => $countryCode,
+                    'name'      => $countryDatas['name'],
+                    'price'     => $countryCode == 'BJ' ? 12 : 25
+                ];
+            }else
+            return $this->services->msg_error(
+                $this->intl->trans("Insertion du tableau de données pays"),
+                $this->intl->trans("La recherche du nom du pays à échoué : BrickPhone"),
             );
 
             // A commenter revoir lorsque l'envoi des mail est activé
             $user->setCreatedAt(new \DatetimeImmutable());
             $user->setBalance(0);
             $user->setPaymentAccount($this->comptes);
-            $user->setApikey($this->services->idgenerate(32));
+            $user->setApikey(bin2hex(random_bytes(32)));
             $user->setUid(time().uniqid());
-            $user->setIsAffiliate(true);
-            $user->setIsVerified(true);
             $user->setPostPay(0);
             $user->setIsDlr(0);
+            $user->setRole($entityManager->getRepository(Role::Class)->findOneById(1));
+            $user->setRoles(['ROLE_USER']);
+            $user->setRouter($entityManager->getRepository(Router::Class)->findOneById(1));
+            $user->setBrand($this->brand->get()['brand']);
+            $user->setStatus($this->services->status(3));
+            $this->userRepository->add($user);
 
-            $entityManager->persist($user);
-            $entityManager->flush();
+            $settingData = [
+                'ccode' => $request->request->get('currency'),
+                'cname' => $request->request->get('currency_name'),
+                'ufirstname' => null,
+                'ulastname'  => null,
+            ];
+            $setDefaultSetting = $this->addEntity->defaultUsetting($user, $settingData);
+
+            return $this->services->msg_success(
+                $this->intl->trans("Création d'un nouvel utilisateur"),
+                $this->intl->trans("Votre compte à été crée avec succès, veuillez consulter votre boîte email pour valider votre compte. Merci")
+            );
 
             // generate a signed url and email it to the user
             /*$this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
@@ -68,11 +128,14 @@ class RegistrationController extends AbstractController
                     ->htmlTemplate('registration/confirmation_email.html.twig')
             );*/
             // do anything else you need here, like send an email
-
-            return $this->redirectToRoute('app_home');
+            //return $this->redirectToRoute('app_home');
         }
-
-        return $this->render('registration/register.html.twig', [
+        $brand = $this->brand->get();
+        return $this->render('registration/'.$this->brand->get()['regisform'], [
+            'title'           => $this->intl->trans('Inscription').' - '. $brand['name'],
+            'menu_text'       => $this->intl->trans('Inscription'),
+            'brand'           => $brand,
+            'baseUrl'         => $this->baseUrl,
             'registrationForm' => $form->createView(),
         ]);
     }

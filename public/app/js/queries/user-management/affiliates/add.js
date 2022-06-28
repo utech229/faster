@@ -1,9 +1,5 @@
 "use strict";
-
-$('#kt_affiliate_add_select2_country').val(intl.getSelectedCountryData()
-['iso2'].toUpperCase()).trigger('change'); //define default selection for country select
-
-var KTUsersAddUser = function() {
+var KTAffiliatesAddAffiliate = function() {
     const t = document.getElementById("kt_modal_add_affiliate"),
         e = t.querySelector("#kt_modal_add_affiliate_form"),
         n = new bootstrap.Modal(t)
@@ -57,6 +53,11 @@ var KTUsersAddUser = function() {
             
                             }
                         },
+                        'uBrand': {
+                            validators: {
+                                
+                            }
+                        },
                         'affiliate[email]': {
                             validators: {
                                 notEmpty: {
@@ -77,24 +78,24 @@ var KTUsersAddUser = function() {
                                 }
                             }
                         },
-                        'affiliate[gender]': {
-                            validators: {
-                                notEmpty: {
-                                    message: _Gender_Required
-                                }
-                            }
-                        },
-                        'user_city': {
-                            validators: {
-                                notEmpty: {
-                                    message: _City_Required
-                                }
-                            }
-                        },
-                        'role': {
+                        'affiliate[role]': {
                             validators: {
                                 notEmpty: {
                                     message: _Role_Required
+                                }
+                            }
+                        },
+                        'affiliate[is_dlr]': {
+                            validators: {
+                                notEmpty: {
+                                    message: _Required_Field
+                                }
+                            }
+                        },
+                        'affiliate[post_pay]': {
+                            validators: {
+                                notEmpty: {
+                                    message: _Required_Field
                                 }
                             }
                         },
@@ -108,13 +109,13 @@ var KTUsersAddUser = function() {
                         })
                     }
                 });
-                const i = t.querySelector('[data-kt-users-modal-action="submit"]');
+                const i = t.querySelector('[data-kt-affiliates-modal-action="submit"]');
                 i.addEventListener("click", (t => {
                     t.preventDefault(), o && o.validate().then((function(t) {
                         console.log("validated!"), "Valid" == t ? (i.setAttribute("data-kt-indicator", "on"), i.disabled = !0, 
-                        
-                           ajax_url = (isAffiliateUpdating == false) ? add_affiliate : window.location.href + '/' + userUidInput.val()+ '/edit',
-                            $('#affiliate_phone').val(intl.getNumber()),
+                            loading(true),
+                           ajax_url = (isAffiliateUpdating == false) ? add_affiliate : window.location.href + '/' + affiliateUidInput.val()+ '/edit',
+                            $('#affiliate_phone').val(intl['affiliate_phone'].getNumber()),
                             $.ajax({
                                 url: ajax_url,
                                 type: 'post',
@@ -125,7 +126,7 @@ var KTUsersAddUser = function() {
                                 async: true,
                                 dataType: 'json',
                                 success: function (response) {
-                                    i.removeAttribute("data-kt-indicator"), i.disabled = !1
+                                    i.removeAttribute("data-kt-indicator"), i.disabled = !1,loading();
                                     Swal.fire({
                                         text: response.message,
                                         icon: response.type,
@@ -135,73 +136,31 @@ var KTUsersAddUser = function() {
                                             confirmButton: "btn btn-primary"
                                         }
                                         
-                                    }).then((function(t) {
-                                        if (response.type === 'success') {
-                                            t.isConfirmed && e.reset();
-                                            tableReloadButton.click();
-                                            (isAffiliateUpdating == true) ? n.hide() : null;
-                                            statisticsReload();
-                                        }
-                                    }));
+                                    })
+                                    if (response.type === 'success') {
+                                        t.isConfirmed,e.reset(),tableReloadButton.click();
+                                        (isAffiliateUpdating == true) ? n.hide() : null;
+                                        statisticsReload();
+                                        $('#affiliate_is_dlr').val('0').trigger('change'), $('#affiliate_post_pay').val('0').trigger('change');
+                                    }
                                 },
                                 error: function (response) {
+                                    loading()
                                     i.removeAttribute("data-kt-indicator"), i.disabled = !1
                                     $(document).trigger('onAjaxError');
                                 }
-                            })) : $(document).trigger('onFormError');
+                            })) : $(document).trigger('onFormError'),loading();
                     }))
                 })), 
-                t.querySelector('[data-kt-users-modal-action="cancel"]').addEventListener("click", (t => {
-                    t.preventDefault(), Swal.fire({
-                        text: _Cancel_Question,
-                        icon: "warning",
-                        showCancelButton: !0,
-                        buttonsStyling: !1,
-                        confirmButtonText: _Yes,
-                        cancelButtonText: _No,
-                        customClass: {
-                            confirmButton: "btn btn-primary",
-                            cancelButton: "btn btn-active-light"
-                        }
-                    }).then((function(t) {
-                        t.value ? (e.reset(), n.hide()) : "cancel" === t.dismiss && Swal.fire({
-                            text: _no_cancel_form,
-                            icon: "error",
-                            buttonsStyling: !1,
-                            confirmButtonText: _Form_Ok_Swal_Button_Text_Notification,
-                            customClass: {
-                                confirmButton: "btn btn-primary"
-                            }
-                        })
-                    }))
-                })), t.querySelector('[data-kt-users-modal-action="close"]').addEventListener("click", (t => {
-                    t.preventDefault(), Swal.fire({
-                        text:  _Cancel_Question,
-                        icon: "warning",
-                        showCancelButton: !0,
-                        buttonsStyling: !1,
-                        confirmButtonText: _Yes,
-                        cancelButtonText: _No,
-                        customClass: {
-                            confirmButton: "btn btn-primary",
-                            cancelButton: "btn btn-active-light"
-                        }
-                    }).then((function(t) {
-                        t.value ? (e.reset(), n.hide()) : "cancel" === t.dismiss && Swal.fire({
-                            text: _no_cancel_form,
-                            icon: "error",
-                            buttonsStyling: !1,
-                            confirmButtonText: _Form_Ok_Swal_Button_Text_Notification,
-                            customClass: {
-                                confirmButton: "btn btn-primary"
-                            }
-                        })
-                    }))
+                t.querySelector('[data-kt-affiliates-modal-action="cancel"]').addEventListener("click", (t => {
+                    t.preventDefault(), e.reset(), n.hide()
+                })), t.querySelector('[data-kt-affiliates-modal-action="close"]').addEventListener("click", (t => {
+                    t.preventDefault(), e.reset(), n.hide()
                 }))
             })()
         }
     }
 }();
 KTUtil.onDOMContentLoaded((function() {
-    KTUsersAddUser.init();
+    KTAffiliatesAddAffiliate.init();
 }));

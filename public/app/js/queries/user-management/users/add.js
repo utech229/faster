@@ -53,6 +53,18 @@ var KTUsersAddUser = function() {
             
                             }
                         },
+                        'uBrand': {
+                            validators: {
+                                
+                            }
+                        },
+                        'currency': {
+                            validators: {
+                                notEmpty: {
+                                    message: _Required_Field
+                                },
+                            }
+                        },
                         'user[email]': {
                             validators: {
                                 notEmpty: {
@@ -111,6 +123,7 @@ var KTUsersAddUser = function() {
                             loading(true),
                            ajax_url = (isUserUpdating == false) ? add_user : window.location.href + '/' + userUidInput.val()+ '/edit',
                             $('#user_phone').val(intl['user_phone'].getNumber()),
+                            $('#user_currency_name').val($("#user_currency option:selected" ).text()),
                             $.ajax({
                                 url: ajax_url,
                                 type: 'post',
@@ -135,7 +148,7 @@ var KTUsersAddUser = function() {
                                     if (response.type === 'success') {
                                         t.isConfirmed,e.reset(),tableReloadButton.click();
                                         (isUserUpdating == true) ? n.hide() : null;
-                                        statisticsReload();
+                                        //statisticsReload();
                                         $('#user_is_dlr').val('0').trigger('change'), $('#user_post_pay').val('0').trigger('change');
                                     }
                                 },

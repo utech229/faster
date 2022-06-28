@@ -39,6 +39,22 @@ class RoleRepository extends ServiceEntityRepository
         }
     }
 
+    // Récupérer les roles selon le type d'utilisateur
+    /**
+     * @return Role[] Returns an array of User objects
+     */
+    public function getManageUserRole($roleLevel)
+    {
+        return $this->createQueryBuilder('r')
+            ->where('r.code != :text1')
+            ->andWhere('r.code != :text2')
+            ->andWhere('r.level < :level')
+            ->setParameter('text1', 'AFF0')
+            ->setParameter('text2', 'AFF1')
+            ->setParameter('level', $roleLevel)
+            ->orderBy('r.level', 'ASC');
+    }
+
 //    /**
 //     * @return Role[] Returns an array of Role objects
 //     */

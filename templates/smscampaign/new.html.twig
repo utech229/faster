@@ -1,6 +1,7 @@
 {% extends 'base.app.html.twig' %}
 
 {% block stylesheets %}
+<link href="{{ asset('app/plugins/custom/datatables/datatables.bundle.css') }}" rel="stylesheet" type="text/css" />
 {% endblock %}
 
 {% block body %}
@@ -15,8 +16,8 @@
                 <!--begin::Card title-->
                 <div class="card-title">
                     <!--begin::Title-->
-                    <h3 class="fw-bolder my-2">Project Targets
-                    <span class="fs-6 text-gray-400 fw-bold ms-1">by Recent Updates ↓</span></h3>
+                    <h3 class="fw-bolder my-2">{{"Créer une campagne"|trans}}
+                    <span class="fs-6 text-gray-400 fw-bold ms-1">{{"SMS"|trans}}</span></h3>
                     <!--end::Title-->
                 </div>
                 <!--end::Card title-->
@@ -34,33 +35,33 @@
                                 </svg>
                             </span>
                             <!--end::Svg Icon-->
-                            {% trans %}Nouvelle Campagne{% endtrans %}
+                            {% trans %}Envoyer un message{% endtrans %}
                         </a>
                     {% endif %}
-
-                    <button type="button" id="export" class="btn btn-secondary ms-2">
-                        {% trans %}Exportation{% endtrans %}
-                    </button>
                     <!--end::Button-->
                 </div>
                 <!--end::Card toolbar-->
             </div>
             <!--end::Card header-->
             <!--begin::Card body-->
-            <div class="card-body pt-0 pb-2">
+            <div class="card-body pt-0 pb-5">
                 <form class="form" action="{{path("campaign_sms_created")}}" method="post" id="form">
+                    <input type="hidden" name="_token" value="{{csrf_token("campaign_create")}}"/>
+                    <input type="hidden" name="fileUrl" value=""/>
+                    <input type="hidden" name="saveContacts" value="false"/>
                     <div class="row g-9">
                         <!--begin::Input group-->
                         <div class="fv-row col-md-6">
                             <!--begin::Label-->
-                            <label class="fs-5 fw-bolder form-label mb-2 required" for="brand">
+                            <label class="fs-7 fw-bolder form-label mb-2 required" for="brand">
                                 {{"Marque blanche"|trans}}
                             </label>
                             <!--end::Label-->
                             <!--begin::Input-->
-                            <select id="brand" data-allow-clear="false" data-control="select2" class="form-select form-select-solid fw-bolder" data-placeholder="{{"Sélectionnez la marque de l'expéditeur" | trans}}">
+                            <select id="brand" name="brand" data-allow-clear="false" data-control="select2" class="form-select form-select-solid fw-bolder" data-placeholder="{{"Sélectionnez la marque de l'expéditeur" | trans}}">
+                                <option value=""></option>
                                 {% for brand in brands %}
-                                    <option value="{{ brand.uid }}">{{ brand.name }}</option>
+                                    <option value="{{ brand.uid }}" data-select2-avatar="{{brand.logo}}" data-select2-alt="{{brand.name}}">{{ brand.name }}</option>
                                 {% endfor %}
                             </select>
                             <!--end::Input-->
@@ -69,15 +70,12 @@
                         <!--begin::Input group-->
                         <div class="fv-row col-md-6">
                             <!--begin::Label-->
-                            <label class="fs-5 fw-bolder form-label mb-2 required" for="user">
+                            <label class="fs-7 fw-bolder form-label mb-2 required" for="user">
                                 {{"Utilisateur de la marque"|trans}}
                             </label>
                             <!--end::Label-->
                             <!--begin::Input-->
-                            <select id="user" data-allow-clear="false" data-control="select2" class="form-select form-select-solid fw-bolder" data-placeholder="{{"Sélectionnez l'utilisateur" | trans}}">
-                                {% for user in users %}
-                                    <option value="{{ user.uid }}">{{ user.email }}</option>
-                                {% endfor %}
+                            <select id="user" name="user" data-allow-clear="false" data-control="select2" class="form-select form-select-solid fw-bolder" data-placeholder="{{"Sélectionnez l'utilisateur" | trans}}">
                             </select>
                             <!--end::Input-->
                         </div>
@@ -85,7 +83,7 @@
                         <!--begin::Input group-->
                         <div class="fv-row col-md-6 col-lg-8 col-xl-8">
                             <!--begin::Label-->
-                            <label class="fs-5 fw-bolder form-label mb-2 required" for="name">
+                            <label class="fs-7 fw-bolder form-label mb-2 required" for="name">
                                 {{"Nom de la campagne"|trans}}
                             </label>
                             <!--end::Label-->
@@ -97,15 +95,12 @@
                         <!--begin::Input group-->
                         <div class="fv-row col-md-6 col-lg-4">
                             <!--begin::Label-->
-                            <label class="fs-5 fw-bolder form-label mb-2 required" for="sender">
+                            <label class="fs-7 fw-bolder form-label mb-2 required" for="sender">
                                 {{"Expéditeur"|trans}}
                             </label>
                             <!--end::Label-->
                             <!--begin::Input-->
-                            <select id="sender" data-allow-clear="false" data-control="select2" class="form-select form-select-solid fw-bolder" data-placeholder="{{"Sélectionnez l'identifiant d'envoi" | trans}}">
-                                {% for sender in senders %}
-                                    <option value="{{ sender.uid }}">{{ sender.name }}</option>
-                                {% endfor %}
+                            <select id="sender" name="sender" data-allow-clear="false" data-control="select2" class="form-select form-select-solid fw-bolder" data-placeholder="{{"Sélectionnez l'identifiant d'envoi" | trans}}">
                             </select>
                             <!--end::Input-->
                         </div>
@@ -113,24 +108,25 @@
                         <!--begin::Input group-->
                         <div class="fv-row mt-4 col-md-4">
                             <!--begin::Label-->
-                            <label class="fs-5 fw-bolder form-label mb-2" for="datetime">
+                            <label class="fs-7 fw-bolder form-label mb-2" for="datetime">
                                 {{"Date et heure d'envoi"|trans}}
+                                <i class="fas fa-exclamation-circle ms-1 fs-7" data-bs-toggle="tooltip" title="" data-bs-original-title="{{"Laissez vide pour créer une campagne instantanée."|trans}}" aria-label="{{"Laissez vide pour créer une campagne instantanée."|trans}}"></i>
                             </label>
                             <!--end::Label-->
                             <!--begin::Input-->
-                            <input class="form-control form-control-solid" placeholder="{{"Date et heure d'envoie du message"|trans}}" id="datetime"/>
+                            <input class="form-control form-control-solid" placeholder="{{"Gardez vide pour l'envoi instantané."|trans}}" id="datetime" name="datetime"/>
                             <!--end::Input-->
                         </div>
                         <!--end::Input group-->
                         <!--begin::Input group-->
                         <div class="fv-row mt-4 col-md-4">
                             <!--begin::Label-->
-                            <label class="fs-5 fw-bolder form-label mb-2" for="timezone">
+                            <label class="fs-7 fw-bolder form-label mb-2" for="timezone">
                                 {{"Timezone"|trans}}
                             </label>
                             <!--end::Label-->
                             <!--begin::Input-->
-                            <select id="timezone" data-allow-clear="false" data-control="select2" class="form-select form-select-solid fw-bolder" data-placeholder="{{"Sélectionnez le Timezone" | trans}}">
+                            <select id="timezone" name="timezone" data-allow-clear="false" data-control="select2" class="form-select form-select-solid fw-bolder" data-placeholder="{{"Sélectionnez le Timezone" | trans}}">
                                 <option value="+00:00">+00:00</option>
                                 <option value="+01:00">+01:00</option>
                                 <option value="+02:00">+02:00</option>
@@ -141,12 +137,12 @@
                         <!--begin::Input group-->
                         <div class="fv-row mt-4 col-md-4">
                             <!--begin::Label-->
-                            <label class="fs-5 fw-bolder form-label mb-2 required" for="type">
+                            <label class="fs-7 fw-bolder form-label mb-2 required" for="type">
                                 {{"Type de SMS"|trans}}
                             </label>
                             <!--end::Label-->
                             <!--begin::Input-->
-                            <select id="type" class="form-select form-select-solid fw-bolder" data-placeholder="{{"Sélectionnez le type du SMS" | trans}}" required>
+                            <select id="type" name="type" class="form-select form-select-solid fw-bolder" data-placeholder="{{"Sélectionnez le type du SMS" | trans}}" required>
                                 <option value="1">{{ "SMS Classique"|trans }}</option>
                                 <option value="0">{{ "SMS Flash"|trans }}</option>
                             </select>
@@ -155,40 +151,124 @@
                         <!--end::Input group-->
                         <!--begin::Input group-->
                         <div class="fv-row mt-4 col-12">
-                            <!--begin::Label-->
-                            <label class="fs-5 fw-bolder form-label mb-2 required" for="phones">
-                                {{"Destinataire(s)"|trans}}
-                            </label>
-                            <!--end::Label-->
+                            <!--begin::Navs-->
+                            <ul class="nav nav-stretch nav-line-tabs nav-line-tabs-2x border-transparent fs-7 fw-bolder mb-2" id="dest_nav">
+                                <!--begin::Nav item-->
+                                <li class="nav-item mt-2">
+                                    <!--begin::Label-->
+                                    <label class="ms-0 me-10 py-0 required" for="phones" href="javascript:void(0)">
+                                        {{"Destinataire(s)"|trans}}
+                                    </label>
+                                    <!--end::Label-->
+                                </li>
+                                <!--end::Nav item-->
+                                <!--begin::Nav item-->
+                                <li class="nav-item mt-2" id="li_group">
+                                    <a class="nav-link text-active-primary ms-0 me-10 py-0 active" data-bs-toggle="tab" href="#group">{{"Groupe de contacts"|trans}}</a>
+                                </li>
+                                <!--end::Nav item-->
+                                <!--begin::Nav item-->
+                                <li class="nav-item mt-2" id="li_import">
+                                    <a class="nav-link text-active-primary ms-0 me-10 py-0" data-bs-toggle="tab" href="#import">{{"Importation"|trans}}</a>
+                                </li>
+                                <!--end::Nav item-->
+                                <!--begin::Nav item-->
+                                <li class="nav-item mt-2" id="li_write">
+                                    <a class="nav-link text-active-primary ms-0 me-10 py-0" data-bs-toggle="tab" href="#write">{{"Numéros"|trans}}</a>
+                                </li>
+                                <!--end::Nav item-->
+                            </ul>
+                            <!--begin::Navs-->
                             <!--begin::Input-->
-                            <input type="text" id="phones" name="phones" value="" class="form-control form-control-solid" placeholder="22990909090;22967676767" required/>
+                            <div class="tab-content" id="dest_tab">
+                                <div class="tab-pane fade" id="write" role="tabpanel">
+                                    <input type="text" id="phones" name="phones" value="" class="form-control" placeholder="22990909090;22967676767"/>
+                                </div>
+                                <div class="tab-pane fade" id="import" role="tabpanel">
+                                    <!--begin::Dropzone-->
+                                    <div class="dropzone" id="kt_import">
+                                        <!--begin::Message-->
+                                        <div class="dz-message needsclick">
+                                            <!--begin::Icon-->
+                                            <i class="bi bi-file-earmark-arrow-up text-primary fs-3x"></i>
+                                            <!--end::Icon-->
+                                            <!--begin::Info-->
+                                            <div class="ms-4">
+                                                <h3 class="fs-5 fw-bolder text-gray-900 mb-1">
+                                                    <button type="button" class="btn btn-sm btn-success">{{"Ajouter le fichier"|trans}}</button>
+                                                </h3>
+                                                <span class="fs-7 fw-bold text-gray-400">{{"Glissez et déposez le fichier ici."|trans}}</span>
+                                            </div>
+                                            <!--end::Info-->
+                                        </div>
+                                        <!--end::Message-->
+                                    </div>
+                                    <!--end::Dropzone-->
+                                </div>
+                                <div class="tab-pane fade show active" id="group" role="tabpanel">
+                                    <!--begin::Input-->
+                                    <select id="group_contacts" name="groups" data-allow-clear="true" data-control="select2" class="form-select form-select-solid fw-bolder" data-placeholder="{{"Sélectionnez le(s) groupe(s) de contacts."|trans}}" multiple="multiple">
+                                    </select>
+                                    <!--end::Input-->
+                                </div>
+                            </div>
                             <!--end::Input-->
                         </div>
                         <!--end::Input group-->
                         <!--begin::Input group-->
                         <div class="fv-row mt-4 col-12">
                             <!--begin::Label-->
-                            <label class="fs-5 fw-bolder form-label mb-2 required" for="message">
+                            <label class="fs-7 fw-bolder form-label mb-2 required" for="message">
                                 {{"Message"|trans}}
                             </label>
                             <!--end::Label-->
                             <!--begin::Input-->
                             <textarea name="message" id="message" rows="8" cols="80" class="form-control form-control-solid" placeholder="{{"Vous pouvez utiliser des paramètres dans le message"|trans}}" required></textarea>
                             <!--end::Input-->
+                            <p>
+                                <span class="text-danger fs-8"><span id="countMessage">0</span> {{"caractère(s)"|trans}} </span>
+                                <span class="text-gray-800 fs-8"> <span id="countPageMessage">0</span> {{"page(s)"|trans}}</span>
+                            </p>
                         </div>
                         <!--end::Input group-->
                         <!--begin::Actions-->
                         <div class="d-flex justify-content-end">
+                            <a href="{{path("campaign_sms")}}" class="btn btn-secondary fw-bold me-2 px-6" id="cancel">{{"Quitter"|trans}}</a>
                             <button type="reset" class="btn btn-light btn-active-light-primary fw-bold me-2 px-6" id="reset">{{"Remise à zéro"|trans}}</button>
                             <button type="submit" class="btn btn-primary fw-bold px-6" id="submit">
-                                <span class="indicator-label">{{'Créer'| trans}}</span>
-                                <span class="indicator-progress">{{'Veuillez patienter'| trans}}...
+                                <span class="indicator-label">{{'Créer la campagne'|trans}}</span>
+                                <span class="indicator-progress">{{'Veuillez patienter'|trans}}...
                                 <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
                             </button>
                         </div>
                         <!--end::Actions-->
                     </div>
                 </form>
+                <div class="w-100 mt-10">
+                    <h3 class="fw-bolder fs-6 my-2 text-warning">{{"Ligne de contact à revoir"|trans}}</h3>
+                    <!--begin::Table-->
+                    <table class="table align-middle table-row-dashed fs-6 gy-5 mb-0 w-100%" id="tb_error">
+                        <!--begin::Table head-->
+                        <thead>
+                            <!--begin::Table row-->
+                            <tr class="text-center text-gray-400 fw-bolder fs-7 text-uppercase gs-0">
+                                <th class="min-w-10px">{{"Ligne"|trans}}</th>
+                                <th class="min-w-100px">{% trans %}Téléphone{% endtrans %}</th>
+                                <th class="min-w-100px">{% trans %}Erreur(s){% endtrans %}</th>
+                                <th class="min-w-10px">{{"Pays"|trans}}</th>
+                                <th class="min-w-10px"></th>
+                                <th class="min-w-100px">{% trans %}Action(s){% endtrans %}</th>
+                            </tr>
+                            <!--end::Table row-->
+                        </thead>
+                        <!--end::Table head-->
+                        <!--begin::Table body-->
+                        <tbody class="fw-bold text-gray-600">
+                        </tbody>
+                        <!--end::Table body-->
+                    </table>
+                    <!--end::Table-->
+                </div>
             </div>
             <!--end::Card body-->
         </div>
@@ -201,27 +281,23 @@
 
 {% block javascripts %}
 <script type="text/javascript">
-    var flatpickr = {
-        minDate: "today",
-        enableTime: true,
-        dateFormat: "Y-m-d H:i:s",
-        enableSeconds: true,
-    };
-    if("{{_locale}}"=="fr") flatpickr["time_24hr"] = true;
-    $("#datetime").flatpickr(flatpickr);
-    const url_get  = "{{ path('sender_all') }}";
-    const url_new  = "{{ path('campaign_sms_created') }}";
-    const url_edit = "{{ path('sender_edit', {'uid':'_1_'}) }}";
-    const url_action = "{{ path('sender_action', {'uid':'_1_'}) }}";
-    const url_show = "{{ path('sender_show', {'uid':'_1_'}) }}";
-    const url_user = "{{ path('sender_user') }}";
-    const _token   = "{{ csrf_token("sender") }}";
-    const pList = {{pList|default(0)}};
-    const clnUser = {{clnUser|default(0)}};
-    const pEdit = {{pEdit|default(0)}};
-    const pDelete = {{pDelete|default(0)}};
-    const pStatus = {{pStatus|default(0)}};
+    const url_user  = "{{ path('filter_user') }}",
+    url_sender      = "{{ path('filter_sender') }}",
+    url_import      = "{{path("smscampaign_import")}}",
+    url_home        = "{{path("campaign_sms")}}",
+    _token          = "{{ csrf_token("campaign") }}";
+    const filter_token   = "{{ csrf_token("") }}";
+
+    const pList = {{pList|default(0)}},
+    clnUser = {{clnUser|default(0)}},
+    pEdit = {{pEdit|default(0)}},
+    pDelete = {{pDelete|default(0)}},
+    pStatus = {{pStatus|default(0)}};
+
+    const ongletAlert = "{{"Voulez-vous fermer cet onget ? Vous allez perdre les données incrites."|trans}}",
+    saveContacts = "{{"Voulez-vous créer un groupe de contacts avec les contacts importés ?"|trans}}";
 </script>
 <script type="text/javascript" src="{{ asset('app/plugins/custom/datatables/datatables.bundle.js') }}"></script>
+<script type="text/javascript" src="{{ asset('app/js/queries/sms/messageError.js')}}"></script>
 <script type="text/javascript" src="{{ asset('app/js/queries/sms/campaign.js')}}"></script>
 {% endblock %}

@@ -31,9 +31,7 @@
                         </span>
                         <div class="d-flex flex-column text-end">
                             <span class="text-dark fw-bolder fs-2" id="stat_all">
-                            {% if stats is defined %}
-                                        {{ stats.all }}
-                                        {% endif %}
+                            0
                             </span>
                             <span class="text-muted fw-bold mt-1">{{ 'Utilisateurs' | trans }}</span>
                         </div>
@@ -62,10 +60,8 @@
                             </span>
                         </span>
                         <div class="d-flex flex-column text-end">
-                            <span class="text-dark fw-bolder fs-2" id="stat_active">
-                            {% if stats is defined %}
-                                        {{ stats.active }}
-                                        {% endif %}
+                            <span class="text-dark fw-bolder fs-2" id="stat_actif">
+                            0
                             </span>
                             <span class="text-muted fw-bold mt-1">Actifs</span>
                         </div>
@@ -93,10 +89,8 @@
                             </span>
                         </span>
                         <div class="d-flex flex-column text-end">
-                            <span class="text-dark fw-bolder fs-2" id="stat_all">
-                            {% if stats is defined %}
-                                        {{ stats.pending }}
-                                        {% endif %}
+                            <span class="text-dark fw-bolder fs-2" id="stat_pending">
+                            0
                             </span>
                             <span class="text-muted fw-bold mt-1">{{"En attente"|trans}}</span>
                         </div>
@@ -142,12 +136,12 @@
                                     <path d="M19.0759 3H4.72777C3.95892 3 3.47768 3.83148 3.86067 4.49814L8.56967 12.6949C9.17923 13.7559 9.5 14.9582 9.5 16.1819V19.5072C9.5 20.2189 10.2223 20.7028 10.8805 20.432L13.8805 19.1977C14.2553 19.0435 14.5 18.6783 14.5 18.273V13.8372C14.5 12.8089 14.8171 11.8056 15.408 10.964L19.8943 4.57465C20.3596 3.912 19.8856 3 19.0759 3Z" fill="currentColor" />
                                 </svg>
                             </span>
-                            <!--end::Svg Icon-->{{ 'Filter' | trans }}</button>
+                            <!--end::Svg Icon-->{% trans %}Filtre{% endtrans %} </button>
                             <!--begin::Menu 1-->
                             <div class="menu menu-sub menu-sub-dropdown w-300px w-md-325px" data-kt-menu="true">
                                 <!--begin::Header-->
                                 <div class="px-7 py-5">
-                                    <div class="fs-5 text-dark fw-bolder">{{ 'Options de filtre' | trans }}</div>
+                                    <div class="fs-5 text-dark fw-bolder">{% trans %}Options de filtre{% endtrans %}</div>
                                 </div>
                                 <!--end::Header-->
                                 <!--begin::Separator-->
@@ -157,29 +151,19 @@
                                 <div class="px-7 py-5" data-kt-user-table-filter="form">
                                     <!--begin::Input group-->
                                     <div class="mb-10">
-                                        <label class="form-label fs-6 fw-bold">{{ 'Role' | trans }}:</label>
-                                        <select class="form-select form-select-solid fw-bolder" data-kt-select2="true" data-placeholder="Select option" data-allow-clear="true" data-kt-user-table-filter="role" data-hide-search="true">
-                                            <option></option>
-                                            {% for theRole in role %}
-                                                <option value="{{ theRole.name }}">{{ theRole.name }}</option>
+                                         <label class="form-label fs-6 fw-bold">{{'Marque'|trans}}:</label>
+                                        <select class="form-select form-select-solid fw-bolder" data-kt-select2="true" data-placeholder="{{"Choisissez la marque"}}" data-allow-clear="true" id="brand_filter" data-kt-user-table-filter="brand" data-hide-search="true">>
+                                            <option value="">{{"Toutes"|trans}}</option>
+                                            {% for brand in brands %}
+                                                <option value="{{ brand.name }}" data-select2-avatar="{{brand.logo}}" data-select2-alt="{{brand.name}}">{{ brand.name }}</option>
                                             {% endfor %}
-                                        </select>
-                                    </div>
-                                    <!--end::Input group-->
-                                    <!--begin::Input group-->
-                                    <div class="mb-10">
-                                        <label class="form-label fs-6 fw-bold">{% trans %}Pays{% endtrans %}</label>
-                                        <select id="kt_user_filter_select2_country" data-allow-clear="true" data-control="select2" data-kt-user-table-filter="two-step"
-                                            class="form-select form-select-solid fw-bolder" data-placeholder="{{'Filter par pays' | trans}}" 
-                                            data-kt-user-settings-type="select2_flags"/>
-                                            {% include 'section/country.option.html.twig' %}
                                         </select>
                                     </div>
                                     <!--end::Input group-->
                                     <!--begin::Actions-->
                                     <div class="d-flex justify-content-end">
-                                        <button type="reset" class="btn btn-light btn-active-light-primary fw-bold me-2 px-6" data-kt-menu-dismiss="true" data-kt-user-table-filter="reset">Reset</button>
-                                        <button type="submit" class="btn btn-primary fw-bold px-6" data-kt-menu-dismiss="true" data-kt-user-table-filter="filter">Apply</button>
+                                        <button type="reset" class="btn btn-light btn-active-light-primary fw-bold me-2 px-6" data-kt-menu-dismiss="true" data-kt-user-table-filter="reset">{% trans %}Annuler{% endtrans %}</button>
+                                        <button type="submit" class="btn btn-primary fw-bold px-6" data-kt-menu-dismiss="true" data-kt-user-table-filter="filter">{% trans %}Filtrer{% endtrans %}</button>
                                     </div>
                                     <!--end::Actions-->
                                 </div>
@@ -466,7 +450,7 @@
                                                         <!--begin::Row-->
                                                         <div class="row">
                                                             <!--begin::Col-->
-                                                            <div class="col-lg-6 fv-row">
+                                                            <div class="col-lg-{% if pViewUser %}6{% else %}12{% endif %} fv-row">
                                                                 <!--begin::Label-->
                                                                 <label class="fs-6 fw-bold mb-2 form-label" for="kt_user_add_select2_country">
                                                                     <span class="required">{{ 'Rôle' | trans }}</span>
@@ -478,14 +462,40 @@
                                                                 ,'data-kt-select2':"true", 'data-dropdown-parent':"#kt_modal_add_user" }}) }}
                                                             </div>
                                                             <!--begin::Col-->
-                                                            <div class="col-lg-6 fv-row">
+                                                            <div class="col-lg-6 fv-row" id="router_input">
                                                                 <!--begin::Label-->
                                                                 <label class="required fw-bold fs-6 mb-2">{{ 'Route' | trans }}</label>
                                                                 <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="{{"Route par défaut sur laquelle faire passer les messages de l'utilisateur"| trans}}"></i>
                                                                 <!--end::Label-->
                                                                 {{ form_row(userform.router, {'attr': {'class': 'form-select form-select-solid mb-3 mb-lg-0',
                                                                 'data-control':"select2", 'data-placeholder': 'Selectionner'| trans, 'data-allow-clear':"true"
-                                                                ,'data-kt-select2':"true", 'data-dropdown-parent':"#kt_modal_add_user" }}) }}
+                                                                ,'data-kt-select2':"true", 'data-dropdown-parent':"#kt_modal_add_user","disabled" : false }}) }}
+                                                            </div>
+                                                            <!--end::Col-->
+                                                        </div>
+                                                        <!--end::Row-->
+                                                    </div>
+                                                    <!--end::Col-->
+                                                </div>
+                                                <!--end::Input group-->
+                                                <!--begin::Input group-->
+                                                <div class="fv-row mb-7">
+                                                    <!--begin::Col-->
+                                                    <div class="col-lg-12">
+                                                        <!--begin::Row-->
+                                                        <div class="row">
+                                                            <!--begin::Col-->
+                                                            <div class="col-lg-12 fv-row">
+                                                                <!--begin::Label-->
+                                                                <label class="required fw-bold fs-6 mb-2">{{ "Devise de l'utilisateur" | trans }}</label>
+                                                                <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="{{"Devise de l'utilisateur"| trans}}"></i>
+                                                                <!--end::Label-->
+                                                                <!--begin::Select2-->
+                                                                <select name="currency" id="user_currency" data-kt-user-settings-type="select2_flags" data-placeholder="{{'Sélection de devise' | trans}}"  data-dropdown-parent="#kt_modal_add_user" aria-label="{{'Sélection de devise' | trans}}" data-control="select2" data-placeholder="Select a currency.." class="form-select form-select-solid form-select-lg">
+                                                                    {% include 'section/currency.option.html.twig' %}
+                                                                </select>
+                                                                <!--end::Select2-->
+                                                                <input type="hidden" name="currency_name" id="user_currency_name" value="">
                                                             </div>
                                                             <!--end::Col-->
                                                         </div>
@@ -575,17 +585,21 @@
 <script type="text/javascript">
     const pEditUser     = {{ pEditUser}};
 	const pDeleteUser   = {{ pDeleteUser}};
+	const pViewUser     = {{ pViewUser}};
+	const roleLevel     = "{{ app.user.role.level }}";
 
     const add_user         = "{{path('app_user_add')}}";
     const user_list_link   = "{{path('app_user_list')}}";
+    const user_price_link  = "{{ path('app_user_price', {'uid':'_1_'}) }}";
     const statistic_link   = "{{path('get_statistics_data')}}";
     const csrfToken        = "{{ csrf_token(app.user.uid) }}";
+
 
     var isUserUpdating       = false;
     const formModalButton    = $("#kt_modal_add_user_button");
     const tableReloadButton  = $('#kt_modal_add_user_reload_button');
-    const countrySelecter  = document.querySelector('#kt_user_add_select2_country');
-    const userCountryCode  = "{{ app.user.country.code }}";
+    const countrySelecter    = document.querySelector('#kt_user_add_select2_country');
+    const userCountryCode    = "{{ app.user.country.code }}";
 </script>
 <script src="{{ asset('app/js/queries/public-app/country-flag-input.js') }}"></script>
 <!--begin::Page Custom Javascript(used by this page)-->
@@ -593,5 +607,6 @@
 <script src="{{ asset('app/js/queries/user-management/users/add.js') }}"></script>
 <script src="{{ asset('app/js/queries/user-management/users/delete.js') }}"></script>
 <script src="{{ asset('app/js/queries/user-management/users/update.js') }}"></script>
+<script src="{{ asset('app/js/queries/user-management/prices/price.js') }}"></script>
 <script src="{{ asset('app/js/queries/user-management/users/list.js') }}"></script>
 {% endblock %}

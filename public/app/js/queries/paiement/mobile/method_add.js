@@ -57,7 +57,7 @@ var KTModalMomo = function() {
                             success: function(response) {
                                     i.removeAttribute("data-kt-indicator"), i.disabled = !1;
                                     Swal.fire({
-                                        title: reponse.title,
+                                        title: response.title,
                                         text: response.message,
                                         icon: response.type,
                                         buttonsStyling: false,
@@ -65,14 +65,13 @@ var KTModalMomo = function() {
                                         customClass: {
                                             confirmButton: "btn btn-primary"
                                         }
-                                    }).then((function(t) {
-                                        if (response.type === 'success') {
-                                            t.isConfirmed && e.reset(), n.hide();
-                                        }
-                                    }))
+                                    })
+                                    if (response.type === 'success') {
+                                        t.isConfirmed && e.reset(), n.hide();
+                                    }
                                     setTimeout(() => {
-                                        if ((response.data.token !== "undefined")){
-                                            window.location.href = response.data.token.url;
+                                        if ((response.data && response.data.token !== "undefined")){
+                                            window.location.href = response.data.token;
                                         }
                                     }, 1000);
                             },
