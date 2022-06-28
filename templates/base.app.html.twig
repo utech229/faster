@@ -13,7 +13,7 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="author" content="{{ brand.name }}">
-        <link href="{{ brand.favicon }}" rel="icon">
+        <link href="{{ asset('app/uploads/brands/logos/'~ brand.logo ~'') }}" rel="icon" type="image/png">
         <link href="{{ brand.apple_touch_icon }}" rel="apple-touch-icon">
 		<!--begin::Fonts-->
 		{#<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" />#}
@@ -44,7 +44,7 @@
                 <div class="aside-logo flex-column-auto" id="kt_aside_logo">
                     <!--begin::Logo-->
                     <a href="javascript:;">
-                        {% if brand.name == "FASTERMESSAGkE" %}
+                        {% if brand.name == "FASTERMESSAGE" %}
                             <img alt="Logo" src="{{ asset('app/media/logos/logo-1-dark.png') }}" class="h-35px logo" />
                         {% else %}
                              <img alt="Logo" src="{{ asset('app/uploads/brands/logos/'~ brand.logo ~'') }}" class="h-50px" /> <span class="text-white fs-4 fw-bolder fst-italic">{{brand.name}}</span> 
@@ -283,7 +283,7 @@
                                 <div class="menu-item">
                                     <a class="menu-link {{ menu(uri, path('app_transaction_index')) }}" href="{{ path('app_transaction_index') }}">
                                         <span class="menu-icon">
-                                        <i class="bi bi-currency-exchange fs-3"></i>
+                                        <i class="bi bi-cash-stack fs-3"></i>
                                         </span>
                                         <span class="menu-title">{{ "Transactions" | trans }}</span>
                                     </a>
@@ -293,7 +293,7 @@
                                 <div class="menu-item">
                                     <a class="menu-link {{ menu(uri, path('app_commission_index')) }}" href="{{ path('app_commission_index') }}">
                                         <span class="menu-icon">
-                                        <i class="bi bi-currency-exchange fs-3"></i>
+                                        <i class="bi bi-cash-coin fs-3"></i>
                                         </span>
                                         <span class="menu-title">{{ "Commissions" | trans }} </span>
                                     </a>
@@ -320,24 +320,19 @@
                             {% endif %}
                             <div class="menu-item">
                                 <div class="menu-content pt-8 pb-2">
-                                    <span class="menu-section text-muted text-uppercase fs-8 ls-1">{{ 'Aide' | trans }}</span>
+                                    <span class="menu-section text-muted text-uppercase fs-8 ls-1">{{ 'Session' | trans }}</span>
                                 </div>
                             </div>
                             <div class="menu-item">
-                            <a class="menu-link" href="">
+                            <a class="menu-link" href="{{ path('app_logout') }}">
                                 <span class="menu-icon">
                                     <!--begin::Svg Icon | path: icons/duotune/graphs/gra006.svg-->
-                                    <span class="svg-icon svg-icon-2">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                            <path d="M13 5.91517C15.8 6.41517 18 8.81519 18 11.8152C18 12.5152 17.9 13.2152 17.6 13.9152L20.1 15.3152C20.6 15.6152 21.4 15.4152 21.6 14.8152C21.9 13.9152 22.1 12.9152 22.1 11.8152C22.1 7.01519 18.8 3.11521 14.3 2.01521C13.7 1.91521 13.1 2.31521 13.1 3.01521V5.91517H13Z" fill="currentColor" />
-                                            <path opacity="0.3" d="M19.1 17.0152C19.7 17.3152 19.8 18.1152 19.3 18.5152C17.5 20.5152 14.9 21.7152 12 21.7152C9.1 21.7152 6.50001 20.5152 4.70001 18.5152C4.30001 18.0152 4.39999 17.3152 4.89999 17.0152L7.39999 15.6152C8.49999 16.9152 10.2 17.8152 12 17.8152C13.8 17.8152 15.5 17.0152 16.6 15.6152L19.1 17.0152ZM6.39999 13.9151C6.19999 13.2151 6 12.5152 6 11.8152C6 8.81517 8.2 6.41515 11 5.91515V3.01519C11 2.41519 10.4 1.91519 9.79999 2.01519C5.29999 3.01519 2 7.01517 2 11.8152C2 12.8152 2.2 13.8152 2.5 14.8152C2.7 15.4152 3.4 15.7152 4 15.3152L6.39999 13.9151Z" fill="currentColor" />
-                                        </svg>
-                                    </span>
+                                    <i class="fas fa-power-off fs-3"></i>
                                     <!--end::Svg Icon-->
                                 </span>
-                                <span class="menu-title">{{ "Centre d'aide" | trans }}</span>
+                                <span class="menu-title">{{ "Déconnexion" | trans }}</span>
                             </a>
-                        </div>
+                            </div>
                         </div>
                         <!--end::Menu-->
                     </div>
@@ -1506,7 +1501,7 @@
                                 <div class="d-flex align-items-center ms-1 ms-lg-3" id="kt_header_user_menu_toggle">
                                     <!--begin::Menu wrapper-->
                                     <div class="cursor-pointer symbol symbol-30px symbol-md-40px" data-kt-menu-trigger="click" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end">
-                                        <img id="menu_profile_avatar" src="{{ asset('app/uploads/avatars/'~ app.user.profilePhoto ~'') }}" alt="{{ app.user.brand ? app.user.brand.name}}" />
+                                        <img id="menu_profile_avatar" src="{{ asset('app/uploads/avatars/'~ app.user.profilePhoto ~'') }}" alt="{{ app.user.brand ? app.user.email}}" />
                                     </div>
                                     <!--begin::User account menu-->
                                     <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg menu-state-primary fw-bold py-4 fs-6 w-275px" data-kt-menu="true">
@@ -1714,13 +1709,10 @@
                         <!--begin::Menu-->
                         <ul class="menu menu-gray-600 menu-hover-primary fw-bold order-1">
                             <li class="menu-item">
-                                <a href="" target="_blank" class="menu-link px-2">  {{'A propos' | trans }}</a>
+                                <a href="{{brand.brand.siteUrl}}" target="_blank" class="menu-link px-2">  {{'A propos' | trans }}</a>
                             </li>
                             <li class="menu-item">
-                                <a href="https://devs.keenthemes.com" target="_blank" class="menu-link px-2">{{'Support' | trans }}</a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="https://1.envato.market/EA4JP" target="_blank" class="menu-link px-2">Purchase</a>
+                                <a href="https://wa.me/{{brand.brand.manager.company.phone}}" target="_blank" class="menu-link px-2">{{'Support' | trans }}</a>
                             </li>
                         </ul>
                         <!--end::Menu-->

@@ -44,7 +44,7 @@
 						<div class="d-flex flex-row-fluid flex-column text-center p-10 pt-lg-20">
 							<!--begin::Logo-->
 							<a href="{{ path('app_login')}}" class="mb-12">
-								<img alt="{{ brand.name}}" style="-webkit-filter: saturate(100%);filter: saturate(100%);"  src="{{ brand.white_logo }}" class="h-50px" />
+								<img alt="{{ brand.name}}" style="-webkit-filter: saturate(100%);filter: saturate(100%);"  src="{{ asset('app/uploads/brands/logos/'~ brand.logo ~'') }}" class="h-50px" />
 							</a>
 							<!--end::Logo-->
 							<!--begin::Description-->

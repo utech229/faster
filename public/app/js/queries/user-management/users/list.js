@@ -359,7 +359,6 @@ var KTUsersList = function() {
                         url: _language_datatables,
                     },
                     dom: '<"top text-end bt-export d-none"B>rtF<"row"<"col-sm-6"l><"col-sm-6"p>>',
-                   
                 }),
                 // Action sur bouton export
                 $(x).on('click', ($this)=>{ $this.preventDefault(); return $(y).hasClass('d-none')?$(y).removeClass('d-none'):$(y).addClass('d-none'); }),
@@ -369,7 +368,6 @@ var KTUsersList = function() {
                 })), l(),
                 document.querySelector('[data-kt-user-table-filter="search"]').addEventListener("keyup", (function(t) {
                     e.search(t.target.value).draw()
-                    // console.log(e['context'][0])
                     UpdateStat(e)         
                 })),
                 document.querySelector('[data-kt-user-table-filter="reset"]').addEventListener("click", (function() {
@@ -398,8 +396,7 @@ var KTUsersList = function() {
                             UpdateStat(e)
                     }));
                 })
-                ())
-                
+                ())  
         }
     }
 }();

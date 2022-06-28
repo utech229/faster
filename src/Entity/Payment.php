@@ -28,9 +28,6 @@ class Payment
     #[ORM\Column(type: 'float')]
     private $amount;
 
-    #[ORM\Column(type: 'integer')]
-    private $status;
-
     #[ORM\Column(type: 'float')]
     private $lastBalance;
 
@@ -58,6 +55,10 @@ class Payment
 
     #[ORM\Column(type: 'text', nullable: true)]
     private $observation;
+
+    #[ORM\ManyToOne(targetEntity: Status::class)]
+    #[ORM\JoinColumn(nullable: false)]
+    private $status;
 
 
     public function getId(): ?int
@@ -121,18 +122,6 @@ class Payment
     public function setAmount(float $amount): self
     {
         $this->amount = $amount;
-
-        return $this;
-    }
-
-    public function getStatus(): ?int
-    {
-        return $this->status;
-    }
-
-    public function setStatus(int $status): self
-    {
-        $this->status = $status;
 
         return $this;
     }
@@ -241,6 +230,18 @@ class Payment
     public function setObservation(?string $observation): self
     {
         $this->observation = $observation;
+
+        return $this;
+    }
+
+    public function getStatus(): ?Status
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?Status $status): self
+    {
+        $this->status = $status;
 
         return $this;
     }

@@ -1,4 +1,6 @@
 "use strict";
+var spanStatAll =	document.getElementById("stat_all"),spanStatValidated = document.getElementById("stat_validated"), spanStatPending	= document.getElementById("stat_pending");
+
 var KTUsersPaymentList = function() {
     var t, e, n, r, o;
     return {
@@ -13,6 +15,10 @@ var KTUsersPaymentList = function() {
                     "type": "POST",
                     data: {
                         _token: function(){ return csrfToken; }
+                    },
+                    dataSrc: function(json) {
+                        spanStatAll.textContent = json.stats.all, spanStatValidated.textContent = json.stats.valisated, spanStatPending.textContent	= json.stats.pending
+                        return json.data;
                     },
                     error: function () { 
                         $(document).trigger('toastr.tableListError');
@@ -69,10 +75,11 @@ var KTUsersPaymentList = function() {
                     targets: 8,
                     render: function(data, type, full, meta) {
                         var status = {
-                            0 : { 'title': _Pending, 'class': 'warning' },
-                            1 : { 'title': _Validated, 'class': 'success' },
-                            3 : { 'title': _Canceled, 'class': 'primary' },
-                            2 : { 'title': _Rejected, 'class': 'danger' },
+                            8 : { 'title': _Rejected, 'class': 'danger' },
+                            2 : { 'title': _Pending, 'class': 'warning' },
+                            3 : { 'title': _Actif, 'class': 'success' },
+                            4 : { 'title': _Disabled, 'class': 'primary' },
+                            6 : { 'title': _Suspended, 'class': 'primary' },
                         };
                         if (typeof status[data] === 'undefined') {
                             return data;
@@ -126,55 +133,74 @@ var KTUsersPaymentList = function() {
                     { data: 'action',responsivePriority: -8 },
                 ],
                 lengthMenu: [10, 25, 100, 250, 500, 1000],
-                pageLength: 5,
+                pageLength: 10,
+                lengthChange: !1,
+                language: {
+                    url: _language_datatables,
+                },
+                dom: '<"top text-end bt-export d-none"B>rtF<"row"<"col-sm-6"l><"col-sm-6"p>>',
             }), 
+            // Action sur bouton export
+            $(x).on('click', ($this)=>{ $this.preventDefault(); return $(y).hasClass('d-none')?$(y).removeClass('d-none'):$(y).addClass('d-none'); }),
             $('#kt_modal_add_payment_reload_button').on('click', function() {
                 t.ajax.reload(null, false);
             }),
+            
             document.querySelector('[data-kt-payment-table-filter="search"]').addEventListener("keyup", (function(e) {
                 t.search(e.target.value).draw()
-            })), e.querySelectorAll('[data-kt-payment-table-filter="delete_row"]').forEach((e => {
-                e.addEventListener("click", (function(e) {
-                    e.preventDefault();
-                    const n = e.target.closest("tr"),
-                        o = n.querySelectorAll("td")[0].innerText;
-                    Swal.fire({
-                        text: "Are you sure you want to delete " + o + "?",
-                        icon: "warning",
-                        showCancelButton: !0,
-                        buttonsStyling: !1,
-                        confirmButtonText: "Yes, delete!",
-                        cancelButtonText: "No, cancel",
-                        customClass: {
-                            confirmButton: "btn fw-bold btn-danger",
-                            cancelButton: "btn fw-bold btn-active-light-primary"
-                        }
-                    }).then((function(e) {
-                        e.value ? Swal.fire({
-                            text: "You have deleted " + o + "!.",
-                            icon: "success",
-                            buttonsStyling: !1,
-                            confirmButtonText: "Ok, got it!",
-                            customClass: {
-                                confirmButton: "btn fw-bold btn-primary"
-                            }
-                        }).then((function() {
-                            t.row($(n)).remove().draw()
-                        })) : "cancel" === e.dismiss && Swal.fire({
-                            text: customerName + " was not deleted.",
-                            icon: "error",
-                            buttonsStyling: !1,
-                            confirmButtonText: "Ok, got it!",
-                            customClass: {
-                                confirmButton: "btn fw-bold btn-primary"
-                            }
-                        })
-                    }))
-                }))
-            })))
+                UpdateStat(e)   
+            })),
+            document.querySelector('[data-kt-payment-table-filter="reset"]').addEventListener("click", (function() {
+                document.querySelector('[data-kt-payment-table-filter="form"]').querySelectorAll("select").forEach((e => {
+                        $(e).val("").trigger("change")
+                    })),
+                    e.search("").draw()
+                    UpdateStat(e)
+            })),
+
+            c(), (() => {
+                const t = document.querySelector('[data-kt-payment-table-filter="form"]'),
+                    n = t.querySelector('[data-kt-payment-table-filter="filter"]'),
+                    r = t.querySelectorAll("select");
+                n.addEventListener("click", (function() {
+                    loading(true);
+                    setTimeout(() => {
+                        loading()
+                    }, 300);
+                    var t = "";
+                    r.forEach(((e, n) => {
+                            e.value && "" !== e.value && (0 !== n && (t += " "),
+                                t += e.value)
+                        })),
+                        e.search(t).draw()
+                        UpdateStat(e)
+                }));
+            })
+            ()  )//end
+
+            
         }
     }
 }();
 KTUtil.onDOMContentLoaded((function() {
     KTUsersPaymentList.init()
 }));
+
+function UpdateStat(e) {
+    // console.log(e['context'][0])
+    let filtre_tab = e['context'][0]['aoData']
+    let sum_tr_all = 0, sum_tr_pending = 0, sum_tr_validated = 0
+    e['context'][0]['aiDisplay'].forEach(function(item){
+    sum_tr_all      +=  1;
+
+    if (parseInt(filtre_tab[item]['_aData'][6]) == 3) {
+        sum_tr_validated        +=  1;
+
+    }
+    else if(parseInt(filtre_tab[item]['_aData'][6]) == 2){
+        sum_tr_pending          +=  1;
+        
+    }
+    });
+    spanStatAll.textContent = sum_tr_all, spanStatPending.textContent = sum_tr_pending, spanStatValidated.textContent = sum_tr_actif   
+}

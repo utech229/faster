@@ -80,7 +80,7 @@
                     <!--begin::Input wrapper-->
                     <div class="position-relative mb-3">
                         {{ form_row(registrationForm.plainPassword, {'attr': {'class': 'form-control form-control-lg form-control-solid',
-                        value: '@21061AdminDefault','maxlength': '30' }}) }}
+                        'maxlength': '30' }}) }}
                         <span class="btn btn-sm btn-icon position-absolute translate-middle top-50 end-0 me-n2" data-kt-password-meter-control="visibility">
                             <i class="bi bi-eye-slash fs-2"></i>
                             <i class="bi bi-eye fs-2 d-none"></i>
@@ -105,8 +105,7 @@
             <!--begin::Input group-->
             <div class="fv-row mb-5">
                 <label class="form-label fw-bolder text-dark fs-6 required">{% trans %}Confirmez le mot de passe{% endtrans %}</label>
-                 {{ form_row(registrationForm.confirm_password, {'attr': {'class': 'form-control form-control-lg form-control-solid',
-                        value: '@21061AdminDefault','maxlength': '30' }}) }}
+                 {{ form_row(registrationForm.confirm_password, {'attr': {'class': 'form-control form-control-lg form-control-solid','maxlength': '30' }}) }}
             </div>
             <!--end::Input group-->
             <!--begin::Row-->
@@ -128,6 +127,6 @@
                 </button>
             </div>
             <!--end::Actions-->
-        {#</form>#}
+            {% include 'registration/form.action.html.twig' %}
         {{ form_end(registrationForm) }}
         <!--end::Form-->

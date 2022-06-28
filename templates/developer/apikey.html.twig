@@ -3,7 +3,11 @@
 
 {% block title %}{{ title }}{% endblock %}
 
-{% block stylesheets %} {% endblock %}
+{% block stylesheets %} 
+<!--begin::Page Vendor Stylesheets(used by this page)-->
+		<link href="{{  asset('app/css/plugins/custom/prismjs/prismjs.bundle.css') }}" rel="stylesheet" type="text/css" />
+		<!--end::Page Vendor Stylesheets-->
+{% endblock %}
 
 {% block body %}
     <!--begin::Post-->
