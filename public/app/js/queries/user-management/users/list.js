@@ -392,7 +392,7 @@ var KTUsersList = function() {
                                 e.value && "" !== e.value && (0 !== n && (t += " "),
                                     t += e.value)
                             })),
-                            e.search(t).draw()
+                            e.search(t).draw(),
                             UpdateStat(e)
                     }));
                 })

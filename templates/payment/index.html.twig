@@ -9,8 +9,6 @@
     <div class="post d-flex flex-column-fluid" id="kt_post">
         <!--begin::Container-->
         <div id="kt_content_container" class="container-xxl">
-        
-
             <!--begin::Row-->
             <div class="row g-5 g-xl-8">
                 <div class="col-xl-4">
@@ -60,7 +58,7 @@
                             </span>
                         </span>
                         <div class="d-flex flex-column text-end">
-                            <span class="text-dark fw-bolder fs-2" id="stat_validate">
+                            <span class="text-dark fw-bolder fs-2" id="stat_approved">
                             0
                             </span>
                             <span class="text-muted fw-bold mt-1">{% trans %}Validé(s){% endtrans %}</span>
@@ -103,7 +101,6 @@
                 </div>
             </div>
             <!--end::Row-->
-
              <!--begin::Hero card-->
             <div class="card mb-12">
                 <!--begin::Hero body-->
@@ -215,7 +212,7 @@
                                 <!--end::Separator-->
                                 <!--begin::Content-->
                                 <div class="px-7 py-5" data-kt-payment-table-filter="form">
-                                    <!--begin::Input group-->
+                                    {#<!--begin::Input group-->
                                     <div class="mb-10">
                                         <label class="form-label fs-6 fw-bold">{{'Marque'|trans}}:</label>
                                         <select class="form-select form-select-solid fw-bolder" data-kt-select2="true" data-placeholder="{{"Choisissez la marque"}}" data-allow-clear="true" id="brand_filter" data-kt-payment-table-filter="brand" data-hide-search="true">>
@@ -225,7 +222,7 @@
                                             {% endfor %}
                                         </select>
                                     </div>
-                                    <!--end::Input group-->
+                                    <!--end::Input group-->#}
                                     <!--begin::Input group-->
                                     <div class="mb-10">
                                         <label class="form-label fs-6 fw-bold">{{'Status'|trans}}:</label>
@@ -248,14 +245,13 @@
                             </div>
                             <!--end::Menu 1-->
                             <!--end::Filter-->
-                            <!--end::Export-->
 
                             <!--begin::Add request-->
                             <button class="btn btn-primary"
                             {% if app.user and app.user.balance <= 0 %}
                                 disabled ="disabled"
                             {% endif %} 
-                            {% if app.user.paymentAccount[0]['Status'] and app.user.paymentAccount[0]['Status'] == 'approved' %}
+                            {% if app.user.paymentAccount[0]['Status'] and app.user.paymentAccount[0]['Status'] != 'approved' %}
                                 disabled="disabled"
                             {% endif %}  
                             data-bs-toggle="modal" data-bs-target="#kt_modal_payment_request">

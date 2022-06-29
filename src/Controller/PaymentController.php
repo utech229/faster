@@ -93,7 +93,7 @@ class PaymentController extends AbstractController
             ],
             'brand'       => $this->brand->get(),
             'brands'      => $brands,
-            'status'      => $this->em->getRepository(Status::class)->findBy(['code' => [2,6,8] ]),
+            'status'      => $this->em->getRepository(Status::class)->findBy(['code' => [2,6,9] ]),
             'baseUrl'     => $this->baseUrl->init(),
             'paymentform' => $form->createView(),
             'pCreate'	  =>	$this->pCreate,
@@ -165,10 +165,10 @@ class PaymentController extends AbstractController
         $row['operator']        = $cuser->getPaymentAccount()[0]['Operator'];
         $row['treatedby']       = ($payment->getValidator()) ? $payment->getValidator()->getEmail() : '...';
         $row['reference']       = $payment->getReference();
-        $row['type']            = ($cuser->getPaymentAccount()[0]['Operator'] == 'MTN BENIN') ? 1 : 0;//($payment->IsType()) ? $payment->IsType() : 0;
+        $row['type']            = ($cuser->getPaymentAccount()[0]['Operator'] == 'MTN BENIN') ? 1 : 0;
         $row['method']          = $payment->getMethod();
         $row['amount']          = $payment->getAmount();
-        $row['status']          = $payment->getStatus();
+        $row['status']          = $payment->getStatus()->getCode();
         $row['updatedAt']       = ($payment->getUpdatedAt()) ? $payment->getUpdatedAt()->format("c") : null;
         $row['createdAt']       = $payment->getCreatedAt()->format("c");
         $row['phone']           = $payment->getReceptionPhone();
@@ -185,12 +185,12 @@ class PaymentController extends AbstractController
 
         $data = [];
         $payments = $this->getPaymentsByRoles($user);
-        $all = count($payments); $actif = 0; $pending = 0;
+        $all = count($payments); $approved = 0; $pending = 0;
         foreach ($payments  as $payment) 
 		{          
             switch ($payment->getStatus()->getCode()) {
                 case 3:
-                    $actif++;
+                    $approved++;
                     break;
                 case 2:
                     $pending++;
@@ -222,7 +222,7 @@ class PaymentController extends AbstractController
             $data []                = $row;
 		}
         $this->services->addLog($this->intl->trans('Lecture de la liste des payments'));
-        $output = array("data" => $data, "stats" => ['all' => $all, "pending" => $pending , "actif" => $actif ]);
+        $output = array("data" => $data, "stats" => ['all' => $all, "pending" => $pending , "approved" => $approved ]);
         return new JsonResponse($output);
     }
 
@@ -252,7 +252,7 @@ class PaymentController extends AbstractController
             $this->intl->trans("Rejet de la demande de paiement"),$this->intl->trans("Vous ne pouvez pas rejeter une demande de paiement déjà traité"));
 
         //update payment
-        $payment->setStatus($this->services->status(8))->setUpdatedAt(new \DatetimeImmutable())->setValidator($this->getUser());
+        $payment->setStatus($this->services->status(9))->setUpdatedAt(new \DatetimeImmutable())->setValidator($this->getUser());
         $creator = $payment->getUser();
         //update payment creator balance
         $creator->setBalance($creator->getBalance() + $payment->getAmount());
