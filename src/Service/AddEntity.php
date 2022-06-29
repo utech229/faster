@@ -49,6 +49,36 @@ class AddEntity extends AbstractController
         $this->brand   = $brand;
     }
 
+    public function imageSetter($request , $user, $isUpdating = false, $route = false)
+	{
+        $response = new Response();
+
+        ($route == false) ? 'brand_image_directory' : $route;
+        $placeAvatar  = $this->getParameter($route);
+        $filename     = $user->getBrand()->getName();
+        $filepath     = $placeAvatar.$filename;
+
+		$response->headers->set('Content-Type', 'application/json');
+		$response->headers->set('Access-Control-Allow-Origin', '*');
+
+		$image_remove	=	$request->request->get("avatar_remove");
+		/** @var UploadedFile $SETTINGFILE */
+        $SETTINGFILE    =	$request->files->get('avatar');
+        $image  = ($image_remove == "1") ? "default_logo_1.png" : (($isUpdating) ? $filename : "default_logo_1.png" );
+        if(isset($SETTINGFILE) && $SETTINGFILE->getError() == 0){
+            $return	=	$this->services->checkFile($SETTINGFILE, ["jpeg", "jpg", "png", "JPEG", "JPG", "PNG"], 200024);
+            if($return['error'] == false) {
+                return $this->services->renameFile($SETTINGFILE, $placeAvatar, true, $placeAvatar, $filename);
+            }else
+                return [
+                    'error' => true,
+                    'info'  => $return['info'],
+                ];
+
+        } else
+        return $image;
+	}
+
     public function profilePhotoSetter($request , $user , $isUpdating = false)
 	{
         $response = new Response();
@@ -129,7 +159,7 @@ class AddEntity extends AbstractController
                     ->setSiteUrl($defaultbrand['base_url'])
                     ->setFavicon($defaultbrand['favicon_link'])
                     ->setEmail($defaultbrand['emails']['support'])
-                    ->setLogo($defaultbrand['logo_link'])
+                    ->setLogo(strtolower($defaultbrand['name']))
                     ->setCommission(0)
                     ->setNoreplyEmail('noreply@'.$defaultbrand['base_url'])
                     ->setPhone($defaultbrand['phone']['bj'])

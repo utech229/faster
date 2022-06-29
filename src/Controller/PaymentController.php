@@ -2,7 +2,8 @@
 
 namespace App\Controller;
 
-use App\Service\Brand;
+use App\Entity\Brand;
+use App\Entity\Status;
 use App\Entity\Payment;
 use App\Service\uBrand;
 use App\Entity\Operator;
@@ -77,13 +78,11 @@ class PaymentController extends AbstractController
             if ($isAdd == true) { //method calling
                 if (!$this->pCreate) return $this->services->no_access($this->intl->trans("Demande de paiement"));
                 return $this->addPayment($request, $form, $payment);
-            }else {
-                if (!$this->pUpdate)   return $this->services->no_access($this->intl->trans("Traitement de demande de paiement"));
-                return $this->updatePayment($request, $form, $payment);
             }
         }
-
         $this->services->addLog($this->intl->trans('Accès au menu commissions & paiements'));
+        list($userType, $masterId, $userRequest) = $this->services->checkThisUser($this->pView);
+        $brands = $this->em->getRepository(Brand::class)->findBrandBy($userType,  $userRequest);
         return $this->render('payment/index.html.twig', [
             'controller_name' => 'ReferralController',
             'role'            => $this->roleRepository->findAll(),
@@ -93,6 +92,8 @@ class PaymentController extends AbstractController
                 [$this->intl->trans("Paiements")],
             ],
             'brand'       => $this->brand->get(),
+            'brands'      => $brands,
+            'status'      => $this->em->getRepository(Status::class)->findBy(['code' => [2,6,9] ]),
             'baseUrl'     => $this->baseUrl->init(),
             'paymentform' => $form->createView(),
             'pCreate'	  =>	$this->pCreate,
@@ -127,7 +128,7 @@ class PaymentController extends AbstractController
             $payment->setReference("Mob_".$this->services->numeric_generate(10));
             $payment->setCode($this->services->idgenerate(6));
             $payment->setUser($user);
-            $payment->setStatus(0);
+            $payment->setStatus($this->services->status(2));
             $payment->setReceptionPhone($user->getPaymentAccount()[0]['Phone']);
             $payment->setMethod('Mobile Money');
             $payment->setLastBalance($user->getBalance());
@@ -148,22 +149,6 @@ class PaymentController extends AbstractController
         }
         return $this->services->failedcrud($this->intl->trans("Création d'une demande de paiement"));
     }
- 
-    //update function
-    public function updatePayment($request, $form, $payment): Response
-    {
-        if ($form->isSubmitted() && $form->isValid()) {
-        
-           
-        }
-        else 
-        {
-            //return $this->services->invalidForm($form, $this->intl);
-            return $this->services->formErrorsNotification($this->validator, $this->intl, $user);
-        }
-        return $this->services->failedcrud($this->intl->trans("Modification de l'utilisateur : " .$request->request->get('user_name')));
-    }
-
 
     #[Route('/{uid}/get', name: 'app_payment_get', methods: ['POST'])]
     public function getOne(Request $request,Payment $payment): JsonResponse
@@ -180,10 +165,10 @@ class PaymentController extends AbstractController
         $row['operator']        = $cuser->getPaymentAccount()[0]['Operator'];
         $row['treatedby']       = ($payment->getValidator()) ? $payment->getValidator()->getEmail() : '...';
         $row['reference']       = $payment->getReference();
-        $row['type']            = ($cuser->getPaymentAccount()[0]['Operator'] == 'MTN BENIN') ? 1 : 0;//($payment->IsType()) ? $payment->IsType() : 0;
+        $row['type']            = ($cuser->getPaymentAccount()[0]['Operator'] == 'MTN BENIN') ? 1 : 0;
         $row['method']          = $payment->getMethod();
         $row['amount']          = $payment->getAmount();
-        $row['status']          = $payment->getStatus();
+        $row['status']          = $payment->getStatus()->getCode();
         $row['updatedAt']       = ($payment->getUpdatedAt()) ? $payment->getUpdatedAt()->format("c") : null;
         $row['createdAt']       = $payment->getCreatedAt()->format("c");
         $row['phone']           = $payment->getReceptionPhone();
@@ -199,9 +184,22 @@ class PaymentController extends AbstractController
             return $this->services->invalid_token_ajax_list($this->intl->trans('Récupération de la liste des payments : token invalide'));
 
         $data = [];
-        $payments = $this->getPaymentsByRoles($user); //$this->paymentRepository->findAll(); //(!$this->pView) ? [] : $this->getpaymentByRoles();
+        $payments = $this->getPaymentsByRoles($user);
+        $all = count($payments); $approved = 0; $pending = 0;
         foreach ($payments  as $payment) 
 		{          
+            switch ($payment->getStatus()->getCode()) {
+                case 3:
+                    $approved++;
+                    break;
+                case 2:
+                    $pending++;
+                    break;
+                default:
+                    # code...
+                    break;
+            }
+
             $row                 = array();
             $paymentCreator      = $payment->getUser();
 
@@ -217,14 +215,14 @@ class PaymentController extends AbstractController
             $row['reference']       = $payment->getReference();
             $row['method']          = strtolower($payment->getMethod());
             $row['amount']          = $payment->getAmount();
-            $row['status']          = $payment->getStatus();
+            $row['status']          = $payment->getStatus()->getCode();
             $row['updatedAt']       = ($payment->getUpdatedAt()) ? $payment->getUpdatedAt()->format("c") : null;
             $row['createdAt']       = $payment->getCreatedAt()->format("c");
             $row['action']          = [$payment->getUid(), $payment->getStatus()];
             $data []                = $row;
 		}
         $this->services->addLog($this->intl->trans('Lecture de la liste des payments'));
-        $output = array("data" => $data);
+        $output = array("data" => $data, "stats" => ['all' => $all, "pending" => $pending , "approved" => $approved ]);
         return new JsonResponse($output);
     }
 
@@ -233,7 +231,7 @@ class PaymentController extends AbstractController
     {
         if (!$this->isCsrfTokenValid($this->getUser()->getUid(), $request->request->get('_token'))) 
             return $this->services->no_access($this->intl->trans("Suppression d'une demande de paiement").': '.$payment->getCode());
-        if ($payment->getStatus() != 0) 
+        if ($payment->getStatus()->getCode() != 2) 
         return $this->services->msg_error(
             $this->intl->trans("Suppression de la demande de paiement"),$this->intl->trans("Vous ne pouvez pas supprimer une demande de paiement déjà traité"));
 
@@ -249,12 +247,12 @@ class PaymentController extends AbstractController
         if (!$this->isCsrfTokenValid($this->getUser()->getUid(), $request->request->get('_token')) OR !$this->pUpdate) 
         return $this->services->no_access($this->intl->trans("Rejet de la demande").' : '.$payment->getReference());
             
-        if ($payment->getStatus() != 0) 
+        if ($payment->getStatus()->getCode() != 2) 
         return $this->services->msg_error(
             $this->intl->trans("Rejet de la demande de paiement"),$this->intl->trans("Vous ne pouvez pas rejeter une demande de paiement déjà traité"));
 
         //update payment
-        $payment->setStatus(2)->setUpdatedAt(new \DatetimeImmutable())->setValidator($this->getUser());
+        $payment->setStatus($this->services->status(9))->setUpdatedAt(new \DatetimeImmutable())->setValidator($this->getUser());
         $creator = $payment->getUser();
         //update payment creator balance
         $creator->setBalance($creator->getBalance() + $payment->getAmount());
@@ -274,12 +272,12 @@ class PaymentController extends AbstractController
         return $this->services->msg_info(
         $this->intl->trans("Validation de la demande de paiement"),$this->intl->trans("Veuillez renseigner l'ID TRANSACTION"));
 
-        if ($payment->getStatus() != 0) 
+        if ($payment->getStatus()->getCode() != 2) 
         return $this->services->msg_error(
         $this->intl->trans("Validation de la demande de paiement"),$this->intl->trans("Vous ne pouvez pas valider une demande de paiement déjà traité"));
 
         if ($request->request->get('type') == 0) {
-            $payment->setStatus(1)->setUpdatedAt(new \DatetimeImmutable())->setValidator($user)->setTransactionId($request->request->get('trid'))
+            $payment->setStatus($this->services->status(6))->setUpdatedAt(new \DatetimeImmutable())->setValidator($user)->setTransactionId($request->request->get('trid'))
             ->setType($request->request->get('type'))->setObservation("Payment manuellement approuvé et mise à jour");
         }else {
             $receiver = [

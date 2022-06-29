@@ -13,19 +13,22 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\CsrfTokenBadge;
-use Symfony\Component\Security\Http\Authenticator\AbstractLoginFormAuthenticator;
+use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
 use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
 use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordCredentials;
 
-class UserAuthenticator extends AbstractLoginFormAuthenticator
+class UserAuthenticator extends AbstractAuthenticator
 {
     use TargetPathTrait;
 
@@ -48,13 +51,22 @@ class UserAuthenticator extends AbstractLoginFormAuthenticator
         $this->services = $services;
     }
 
-    
+    public function supports(Request $request): ?bool
+    {
+        return $request->attributes->get('_route') === 'app_login' && $request->isMethod('POST');
+        /*dd($request->headers);
+        dd($request->headers->has('X-AUTH-TOKEN'));
+        return $request->headers->has('X-AUTH-TOKEN');*/
+        
+    }
 
     public function authenticate(Request $request): Passport
     {
+        
         $email = $request->request->get('email', '');
         //verification for compte by status
         $user = $this->userRepository->findOneBy(['brand' => $this->brand->get()['brand'], 'email' => $email]);// find a user based on an "email" form field
+       
         if (!$user) {
             throw new CustomUserMessageAuthenticationException($this->intl->trans("Vos informations de connexion sont 
             inexistantes, veuillez vérifier et réessayer"));
@@ -98,16 +110,28 @@ class UserAuthenticator extends AbstractLoginFormAuthenticator
         if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
             return new RedirectResponse($targetPath);
         }
-
         $user = $this->userRepository->findOneByEmail($request->request->get('email'));
         $user->setLastLoginAt(new \DatetimeImmutable());
         $this->em->persist($user);
         $this->em->flush();
         $this->services->addLog($this->intl->trans("Connexion de l'utilisateur"));
-      
         // For example:
         return new RedirectResponse($this->urlGenerator->generate('app_home'));
         //throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);
+    }
+
+    public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
+    {
+        $data = [
+            // you may want to customize or obfuscate the message first
+            'message' => strtr($exception->getMessageKey(), $exception->getMessageData())
+
+            // or to translate this message
+            // $this->translator->trans($exception->getMessageKey(), $exception->getMessageData())
+        ];
+        throw new CustomUserMessageAuthenticationException($data['message']);
+
+        //return new JsonResponse($data, Response::HTTP_UNAUTHORIZED);
     }
 
     protected function getLoginUrl(Request $request): string

@@ -167,7 +167,7 @@ var KTUsersList = function() {
                                         <div class="symbol symbol-circle symbol-50px overflow-hidden me-3">
                                             <a href="javascript:;">
                                                 <div class="symbol-label">
-                                                    <img src="`+window.location.origin+`/app/uploads/avatars/`+data.photo+`" alt="`+data.name+`" class="w-100" />
+                                                    <img src="`+user_avatar_link.replace("_1_", data.photo)+`" alt="`+data.name+`" class="w-100" />
                                                 </div>
                                             </a>
                                         </div>
@@ -359,7 +359,6 @@ var KTUsersList = function() {
                         url: _language_datatables,
                     },
                     dom: '<"top text-end bt-export d-none"B>rtF<"row"<"col-sm-6"l><"col-sm-6"p>>',
-                   
                 }),
                 // Action sur bouton export
                 $(x).on('click', ($this)=>{ $this.preventDefault(); return $(y).hasClass('d-none')?$(y).removeClass('d-none'):$(y).addClass('d-none'); }),
@@ -369,7 +368,6 @@ var KTUsersList = function() {
                 })), l(),
                 document.querySelector('[data-kt-user-table-filter="search"]').addEventListener("keyup", (function(t) {
                     e.search(t.target.value).draw()
-                    // console.log(e['context'][0])
                     UpdateStat(e)         
                 })),
                 document.querySelector('[data-kt-user-table-filter="reset"]').addEventListener("click", (function() {
@@ -394,12 +392,11 @@ var KTUsersList = function() {
                                 e.value && "" !== e.value && (0 !== n && (t += " "),
                                     t += e.value)
                             })),
-                            e.search(t).draw()
+                            e.search(t).draw(),
                             UpdateStat(e)
                     }));
                 })
-                ())
-                
+                ())  
         }
     }
 }();

@@ -15,7 +15,7 @@
 		<meta property="og:url" content="{{ baseUrl }}" />
 		<meta property="og:site_name" content="{{ brand.name }} |{{ brand.name }}" />
 		<!-- Favicons -->
-        <link href="{{ brand.favicon }}" rel="icon">
+        <link href="{{ asset('app/uploads/brands/logos/'~ brand.logo ~'') }}" rel="icon">
         <link href="{{ brand.apple_touch_icon }}" rel="apple-touch-icon">
 		<!--begin::Fonts-->
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" />
@@ -41,15 +41,21 @@
 					<div class="d-flex align-items-start flex-column p-5 p-lg-15">
 						<!--begin::Logo-->
 						<a href="{{ path('app_login')}}" class="mb-12">
-							<img alt="{{ brand.name}}" style="-webkit-filter: saturate(100%);filter: saturate(100%);"  src="{{ brand.white_logo }}" class="h-40px" />
+							<img alt="{{ brand.name}}" style="-webkit-filter: saturate(100%);filter: saturate(100%);"  src="{{ asset('app/uploads/brands/logos/'~ brand.logo ~'') }}" class="h-50px" />
 						</a>
 						<!--end::Logo-->
 						<!--begin::Title-->
-						<h1 class="text-dark fs-2x mb-3">{% trans %}Bienvenue, invité !{% endtrans %}</h1>
+						<h1 class="text-dark fs-2x mb-3">{% trans %}Bienvenue{% endtrans %}</h1>
 						<!--end::Title-->
 						<!--begin::Description-->
-						<div class="fw-bold fs-4 text-gray-400 mb-10">{% trans %}Pour des campagnes marketing propulseur{% endtrans %}
-						<br />{% trans %}rejoins-nous{% endtrans %}</div>
+						<div class="fw-bold fs-4 text-gray-400 mb-10">
+						{% if brand.name == "LITESMS" %}
+						{{brand.name}}, <br>
+						{% trans %}Plateforme de SMS marketing propulseur{% endtrans %}
+						{% else %}
+						{% trans %}Solution de campagne marketing par SMS{% endtrans %}
+						{% endif %}
+						</div>
 						<!--begin::Description-->
 						<!--begin::Illustration-->
 						<img src="{{ asset('app/media/illustrations/sketchy-1/17-dark.png') }}" class="h-250px h-lg-350px" />
@@ -79,6 +85,16 @@
 		<script src="{{ asset('app/js/queries/public-app/country-flag-input.js') }}"></script>
 		 <script src="{{ asset('app/js/queries/general.js') }}"></script>
         <!--end::Global Javascript Bundle-->
+
+		<!--begin::Page Custom Javascript(used by this page)-->
+		<script>
+			const register_url = "{{path('app_register')}}";
+			const login_url    = "{{path('app_login', {'slug': 'registered'})}}";
+		</script>
+		<script src="{{ asset('app/js/queries/authentication/sign-up/general.js') }}"></script>
+		<script src="{{ asset('app/js/queries/authentication/sign-in/general.js') }}"></script>
+		<!--end::Page Custom Javascript-->
+
 		<!--end::Javascript-->
         {% include 'translations/global.html.twig' %}
 		{% include 'section/intl.input.html.twig' %}

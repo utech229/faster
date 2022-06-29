@@ -1,17 +1,17 @@
 "use strict";
-var KTUsersAddPayment = function() {
-    const t = document.getElementById("kt_modal_payment_request"),
-        e = t.querySelector("#kt_modal_payment_request_form"),
+var KTAddContact = function() {
+    const t = document.getElementById("kt_modal_create_contact"),
+        e = t.querySelector("#kt_modal_contact_form"),
         n = new bootstrap.Modal(t);
     return {
         init: function() {
             (() => {
                 var o = FormValidation.formValidation(e, {
                     fields: {
-                        'payment[amount]': {
+                        'phone': {
                             validators: {
                                 notEmpty: {
-                                    message: '_paymentDesc_Required' 
+                                    message: 'Le numéro est obligatoire' 
                                 }
                             }
                         }
@@ -19,25 +19,33 @@ var KTUsersAddPayment = function() {
                     plugins: {
                         trigger: new FormValidation.plugins.Trigger,
                         bootstrap: new FormValidation.plugins.Bootstrap5({
-                            rowSelector: ".fv-row",
+                            rowSelector: ".fv",
                             eleInvalidClass: "",
                             eleValidClass: ""
                         })
                     }
                 });
-                t.querySelector('[data-kt-payment-modal-action="close"]').addEventListener("click", (t => {
-                    t.preventDefault(), 
-                        t.value , n.hide()
-                })), t.querySelector('[data-kt-payment-modal-action="cancel"]').addEventListener("click", (t => {
-                    t.preventDefault(), (e.reset(), n.hide())
-                }));
-                const i = t.querySelector('[data-kt-payment-modal-action="submit"]');
-                i.addEventListener("click", (function(t) {
-                    t.preventDefault(), o && o.validate().then((function(t) {
+                t.querySelector('[data-kt-contact-modal-action="close"]').addEventListener("click", ($this) => {
+                    $this.preventDefault(); n.hide();
+                });
+                t.querySelector('[data-kt-contact-modal-action="cancel"]').addEventListener("click", ($this) => {
+                    $this.preventDefault();
+                    e.reset();n.hide();
+                });
+                const i = t.querySelector('[data-kt-contact-modal-action="submit"]');
+                e.addEventListener("submit", (function(t) {
+                    
+                    t.preventDefault();
+                    var inputs = document.querySelectorAll("[data-name=phone]");
+
+                    inputs.forEach((input, index) => {
+                        var hidden = input.closest("div").querySelector("input[type=hidden]");
+                        $(hidden).val(allHidden[index].getNumber());
+                    });
+                    o && o.validate().then((function(t) {
                         console.log("validated!"), "Valid" == t ? (i.setAttribute("data-kt-indicator", "on"), i.disabled = !0, 
-                        loading(true),
                         $.ajax({
-                            url: add_payment_link,
+                            url: contact_new,
                             type: 'post',
                             data: new FormData(e),
                             dataType: 'json',
@@ -46,9 +54,7 @@ var KTUsersAddPayment = function() {
                             cache: false,
                             success: function(response) {
                                     i.removeAttribute("data-kt-indicator"), i.disabled = !1;
-                                    loading()
                                     Swal.fire({
-                                        title: _Swal_success,
                                         text: response.message,
                                         icon: response.type,
                                         buttonsStyling: false,
@@ -58,7 +64,9 @@ var KTUsersAddPayment = function() {
                                         }
                                     })
                                     if (response.type === 'success') {
-                                        t.isConfirmed && e.reset(), tableReloadButton.click(), n.hide();
+                                        t.isConfirmed && e.reset(),
+                                        $('#kt_modal_add_contact_reload_button').click();
+                                          n.hide();
                                     }
                             },
                             error: function () { 
@@ -66,7 +74,8 @@ var KTUsersAddPayment = function() {
                                 i.removeAttribute("data-kt-indicator"), i.disabled = !1;
                                 loading()
                             },
-                        })) : 
+                        })
+                        ) : 
                         $(document).trigger('onFormError'),
                         loading();
                     }))
@@ -76,5 +85,5 @@ var KTUsersAddPayment = function() {
     }
 }();
 KTUtil.onDOMContentLoaded((function() {
-    KTUsersAddPayment.init()
+    KTAddContact.init()
 }));

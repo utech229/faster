@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Role;
 use App\Entity\User;
 use App\Entity\Router;
 use App\Service\uBrand;
@@ -91,6 +92,7 @@ class RegistrationController extends AbstractController
                 $this->intl->trans("La recherche du nom du pays à échoué : BrickPhone"),
             );
 
+        
             // A commenter revoir lorsque l'envoi des mail est activé
             $user->setCreatedAt(new \DatetimeImmutable());
             $user->setBalance(0);
@@ -100,6 +102,7 @@ class RegistrationController extends AbstractController
             $user->setPostPay(0);
             $user->setIsDlr(0);
             $user->setRole($entityManager->getRepository(Role::Class)->findOneById(1));
+            $user->setProfilePhoto("default_avatar_1.png");
             $user->setRoles(['ROLE_USER']);
             $user->setRouter($entityManager->getRepository(Router::Class)->findOneById(1));
             $user->setBrand($this->brand->get()['brand']);
