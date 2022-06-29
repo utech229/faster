@@ -16,7 +16,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/{_locale}/home')]
 #[IsGranted("ROLE_USER")]
-
 class HomeController extends AbstractController
 {
     public function __construct(TranslatorInterface $intl, uBrand $brand, BaseUrl $baseUrl, Services $services,
