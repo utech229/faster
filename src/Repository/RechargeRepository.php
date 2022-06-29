@@ -3,6 +3,8 @@
 namespace App\Repository;
 
 use App\Entity\Recharge;
+use App\Entity\User;
+use App\Entity\Brand;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -39,6 +41,35 @@ class RechargeRepository extends ServiceEntityRepository
         }
     }
 
+    //GET Recharge By or Reseller or Brand
+    public function getRechargeBy($idManager = NULL, $idReseller = NULL, $idBrand = NULL){
+        $q = $this->createQueryBuilder('r')->from(User::class, "u")->from(Brand::class, "b");
+        if($idManager)  $q->andWhere('r.user = u.id')->andWhere('u.accountManager = :id')->setParameter('id', $idManager);
+        if($idReseller) $q->andWhere('r.user = u.id')->andWhere('u.brand = b.id')->andWhere('b.manager = :id')->setParameter('id', $idReseller);
+        if($idBrand)    $q->andWhere('r.user = u.id')->andWhere('u.brand = b.id')->andWhere('b.brand = :id')->setParameter('id', $idBrand);
+        return $q->orderBy('r.id', 'DESC')->getQuery()->getResult();
+    }
+
+    //  //Manager id
+    //  public function getRechargeByManager($idManager){
+    //     return
+    //     $this->createQueryBuilder('r')
+    //     ->from(User::class, "u")
+    //     ->andWhere('r.user = u.id')
+    //     ->andWhere('u.accountManager = :id')
+    //     ->setParameter('id', $idManager)->orderBy('r.id', 'DESC')->getQuery()->getResult();
+    // }
+
+    // //ReselleR id
+    // public function getRechargeByReseller($idReseller){
+    //     return $this->createQueryBuilder('r')->from(User::class, "u")->from(Brand::class, "b")->andWhere('r.user = u.id')->andWhere('u.brand = b.id')
+    //     ->andWhere('b.manager = :id')->setParameter('id', $idReseller)->orderBy('r.id', 'DESC')->getQuery()->getResult();
+    // }
+    // //Getby
+    // public function getRechargeByBrand($idBrand){
+    //     return $this->createQueryBuilder('r')->from(User::class, "u")->from(Brand::class, "b")->andWhere('r.user = u.id')->andWhere('u.brand = b.id')
+    //     ->andWhere('b.brand = :id')->setParameter('id', $idReseller)->orderBy('r.id', 'DESC')->getQuery()->getResult();
+    // }
 //    /**
 //     * @return Recharge[] Returns an array of Recharge objects
 //     */

@@ -29,7 +29,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         parent::__construct($registry, User::class);
     }
 
-    public function add(User $entity, bool $flush = false): void
+    public function add(User $entity, bool $flush = true): void
     {
         $this->getEntityManager()->persist($entity);
 
@@ -233,7 +233,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
                 default: break;
             }
         }
-        
+
         $query = $qb->getQuery();
         //dd($query->execute());
         return $query->execute();

@@ -23,8 +23,10 @@ $(document).on('click', '.updateBrand', function(e){
             $('#noreplyEmail').val(r.adressN);
             $('#phoneb').val(r.phone);
             $('#phoneb').val(r.phone);
+            // $('#_uSelect').val()
+            // $('#observations').val(r.observations);
             $('#thisU').val(r.manager[1]);
-            $('#account_check').val(r.manager[0]).trigger('change');
+            $('#_uSelect').val(r.manager[0]).trigger('change');
             $('#waiting').modal('hide');
             $('#kt_modal_create_folder').modal('show');
         },
@@ -298,7 +300,8 @@ var KTUsersLoadBrand = function() {
                         var status = {
                             1 : { 'title': _pendingb, 'class': 'warning' },
                             3 : { 'title': _validateb, 'class': 'success' },
-                            7 : { 'title': _canceledb, 'class': 'danger' },
+                            4 : { 'title': _canceledb, 'class': 'danger' },
+                            5 : { 'title': _disabled, 'class': 'danger' },
                         };
                         if (typeof status[data] === 'undefined') {
                             return data;

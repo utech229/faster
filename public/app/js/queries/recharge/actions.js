@@ -6,19 +6,50 @@ $(document).on('click', '.cursor-balance', function(e){
     $('.phone-required').hide();
 });
 
-
 $(document).on('click', '.cursor-mobile-carte', function(e){
     $('.phone-required').show();
 });
 
 $(document).on('click', '#self_recharge', function(e){
-    $('.uAction').hide();
-    $('#cursorBalance').hide();
-    $('input:radio[name=typeProcess]')[1].checked=true;
-    $('#kt_modal_recharge').modal('show');
+
+    $('#kt_modal_recharge_self').modal('show');
+});
+function reload(r, rRecharge){
+    // $('#waiting').modal('show');
+    $.ajax({
+        url: rRecharge,
+        type: "post",
+        data: {u : r, _token : csrfToken},
+        dataType: "json",
+        success: function(response) {
+            // $('#waiting').modal('hide');
+            tableReloadButton.click();
+            Swal.fire({
+                text: response.message,
+                icon: response.status,
+                buttonsStyling: false,
+                // confirmButtonText: _Form_Ok_Swal_Button_Text_Notification,
+                customClass: {
+                    confirmButton: "btn btn-primary"
+                }
+            });
+        },
+    });
+}
+
+$(document).on('click', ".reloadRecharge", function() {
+    var r = $(this).data('id');
+    reload(r, rRecharge);
 });
 
 
+var str = document.location.href;
+var url, id = '';
+url = new URL(str);
+id = url.searchParams.get("id");
+if(id){
+    reload(id, rRecharge);
+}
 var KTUsersRechargeUser = function() {
     const t = document.getElementById("kt_modal_recharge"),
         e = t.querySelector("#kt_modal_recharge_form"),
@@ -79,7 +110,86 @@ var KTUsersRechargeUser = function() {
                                         customClass: {
                                             confirmButton: "btn btn-primary"
                                         }
-                                    })
+                                    });
+                                    if (response.data) window.location.href = response.data;
+                                    if (response.type === 'success') e.reset(), n.hide(),tableReloadButton.click();
+                            },
+                            error: function () {
+                                $(document).trigger('onAjaxError');
+                                i.removeAttribute("data-kt-indicator"), i.disabled = !1;
+                            },
+                        })) :
+                        $(document).trigger('onFormError')
+                        // load.addClass('sr-only')
+                        ;
+                    }))
+                }))
+            })()
+        }
+    }
+}();
+var KTUsersRecharge = function() {
+    const t = document.getElementById("kt_modal_recharge_self"),
+        e = t.querySelector("#kt_modal_recharge_form"),
+        n = new bootstrap.Modal(t);
+    return {
+        init: function() {
+            (() => {
+                var o = FormValidation.formValidation(e, {
+                    fields: {
+                        'amount': {
+                            validators: {
+                                notEmpty: {
+                                    message: msg_amount_required
+                                }
+                            }
+                        },
+                        'phone': {
+                            validators: {
+                                notEmpty: {
+                                    message: msg_phone_required
+                                }
+                            }
+                        },
+                    },
+                    plugins: {
+                        trigger: new FormValidation.plugins.Trigger,
+                        bootstrap: new FormValidation.plugins.Bootstrap5({
+                            rowSelector: ".fv-row",
+                            eleInvalidClass: "",
+                            eleValidClass: ""
+                        })
+                    }
+                });
+                t.querySelector('[data-kt-modal-action="close"]').addEventListener("click", (t => {
+                    t.preventDefault(),  t.value && n.hide()
+                })), t.querySelector('[data-kt-modal-action="cancel"]').addEventListener("click", (t => {
+                    t.preventDefault(), e.reset(), n.hide()
+                }));
+                const i = t.querySelector('[data-kt-modal-action="submit"]');
+                i.addEventListener("click", (function(t) {
+                    t.preventDefault(), o && o.validate().then((function(t) {
+                        console.log("validated!"), "Valid" == t ? (i.setAttribute("data-kt-indicator", "on"), i.disabled = !0,
+                        $.ajax({
+                            url: createRecharge,
+                            type: 'post',
+                            data: new FormData(e),
+                            dataType: 'json',
+                            processData: false,
+                            contentType: false,
+                            cache: false,
+                            success: function(response) {
+                                    i.removeAttribute("data-kt-indicator"), i.disabled = !1;
+                                    Swal.fire({
+                                        text: response.message,
+                                        icon: response.type,
+                                        buttonsStyling: false,
+                                        confirmButtonText: _Form_Ok_Swal_Button_Text_Notification,
+                                        customClass: {
+                                            confirmButton: "btn btn-primary"
+                                        }
+                                    });
+                                    if (response.data) window.location.href = response.data;
                                     if (response.type === 'success') e.reset(), n.hide(),tableReloadButton.click();
                             },
                             error: function () {
@@ -178,6 +288,10 @@ var KTUsersLoadRecharge = function() {
             $('#kt_table_recharge_reload_button').on('click', function() {
                 t.ajax.reload(null, false);
             }),
+            $(document).on('submit', '#formFilter', function(e){
+                e.preventDefault();
+                t.ajax.url(uriLoad+'?'+$(this).serialize()).load(function(){});
+            }),
             document.querySelector('[data-kt-recharge-table-filter="search"]').addEventListener("keyup", (function(e) {
                 t.search(e.target.value).draw()
             }))
@@ -188,6 +302,7 @@ var KTUsersLoadRecharge = function() {
 
 KTUtil.onDOMContentLoaded((function() {
     KTUsersRechargeUser.init(),
+    KTUsersRecharge.init(),
     KTUsersLoadRecharge.init()
 }));
 
