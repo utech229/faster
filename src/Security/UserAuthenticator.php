@@ -52,7 +52,7 @@ class UserAuthenticator extends AbstractLoginFormAuthenticator
 
     public function authenticate(Request $request): Passport
     {
-        dd('defr');
+        dd('defr00');
         $email = $request->request->get('email', '');
         //verification for compte by status
         $user = $this->userRepository->findOneBy(['brand' => $this->brand->get()['brand'], 'email' => $email]);// find a user based on an "email" form field
@@ -113,7 +113,7 @@ class UserAuthenticator extends AbstractLoginFormAuthenticator
     }
 
     protected function getLoginUrl(Request $request): string
-    {dd('85');
+    {
         return $this->urlGenerator->generate(self::LOGIN_ROUTE);
     }
 }
