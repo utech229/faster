@@ -59,7 +59,8 @@ class BrandController extends AbstractController
             case 0: $inBrand  = true; $users = $this->uRepository->findAll(); break;
             case 1: $inBrand  = true; $users = $this->services->getUserByPermission('MANGR'); break;
             case 2: $inBrand  = $this->bRepository->findOneBy(['manager'=> $this->getUser()]); break;
-            default: $inBrand = false; break;
+            case 4: $inBrand  = $this->bRepository->findOneBy(['manager'=> $this->getUser()]); break;
+            default: $inBrand = $this->bRepository->findOneBy(['manager'=> $this->getUser()->getAffiliationManager()]); break;
         }
 
         return $this->render('brand/index.html.twig', [
@@ -98,7 +99,7 @@ class BrandController extends AbstractController
             if(!$user) return $this->services->msg_error($this->intl->trans("Utilisateur incorrect.").': '.$this->getUser()->getEmail(), $this->intl->trans("L'utilisateur sélectionné n'existe pas ou n'est pas actif."));
         }
 
-        $executeReq = $this->services->checkThisUser($this->pAllAccess, NULL, NULL, $user);
+        $executeReq  = $this->services->checkThisUser($this->pAllAccess, NULL, NULL, $user);
         if($executeReq[0]== 0 || $executeReq[0] == 1){
             $creator = $this->getUser();
             $manager = $user;
@@ -111,7 +112,7 @@ class BrandController extends AbstractController
             $inBrand = $this->bRepository->findOneBy(['uid'=> $request->request->get('thisU')]);
             //Permettre également à l'utilisateur de pouvoir changer le statut
             if($inBrand){
-                $inBrand-> setUid($this->services->getUniqid())
+                $inBrand-> setManager($manager)
                         -> setName($request->request->get('_name_brand'))
                         -> setSiteUrl($request->request->get('_url_brand'))
                         -> setLogo($buildImg)
@@ -122,6 +123,7 @@ class BrandController extends AbstractController
                         -> setPhone($request->request->get('_phone_support'))
                         -> setCreatedAt(new \DatetimeImmutable())
                         -> setCreator($creator);
+                        // -> setObservations($request->request->get('observations'));
                         $this->bRepository->add($inBrand);
                 $msg1 =$this->intl->trans("Modification de marque blanche").': '.$this->getUser()->getEmail();
                 $msg2 = $this->intl->trans("La marque a été modifiée avec succès.");
@@ -132,7 +134,7 @@ class BrandController extends AbstractController
             $existBrand = $this->bRepository->findOneBy(['name'=> $request->request->get('_name_brand')]);
             if($existBrand){ return $this->services->msg_error($this->intl->trans("Création de marque échouée."), $this->intl->trans("Ce nom de marque n'est pas disponible. Veuillez changer le nom pour continuer."));}
             $newBrand   = new Brand;
-            $newBrand-> setManager($manager)
+            $newBrand   -> setManager($manager)
                         -> setStatus($this->services->status(1))
                         -> setUid($this->services->getUniqid())
                         -> setName($request->request->get('_name_brand'))
@@ -164,6 +166,7 @@ class BrandController extends AbstractController
             if($inBrand){
                 $inBrand-> setStatus($this->services->status($request->request->get('st')))
                         -> setUpdatedAt(new \DatetimeImmutable())
+                        -> setObservations($request->request->get('observations'))
                         -> setValidator($this->getUser());
                 $this->bRepository->add($inBrand);
                 return $this->services->msg_success($this->intl->trans("Changement de statut."), $this->intl->trans("Le statut de la marque a été changé avec succès."));
@@ -210,7 +213,8 @@ class BrandController extends AbstractController
                         'adressN'   => $checkBrand->getNoreplyEmail(),
                         'phone'     => $checkBrand->getPhone(),
                         'uriLogo'   => $checkBrand->getLogo(),
-                        'status'    => $checkBrand->getStatus()->getCode()
+                        'status'    => $checkBrand->getStatus()->getCode(),
+                        // 'observation'    => $checkBrand->getStatus()->getCode()
         ];
         $this->services->addLog($this->intl->trans("Récupération des informations d'une marque de revente de la solution."));
         return new JsonResponse($infoBrand);

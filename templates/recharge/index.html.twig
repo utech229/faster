@@ -52,42 +52,55 @@
                             <div class="px-7 py-5" data-kt-user-table-filter="form">
                                 <!--end::Input group-->
                                 <!--begin::Input group-->
-                                <div class="mb-5">
-                                    <label class="form-label fs-6 fw-bold">{{ 'Sélectionnez Marque' | trans }} :</label>
-                                    <select class="form-select form-select-solid fw-bolder" data-kt-select2="true" data-placeholder="{{"Choisissez marque"}}" data-allow-clear="true">
-                                        <option value="">{{"Tous"|trans}}</option>
-                                        {% if brands is defined %}
-                                            {% for brand in brands %}
-                                                <option value="{{brand.uid }}">{{ brand.name }}</option>
-                                            {% endfor %}
-                                        {% endif %}
-                                    </select>
-                                </div>
-                                <!--end::Input group-->
-                                <!--begin::Input group-->
-                                <div class="mb-5">
-                                    <label class="form-label fs-6 fw-bold">{{ 'Sélectionnez utilisateur' | trans }} :</label>
-                                    <select class="form-select form-select-solid fw-bolder" data-kt-select2="true" data-placeholder="{{"Choisissez l'utilisateur"}}" data-allow-clear="true">
-                                        <option value="">{{"Tous"|trans}}</option>
-                                        {% if users is defined %}
-                                            {% for user in users %}
-                                                <option value="{{user.uid }}">{{ user.email }}</option>
-                                            {% endfor %}
-                                        {% endif %}
-                                    </select>
-                                </div>
-                                <!--end::Input group-->
-
-                                <!--end::Input group-->
-                                <!--begin::Actions-->
-                                <div class="d-flex justify-content-end">
-                                    <button type="button" class="btn btn-light btn-active-light-primary fw-bold me-2 px-6" data-kt-menu-dismiss="true" id="reset">{{"Remise à zéro"|trans}}</button>
-                                    <button type="submit" class="btn btn-primary fw-bold px-6" data-kt-menu-dismiss="true" id="submit">{{"Appliquer"|trans}}</button>
-                                </div>
+                                <form id="formFilter">
+                                    <input type="hidden" value="{{ csrf_token(app.user.uid) }}" name="_token">
+                                    <div class="mb-5">
+                                        <label class="form-label fs-6 fw-bold">{{ 'Sélectionnez Marque' | trans }} :</label>
+                                        <select class="form-select form-select-solid fw-bolder" name="brand" data-kt-select2="true" data-placeholder="{{"Choisissez marque"}}" data-allow-clear="true">
+                                            <option value="">{{"Tous"|trans}}</option>
+                                            {% if brands is defined %}
+                                                {% for brand in brands %}
+                                                    <option value="{{brand.uid }}">{{ brand.name }}</option>
+                                                {% endfor %}
+                                            {% endif %}
+                                        </select>
+                                    </div>
+                                    <!--begin::Input group-->
+                                    <div class="mb-5">
+                                        <label class="form-label fs-6 fw-bold">{{ 'Sélectionnez utilisateur' | trans }} :</label>
+                                        <select class="form-select form-select-solid fw-bolder" name="uSelect" data-kt-select2="true" data-placeholder="{{"Choisissez l'utilisateur"}}" data-allow-clear="true">
+                                            <option value="ts">{{"Tous"|trans}}</option>
+                                            {% if users is defined %}
+                                                {% for user in users %}
+                                                    <option value="{{user.uid }}">{{ user.email }}</option>
+                                                {% endfor %}
+                                            {% endif %}
+                                        </select>
+                                    </div>
+                                    <!--begin::Actions-->
+                                    <div class="d-flex justify-content-end">
+                                        <button type="button" class="btn btn-light btn-active-light-primary fw-bold me-2 px-6" data-kt-menu-dismiss="true" id="reset">{{"Remise à zéro"|trans}}</button>
+                                        <button type="submit" class="btn btn-primary fw-bold px-6" data-kt-menu-dismiss="true">{{"Appliquer"|trans}}</button>
+                                    </div>
+                                </form>
                                 <!--end::Actions-->
                             </div>
                             <!--end::Content-->
                         </div>
+                    </div>
+                    <div class="modal fade" id="waiting" tabindex="-1" aria-hidden="true">
+                        <!--begin::Modal dialog-->
+                        <div class="modal-dialog modal-dialog-centered mw-400px">
+                            <!--begin::Modal content-->
+                            <div class="modal-content text-center">
+                                <div class="fv-row p-10 text-warning">
+                                    <span class="spinner-border spinner-border-sm align-middle ms-2"></span> En cours de chargement</span>
+                                </div>
+
+                            </div>
+                            <!--end::Modal content-->
+                        </div>
+                        <!--end::Modal dialog-->
                     </div>
                     <!--end::Card title-->
                     <!--begin::Card toolbar-->
@@ -189,7 +202,7 @@
 
                                                     <div class="fv-row mb-8 uAction">
                                                         <label class="d-flex align-items-center fs-5 fw-bold mb-2">{% trans %}Compte{% endtrans %}</label>
-                                                        <select class="form-select form-select-solid fw-bolder" name="uSelect" data-kt-select2="true" data-placeholder="{{"Choisissez l'utilisateur"}}" data-allow-clear="true">
+                                                        <select class="form-select form-select-solid fw-bolder" name="uSelect" data-kt-select2="true" data-dropdown-parent="#kt_modal_recharge" data-placeholder="{{"Choisissez l'utilisateur"}}" data-allow-clear="true">
                                                             {% if users is defined %}
                                                                 {% for user in users %}
                                                                     <option value="{{ user.uid }}">{{ user.email }}</option>
@@ -213,7 +226,7 @@
                                                             <span class="required">{{'Téléphone'|trans }}</span>
                                                         <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="{{'Numéro de téléphone qui sera utilisé pour le paiement'|trans}}"></i>
                                                         </label>
-                                                        <input type="tel" class='form-control form-control-solid mb-3 mb-lg-0'  name="phone" placeholder="" value="{{ app.user.phone }}" />
+                                                        <input type="tel" class='form-control form-control-solid mb-3 mb-lg-0 tel'  name="phone" placeholder="" value="{{ app.user.phone }}" />
                                                     </div>
                                                     <!--end::Input group-->
                                                     <!--begin::Input group-->
@@ -389,7 +402,7 @@
                                                             <span class="required">{{'Téléphone'|trans }}</span>
                                                         <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="{{'Numéro de téléphone qui sera utilisé pour le paiement'|trans}}"></i>
                                                         </label>
-                                                        <input type="tel" class='form-control form-control-solid mb-3 mb-lg-0'  name="phone" placeholder="" value="{{ app.user.phone }}" />
+                                                        <input type="tel" class='form-control form-control-solid mb-3 mb-lg-0 tel'  name="phone" placeholder="" value="{{ app.user.phone }}" />
                                                     </div>
                                                     <!--end::Input group-->
                                                     <!--begin::Input group-->
@@ -559,7 +572,7 @@
                                                         <span class="required">{{'Téléphone'|trans }}</span>
                                                     <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="{{'Numéro de téléphone qui sera utilisé pour le paiement'|trans}}"></i>
                                                     </label>
-                                                    <input type="text" class='form-control form-control-solid mb-3 mb-lg-0'  name="name" placeholder="" value="" />
+                                                    <input type="text" class='form-control form-control-solid mb-3 mb-lg-0 tel'  name="name" placeholder="" value="" />
 
                                                 </div>
                                                 <!--end::Input group-->
@@ -661,6 +674,7 @@
     </div>
     <!--end::Post-->
     <!--end::Post-->
+
 </div>
 <div class="sr-only" id="loading-container" >
     <img id="loading" src="/app/media/loading/loading.gif"/>

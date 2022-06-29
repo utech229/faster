@@ -1,0 +1,141 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title></title>
+    </head>
+    <body>
+        <div class="row">
+            {# {% if (data.brand !='FASTERMESSAGE') %} #}
+
+                <div style="background-color:#F8F7F7; padding: 20px;">
+
+                    <div  style="margin-left: 60%; font-size: 20px; font-weight: 700px; background-color:#F8F7F7; padding: 15px; text-align: center; border-radius: 5px;">
+                        <span>
+                        <b>{% trans %}FACTURE{% endtrans %}</b>
+                        </span>
+                    </div>
+                </div>
+            {# {% else %}
+                    <div   style="margin-left: 60%; font-size: 20px; font-weight: 700px; background-color: #0071bc; color: #fff; padding: 15px; text-align: center; border-radius: 5px;">
+                    <span>
+                    <b>{% trans %}FACTURE{% endtrans %}</b>
+                    </span>
+                </div>
+            {% endif %} #}
+            <div class="col-lg-1 text-success">
+                    {# {% if (data.brand !='FASTERMESSAGE') %} #}
+                        <div style="width: 90px;"><img src="" style="width: 80px; height: 60px;" style="padding: 0px; margin: 0px; text-align: right !important;"/></div>
+                        <div style="margin-left: 90px; margin-top: -30px;"><b>FASTERMESSAGE</b><br>
+                    {# {% else %}
+                        <br>
+                        <div style="width: 90px;"><img src={{data.ImgAdmin}} style="width: 80px" style="padding: 0px; margin: 0px; text-align: right !important;"/></div>
+                        <div style="margin-left: 90px; margin-top: -55px;"><b>URBAN TECHNOLOGY SARL</b><br><span style="font-size: 12px;">Ingénierie informatique - Services des télécommunications</span></div><br><span >
+                    {% endif %} #}
+                </table>
+                <br>
+            </div>
+            <div style="margin-left: 40 %; padding: 25px;">
+
+                    <table>
+                        <tr>
+                            <td><b>{% trans %}Nom {% endtrans %}</b></td><td>: OUANKPO</td>
+                        </tr>
+                        <tr>
+                            <td><b>{% trans %}Téléphone{% endtrans %}</b></td><td>: OUANKPO</td>
+                        </tr>
+                        <tr>
+                    <td><b>{% trans %}Adresse{% endtrans %}</b></td><td>: AkonVille</td>
+                        </tr>
+                    </table>
+
+            </div>
+            <br><br>
+            <div>
+
+                    <table>
+                        <tr>
+                            <td><b>{% trans %}Référence {% endtrans %}</b></td><td>: 093938441</td>
+                        </tr>
+                        <tr>
+                            <td><b>{% trans %}Date{% endtrans %}</b></td><td>:2022-09-01 à 09:12</td>
+                        </tr>
+                    </table>
+                    <br><br>
+                    <table style="width: 100%; ">
+                        {# {% if (data.brand !='FASTERMESSAGE') %} #}
+                            <thead style="background-color:#F8F7F7; padding: 5px; margin: 0px; ">
+                                <tr>
+                                    <th style="padding: 10px; width: 50%;">{% trans %}Désignations{% endtrans %}</th>
+                                    <th style="padding: 10px; width: 50%;">{% trans %}Montant {% endtrans %}XOF</th>
+                                </tr>
+                            </thead>
+                            <tbody style="">
+                                <tr>
+                                    <td style="padding: 25px;">Rechargement</td>
+                                    <td style="text-align: center; "style="padding: 25px;">3500</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2"><hr style="border-width:0.75px; border-color: #F8F7F7;border-collapse:collapse;"/></td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td style="text-align: center" style="padding: 25px;"><b>{% trans %}Total {% endtrans %}</b></td>
+                                    <td style="text-align: center" style="padding: 25px;"><b>2000 XOF</b></td>
+                                </tr>
+                            </tfoot>
+                        {# {% else %}
+                            <thead style="background-color: #0071bc; color: #fff; padding: 15px; margin: 0px;">
+                                <tr>
+                                    <th style="padding: 10px;">{% trans %}Désignations{% endtrans %}</th>
+                                    <th style="padding: 10px;">{% trans %}Montant {% endtrans %}({{ data.devise }})</th>
+                                </tr>
+                            </thead>
+                            <tbody style="">
+                                <tr>
+                                    <td style="padding: 25px;">{{data.message}}</td>
+                                    <td style="text-align: center; "style="padding: 25px;">{{data.montant}}</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2"><hr style="border-width:0.75px; border-color: #0071bc;border-collapse:collapse;"/></td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td style="text-align: center" style="padding: 25px;"><b>{% trans %}Total {% endtrans %}</b></td>
+                                    <td style="text-align: center" style="padding: 25px;"><b>{{data.montant }} {{ data.devise}}</b></td>
+                                </tr>
+                            </tfoot>
+                            {% endif %} #}
+                    </table>
+
+
+
+
+            </div>
+        </div>
+        <br><br><br>
+        <div style="margin-left: 50%">
+            <img src="" style="width: 200px; margin-top: 15px;"/>
+        </div>
+
+        <div style="margin-top: 150px; text-align: center; padding-top: 5px;">
+        <hr style="border-style: solid; border-width: 2px; border-color: #000;"/>
+
+            {# {% if (data.brand != "FASTERMESSAGE")  %}
+                {% if (data.RCCM != '') %}
+                    <b>RCCM</b> : {{ data.RCCM }}
+                {% endif %}
+                {% if (data.IFU != '') %}
+                    <b>IFU</b> : {{ data.IFU }}<br />
+                {% endif %}
+                {{ data.adress }} - <b>TEL</b> : {{ data.phoneTeam }}
+                <br>
+                <b>Email</b> : {{ data.emailSender }} - <b>{% trans %}Site web {% endtrans %}</b> :{{ data.UrlSite }}<br>
+            {% else %} #}
+                <b>RCCM</b> :RB/COT/16 BP 1570 - <b>IFU</b> : 3201641186710<br />
+                3381 Agla, Cotonou (Bénin) - <b>TEL</b> :22952734444/22967393349<br />
+                <b>Email</b> : faster@fastermessage.com - <b>{% trans %}Site web {% endtrans %}</b> : www.fastermessage.com <br>
+            {# {% endif %} #}
+    </body>
+</html>

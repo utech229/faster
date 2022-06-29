@@ -6,15 +6,12 @@ $(document).on('click', '.cursor-balance', function(e){
     $('.phone-required').hide();
 });
 
-
 $(document).on('click', '.cursor-mobile-carte', function(e){
     $('.phone-required').show();
 });
 
 $(document).on('click', '#self_recharge', function(e){
-    // $('.uAction').hide();
-    // $('#cursorBalance').hide();
-    // $('input:radio[name=typeProcess]')[1].checked=true;
+
     $('#kt_modal_recharge_self').modal('show');
 });
 function reload(r, rRecharge){
@@ -39,10 +36,13 @@ function reload(r, rRecharge){
         },
     });
 }
+
 $(document).on('click', ".reloadRecharge", function() {
     var r = $(this).data('id');
     reload(r, rRecharge);
 });
+
+
 var str = document.location.href;
 var url, id = '';
 url = new URL(str);
@@ -110,7 +110,8 @@ var KTUsersRechargeUser = function() {
                                         customClass: {
                                             confirmButton: "btn btn-primary"
                                         }
-                                    })
+                                    });
+                                    if (response.data) window.location.href = response.data;
                                     if (response.type === 'success') e.reset(), n.hide(),tableReloadButton.click();
                             },
                             error: function () {
@@ -286,6 +287,10 @@ var KTUsersLoadRecharge = function() {
             }),
             $('#kt_table_recharge_reload_button').on('click', function() {
                 t.ajax.reload(null, false);
+            }),
+            $(document).on('submit', '#formFilter', function(e){
+                e.preventDefault();
+                t.ajax.url(uriLoad+'?'+$(this).serialize()).load(function(){});
             }),
             document.querySelector('[data-kt-recharge-table-filter="search"]').addEventListener("keyup", (function(e) {
                 t.search(e.target.value).draw()
