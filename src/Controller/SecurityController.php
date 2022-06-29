@@ -45,12 +45,12 @@ class SecurityController extends AbstractController
             $user = new User();
             $form = $this->createForm(RegistrationFormType::class, $user);
         }
-        dd('defr');
+       
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
         // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
-
+        dd('defr');
         return $this->render('security/'.$this->brand->get()['loginform'], 
         [
             'last_username'   => $lastUsername, 
