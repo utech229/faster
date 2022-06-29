@@ -329,7 +329,7 @@ class UserController extends AbstractController
             $row['phone']        = $user->getPhone();
             $row['brand']        = [   'name'  => $brand->getName(),'uid' => $brand->getUid(),'roleLevel' => $user->getRole()->getLevel()];
             $row['role']         = $user->getRoles()[0];
-            $row['country']      = '';
+            $row['country']      = $user->getCountry()['name'];
             $row['postPay']      = $user->IsPostPay();
             $row['isDlr']        = $user->getIsDlr();
             $row['balance']      = $user->getBalance();
