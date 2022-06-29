@@ -47,9 +47,9 @@
                         {% if brand.name == "FASTERMESSAGE" %}
                             <img alt="Logo" src="{{ asset('app/media/logos/logo-1-dark.png') }}" class="h-35px logo" />
                         {% else %}
-                             <img alt="Logo" src="{{ asset('app/uploads/brands/logos/'~ brand.logo ~'') }}" class="h-50px" /> <span class="text-white fs-4 fw-bolder fst-italic">{{brand.name}}</span> 
+                             <img alt="Logo" src="{{ asset('app/uploads/brands/logos/'~ brand.logo ~'') }}" class="h-50px" /> <span class="text-white fs-4 fw-bolder fst-italic">{{brand.name}}</span>
                         {% endif %}
-                       
+
                     </a>
                     <!--end::Logo-->
                     <!--begin::Aside toggler-->
@@ -1758,6 +1758,7 @@
     <script src="{{ asset('app/js/queries/general.js') }}"></script>
     <script>
         const user_avatar_link  = "{{ asset('app/uploads/avatars/_1_') }}";
+        const user_brand_logo_link  = "{{ asset('app/uploads/brands/logos/_1_') }}";
     </script>
     <!--end::Global Javascript Bundle-->
     {% include 'translations/global.html.twig' %}
