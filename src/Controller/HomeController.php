@@ -16,7 +16,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/{_locale}/home')]
 #[IsGranted("ROLE_USER")]
-#[IsGranted("IS_AUTHENTICATED_FULLY")]
 
 class HomeController extends AbstractController
 {
