@@ -34,7 +34,7 @@ class uBrand extends AbstractController
         return[
            'name'               => $brand->getName(),
            'site_url'           => $brand->getSiteUrl(),
-           'logo'               => $brand->getLogo(),
+           'logo'               => strtolower($brand->getLogo()),
            'white_logo'         => $brand->getLogo(),
            'favicon'            => $brand->getFavicon(),
            'apple_touch_icon'   => $brand->getLogo(),
