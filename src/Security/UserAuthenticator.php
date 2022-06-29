@@ -46,6 +46,7 @@ class UserAuthenticator extends AbstractLoginFormAuthenticator
         $this->roleRepository = $roleRepository;
         $this->statusRepository = $statusRepository;
         $this->services = $services;
+        dd('defr');
     }
 
     
