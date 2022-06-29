@@ -55,6 +55,7 @@ class UserAuthenticator extends AbstractLoginFormAuthenticator
         $email = $request->request->get('email', '');
         //verification for compte by status
         $user = $this->userRepository->findOneBy(['brand' => $this->brand->get()['brand'], 'email' => $email]);// find a user based on an "email" form field
+        dd($user);
         if (!$user) {
             throw new CustomUserMessageAuthenticationException($this->intl->trans("Vos informations de connexion sont 
             inexistantes, veuillez vérifier et réessayer"));
