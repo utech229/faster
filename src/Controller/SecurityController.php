@@ -50,7 +50,7 @@ class SecurityController extends AbstractController
         $error = $authenticationUtils->getLastAuthenticationError();
         // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
-        dd('defr');
+       
         return $this->render('security/'.$this->brand->get()['loginform'], 
         [
             'last_username'   => $lastUsername, 
