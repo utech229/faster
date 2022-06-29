@@ -46,7 +46,6 @@ class UserAuthenticator extends AbstractLoginFormAuthenticator
         $this->roleRepository = $roleRepository;
         $this->statusRepository = $statusRepository;
         $this->services = $services;
-        dd('defr');
     }
 
     
@@ -114,7 +113,7 @@ class UserAuthenticator extends AbstractLoginFormAuthenticator
     }
 
     protected function getLoginUrl(Request $request): string
-    {
+    {dd('85');
         return $this->urlGenerator->generate(self::LOGIN_ROUTE);
     }
 }
