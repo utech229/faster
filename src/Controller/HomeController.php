@@ -6,7 +6,9 @@ use App\Service\Brand;
 use App\Service\uBrand;
 use App\Service\BaseUrl;
 use App\Service\Services;;
+use App\Entity\SMSCampaign;
 use App\Repository\StatusRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -20,12 +22,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class HomeController extends AbstractController
 {
     public function __construct(TranslatorInterface $intl, uBrand $brand, BaseUrl $baseUrl, Services $services,
-    StatusRepository $statusRepository, UrlGeneratorInterface $urlGenerator)
+    StatusRepository $statusRepository, UrlGeneratorInterface $urlGenerator, EntityManagerInterface $entityManager)
 	{
        $this->intl    = $intl;
        $this->brand   = $brand;
        $this->baseUrl = $baseUrl->init();
        $this->services = $services;
+       $this->em = $entityManager;
        $this->statusRepository  = $statusRepository;
        $this->urlGenerator  = $urlGenerator;
     }
@@ -40,6 +43,24 @@ class HomeController extends AbstractController
             'pageTitle'     => [ ],
             'menu_text'       => $this->intl->trans('Tableau de bord') .' - '. $this->brand->get()['name'],
             'brand'           => $this->brand->get(),
+            'data'            => $this->statistics()
         ]);
+    }
+
+    public function statistics(){
+        $user = $this->getUser();
+        switch ($user->getRole()->getLevel()) {
+            case [0, 2]:
+                return [
+"e" => true
+                ];
+                break;
+            
+            default:
+                return [
+                    'campaign' => $this->em->getRepository(SMSCampaign::class)->findAll()
+                ];
+                break;
+        }
     }
 }

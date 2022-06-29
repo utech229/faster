@@ -182,8 +182,8 @@
                                 <div class="card-header pt-5">
                                     <!--begin::Title-->
                                     <h4 class="card-title d-flex align-items-start flex-column">
-                                        <span class="card-label fw-bolder text-gray-800">Today’s Course</span>
-                                        <span class="text-gray-400 mt-1 fw-bolder fs-7">4 lessons, 3 hours 45 minutes</span>
+                                        <span class="card-label fw-bolder text-gray-800">{% trans %}Campagne SMS{% endtrans %}</span>
+                                        <span class="text-gray-400 mt-1 fw-bolder fs-7">{% trans %}Créez un campagne en 1 min{% endtrans %}</span>
                                     </h4>
                                     <!--end::Title-->
                                     <!--begin::Toolbar-->
@@ -191,8 +191,6 @@
                                         <!--begin::Carousel Indicators-->
                                         <ol class="p-0 m-0 carousel-indicators carousel-indicators-bullet carousel-indicators-active-primary">
                                             <li data-bs-target="#kt_sliders_widget_1_slider" data-bs-slide-to="0" class="active ms-1"></li>
-                                            <li data-bs-target="#kt_sliders_widget_1_slider" data-bs-slide-to="1" class="ms-1"></li>
-                                            <li data-bs-target="#kt_sliders_widget_1_slider" data-bs-slide-to="2" class="ms-1"></li>
                                         </ol>
                                         <!--end::Carousel Indicators-->
                                     </div>
@@ -215,7 +213,7 @@
                                                 <!--begin::Info-->
                                                 <div class="m-0">
                                                     <!--begin::Subtitle-->
-                                                    <h4 class="fw-bolder text-gray-800 mb-3">Ruby on Rails</h4>
+                                                    <h4 class="fw-bolder text-gray-800 mb-3">{% trans %}Campagne marketing{% endtrans %}</h4>
                                                     <!--end::Subtitle-->
                                                     <!--begin::Items-->
                                                     <div class="d-flex d-grid gap-5">
@@ -230,7 +228,7 @@
                                                                     <path d="M11.9343 12.5657L9.53696 14.963C9.22669 15.2733 9.18488 15.7619 9.43792 16.1204C9.7616 16.5789 10.4211 16.6334 10.8156 16.2342L14.3054 12.7029C14.6903 12.3134 14.6903 11.6866 14.3054 11.2971L10.8156 7.76582C10.4211 7.3666 9.7616 7.42107 9.43792 7.87962C9.18488 8.23809 9.22669 8.72669 9.53696 9.03696L11.9343 11.4343C12.2467 11.7467 12.2467 12.2533 11.9343 12.5657Z" fill="currentColor" />
                                                                 </svg>
                                                             </span>
-                                                            <!--end::Svg Icon-->3 Topics</span>
+                                                            <!--end::Svg Icon-->{% trans %}Sms paramétrés{% endtrans %}</span>
                                                             <!--end::Section-->
                                                             <!--begin::Section-->
                                                             <span class="d-flex align-items-center text-gray-400 fw-bolder fs-7">
@@ -241,7 +239,7 @@
                                                                     <path d="M11.9343 12.5657L9.53696 14.963C9.22669 15.2733 9.18488 15.7619 9.43792 16.1204C9.7616 16.5789 10.4211 16.6334 10.8156 16.2342L14.3054 12.7029C14.6903 12.3134 14.6903 11.6866 14.3054 11.2971L10.8156 7.76582C10.4211 7.3666 9.7616 7.42107 9.43792 7.87962C9.18488 8.23809 9.22669 8.72669 9.53696 9.03696L11.9343 11.4343C12.2467 11.7467 12.2467 12.2533 11.9343 12.5657Z" fill="currentColor" />
                                                                 </svg>
                                                             </span>
-                                                            <!--end::Svg Icon-->1 Speakers</span>
+                                                            <!--end::Svg Icon-->{% trans %}Sms programmés{% endtrans %}</span>
                                                             <!--end::Section-->
                                                         </div>
                                                         <!--end::Item-->
@@ -256,7 +254,7 @@
                                                                     <path d="M11.9343 12.5657L9.53696 14.963C9.22669 15.2733 9.18488 15.7619 9.43792 16.1204C9.7616 16.5789 10.4211 16.6334 10.8156 16.2342L14.3054 12.7029C14.6903 12.3134 14.6903 11.6866 14.3054 11.2971L10.8156 7.76582C10.4211 7.3666 9.7616 7.42107 9.43792 7.87962C9.18488 8.23809 9.22669 8.72669 9.53696 9.03696L11.9343 11.4343C12.2467 11.7467 12.2467 12.2533 11.9343 12.5657Z" fill="currentColor" />
                                                                 </svg>
                                                             </span>
-                                                            <!--end::Svg Icon-->50 Min</span>
+                                                            <!--end::Svg Icon-->{% trans %}1 min{% endtrans %}</span>
                                                             <!--end::Section-->
                                                             <!--begin::Section-->
                                                             <span class="d-flex align-items-center text-gray-400 fw-bolder fs-7">
@@ -279,172 +277,8 @@
                                             <!--end::Wrapper-->
                                             <!--begin::Action-->
                                             <div class="mb-1">
-                                                <a href="#" class="btn btn-sm btn-light me-2">Skip This</a>
-                                                <a href="#" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_create_app">Continue</a>
-                                            </div>
-                                            <!--end::Action-->
-                                        </div>
-                                        <!--end::Item-->
-                                        <!--begin::Item-->
-                                        <div class="carousel-item">
-                                            <!--begin::Wrapper-->
-                                            <div class="d-flex align-items-center mb-5">
-                                                <!--begin::Chart-->
-                                                <div class="w-80px flex-shrink-0 me-2">
-                                                    <div class="min-h-auto ms-n3" id="kt_slider_widget_1_chart_2" style="height: 100px"></div>
-                                                </div>
-                                                <!--end::Chart-->
-                                                <!--begin::Info-->
-                                                <div class="m-0">
-                                                    <!--begin::Subtitle-->
-                                                    <h4 class="fw-bolder text-gray-800 mb-3">Ruby on Rails</h4>
-                                                    <!--end::Subtitle-->
-                                                    <!--begin::Items-->
-                                                    <div class="d-flex d-grid gap-5">
-                                                        <!--begin::Item-->
-                                                        <div class="d-flex flex-column flex-shrink-0 me-4">
-                                                            <!--begin::Section-->
-                                                            <span class="d-flex align-items-center fs-7 fw-bolder text-gray-400 mb-2">
-                                                            <!--begin::Svg Icon | path: icons/duotune/general/gen057.svg-->
-                                                            <span class="svg-icon svg-icon-6 svg-icon-gray-600 me-2">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="currentColor" />
-                                                                    <path d="M11.9343 12.5657L9.53696 14.963C9.22669 15.2733 9.18488 15.7619 9.43792 16.1204C9.7616 16.5789 10.4211 16.6334 10.8156 16.2342L14.3054 12.7029C14.6903 12.3134 14.6903 11.6866 14.3054 11.2971L10.8156 7.76582C10.4211 7.3666 9.7616 7.42107 9.43792 7.87962C9.18488 8.23809 9.22669 8.72669 9.53696 9.03696L11.9343 11.4343C12.2467 11.7467 12.2467 12.2533 11.9343 12.5657Z" fill="currentColor" />
-                                                                </svg>
-                                                            </span>
-                                                            <!--end::Svg Icon-->3 Topics</span>
-                                                            <!--end::Section-->
-                                                            <!--begin::Section-->
-                                                            <span class="d-flex align-items-center text-gray-400 fw-bolder fs-7">
-                                                            <!--begin::Svg Icon | path: icons/duotune/general/gen057.svg-->
-                                                            <span class="svg-icon svg-icon-6 svg-icon-gray-600 me-2">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="currentColor" />
-                                                                    <path d="M11.9343 12.5657L9.53696 14.963C9.22669 15.2733 9.18488 15.7619 9.43792 16.1204C9.7616 16.5789 10.4211 16.6334 10.8156 16.2342L14.3054 12.7029C14.6903 12.3134 14.6903 11.6866 14.3054 11.2971L10.8156 7.76582C10.4211 7.3666 9.7616 7.42107 9.43792 7.87962C9.18488 8.23809 9.22669 8.72669 9.53696 9.03696L11.9343 11.4343C12.2467 11.7467 12.2467 12.2533 11.9343 12.5657Z" fill="currentColor" />
-                                                                </svg>
-                                                            </span>
-                                                            <!--end::Svg Icon-->1 Speakers</span>
-                                                            <!--end::Section-->
-                                                        </div>
-                                                        <!--end::Item-->
-                                                        <!--begin::Item-->
-                                                        <div class="d-flex flex-column flex-shrink-0">
-                                                            <!--begin::Section-->
-                                                            <span class="d-flex align-items-center fs-7 fw-bolder text-gray-400 mb-2">
-                                                            <!--begin::Svg Icon | path: icons/duotune/general/gen057.svg-->
-                                                            <span class="svg-icon svg-icon-6 svg-icon-gray-600 me-2">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="currentColor" />
-                                                                    <path d="M11.9343 12.5657L9.53696 14.963C9.22669 15.2733 9.18488 15.7619 9.43792 16.1204C9.7616 16.5789 10.4211 16.6334 10.8156 16.2342L14.3054 12.7029C14.6903 12.3134 14.6903 11.6866 14.3054 11.2971L10.8156 7.76582C10.4211 7.3666 9.7616 7.42107 9.43792 7.87962C9.18488 8.23809 9.22669 8.72669 9.53696 9.03696L11.9343 11.4343C12.2467 11.7467 12.2467 12.2533 11.9343 12.5657Z" fill="currentColor" />
-                                                                </svg>
-                                                            </span>
-                                                            <!--end::Svg Icon-->50 Min</span>
-                                                            <!--end::Section-->
-                                                            <!--begin::Section-->
-                                                            <span class="d-flex align-items-center text-gray-400 fw-bolder fs-7">
-                                                            <!--begin::Svg Icon | path: icons/duotune/general/gen057.svg-->
-                                                            <span class="svg-icon svg-icon-6 svg-icon-gray-600 me-2">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="currentColor" />
-                                                                    <path d="M11.9343 12.5657L9.53696 14.963C9.22669 15.2733 9.18488 15.7619 9.43792 16.1204C9.7616 16.5789 10.4211 16.6334 10.8156 16.2342L14.3054 12.7029C14.6903 12.3134 14.6903 11.6866 14.3054 11.2971L10.8156 7.76582C10.4211 7.3666 9.7616 7.42107 9.43792 7.87962C9.18488 8.23809 9.22669 8.72669 9.53696 9.03696L11.9343 11.4343C12.2467 11.7467 12.2467 12.2533 11.9343 12.5657Z" fill="currentColor" />
-                                                                </svg>
-                                                            </span>
-                                                            <!--end::Svg Icon-->72 students</span>
-                                                            <!--end::Section-->
-                                                        </div>
-                                                        <!--end::Item-->
-                                                    </div>
-                                                    <!--end::Items-->
-                                                </div>
-                                                <!--end::Info-->
-                                            </div>
-                                            <!--end::Wrapper-->
-                                            <!--begin::Action-->
-                                            <div class="mb-1">
-                                                <a href="#" class="btn btn-sm btn-light me-2">Skip This</a>
-                                                <a href="#" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_create_app">Continue</a>
-                                            </div>
-                                            <!--end::Action-->
-                                        </div>
-                                        <!--end::Item-->
-                                        <!--begin::Item-->
-                                        <div class="carousel-item">
-                                            <!--begin::Wrapper-->
-                                            <div class="d-flex align-items-center mb-5">
-                                                <!--begin::Chart-->
-                                                <div class="w-80px flex-shrink-0 me-2">
-                                                    <div class="min-h-auto ms-n3" id="kt_slider_widget_1_chart_3" style="height: 100px"></div>
-                                                </div>
-                                                <!--end::Chart-->
-                                                <!--begin::Info-->
-                                                <div class="m-0">
-                                                    <!--begin::Subtitle-->
-                                                    <h4 class="fw-bolder text-gray-800 mb-3">Ruby on Rails</h4>
-                                                    <!--end::Subtitle-->
-                                                    <!--begin::Items-->
-                                                    <div class="d-flex d-grid gap-5">
-                                                        <!--begin::Item-->
-                                                        <div class="d-flex flex-column flex-shrink-0 me-4">
-                                                            <!--begin::Section-->
-                                                            <span class="d-flex align-items-center fs-7 fw-bolder text-gray-400 mb-2">
-                                                            <!--begin::Svg Icon | path: icons/duotune/general/gen057.svg-->
-                                                            <span class="svg-icon svg-icon-6 svg-icon-gray-600 me-2">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="currentColor" />
-                                                                    <path d="M11.9343 12.5657L9.53696 14.963C9.22669 15.2733 9.18488 15.7619 9.43792 16.1204C9.7616 16.5789 10.4211 16.6334 10.8156 16.2342L14.3054 12.7029C14.6903 12.3134 14.6903 11.6866 14.3054 11.2971L10.8156 7.76582C10.4211 7.3666 9.7616 7.42107 9.43792 7.87962C9.18488 8.23809 9.22669 8.72669 9.53696 9.03696L11.9343 11.4343C12.2467 11.7467 12.2467 12.2533 11.9343 12.5657Z" fill="currentColor" />
-                                                                </svg>
-                                                            </span>
-                                                            <!--end::Svg Icon-->3 Topics</span>
-                                                            <!--end::Section-->
-                                                            <!--begin::Section-->
-                                                            <span class="d-flex align-items-center text-gray-400 fw-bolder fs-7">
-                                                            <!--begin::Svg Icon | path: icons/duotune/general/gen057.svg-->
-                                                            <span class="svg-icon svg-icon-6 svg-icon-gray-600 me-2">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="currentColor" />
-                                                                    <path d="M11.9343 12.5657L9.53696 14.963C9.22669 15.2733 9.18488 15.7619 9.43792 16.1204C9.7616 16.5789 10.4211 16.6334 10.8156 16.2342L14.3054 12.7029C14.6903 12.3134 14.6903 11.6866 14.3054 11.2971L10.8156 7.76582C10.4211 7.3666 9.7616 7.42107 9.43792 7.87962C9.18488 8.23809 9.22669 8.72669 9.53696 9.03696L11.9343 11.4343C12.2467 11.7467 12.2467 12.2533 11.9343 12.5657Z" fill="currentColor" />
-                                                                </svg>
-                                                            </span>
-                                                            <!--end::Svg Icon-->1 Speakers</span>
-                                                            <!--end::Section-->
-                                                        </div>
-                                                        <!--end::Item-->
-                                                        <!--begin::Item-->
-                                                        <div class="d-flex flex-column flex-shrink-0">
-                                                            <!--begin::Section-->
-                                                            <span class="d-flex align-items-center fs-7 fw-bolder text-gray-400 mb-2">
-                                                            <!--begin::Svg Icon | path: icons/duotune/general/gen057.svg-->
-                                                            <span class="svg-icon svg-icon-6 svg-icon-gray-600 me-2">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="currentColor" />
-                                                                    <path d="M11.9343 12.5657L9.53696 14.963C9.22669 15.2733 9.18488 15.7619 9.43792 16.1204C9.7616 16.5789 10.4211 16.6334 10.8156 16.2342L14.3054 12.7029C14.6903 12.3134 14.6903 11.6866 14.3054 11.2971L10.8156 7.76582C10.4211 7.3666 9.7616 7.42107 9.43792 7.87962C9.18488 8.23809 9.22669 8.72669 9.53696 9.03696L11.9343 11.4343C12.2467 11.7467 12.2467 12.2533 11.9343 12.5657Z" fill="currentColor" />
-                                                                </svg>
-                                                            </span>
-                                                            <!--end::Svg Icon-->50 Min</span>
-                                                            <!--end::Section-->
-                                                            <!--begin::Section-->
-                                                            <span class="d-flex align-items-center text-gray-400 fw-bolder fs-7">
-                                                            <!--begin::Svg Icon | path: icons/duotune/general/gen057.svg-->
-                                                            <span class="svg-icon svg-icon-6 svg-icon-gray-600 me-2">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="currentColor" />
-                                                                    <path d="M11.9343 12.5657L9.53696 14.963C9.22669 15.2733 9.18488 15.7619 9.43792 16.1204C9.7616 16.5789 10.4211 16.6334 10.8156 16.2342L14.3054 12.7029C14.6903 12.3134 14.6903 11.6866 14.3054 11.2971L10.8156 7.76582C10.4211 7.3666 9.7616 7.42107 9.43792 7.87962C9.18488 8.23809 9.22669 8.72669 9.53696 9.03696L11.9343 11.4343C12.2467 11.7467 12.2467 12.2533 11.9343 12.5657Z" fill="currentColor" />
-                                                                </svg>
-                                                            </span>
-                                                            <!--end::Svg Icon-->72 students</span>
-                                                            <!--end::Section-->
-                                                        </div>
-                                                        <!--end::Item-->
-                                                    </div>
-                                                    <!--end::Items-->
-                                                </div>
-                                                <!--end::Info-->
-                                            </div>
-                                            <!--end::Wrapper-->
-                                            <!--begin::Action-->
-                                            <div class="mb-1">
-                                                <a href="#" class="btn btn-sm btn-light me-2">Skip This</a>
-                                                <a href="#" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_create_app">Continue</a>
+                                                <a href="#" class="btn btn-sm btn-light me-2"> {% trans %}Créer un identifiant{% endtrans %} </a>
+                                                <a href="#" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_create_app">{% trans %}Créer une campagne{% endtrans %}</a>
                                             </div>
                                             <!--end::Action-->
                                         </div>
@@ -577,188 +411,6 @@
                                             <!--end::Action-->
                                         </div>
                                         <!--end::Item-->
-                                        <!--begin::Item-->
-                                        <div class="carousel-item">
-                                            <!--begin::Wrapper-->
-                                            <div class="d-flex align-items-center mb-9">
-                                                <!--begin::Symbol-->
-                                                <div class="symbol symbol-70px symbol-circle me-5">
-                                                    <span class="symbol-label bg-light-danger">
-                                                        <!--begin::Svg Icon | path: icons/duotune/abstract/abs026.svg-->
-                                                        <span class="svg-icon svg-icon-3x svg-icon-danger">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                                                <path opacity="0.3" d="M7 20.5L2 17.6V11.8L7 8.90002L12 11.8V17.6L7 20.5ZM21 20.8V18.5L19 17.3L17 18.5V20.8L19 22L21 20.8Z" fill="currentColor" />
-                                                                <path d="M22 14.1V6L15 2L8 6V14.1L15 18.2L22 14.1Z" fill="currentColor" />
-                                                            </svg>
-                                                        </span>
-                                                        <!--end::Svg Icon-->
-                                                    </span>
-                                                </div>
-                                                <!--end::Symbol-->
-                                                <!--begin::Info-->
-                                                <div class="m-0">
-                                                    <!--begin::Subtitle-->
-                                                    <h4 class="fw-bolder text-gray-800 mb-3">Ruby on Rails</h4>
-                                                    <!--end::Subtitle-->
-                                                    <!--begin::Items-->
-                                                    <div class="d-flex d-grid gap-5">
-                                                        <!--begin::Item-->
-                                                        <div class="d-flex flex-column flex-shrink-0 me-4">
-                                                            <!--begin::Section-->
-                                                            <span class="d-flex align-items-center fs-7 fw-bolder text-gray-400 mb-2">
-                                                            <!--begin::Svg Icon | path: icons/duotune/general/gen057.svg-->
-                                                            <span class="svg-icon svg-icon-6 svg-icon-gray-600 me-2">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="currentColor" />
-                                                                    <path d="M11.9343 12.5657L9.53696 14.963C9.22669 15.2733 9.18488 15.7619 9.43792 16.1204C9.7616 16.5789 10.4211 16.6334 10.8156 16.2342L14.3054 12.7029C14.6903 12.3134 14.6903 11.6866 14.3054 11.2971L10.8156 7.76582C10.4211 7.3666 9.7616 7.42107 9.43792 7.87962C9.18488 8.23809 9.22669 8.72669 9.53696 9.03696L11.9343 11.4343C12.2467 11.7467 12.2467 12.2533 11.9343 12.5657Z" fill="currentColor" />
-                                                                </svg>
-                                                            </span>
-                                                            <!--end::Svg Icon-->12 Topics</span>
-                                                            <!--end::Section-->
-                                                            <!--begin::Section-->
-                                                            <span class="d-flex align-items-center text-gray-400 fw-bolder fs-7">
-                                                            <!--begin::Svg Icon | path: icons/duotune/general/gen057.svg-->
-                                                            <span class="svg-icon svg-icon-6 svg-icon-gray-600 me-2">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="currentColor" />
-                                                                    <path d="M11.9343 12.5657L9.53696 14.963C9.22669 15.2733 9.18488 15.7619 9.43792 16.1204C9.7616 16.5789 10.4211 16.6334 10.8156 16.2342L14.3054 12.7029C14.6903 12.3134 14.6903 11.6866 14.3054 11.2971L10.8156 7.76582C10.4211 7.3666 9.7616 7.42107 9.43792 7.87962C9.18488 8.23809 9.22669 8.72669 9.53696 9.03696L11.9343 11.4343C12.2467 11.7467 12.2467 12.2533 11.9343 12.5657Z" fill="currentColor" />
-                                                                </svg>
-                                                            </span>
-                                                            <!--end::Svg Icon-->1 Speakers</span>
-                                                            <!--end::Section-->
-                                                        </div>
-                                                        <!--end::Item-->
-                                                        <!--begin::Item-->
-                                                        <div class="d-flex flex-column flex-shrink-0">
-                                                            <!--begin::Section-->
-                                                            <span class="d-flex align-items-center fs-7 fw-bolder text-gray-400 mb-2">
-                                                            <!--begin::Svg Icon | path: icons/duotune/general/gen057.svg-->
-                                                            <span class="svg-icon svg-icon-6 svg-icon-gray-600 me-2">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="currentColor" />
-                                                                    <path d="M11.9343 12.5657L9.53696 14.963C9.22669 15.2733 9.18488 15.7619 9.43792 16.1204C9.7616 16.5789 10.4211 16.6334 10.8156 16.2342L14.3054 12.7029C14.6903 12.3134 14.6903 11.6866 14.3054 11.2971L10.8156 7.76582C10.4211 7.3666 9.7616 7.42107 9.43792 7.87962C9.18488 8.23809 9.22669 8.72669 9.53696 9.03696L11.9343 11.4343C12.2467 11.7467 12.2467 12.2533 11.9343 12.5657Z" fill="currentColor" />
-                                                                </svg>
-                                                            </span>
-                                                            <!--end::Svg Icon-->50 Min</span>
-                                                            <!--end::Section-->
-                                                            <!--begin::Section-->
-                                                            <span class="d-flex align-items-center text-gray-400 fw-bolder fs-7">
-                                                            <!--begin::Svg Icon | path: icons/duotune/general/gen057.svg-->
-                                                            <span class="svg-icon svg-icon-6 svg-icon-gray-600 me-2">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="currentColor" />
-                                                                    <path d="M11.9343 12.5657L9.53696 14.963C9.22669 15.2733 9.18488 15.7619 9.43792 16.1204C9.7616 16.5789 10.4211 16.6334 10.8156 16.2342L14.3054 12.7029C14.6903 12.3134 14.6903 11.6866 14.3054 11.2971L10.8156 7.76582C10.4211 7.3666 9.7616 7.42107 9.43792 7.87962C9.18488 8.23809 9.22669 8.72669 9.53696 9.03696L11.9343 11.4343C12.2467 11.7467 12.2467 12.2533 11.9343 12.5657Z" fill="currentColor" />
-                                                                </svg>
-                                                            </span>
-                                                            <!--end::Svg Icon-->72 students</span>
-                                                            <!--end::Section-->
-                                                        </div>
-                                                        <!--end::Item-->
-                                                    </div>
-                                                    <!--end::Items-->
-                                                </div>
-                                                <!--end::Info-->
-                                            </div>
-                                            <!--end::Wrapper-->
-                                            <!--begin::Action-->
-                                            <div class="mb-1">
-                                                <a href="#" class="btn btn-sm btn-light me-2">Details</a>
-                                                <a href="#" class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#kt_modal_create_campaign">Join Event</a>
-                                            </div>
-                                            <!--end::Action-->
-                                        </div>
-                                        <!--end::Item-->
-                                        <!--begin::Item-->
-                                        <div class="carousel-item">
-                                            <!--begin::Wrapper-->
-                                            <div class="d-flex align-items-center mb-9">
-                                                <!--begin::Symbol-->
-                                                <div class="symbol symbol-70px symbol-circle me-5">
-                                                    <span class="symbol-label bg-light-primary">
-                                                        <!--begin::Svg Icon | path: icons/duotune/abstract/abs038.svg-->
-                                                        <span class="svg-icon svg-icon-3x svg-icon-primary">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                                                <path d="M12.0444 17.9444V12.1444L17.0444 15.0444C18.6444 15.9444 19.1445 18.0444 18.2445 19.6444C17.3445 21.2444 15.2445 21.7444 13.6445 20.8444C12.6445 20.2444 12.0444 19.1444 12.0444 17.9444ZM7.04445 15.0444L12.0444 12.1444L7.04445 9.24445C5.44445 8.34445 3.44444 8.84445 2.44444 10.4444C1.54444 12.0444 2.04445 14.0444 3.64445 15.0444C4.74445 15.6444 6.04445 15.6444 7.04445 15.0444ZM12.0444 6.34444V12.1444L17.0444 9.24445C18.6444 8.34445 19.1445 6.24444 18.2445 4.64444C17.3445 3.04444 15.2445 2.54445 13.6445 3.44445C12.6445 4.04445 12.0444 5.14444 12.0444 6.34444Z" fill="currentColor" />
-                                                                <path opacity="0.3" d="M7.04443 9.24445C6.04443 8.64445 5.34442 7.54444 5.34442 6.34444C5.34442 4.54444 6.84444 3.04443 8.64444 3.04443C10.4444 3.04443 11.9444 4.54444 11.9444 6.34444V12.1444L7.04443 9.24445ZM17.0444 15.0444C18.0444 15.6444 19.3444 15.6444 20.3444 15.0444C21.9444 14.1444 22.4444 12.0444 21.5444 10.4444C20.6444 8.84444 18.5444 8.34445 16.9444 9.24445L11.9444 12.1444L17.0444 15.0444ZM7.04443 15.0444C6.04443 15.6444 5.34442 16.7444 5.34442 17.9444C5.34442 19.7444 6.84444 21.2444 8.64444 21.2444C10.4444 21.2444 11.9444 19.7444 11.9444 17.9444V12.1444L7.04443 15.0444Z" fill="currentColor" />
-                                                            </svg>
-                                                        </span>
-                                                        <!--end::Svg Icon-->
-                                                    </span>
-                                                </div>
-                                                <!--end::Symbol-->
-                                                <!--begin::Info-->
-                                                <div class="m-0">
-                                                    <!--begin::Subtitle-->
-                                                    <h4 class="fw-bolder text-gray-800 mb-3">Ruby on Rails</h4>
-                                                    <!--end::Subtitle-->
-                                                    <!--begin::Items-->
-                                                    <div class="d-flex d-grid gap-5">
-                                                        <!--begin::Item-->
-                                                        <div class="d-flex flex-column flex-shrink-0 me-4">
-                                                            <!--begin::Section-->
-                                                            <span class="d-flex align-items-center fs-7 fw-bolder text-gray-400 mb-2">
-                                                            <!--begin::Svg Icon | path: icons/duotune/general/gen057.svg-->
-                                                            <span class="svg-icon svg-icon-6 svg-icon-gray-600 me-2">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="currentColor" />
-                                                                    <path d="M11.9343 12.5657L9.53696 14.963C9.22669 15.2733 9.18488 15.7619 9.43792 16.1204C9.7616 16.5789 10.4211 16.6334 10.8156 16.2342L14.3054 12.7029C14.6903 12.3134 14.6903 11.6866 14.3054 11.2971L10.8156 7.76582C10.4211 7.3666 9.7616 7.42107 9.43792 7.87962C9.18488 8.23809 9.22669 8.72669 9.53696 9.03696L11.9343 11.4343C12.2467 11.7467 12.2467 12.2533 11.9343 12.5657Z" fill="currentColor" />
-                                                                </svg>
-                                                            </span>
-                                                            <!--end::Svg Icon-->3 Topics</span>
-                                                            <!--end::Section-->
-                                                            <!--begin::Section-->
-                                                            <span class="d-flex align-items-center text-gray-400 fw-bolder fs-7">
-                                                            <!--begin::Svg Icon | path: icons/duotune/general/gen057.svg-->
-                                                            <span class="svg-icon svg-icon-6 svg-icon-gray-600 me-2">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="currentColor" />
-                                                                    <path d="M11.9343 12.5657L9.53696 14.963C9.22669 15.2733 9.18488 15.7619 9.43792 16.1204C9.7616 16.5789 10.4211 16.6334 10.8156 16.2342L14.3054 12.7029C14.6903 12.3134 14.6903 11.6866 14.3054 11.2971L10.8156 7.76582C10.4211 7.3666 9.7616 7.42107 9.43792 7.87962C9.18488 8.23809 9.22669 8.72669 9.53696 9.03696L11.9343 11.4343C12.2467 11.7467 12.2467 12.2533 11.9343 12.5657Z" fill="currentColor" />
-                                                                </svg>
-                                                            </span>
-                                                            <!--end::Svg Icon-->1 Speakers</span>
-                                                            <!--end::Section-->
-                                                        </div>
-                                                        <!--end::Item-->
-                                                        <!--begin::Item-->
-                                                        <div class="d-flex flex-column flex-shrink-0">
-                                                            <!--begin::Section-->
-                                                            <span class="d-flex align-items-center fs-7 fw-bolder text-gray-400 mb-2">
-                                                            <!--begin::Svg Icon | path: icons/duotune/general/gen057.svg-->
-                                                            <span class="svg-icon svg-icon-6 svg-icon-gray-600 me-2">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="currentColor" />
-                                                                    <path d="M11.9343 12.5657L9.53696 14.963C9.22669 15.2733 9.18488 15.7619 9.43792 16.1204C9.7616 16.5789 10.4211 16.6334 10.8156 16.2342L14.3054 12.7029C14.6903 12.3134 14.6903 11.6866 14.3054 11.2971L10.8156 7.76582C10.4211 7.3666 9.7616 7.42107 9.43792 7.87962C9.18488 8.23809 9.22669 8.72669 9.53696 9.03696L11.9343 11.4343C12.2467 11.7467 12.2467 12.2533 11.9343 12.5657Z" fill="currentColor" />
-                                                                </svg>
-                                                            </span>
-                                                            <!--end::Svg Icon-->50 Min</span>
-                                                            <!--end::Section-->
-                                                            <!--begin::Section-->
-                                                            <span class="d-flex align-items-center text-gray-400 fw-bolder fs-7">
-                                                            <!--begin::Svg Icon | path: icons/duotune/general/gen057.svg-->
-                                                            <span class="svg-icon svg-icon-6 svg-icon-gray-600 me-2">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="currentColor" />
-                                                                    <path d="M11.9343 12.5657L9.53696 14.963C9.22669 15.2733 9.18488 15.7619 9.43792 16.1204C9.7616 16.5789 10.4211 16.6334 10.8156 16.2342L14.3054 12.7029C14.6903 12.3134 14.6903 11.6866 14.3054 11.2971L10.8156 7.76582C10.4211 7.3666 9.7616 7.42107 9.43792 7.87962C9.18488 8.23809 9.22669 8.72669 9.53696 9.03696L11.9343 11.4343C12.2467 11.7467 12.2467 12.2533 11.9343 12.5657Z" fill="currentColor" />
-                                                                </svg>
-                                                            </span>
-                                                            <!--end::Svg Icon-->72 students</span>
-                                                            <!--end::Section-->
-                                                        </div>
-                                                        <!--end::Item-->
-                                                    </div>
-                                                    <!--end::Items-->
-                                                </div>
-                                                <!--end::Info-->
-                                            </div>
-                                            <!--end::Wrapper-->
-                                            <!--begin::Action-->
-                                            <div class="mb-1">
-                                                <a href="#" class="btn btn-sm btn-light me-2">Details</a>
-                                                <a href="#" class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#kt_modal_create_campaign">Join Event</a>
-                                            </div>
-                                            <!--end::Action-->
-                                        </div>
-                                        <!--end::Item-->
                                     </div>
                                     <!--end::Carousel-->
                                 </div>
@@ -777,25 +429,25 @@
                             <div class="m-0">
                                 <!--begin::Title-->
                                 <div class="position-relative fs-2x z-index-2 fw-bolder text-white mb-7">
-                                <span class="me-2">You have got
+                                <span class="me-2"> {% trans %}Vous avez besoin de {% endtrans %}
                                 <span class="position-relative d-inline-block text-danger">
-                                    <a href="../../demo1/dist/pages/user-profile/overview.html" class="text-danger opacity-75-hover">2300 bonus</a>
+                                    <a href="{{ path('app_recharge')}}" class="text-warning opacity-75-hover">{% trans %}crédit SMS {% endtrans %}</a>
                                     <!--begin::Separator-->
                                     <span class="position-absolute opacity-50 bottom-0 start-0 border-4 border-danger border-bottom w-100"></span>
                                     <!--end::Separator-->
-                                </span></span>points.
-                                <br />Feel free to use them in your lessons</div>
+                                </span></span>{% trans %}Faites-le en quelques secondes{% endtrans %}</div>
                                 <!--end::Title-->
                                 <!--begin::Action-->
                                 <div class="mb-3">
-                                    <a href='#' class="btn btn-danger fw-bold me-2" data-bs-toggle="modal" data-bs-target="#kt_modal_upgrade_plan">Get Reward</a>
-                                    <a href="../../demo1/dist/apps/support-center/overview.html" class="btn btn-color-white bg-body bg-opacity-15 bg-hover-opacity-25 fw-bold">How to</a>
+                                    <a href='{{ path('app_recharge')}}' class="btn btn-danger fw-bold me-2">
+                                    {% trans %}Recharger mon compte{% endtrans %}</a>
+                                    <a href="{{ path('sender')}}" class="btn btn-color-white bg-body bg-opacity-15 bg-hover-opacity-25 fw-bold">{% trans %}Créer un identifiant{% endtrans %}</a>
                                 </div>
                                 <!--begin::Action-->
                             </div>
                             <!--begin::Action-->
                             <!--begin::Illustration-->
-                            <img src="assets/media/illustrations/sigma-1/17-dark.png" class="position-absolute me-3 bottom-0 end-0 h-200px" alt="" />
+                            <img src="{{ asset('app/media/illustrations/sigma-1/17-dark.png') }}" class="position-absolute me-3 bottom-0 end-0 h-200px" alt="" />
                             <!--end::Illustration-->
                         </div>
                         <!--end::Body-->

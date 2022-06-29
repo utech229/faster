@@ -53,7 +53,7 @@ class AddEntity extends AbstractController
 	{
         $response = new Response();
 
-        ($route == false) ? 'brand_image_directory' : $route;
+        ($route == false) ? 'brand_logo_directory' : $route;
         $placeAvatar  = $this->getParameter($route);
         $filename     = $user->getBrand()->getName();
         $filepath     = $placeAvatar.$filename;

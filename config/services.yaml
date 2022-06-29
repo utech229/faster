@@ -6,7 +6,7 @@
 parameters:
     app.supported_locales: ['en','fr']
     avatar_directory: '%kernel.project_dir%/public/app/uploads/avatars/'
-    brand_image_directory: '%kernel.project_dir%/public/app/uploads/brands/logos/'
+    brand_logo_directory: '%kernel.project_dir%/public/app/uploads/brands/logos/'
 
 services:
     # default configuration for services in *this* file
