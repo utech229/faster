@@ -1756,8 +1756,10 @@
     <!-- end::moment -->
     <script src="{{ asset('app/js/queries/app-theme-mode.js') }}"></script>
     <script src="{{ asset('app/js/queries/general.js') }}"></script>
+    <script>
+        const user_avatar_link  = "{{ asset('app/uploads/avatars/_1_') }}";
+    </script>
     <!--end::Global Javascript Bundle-->
-
     {% include 'translations/global.html.twig' %}
     {% include 'section/intl.input.html.twig' %}
     {% include 'section/additionnal.html.twig' %}

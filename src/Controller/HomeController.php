@@ -33,7 +33,6 @@ class HomeController extends AbstractController
     #[Route('/dashboard', name: 'app_home')]
     public function index(): Response
     {
-        dd($_SERVER['DOCUMENT_ROOT']);
         $this->services->addLog($this->intl->trans('Accès au tableau de bord'));
         return $this->render('home/index.html.twig', [
             'controller_name' => 'HomeController',
