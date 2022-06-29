@@ -163,7 +163,7 @@ var KTAffiliatesList = function() {
                                         <div class="symbol symbol-circle symbol-50px overflow-hidden me-3">
                                             <a href="javascript:;">
                                                 <div class="symbol-label">
-                                                    <img src="`+window.location.origin+`/app/uploads/avatars/`+data.photo+`" alt="`+data.name+`" class="w-100" />
+                                                    <img src="`+user_avatar_link.replace("_1_", data.photo)+`" alt="`+data.name+`" class="w-100" />
                                                 </div>
                                             </a>
                                         </div>
