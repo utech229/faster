@@ -14,8 +14,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-#[IsGranted("ROLE_USER")]
-#[IsGranted("IS_AUTHENTICATED_FULLY")]
 #[Route('/{_locale}/home')]
 class HomeController extends AbstractController
 {
