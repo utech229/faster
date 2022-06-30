@@ -37,7 +37,7 @@ class sMailer extends AbstractController
             ->text('Sending emails is fun again!')
             ->html('<p>See Twig integration for better HTML integration!</p>');
 
-        $mailer->send($email);
+        return $mailer->send($email);
     }
 
     
