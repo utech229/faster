@@ -40,6 +40,7 @@ security:
         # - { path: ^/profile, roles: ROLE_USER }
     role_hierarchy:
         ROLE_USER         :  ROLE_USER_AFFILIATE
+        ROLE_RESELLER_AFFILIATE : ROLE_USER
         ROLE_RESELLER     :  ROLE_RESELLER_AFFILIATE
         ROLE_ACCOUNTING   :  ROLE_RESELLER
         ROLE_ADMIN        :  ROLE_ACCOUNTING
