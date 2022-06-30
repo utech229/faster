@@ -2,13 +2,14 @@
 
 namespace App\Service;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Email;
-use Symfony\Component\Routing\Annotation\Route;
 use App\Service\Services;
+use Symfony\Component\Mime\Email;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 
 
@@ -26,7 +27,7 @@ class sMailer extends AbstractController
     public function send()
     {
         $mailer = $this->mailer;
-        $email = (new Email())
+        $email = (new TemplatedEmail())
             ->from('support@zekin.app')
             ->to('enockiatk@gmail.com')
             //->cc('cc@example.com')
