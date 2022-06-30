@@ -349,6 +349,7 @@ return array(
     'App\\Service\\sAgregatorRouter' => $baseDir . '/src/Service/sAgregatorRouter.php',
     'App\\Service\\sBrand' => $baseDir . '/src/Service/sBrand.php',
     'App\\Service\\sFedapay' => $baseDir . '/src/Service/sFedapay.php',
+    'App\\Service\\sMailer' => $baseDir . '/src/Service/sMailer.php',
     'App\\Service\\sTransaction' => $baseDir . '/src/Service/sTransaction.php',
     'App\\Service\\sUpay' => $baseDir . '/src/Service/sUpay.php',
     'App\\Service\\sUpdateTransaction' => $baseDir . '/src/Service/sUpdateTransaction.php',

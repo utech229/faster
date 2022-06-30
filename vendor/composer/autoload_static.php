@@ -1087,6 +1087,7 @@ class ComposerStaticInita747b675ce0726c12a7b51416be97bc7
         'App\\Service\\sAgregatorRouter' => __DIR__ . '/../..' . '/src/Service/sAgregatorRouter.php',
         'App\\Service\\sBrand' => __DIR__ . '/../..' . '/src/Service/sBrand.php',
         'App\\Service\\sFedapay' => __DIR__ . '/../..' . '/src/Service/sFedapay.php',
+        'App\\Service\\sMailer' => __DIR__ . '/../..' . '/src/Service/sMailer.php',
         'App\\Service\\sTransaction' => __DIR__ . '/../..' . '/src/Service/sTransaction.php',
         'App\\Service\\sUpay' => __DIR__ . '/../..' . '/src/Service/sUpay.php',
         'App\\Service\\sUpdateTransaction' => __DIR__ . '/../..' . '/src/Service/sUpdateTransaction.php',
