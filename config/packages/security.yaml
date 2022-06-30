@@ -21,9 +21,9 @@ security:
             lazy: true
             provider: app_user_provider
             custom_authenticator:
-                - App\Security\UserAuthenticator
+                #- App\Security\UserAuthenticator
+                - App\Security\LoginFormAuthenticator
                 #- App\Security\UserSecondAuthenticator
-                #- App\Security\ApiKeyAuthenticator
             logout:
                 path: app_logout
                 # where to redirect after logout
