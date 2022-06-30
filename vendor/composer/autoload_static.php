@@ -219,8 +219,8 @@ class ComposerStaticInita747b675ce0726c12a7b51416be97bc7
         'phpDocumentor\\Reflection\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpdocumentor/reflection-common/src',
-            1 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
-            2 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
+            1 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
+            2 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
         ),
         'libphonenumber\\' => 
         array (
@@ -528,8 +528,8 @@ class ComposerStaticInita747b675ce0726c12a7b51416be97bc7
         ),
         'Psr\\Http\\Message\\' => 
         array (
-            0 => __DIR__ . '/..' . '/psr/http-message/src',
-            1 => __DIR__ . '/..' . '/psr/http-factory/src',
+            0 => __DIR__ . '/..' . '/psr/http-factory/src',
+            1 => __DIR__ . '/..' . '/psr/http-message/src',
         ),
         'Psr\\Http\\Client\\' => 
         array (
@@ -582,8 +582,8 @@ class ComposerStaticInita747b675ce0726c12a7b51416be97bc7
         'League\\Uri\\' => 
         array (
             0 => __DIR__ . '/..' . '/league/uri-interfaces/src',
-            1 => __DIR__ . '/..' . '/league/uri/src',
-            2 => __DIR__ . '/..' . '/league/uri-parser/src',
+            1 => __DIR__ . '/..' . '/league/uri-parser/src',
+            2 => __DIR__ . '/..' . '/league/uri/src',
         ),
         'Laminas\\Code\\' => 
         array (
@@ -655,8 +655,8 @@ class ComposerStaticInita747b675ce0726c12a7b51416be97bc7
         ),
         'Doctrine\\Common\\' => 
         array (
-            0 => __DIR__ . '/..' . '/doctrine/event-manager/lib/Doctrine/Common',
-            1 => __DIR__ . '/..' . '/doctrine/common/lib/Doctrine/Common',
+            0 => __DIR__ . '/..' . '/doctrine/common/lib/Doctrine/Common',
+            1 => __DIR__ . '/..' . '/doctrine/event-manager/lib/Doctrine/Common',
         ),
         'Doctrine\\Bundle\\MigrationsBundle\\' => 
         array (
@@ -1073,8 +1073,6 @@ class ComposerStaticInita747b675ce0726c12a7b51416be97bc7
         'App\\Repository\\TransactionRepository' => __DIR__ . '/../..' . '/src/Repository/TransactionRepository.php',
         'App\\Repository\\UserRepository' => __DIR__ . '/../..' . '/src/Repository/UserRepository.php',
         'App\\Repository\\UsettingRepository' => __DIR__ . '/../..' . '/src/Repository/UsettingRepository.php',
-        'App\\Security\\AccessDeniedHandler' => __DIR__ . '/../..' . '/src/Security/AccessDeniedHandler.php',
-        'App\\Security\\AuthenticationEntryPoint' => __DIR__ . '/../..' . '/src/Security/AuthenticationEntryPoint.php',
         'App\\Security\\EmailVerifier' => __DIR__ . '/../..' . '/src/Security/EmailVerifier.php',
         'App\\Security\\UserAuthenticator' => __DIR__ . '/../..' . '/src/Security/UserAuthenticator.php',
         'App\\Service\\APIResponse' => __DIR__ . '/../..' . '/src/Service/APIResponse.php',
