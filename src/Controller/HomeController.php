@@ -72,6 +72,7 @@ class HomeController extends AbstractController
     {
         $send = $this->sMailer->send();
         dd($send);
+        
         return $this->services->msg_success(
             $this->intl->trans("Envoi d'email"),
             $this->intl->trans("Mail envoyé"));
