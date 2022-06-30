@@ -23,7 +23,7 @@ class sMailer extends AbstractController
        $this->mailer = $mailer;
     }
 
-    public function send(): Response 
+    public function send()
     {
         $mailer = $this->mailer;
         $email = (new Email())
@@ -37,7 +37,8 @@ class sMailer extends AbstractController
             ->text('Sending emails is fun again!')
             ->html('<p>See Twig integration for better HTML integration!</p>');
 
-        return $mailer->send($email);
+        $send =  $mailer->send($email);
+        return $send;
     }
 
     
