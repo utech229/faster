@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use App\Repository\UserRepository;
 use App\Repository\BrandRepository;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -44,6 +45,8 @@ class BrandController extends AbstractController
         $this->pUpdate         = $this->services->checkPermission($this->permission[3]);
         $this->pADelete        = $this->services->checkPermission($this->permission[4]);
         $this->pAllAccess      = $this->services->checkPermission($this->permission[2]);
+        $this->ext             = ['jpg', 'png' , 'JPG', 'PNG', 'JPEG'];
+
     }
 
     //Load index page of brand
@@ -88,10 +91,10 @@ class BrandController extends AbstractController
             $this->intl->trans("Tentative de validation de marque blanche échouée."), $this->intl->trans("Vous n'êtes pas autorisé(e) à effectuer cette action.")
         );}
         $linkLogo   = 'loadPicture';
-        $buildImg = $this->addEntity->profilePhotoSetter($request , $this->getUser());
-        if (isset($buildImg['error']) && $buildImg['error'] == true){
-            return $this->services->ajax_error_crud($this->intl->trans('Traitement du fichier image de profil'), $avatarProcess['info']);
-        }
+
+        // $buildImg = $this->addEntity->profilePhotoSetter($request , $this->getUser());
+        // $buildImg = $this->addEntity->imageSetter($request , $this->getUser());
+
         $user       = $this->getUser();
         $isSelect   = $request->request->get('uSelect');
         if($isSelect){
@@ -112,11 +115,21 @@ class BrandController extends AbstractController
             $inBrand = $this->bRepository->findOneBy(['uid'=> $request->request->get('thisU')]);
             //Permettre également à l'utilisateur de pouvoir changer le statut
             if($inBrand){
+                /** @var UploadedFile $logo */
+                $logo = $request->files->get("_logo");
+                if (isset($logo) && $logo->getError() == 0) {$loadFile  = $this->services->checkFile($logo, $this->ext, 1024000);
+                    if($loadFile['error'] ==false ){ $targetPath = "app/uploads/brands/logos/"; $new_file_name  = $inBrand->getUid();
+                        $upload_result  = $this->services->renameFile($logo, $targetPath, 1, $new_file_name, $new_file_name);
+                    }else{
+                        return $this->services->msg_error($this->intl->trans("Image logo sélectionnée incorrecte."), $this->intl->trans("Le format du logo que vous avez sélectionné est incorrect ou la taille est trop grande. veuillez choisir une autre image SVP."));
+                    }
+                    // dd($upload_result);
+                }
                 $inBrand-> setManager($manager)
                         -> setName($request->request->get('_name_brand'))
                         -> setSiteUrl($request->request->get('_url_brand'))
-                        -> setLogo($buildImg)
-                        -> setFavicon($buildImg)
+                        -> setLogo('$buildImg')
+                        -> setFavicon('$buildImg')
                         -> setEmail($request->request->get('_mail_support'))
                         -> setNoreplyEmail($request->request->get('_mail_noreply'))
                         -> setIsDefault(1)
@@ -133,14 +146,30 @@ class BrandController extends AbstractController
         }else{
             $existBrand = $this->bRepository->findOneBy(['name'=> $request->request->get('_name_brand')]);
             if($existBrand){ return $this->services->msg_error($this->intl->trans("Création de marque échouée."), $this->intl->trans("Ce nom de marque n'est pas disponible. Veuillez changer le nom pour continuer."));}
+            $uid = $this->services->getUniqid();
+            /** @var UploadedFile $logo */
+            $logo = $request->files->get("_logo");
+            if (isset($logo) && $logo->getError() == 0) {$loadFile  = $this->services->checkFile($logo, $this->ext, 1024000);
+                if($loadFile['error'] ==false ){$targetPath     = "app/uploads/brands/logos/"; $new_file_name  = $uid;
+                    $upload_result  = $this->services->renameFile($logo, $targetPath, 1, $new_file_name, $new_file_name);
+                }else{
+                    return $this->services->msg_error($this->intl->trans("Image logo sélectionnée incorrecte."), $this->intl->trans("Le format du logo que vous avez sélectionné est incorrect ou la taille est trop grande. veuillez choisir une autre image SVP."));
+                }
+                // dd($upload_result);
+            }
+            // $buildImg = $this->services->imageSetter($request , $request->request->get('_name_brand'));
+            // dd($buildImg);
+            // if (isset($buildImg['error']) && $buildImg['error'] == true){
+            //     return $this->services->ajax_error_crud($this->intl->trans('Traitement du fichier image de profil'), $avatarProcess['info']);
+            // }
             $newBrand   = new Brand;
             $newBrand   -> setManager($manager)
                         -> setStatus($this->services->status(1))
-                        -> setUid($this->services->getUniqid())
+                        -> setUid($uid)
                         -> setName($request->request->get('_name_brand'))
                         -> setSiteUrl($request->request->get('_url_brand'))
-                        -> setLogo($buildImg)
-                        -> setFavicon($buildImg)
+                        -> setLogo($upload_result)
+                        -> setFavicon($upload_result)
                         -> setEmail($request->request->get('_mail_support'))
                         -> setNoreplyEmail($request->request->get('_mail_noreply'))
                         -> setIsDefault(1)

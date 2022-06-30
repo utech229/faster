@@ -372,13 +372,14 @@ class Services extends AbstractController
         else if($session->getAffiliateManager()) return [5, $session->getAffiliateManager()->getId(), ["user"=>$session->getAffiliateManager()->getId()]]; // Affilié à un utilisateur
 	}
 
-    public function imageSetter($request , $user, $isUpdating = false, $route = false)
+
+    public function imageSetter($request , $_fileName, $isUpdating = false, $route = false)
 	{
+        dd("der");
         $response = new Response();
 
-        ($route == false) ? 'brand_image_directory' : $route;
         $placeAvatar  = $this->getParameter($route);
-        $filename     = $user->getBrand()->getName();
+        $filename     = $_fileName;
         $filepath     = $placeAvatar.$filename;
 
 		$response->headers->set('Content-Type', 'application/json');

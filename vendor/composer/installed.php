@@ -3,7 +3,11 @@
         'name' => '__root__',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
+<<<<<<< HEAD
         'reference' => '5aa93d73fc8ae0bb579b2255806d2fcbe00e1c71',
+=======
+        'reference' => 'b4b2d57b718a09d29685c3d9d04c6e480e0df765',
+>>>>>>> a1e4113857b63b815ac0029cff110c9810034a5e
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +17,11 @@
         '__root__' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
+<<<<<<< HEAD
             'reference' => '5aa93d73fc8ae0bb579b2255806d2fcbe00e1c71',
+=======
+            'reference' => 'b4b2d57b718a09d29685c3d9d04c6e480e0df765',
+>>>>>>> a1e4113857b63b815ac0029cff110c9810034a5e
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -891,9 +899,9 @@
             'dev_requirement' => false,
         ),
         'symfony/mailer' => array(
-            'pretty_version' => 'v6.1.1',
-            'version' => '6.1.1.0',
-            'reference' => 'db6a19a5c896139901c2de59fc9849379e0ff3b6',
+            'pretty_version' => 'v6.1.2',
+            'version' => '6.1.2.0',
+            'reference' => '8fa150355115ea09238858ae3cfaf249fd1fd5ed',
             'type' => 'library',
             'install_path' => __DIR__ . '/../symfony/mailer',
             'aliases' => array(),
