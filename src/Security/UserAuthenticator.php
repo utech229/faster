@@ -2,18 +2,6 @@
 
 namespace App\Security;
 
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Security;
-use Symfony\Component\Security\Http\Authenticator\AbstractLoginFormAuthenticator;
-use Symfony\Component\Security\Http\Authenticator\Passport\Badge\CsrfTokenBadge;
-use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
-use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordCredentials;
-use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
-use Symfony\Component\Security\Http\Util\TargetPathTrait;
 use App\Service\uBrand;
 use App\Service\AddLogs;
 use App\Service\BaseUrl;
@@ -22,10 +10,24 @@ use App\Repository\RoleRepository;
 use App\Repository\UserRepository;
 use App\Repository\StatusRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Security;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\Security\Http\Util\TargetPathTrait;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
+use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
+use Symfony\Component\Security\Http\Authenticator\Passport\Badge\CsrfTokenBadge;
+use Symfony\Component\Security\Http\Authenticator\AbstractLoginFormAuthenticator;
+use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordCredentials;
 
 
-class UserAuthenticator extends AbstractLoginFormAuthenticator
+class UserAuthenticator extends AbstractAuthenticator //AbstractLoginFormAuthenticator
 {
     use TargetPathTrait;
 
@@ -47,6 +49,11 @@ class UserAuthenticator extends AbstractLoginFormAuthenticator
          $this->statusRepository = $statusRepository;
          $this->services = $services;
      }
+
+    public function supports(Request $request): ?bool
+    {
+        return $request->attributes->get('_route') === 'app_login' && $request->isMethod('POST');
+    }
 
     public function authenticate(Request $request): Passport
     {
@@ -102,5 +109,21 @@ class UserAuthenticator extends AbstractLoginFormAuthenticator
     protected function getLoginUrl(Request $request): string
     {
         return $this->urlGenerator->generate(self::LOGIN_ROUTE);
+    }
+
+    /**
+     * Called when authentication executed, but failed (e.g. wrong username password).
+     *
+     * This should return the Response sent back to the user, like a
+     * RedirectResponse to the login page or a 403 response.
+     *
+     * If you return null, the request will continue, but the user will
+     * not be authenticated. This is probably not what you want to do.
+     */
+    public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
+    {
+        $message = $exception ? $this->translator->trans('Identifiants de connexion incorrects')/*$exception->getMessage()*/ : $this->translator->trans('Missing credentials');
+        $request->getSession()->getFlashBag()->add('error', $message);
+        return new RedirectResponse($this->urlGenerator->generate('app_login'));
     }
 }

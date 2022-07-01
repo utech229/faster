@@ -217,20 +217,14 @@ class BrickPhone
 
     public function numberPrefixe($phone)
     {
-        $prefixe = $this->getCountryCode($phone);
-        $prefixes   = array('97','96','61','62','66','67','61','62','90','91','51','69','52','53','54');
-        $gsmPrefixe0 = substr($phone, 3, 2);
+        $prefixe    = $this->getCountryCode($phone);
+        $prefixes   = array('97','96','61','62','66','67','61','62','90','91','51','69','52','53','54','55');
         $gsmPrefixe = substr($phone, 4, 2);
         switch ($prefixe)
         {
-
             case '229':
                 if(in_array($gsmPrefixe, $prefixes))
                 {
-                    $phoneData['GSM']      = "mtn";
-                    $phoneData['PAYS']     = "bj";
-                    $phoneData['PREFIXE']  = $gsmPrefixe;
-                }elseif (in_array($gsmPrefixe0, $prefixes)) {
                     $phoneData['GSM']      = "mtn";
                     $phoneData['PAYS']     = "bj";
                     $phoneData['PREFIXE']  = $gsmPrefixe;

@@ -18,10 +18,20 @@
                     <!--begin::Lists Widget 19-->
                     <div class="card card-flush h-xl-100">
                         <!--begin::Heading-->
-                        <div class="card-header rounded bgi-no-repeat bgi-size-cover bgi-position-y-top bgi-position-x-center align-items-start h-250px" style="background-image:url({{ asset('app/media/svg/shapes/top-green.png') }})">
+                        <div class="card-header rounded bgi-no-repeat bgi-size-cover bgi-position-y-top bgi-position-x-center align-items-start h-250px" style="background-image:url({{ asset('app/media/dashboard/top-green.png') }})">
                             <!--begin::Title-->
                             <h3 class="card-title align-items-start flex-column text-white pt-15">
                                 <span class="fw-bolder fs-2x mb-3"> {% trans %}Salut{% endtrans %} , {{ app.user.usetting.firstName|upper}}</span>
+                                <div class="fs-4 text-white">
+                                    <span class="opacity-75">{% trans %}Bénéficiez de la{% endtrans %}</span>
+                                    <span class="position-relative d-inline-block">
+                                        <a href="javascript:;" style="color: #fc6" class="link-info opacity-75-hover fw-bolder d-block mb-1">{% trans %}puissance{% endtrans %}</a>
+                                        <!--begin::Separator-->
+                                        <span class="position-absolute opacity-50 bottom-0 start-0 border-2 border-white border-bottom w-100"></span>
+                                        <!--end::Separator-->
+                                    </span>
+                                    <span class="opacity-75">{% trans %}des{% endtrans %} SMS</span>
+                                </div>
                             </h3>
                             <!--end::Title-->
                         </div>
@@ -33,7 +43,7 @@
                                 <!--begin::Row-->
                                 <div class="row g-3 g-lg-6">
                                      <!--begin::Illustration-->
-                                <div class="flex-grow-1 bgi-no-repeat bgi-size-contain bgi-position-x-center card-rounded-bottom h-200px mh-200px my-5 my-lg-12" style="background-image:url({{ asset('app/media/svg/illustrations/easy/1.svg') }}"></div>
+                                <div class="flex-grow-1 bgi-no-repeat bgi-size-contain bgi-position-x-center card-rounded-bottom h-200px mh-200px my-5 my-lg-12" style="background-image:url({{ asset('app/media/dashboard/sms.png') }}"></div>
                                 <!--end::Illustration-->
                                 </div>
                                 <!--end::Row-->
@@ -41,10 +51,14 @@
                               <!--begin::Links-->
                             <div class="text-center mb-1">
                                 <!--begin::Link-->
-                                <a class="btn btn-sm btn-primary me-2">{% trans %}Devenir revendeur{% endtrans %}</a>
+                                {% if brand.name == "FASTERMESSAGE" %}
+                                    <a  href="{{ path('brand') }}" class="btn btn-sm btn-primary me-2">{% trans %}Devenir revendeur{% endtrans %}</a>
+                                {% else %}
+                                    <a  href="{{ path('campaign_sms') }}" class="btn btn-sm btn-primary me-2">{% trans %}Envoyer un SMS{% endtrans %}</a>
+                                {% endif %}
                                 <!--end::Link-->
                                 <!--begin::Link-->
-                                <a class="btn btn-sm btn-light" href="">{% trans %}API développeur{% trans %}</a>
+                                <a class="btn btn-sm btn-light" href="{{ path('app_developer') }}">{% trans %}API développeur{% endtrans %}</a>
                                 <!--end::Link-->
                             </div>
                             <!--end::Links-->
@@ -54,179 +68,68 @@
                     </div>
                     <!--end::Lists Widget 19-->
                 </div>
-                <!--begin::Col-->
-                <div class="col-xl-4">
-                    <!--begin::Engage widget 1-->
-                    <div class="card h-xl-100" style="background-image:url({{ asset('app/media/svg/shapes/top-green.png') }})">
-                        <!--begin::Body-->
-                        <div class="card-body d-flex flex-column flex-center">
-                            <!--begin::Heading-->
-                            <div class="mb-2">
-                                <!--begin::Title-->
-                                <h1 class="fw-bolder fs-2x mb-3"> {% trans %}Salut{% endtrans %}, {{ app.user.usetting.firstName|upper}}</
-                                <span class="fw-boldest">Mobile Application ?</span></h1>
-                                <!--end::Title-->
-                                <!--begin::Illustration-->
-                                <div class="flex-grow-1 bgi-no-repeat bgi-size-contain bgi-position-x-center card-rounded-bottom h-200px mh-200px my-5 my-lg-12" style="background-image:url('assets/media/svg/illustrations/easy/1.svg')"></div>
-                                <!--end::Illustration-->
-                            </div>
-                            <!--end::Heading-->
-                            <!--begin::Links-->
-                            <div class="text-center mb-1">
-                                <!--begin::Link-->
-                                <a class="btn btn-sm btn-primary me-2" data-bs-target="#kt_modal_new_card" data-bs-toggle="modal">Try now</a>
-                                <!--end::Link-->
-                                <!--begin::Link-->
-                                <a class="btn btn-sm btn-light" href="../../demo1/dist/pages/user-profile/followers.html">Learn more</a>
-                                <!--end::Link-->
-                            </div>
-                            <!--end::Links-->
-                        </div>
-                        <!--end::Body-->
-                    </div>
-                    <!--end::Engage widget 1-->
-                </div>
-                <!--end::Col-->
                 <!--end::Col-->
                 <!--begin::Col-->
                 <div class="col-xl-8 mb-5 mb-xl-10">
                     <!--begin::Row-->
                     <div class="row g-5 g-xl-10">
                         <!--begin::Col-->
-                        <div class="col-xl-6 mb-xl-10">
-                            <!--begin::Slider Widget 1-->
-                            <div id="kt_sliders_widget_1_slider" class="card card-flush carousel carousel-custom carousel-stretch slide h-xl-100" data-bs-ride="carousel" data-bs-interval="5000">
-                                <!--begin::Header-->
-                                <div class="card-header pt-5">
-                                    <!--begin::Title-->
-                                    <h4 class="card-title d-flex align-items-start flex-column">
-                                        <span class="card-label fw-bolder text-gray-800">{% trans %}Campagne SMS{% endtrans %}</span>
-                                        <span class="text-gray-400 mt-1 fw-bolder fs-7">{% trans %}Créez un campagne en 1 min{% endtrans %}</span>
-                                    </h4>
-                                    <!--end::Title-->
-                                    <!--begin::Toolbar-->
-                                    <div class="card-toolbar">
-                                        <!--begin::Carousel Indicators-->
-                                        <ol class="p-0 m-0 carousel-indicators carousel-indicators-bullet carousel-indicators-active-primary">
-                                            <li data-bs-target="#kt_sliders_widget_1_slider" data-bs-slide-to="0" class="active ms-1"></li>
-                                        </ol>
-                                        <!--end::Carousel Indicators-->
-                                    </div>
-                                    <!--end::Toolbar-->
+                        <div class="col-xl-12 mb-xl-10 card card-flush p-4">
+
+                            <div id="kt_carousel_3_carousel" class="carousel carousel-custom slide" data-bs-ride="carousel" data-bs-interval="8000">
+                                <!--begin::Heading-->
+                                <div class="d-flex align-items-center justify-content-between flex-wrap">
+                                    <!--begin::Label-->
+                                    <span class="fs-4 fw-bolder pe-2">Title</span>
+                                    <!--end::Label-->
+
+                                    <!--begin::Carousel Indicators-->
+                                    <ol class="p-0 m-0 carousel-indicators carousel-indicators-bullet carousel-indicators-active-primary">
+                                        <li data-bs-target="#kt_carousel_3_carousel" data-bs-slide-to="0" class="ms-1 active"></li>
+                                        <li data-bs-target="#kt_carousel_3_carousel" data-bs-slide-to="1" class="ms-1"></li>
+                                        <li data-bs-target="#kt_carousel_3_carousel" data-bs-slide-to="2" class="ms-1"></li>
+                                    </ol>
+                                    <!--end::Carousel Indicators-->
                                 </div>
-                                <!--end::Header-->
-                                <!--begin::Body-->
-                                <div class="card-body pt-6">
-                                    <!--begin::Carousel-->
-                                    <div class="carousel-inner mt-n5">
-                                        <!--begin::Item-->
-                                        <div class="carousel-item active show">
-                                            <!--begin::Wrapper-->
-                                            <div class="d-flex align-items-center mb-5">
-                                                <!--begin::Chart-->
-                                                <div class="w-80px flex-shrink-0 me-2">
-                                                    <div class="min-h-auto ms-n3" id="kt_slider_widget_1_chart_1" style="height: 100px"></div>
-                                                </div>
-                                                <!--end::Chart-->
-                                                <!--begin::Info-->
-                                                <div class="m-0">
-                                                    <!--begin::Subtitle-->
-                                                    <h4 class="fw-bolder text-gray-800 mb-3">{% trans %}SMS{% endtrans %}</h4>
-                                                    <!--end::Subtitle-->
-                                                </div>
-                                                <!--end::Info-->
-                                            </div>
-                                            <!--end::Wrapper-->
-                                            <!--begin::Action-->
-                                            <div class="mb-1">
-                                                <a href="{{ path('campaign_sms')}}" class="btn btn-sm btn-secondary me-2">{% trans %}SMS{% endtrans %}</a>
-                                                <a href="{{ path('campaign_sms')}}" class="btn btn-sm btn-primary">{% trans %}Créer une Campagne{% endtrans %}</a>
-                                            </div>
-                                            <!--end::Action-->
-                                        </div>
-                                        <!--end::Item-->
+                                <!--end::Heading-->
+
+                                <!--begin::Carousel-->
+                                <div class="carousel-inner pt-8">
+                                    <!--begin::Item-->
+                                    <div class="carousel-item active">
+                                        ...
                                     </div>
-                                    <!--end::Carousel-->
+                                    <!--end::Item-->
+
+                                    <!--begin::Item-->
+                                    <div class="carousel-item">
+                                        ...
+                                    </div>
+                                    <!--end::Item-->
+
+                                    <!--begin::Item-->
+                                    <div class="carousel-item">
+                                        ...
+                                    </div>
+                                    <!--end::Item-->
                                 </div>
-                                <!--end::Body-->
+                                <!--end::Carousel-->
                             </div>
-                            <!--end::Slider Widget 1-->
-                        </div>
-                        <!--end::Col-->
-                        <!--begin::Col-->
-                        <div class="col-xl-6 mb-5 mb-xl-10">
-                            <!--begin::Slider Widget 2-->
-                            <div id="kt_sliders_widget_2_slider" class="card card-flush carousel carousel-custom carousel-stretch slide h-xl-100" data-bs-ride="carousel" data-bs-interval="5500">
-                                <!--begin::Header-->
-                                <div class="card-header pt-5">
-                                    <!--begin::Title-->
-                                    <h4 class="card-title d-flex align-items-start flex-column">
-                                        <span class="card-label fw-bolder text-gray-800">{% trans %}Carnet d'adresse{% endtrans %}</span>
-                                        <span class="text-gray-400 mt-1 fw-bolder fs-7">{% trans %}Organisez vos contacts{% endtrans %}</span>
-                                    </h4>
-                                    <!--end::Title-->
-                                    <!--begin::Toolbar-->
-                                    <div class="card-toolbar">
-                                        <!--begin::Carousel Indicators-->
-                                        <ol class="p-0 m-0 carousel-indicators carousel-indicators-bullet carousel-indicators-active-success">
-                                            <li data-bs-target="#kt_sliders_widget_2_slider" data-bs-slide-to="0" class="active ms-1"></li>
-                                        </ol>
-                                        <!--end::Carousel Indicators-->
-                                    </div>
-                                    <!--end::Toolbar-->
-                                </div>
-                                <!--end::Header-->
-                                <!--begin::Body-->
-                                <div class="card-body pt-6">
-                                    <!--begin::Carousel-->
-                                    <div class="carousel-inner">
-                                        <!--begin::Item-->
-                                        <div class="carousel-item active show">
-                                            <!--begin::Wrapper-->
-                                            <div class="d-flex align-items-center mb-9">
-                                                <!--begin::Symbol-->
-                                                <div class="symbol symbol-70px symbol-circle me-5">
-                                                    <span class="symbol-label bg-light-success">
-                                                        <!--begin::Svg Icon | path: icons/duotune/abstract/abs025.svg-->
-                                                        <span class="svg-icon svg-icon-3x svg-icon-success">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                                                <path d="M16.925 3.90078V8.00077L12.025 10.8008V5.10078L15.525 3.10078C16.125 2.80078 16.925 3.20078 16.925 3.90078ZM2.525 13.5008L6.025 15.5008L10.925 12.7008L6.025 9.90078L2.525 11.9008C1.825 12.3008 1.825 13.2008 2.525 13.5008ZM18.025 19.7008V15.6008L13.125 12.8008V18.5008L16.625 20.5008C17.225 20.8008 18.025 20.4008 18.025 19.7008Z" fill="currentColor" />
-                                                                <path opacity="0.3" d="M8.52499 3.10078L12.025 5.10078V10.8008L7.125 8.00077V3.90078C7.125 3.20078 7.92499 2.80078 8.52499 3.10078ZM7.42499 20.5008L10.925 18.5008V12.8008L6.02499 15.6008V19.7008C6.02499 20.4008 6.82499 20.8008 7.42499 20.5008ZM21.525 11.9008L18.025 9.90078L13.125 12.7008L18.025 15.5008L21.525 13.5008C22.225 13.2008 22.225 12.3008 21.525 11.9008Z" fill="currentColor" />
-                                                            </svg>
-                                                        </span>
-                                                        <!--end::Svg Icon-->
-                                                    </span>
-                                                </div>
-                                                <!--end::Symbol-->
-                                                <!--begin::Info-->
-                                                <div class="m-0">
-                                                    <!--begin::Subtitle-->
-                                                    <h4 class="fw-bolder text-gray-800 mb-3">{% trans %}Importer contacts{% endtrans %}</h4>
-                                                    <!--end::Subtitle-->
-                                                </div>
-                                                <!--end::Info-->
-                                            </div>
-                                            <!--end::Wrapper-->
-                                            <!--begin::Action-->
-                                            <div class="mb-1">
-                                                <a href="{{ path('app_contact_index')}}" class="btn btn-sm btn-light me-2">{% trans %}API SMS{% endtrans %}</a>
-                                                <a href="{{ path('app_contact_index')}}" class="btn btn-sm btn-success">{% trans %}Importer des contacts{% endtrans %}</a>
-                                            </div>
-                                            <!--end::Action-->
-                                        </div>
-                                        <!--end::Item-->
-                                    </div>
-                                    <!--end::Carousel-->
-                                </div>
-                                <!--end::Body-->
+                            <!--begin::Action-->
+                            <div class="mb-1 mt-4">
+                                <a href="{{ path('campaign_sms')}}" class="btn btn-primary me-2">{% trans %}SMS{% endtrans %}</a>
+                                <a href="{{ path('campaign_sms')}}" style="background: #fc6" class="btn me-2">{% trans %}Créer une Campagne{% endtrans %}</a>
+                                <a href="{{ path('app_contact_index')}}" class="btn btn-light me-2">{% trans %}API SMS{% endtrans %}</a>
+                                <a href="{{ path('app_contact_index')}}" class="btn btn-success">{% trans %}Importer des contacts{% endtrans %}</a>
                             </div>
-                            <!--end::Slider Widget 2-->
+                            <!--end::Action-->
                         </div>
                         <!--end::Col-->
                     </div>
-                    <!--end::Row-->
+                    <!--end::Row-->  
+                    
                     <!--begin::Engage widget 4-->
-                    <div class="card" style="background: #010246;">
+                    <div class="card" style="background: {% if brand.name == "FASTERMESSAGE" %}  #003366  {% else %} #010246 {% endif %};">
                         <!--begin::Body-->
                         <div class="card-body d-flex ps-xl-15">
                             <!--begin::Action-->
@@ -235,23 +138,23 @@
                                 <div class="position-relative fs-2x z-index-2 fw-bolder text-white mb-7">
                                 <span class="me-2"> {% trans %}Vous avez besoin de {% endtrans %}
                                 <span class="position-relative d-inline-block text-warning">
-                                    <a href="{{ path('app_recharge')}}" class="text-danger opacity-75-hover">{% trans %}crédit SMS {% endtrans %}</a>
+                                    <a href="{{ path('app_recharge')}}" style="color: #fc6" class="opacity-75-hover">{% trans %}crédit SMS {% endtrans %} !</a>
                                     <!--begin::Separator-->
-                                    <span class="position-absolute opacity-50 bottom-0 start-0 border-4 border-danger border-bottom w-100"></span>
+                                    <span class="position-absolute opacity-50 bottom-0  start-0 border-4 border-bottom w-100" style="color: #fc9"></span>
                                     <!--end::Separator-->
-                                </span></span>{% trans %}Faites-le en quelques secondes{% endtrans %}</div>
+                                </span></span>{% trans %}Rechargez votre compte en quelques secondes{% endtrans %}</div>
                                 <!--end::Title-->
                                 <!--begin::Action-->
                                 <div class="mb-3">
-                                    <a href='{{ path('app_recharge')}}' class="btn btn-info fw-bold me-2">
+                                    <a href='{{ path('app_recharge')}}' class="btn fw-bold me-2" style="background: #fc6">
                                     {% trans %}Recharger mon compte{% endtrans %}</a>
-                                    <a href="{{ path('sender')}}" class="btn btn-color-white bg-body bg-opacity-15 bg-hover-opacity-25 fw-bold">{% trans %}Créer un identifiant{% endtrans %}</a>
+                                    <a href="{{ path('sender')}}" style="background: #fff" class="btn bg-hover-opacity-25 fw-bold">{% trans %}Créer un identifiant{% endtrans %}</a>
                                 </div>
                                 <!--begin::Action-->
                             </div>
                             <!--begin::Action-->
                             <!--begin::Illustration-->
-                            <img src="{{ asset('app/media/illustrations/sigma-1/17-dark.png') }}" class="position-absolute me-3 bottom-0 end-0 h-200px" alt="" />
+                            <img src="{{ asset('app/media/dashboard/notification.png') }}" class="position-absolute  me-3 bottom-0 end-0 h-150px" alt="" />
                             <!--end::Illustration-->
                         </div>
                         <!--end::Body-->
