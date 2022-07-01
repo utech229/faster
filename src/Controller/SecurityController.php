@@ -35,36 +35,8 @@ class SecurityController extends AbstractController
         $this->roleRepository = $roleRepository;
         $this->statusRepository  = $statusRepository;
     }
-    
-    /*#[Route(path: '', name: 'app_login')]
-    public function login(AuthenticationUtils $authenticationUtils): Response
-    {
-        if ($this->getUser()) {
-             return $this->redirectToRoute('app_home');
-        }else {
-            $user = new User();
-            $form = $this->createForm(RegistrationFormType::class, $user);
-        }
-        
-        // get the login error if there is one
-        $error = $authenticationUtils->getLastAuthenticationError();
-        // last username entered by the user
-        $lastUsername = $authenticationUtils->getLastUsername();
 
-        return $this->render('security/'.$this->brand->get()['loginform'], 
-        [
-            'last_username'   => $lastUsername, 
-            'error'           => $error,
-            'title'           => $this->intl->trans('Connexion').' - '. $this->brand->get()['name'],
-            'menu_text'       => $this->intl->trans('Connexion'),
-            'brand'           => $this->brand->get(),
-            'baseUrl'         => $this->baseUrl,
-            'registrationForm' => $form->createView(),
-        ]);
-    }*/
-
-
-    #[Route(path: '/login', name: 'app_login')]
+    #[Route(path: '', name: 'app_login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
         if ($this->getUser()) {
