@@ -441,7 +441,7 @@
                                         </div>
                                         <div data-kt-menu-trigger="click" data-kt-menu-placement="bottom-start" class="menu-item menu-lg-down-accordion me-lg-1">
                                             <span class="menu-link py-3"> 
-                                                <span class="menu-title"> <strong>{{ app.user.balance /  app.user.price[0].price }} SMS</strong> </span>
+                                                <span class="menu-title"> <strong>{% if app.user.price != [] %}{{ app.user.balance /  app.user.price[0].price }}{% endif %} SMS</strong> </span>
                                                 <span class="menu-arrow d-lg-none"></span>
                                             </span>
                                         </div>
@@ -624,9 +624,12 @@
                             <div class="d-flex align-items-center gap-2 gap-lg-3">
                                 <!--begin::Filter menu-->
                                 <div class="m-0">
-                                    <a href="javascript:history.back()" class="btn btn-sm btn-secondary px-6"><span class="fas fa-chevron-circle-left"> {% trans %} Retour{% endtrans %}</span></a>
+                                    <a href="javascript:history.back()" class="btn btn-sm btn-secondary px-6">{% trans %} Retour{% endtrans %}</a>
                                 </div>
                                 <!--end::Filter menu-->
+                                <!--begin::Primary button-->
+                                <a href="{{ path('campaign_sms') }}" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_create_campaign">{% trans %}Nouvel Campagne{% endtrans %}</a>
+                                <!--end::Primary button-->
                             </div>
                             <!--end::Actions-->
                         </div>
