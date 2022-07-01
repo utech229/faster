@@ -111,6 +111,7 @@ class PriceController extends AbstractController
                 [$user->getEmail()],
             ],
             'user_uid'        => $user->getUid(),
+            'user'            => $user,
             'brand'           => $this->brand->get(),
             'baseUrl'         => $this->baseUrl->init(),
             'priceform'        => $form->createView(),

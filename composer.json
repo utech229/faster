@@ -31,7 +31,7 @@
         "symfony/google-mailer": "*",
         "symfony/http-client": "*",
         "symfony/intl": "*",
-        "symfony/mailer": "*",
+        "symfony/mailer": "6.1.*",
         "symfony/mime": "*",
         "symfony/monolog-bundle": "^3.8",
         "symfony/notifier": "*",

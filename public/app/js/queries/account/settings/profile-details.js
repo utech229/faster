@@ -93,7 +93,7 @@ var KTAccountSettingsProfileDetails=function() {
                                     customClass: {
                                         confirmButton: "btn btn-primary"
                                     }}).then((function(t) {
-                                    const cover = avatarPath + response.data;
+                                    const cover = user_avatar_link.replace("_1_", response.data);
                                     if (response.status == 'success'){
                                         $('#profile_avatar').attr('src', cover);
                                         $('#menu_profile_avatar').attr('src', cover);

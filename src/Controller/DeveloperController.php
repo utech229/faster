@@ -48,15 +48,7 @@ class DeveloperController extends AbstractController
     }
 
     #[Route('', name: 'app_developer')]
-    public function index(): Response
-    {
-        return $this->render('developer/index.html.twig', [
-            'controller_name' => 'DeveloperController',
-        ]);
-    }
-
-    #[Route('/apikey', name: 'app_user_apikey')]
-    public function apikey(): Response
+    public function developer(): Response
     {
         if(!$this->pAccess)
         {
@@ -67,8 +59,8 @@ class DeveloperController extends AbstractController
         $this->services->addLog($this->intl->trans('Accès au menu clé api'));
         return $this->render('developer/apikey.html.twig', [
             'controller_name' => 'DeveloperController',
-            'title'           => $this->intl->trans('Clé api').' - '. $this->brand->get()['name'],
-            'pageTitle'          => [ [$this->intl->trans('Développeur & Api')], [$this->intl->trans('A')] ],
+            'title'           => $this->intl->trans('Développeur & Api').' - '. $this->brand->get()['name'],
+            'pageTitle'          => [ [$this->intl->trans('Développeur & Api')], [$this->intl->trans('Intégration')] ],
             'brand'           => $this->brand->get(),
             'baseUrl'         => $this->baseUrl->init(),
             'pCreateUser'     => $this->pCreate,
@@ -87,7 +79,7 @@ class DeveloperController extends AbstractController
             if ((!$this->isCsrfTokenValid($user->getUid(), $request->request->get('_token'))) or ($user->getRole()->getCode() == 'AFF')) 
                 return $this->services->no_access($this->intl->trans("Régénération de la clé api"));
 
-            $newapikey   = $this->services->idgenerate(30);   
+            $newapikey   =  bin2hex(random_bytes(32));  
             if ($user->getAffiliateManager()) {
                 $aff_manager = $user->getAffiliateManager();
 

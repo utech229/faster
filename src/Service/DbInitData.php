@@ -274,7 +274,6 @@ class DbInitData extends AbstractController
         $this->em->flush();
     }
 
-    #[Route('/addauthorization', name: 'app_authorization')]
     public function addAuthorization(): void
     {
         $roleId = [7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,
@@ -344,10 +343,8 @@ class DbInitData extends AbstractController
 
     public function addStatus():void
     {
-        $existedStatus  = $this->statusRepository->findAll();
-        if (!$existedStatus) {
-            $statusCodes = [0,1,2,3,4,5,6,7];
-            $statusNames = [ "Programmé","En cours", "En attente", "Actif", "Désactivé", "Suspendu", "Approuvé", "Annulé"];
+            $statusCodes = [0,1,2,3,4,5,6,7,8,9];
+            $statusNames = [ "Programmé","En cours", "En attente", "Actif", "Désactivé", "Suspendu", "Approuvé", "Annulé","Supprimé", "Rejeté"];
             $statusDescription = [
                 "Statut programmé sur une entité",
                 "Statut en cours  d'une entité",
@@ -356,7 +353,21 @@ class DbInitData extends AbstractController
                 "Statut désactivé d'une entité",
                 "Statut suspendu d'une entité",
                 "Statut approuvé d'une entité",
-                "Statut annulé d'une entité"
+                "Statut annulé d'une entité",
+                "Statut supprimé d'une entité",
+                "Statut rejeté d'une entité"
+            ];
+            $statusLabel = [
+                "primary",
+                "warning",
+                "warning",
+                "success",
+                "danger",
+                "danger",
+                "success",
+                "danger",
+                "secondary",
+                "danger"
             ];
             for ($i=0; $i < (count($statusCodes)); $i++) {
                 $status  = $this->statusRepository->findOneBy(['code' => $statusCodes[$i]]);
@@ -367,14 +378,12 @@ class DbInitData extends AbstractController
                     $status->setName($statusNames[$i]);
                     $status->setDescription($statusDescription[$i]);
                     $status->setCreatedAt(new \DatetimeImmutable());
+                    $status->setLabel($statusLabel[$i]);
                     $this->em->persist($status);
                 }
             }
             $this->em->flush();
             $response = true;
-        }else{
-            $response = false;
-        }
     }
 
     public function addRoute():void

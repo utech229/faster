@@ -3,10 +3,18 @@
 
 {% block title %}{{ title }}{% endblock %}
 
-{% block stylesheets %} {% endblock %}
+{% block stylesheets %} 
+<!--begin::Page Vendor Stylesheets(used by this page)-->
+		<link href="{{  asset('app/css/plugins/custom/prismjs/prismjs.bundle.css') }}" rel="stylesheet" type="text/css" />
+		<!--end::Page Vendor Stylesheets-->
+{% endblock %}
 
 {% block body %}
     <!--begin::Post-->
+    {% set hostApi     = app.request.getHttpHost()%}
+    {% set v1send_link = '/api/v1/sms/send' %}
+    {% set v1Dlr_link = '/api/v1/sms/dlr' %}
+    {% set v1Balance_link = '/api/v1/sms/balance' %}
     <div class="post d-flex flex-column-fluid" id="kt_post">
         <!--begin::Container-->
         <div id="kt_content_container" class="container-xxl">
@@ -14,7 +22,7 @@
             <div class="card mb-5 mb-xl-10">
                 <!--begin::Body-->
                 <div class="card-body py-10">
-                    <h2 class="mb-9">{{'Clé api'| trans | upper}}</h2>
+                    <h2 class="mb-9">{{'Clé api'| trans | upper}} </h2>
                     <!--begin::Overview-->
                     <div class="row mb-2">
                         <!--begin::Col-->
@@ -45,7 +53,7 @@
                         <div class="col-xl-6 mb-15 mb-xl-0 pe-5">
                             <h4 class="mb-0">{% trans %} A quoi vous sert une clé api ?{% endtrans %}</h4>
                             <p class="fs-6 fw-bold text-gray-600 py-4 m-0">
-                            <i class="fa fa-info-circle text-primary"></i> {% trans %} Utilisez votre clé api pour intégrer l'envoie de SMS sur vos différentes plateformes avec plusieurs langages de programmation tels que le PHP, NODE JS, WINDEV etc...{% endtrans %}<br> 
+                            <i class="fa fa-info-circle text-primary"></i> {% trans %} Utilisez votre clé api pour intégrer l'envoie de SMS sur vos différentes plateformes avec plusieurs langages de programmation tels que le PHP, CURL, PYTHON, NODE JS, WINDEV etc...{% endtrans %}<br> 
                         </div>
                         <!--end::Col-->
                         <!--begin::Col-->
@@ -177,7 +185,7 @@
                                         <h3 class="text-gray-800 fw-bold cursor-pointer me-3 mb-0">{% trans %}Envoyer un SMS{% endtrans %} </h3>
                                         <!--end::Title-->
                                         <!--begin::Label-->
-                                        <span class="badge badge-light-danger my-1 d-block">{{brand.name}}</span>
+                                        <span class="badge badge-light-info my-1 d-block">{{brand.name}}</span>
                                         <!--end::Label-->
                                     </div>
                                     <!--end::Section-->
@@ -190,7 +198,7 @@
                                         <!--begin::Text-->
                                         <span class="text-muted fw-bold fs-5">{% trans %}Pour envoyer un SMS par l’intermédiaire de l’API, 
                                         il vous faut lancer une requête HTTP vers l’adresse{% endtrans %}
-                                        <a href="{{brand.site_url}}/v1/sms/send" target="_blank" rel="noopener noreferrer">« {{brand.site_url}}/v1/sms/send »</a> , 
+                                        <a href="{{brand.site_url}}{{v1send_link}}" target="_blank" rel="noopener noreferrer">« {{brand.site_url}}{{v1send_link}} »</a> , 
                                         {% trans %}en spécifiant certains paramètres (texte à envoyer, numéro de téléphone, destinataire, expéditeur, etc.). 
                                         L’API retournera une réponse sur l’état de la requête soumise : une confirmation de réponse si tout s’est 
                                         bien passé ou une erreur si elle n’a pas les options de configuration disponibles{% endtrans %}.
@@ -209,6 +217,514 @@
                                             <li> 
                                                 <span class="badge badge-light-danger my-1">to</span> : {% trans %} c’est le destinataire du message. Il s’agit du numéro de téléphone de celui qui reçoit le SMS précédé de l’indicatif de son pays. Exemple : 22990909090;{% endtrans %}
                                             </li>
+                                             <li> 
+                                                <span class="badge badge-light-success my-1">datetime</span> : {% trans %} ce paramètre est spécifié pour un envoi différé. Il représente la date à laquelle le destinataire recevra le message;{% endtrans %}
+                                            </li>
+                                             <li> 
+                                                <span class="badge badge-light-success my-1">messageId</span> : {% trans %} c’est l'identifiant unique de chaque message envoyé;{% endtrans %}
+                                            </li>
+                                             <li> 
+                                                <span class="badge badge-light-success my-1">dlr_url </span> : {% trans %} c’est l’adresse HTTP à laquelle l’accusé de réception du message vous sera envoyé automatiquement. Voir la rubrique accusé de réception pour plus de détail.{% endtrans %}
+                                            </li>
+                                        </ul>
+                                        </span>
+                                        <!--end::Text-->
+                                        <!--begin::Link-->
+                                        <a href="javascript:;" class="fs-5 link-primary fw-bold"></a>
+                                        <!--end::Link-->
+                                    </div>
+                                    <!--end::Block-->
+                                    <!--begin::Alert-->
+                                    <div class="alert alert-dismissible bg-light-danger border border-danger border-dashed  h-lg-100 d-flex flex-column flex-sm-row w-100 p-5">
+                                        <!--begin::Icon-->
+                                        <!--begin::Svg Icon | path: icons/duotune/communication/com003.svg-->
+                                        <span class="svg-icon svg-icon-2hx svg-icon-danger me-4 mb-5 mb-sm-0">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                <path opacity="0.3" d="M2 4V16C2 16.6 2.4 17 3 17H13L16.6 20.6C17.1 21.1 18 20.8 18 20V17H21C21.6 17 22 16.6 22 16V4C22 3.4 21.6 3 21 3H3C2.4 3 2 3.4 2 4Z" fill="currentColor" />
+                                                <path d="M18 9H6C5.4 9 5 8.6 5 8C5 7.4 5.4 7 6 7H18C18.6 7 19 7.4 19 8C19 8.6 18.6 9 18 9ZM16 12C16 11.4 15.6 11 15 11H6C5.4 11 5 11.4 5 12C5 12.6 5.4 13 6 13H15C15.6 13 16 12.6 16 12Z" fill="currentColor" />
+                                            </svg>
+                                        </span>
+                                        <!--end::Svg Icon-->
+                                        <!--end::Icon-->
+                                        <!--begin::Content-->
+                                        <div class="d-flex flex-column pe-0 pe-sm-10">
+                                            <h4 class="text-gray-900 fw-bolder">{% trans %}Note{% endtrans %}</h4>
+                                            <div class="fs-6 text-gray-700">{% trans %}Les variables en badge rouge sont obligatoires. Les autres sont optionnelles.{% endtrans %}
+                                            </div>
+                                        </div>
+                                        <!--end::Content-->
+                                    </div>
+                                    <!--end::Alert-->
+                                </div>
+                                <!--end::Content-->
+                            </div>
+                            <!--end::Body-->
+                            <!--begin::Section-->
+                            <div class="m-0">
+                                <!--begin::Heading-->
+                                <div class="d-flex align-items-center collapsible py-3 toggle collapsed mb-0" data-bs-toggle="collapse" data-bs-target="#kt_support_1_3">
+                                    <!--begin::Icon-->
+                                    {% include 'developer/icon.html.twig' %}
+                                    <!--end::Icon-->
+                                    <!--begin::Section-->
+                                    <div class="d-flex align-items-center flex-wrap">
+                                        <!--begin::Title-->
+                                        <h3 class="text-gray-800 fw-bold cursor-pointer me-3 mb-0">{% trans %}Méthode d'envoi API{% endtrans %}</h3>
+                                        <!--end::Title-->
+                                        <!--begin::Label-->
+                                        <span class="badge badge-light-danger my-1 d-block">GET</span>
+                                        <!--end::Label-->
+                                    </div>
+                                    <!--end::Section-->
+                                </div>
+                                <!--end::Heading-->
+                                <!--begin::Body-->
+                                <div id="kt_support_1_3" class="collapse fs-6 ms-10">
+                                    <!--begin::Block-->
+                                    <div class="mb-2">
+                                    </div>
+                                    <!--end::Block-->
+                                    <div>
+                                        <ul class="nav nav-tabs nav-line-tabs mb-5 fs-6">
+                                            <li class="nav-item">
+                                                <a class="nav-link active" data-bs-toggle="tab" href="#kt_tab_pane_get_1">PHP</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_get_2">CURL</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_get_3">PYTHON</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_get_4">NODE JS</a>
+                                            </li>
+                                        </ul>
+                                        <div class="tab-content" id="myTabContent">
+
+                                            <div class="tab-pane fade show active" id="kt_tab_pane_get_1" role="tabpanel">
+                                                <!--begin::Code-->
+										        <div class="py-5">
+                                                    <!--begin::Highlight-->
+                                                    <div class="highlight"> 
+                                                        <button class="highlight-copy btn" data-bs-toggle="tooltip" title="{{"Copier le code"|trans}}">{{"Copier"|trans}}</button>
+                                                        <div class="highlight-code">
+                                                            <pre class="language-html" style="min-height:50px; max-height:400px">
+                                                                <code class="text-primary">
+                                                                      &lt;?php <br>
+                                                                    $apiKey         = '{{ app.user.apikey }}';<br>
+                                                                    $sendsmsurl_prefix = "{{ base_url }}{{ v1send_link }}";<br>
+                                                                    $curl = curl_init();<br>
+                                                                    $sendsmsurl_params = array(<br>
+                                                                        'from'      => $from,<br>
+                                                                        'to'        => $to,<br>
+                                                                        'text'      => $text,<br>
+                                                                        'x-api-key' => $apiKey,
+                                                                    );<br>
+
+                                                                    $sendsmsurl = $sendsmsurl_prefix."?".http_build_query($sendsmsurl_params);<br>
+
+                                                                    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);<br>
+                                                                    curl_setopt($curl, CURLOPT_HTTPHEADER, array("x-api-key: " . $apiKey));<br>
+                                                                    curl_setopt($curl, CURLOPT_URL, $sendsmsurl);<br>
+                                                                    curl_exec($curl);<br>
+                                                                    curl_close($curl);<br>
+                                                                    ?&gt;
+                                                                </code>
+                                                            </pre>
+                                                        </div>
+                                                    </div>
+                                                    <!--end::Highlight-->
+                                                </div>
+										        <!--end::Code-->
+                                            </div>
+                                            <div class="tab-pane fade" id="kt_tab_pane_get_2" role="tabpanel">
+                                                <!--begin::Code-->
+										        <div class="py-5">
+                                                    <!--begin::Highlight-->
+                                                    <div class="highlight"> 
+                                                        <button class="highlight-copy btn" data-bs-toggle="tooltip" title="{{"Copier le code"|trans}}">{{"Copier"|trans}}</button>
+                                                        <div class="highlight-code">
+                                                            <pre class="language-html" style="min-height:50px; max-height:400px">
+                                                                <code class="text-primary">
+                                                                     curl "{{ base_url }}{{ v1send_link }}?from={{ 'senderDefault' }}&to=22990909090&text=Hello world" \<br>
+                                                                    -H "x-api-key: {{  app.user.apikey  }}"<br><br>
+                                                                </code>
+                                                            </pre>
+                                                        </div>
+                                                    </div>
+                                                    <!--end::Highlight-->
+                                                </div>
+										        <!--end::Code-->
+                                            </div>
+                                            <div class="tab-pane fade" id="kt_tab_pane_get_3" role="tabpanel">
+                                                <!--begin::Code-->
+										        <div class="py-5">
+                                                    <!--begin::Highlight-->
+                                                    <div class="highlight"> 
+                                                        <button class="highlight-copy btn" data-bs-toggle="tooltip" title="{{"Copier le code"|trans}}">{{"Copier"|trans}}</button>
+                                                        <div class="highlight-code">
+                                                            <pre class="language-html" style="min-height:50px; max-height:400px">
+                                                                <code class="text-primary">
+                                                                     import requests<br>
+
+                                                        url = '{{ base_url }}{{ v1send_link }}?from={{ 'senderDefault' }}&to=22990909090&text=Hello world'<br>
+                                                        headers = {'x-api-key': '{{ app.user.apikey }}'}<br>
+
+                                                        req = requests.get(url, headers=headers)<br>
+
+                                                        print(req.status_code)<br>
+                                                        print(req.headers)<br>
+                                                        print(req.text)<br>
+                                                                </code>
+                                                            </pre>
+                                                        </div>
+                                                    </div>
+                                                    <!--end::Highlight-->
+                                                </div>
+										        <!--end::Code-->
+                                            </div>
+                                            <div class="tab-pane fade" id="kt_tab_pane_get_4" role="tabpanel">
+                                                <!--begin::Code-->
+										        <div class="py-5">
+                                                    <!--begin::Highlight-->
+                                                    <div class="highlight"> 
+                                                        <button class="highlight-copy btn" data-bs-toggle="tooltip" title="{{"Copier le code"|trans}}">{{"Copier"|trans}}</button>
+                                                        <div class="highlight-code">
+                                                            <pre class="language-html" style="min-height:50px; max-height:400px">
+                                                                <code class="text-primary">
+                                                                   
+                                                        const http = require('https');<br>
+                                                        const init = {<br>
+                                                        host: '{{ hostApi }}',<br>
+                                                        path: '{{ v1send_link }}?from={{ 'senderDefault' }}&to=22990909090&text=Hello%20world',<br>
+                                                        method: 'GET',<br>
+                                                            headers: {<br>
+                                                            'x-api-key': '{{ app.user.apikey }}'<br>
+                                                            }<br>
+                                                        };<br>
+                                                        const callback = function(response) {<br>
+                                                        let result = Buffer.alloc(0);<br>
+                                                        response.on('data', function(chunk) {<br>
+                                                            result = Buffer.concat([result, chunk]);<br>
+                                                        });<br>
+                                                        response.on('end', function() {<br>
+                                                        // result has response body buffer<br>
+                                                        console.log(result.toString());<br>
+                                                        });<br>
+                                                        };<br>
+
+                                                        const req = http.request(init, callback);<br>
+                                                        req.end();<br>
+                                                                </code>
+                                                            </pre>
+                                                        </div>
+                                                    </div>
+                                                    <!--end::Highlight-->
+                                                </div>
+										        <!--end::Code-->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--end::Content-->
+                            </div>
+                            <!--end::Section-->
+                            <!--begin::Section-->
+                            <div class="m-0 mt-2">
+                                <!--begin::Heading-->
+                                <div class="d-flex align-items-center collapsible py-3 toggle collapsed mb-0" data-bs-toggle="collapse" data-bs-target="#kt_support_1_4">
+                                    <!--begin::Icon-->
+                                    {% include 'developer/icon.html.twig' %}
+                                    <!--end::Icon-->
+                                    <!--begin::Section-->
+                                    <div class="d-flex align-items-center flex-wrap">
+                                        <!--begin::Title-->
+                                        <h3 class="text-gray-800 fw-bold cursor-pointer me-3 mb-0">{% trans %}Méthode d'envoi API{% endtrans %}</h3>
+                                        <!--end::Title-->
+                                        <!--begin::Label-->
+                                        <span class="badge badge-light-success my-1 d-block">POST</span>
+                                        <!--end::Label-->
+                                    </div>
+                                    <!--end::Section-->
+                                </div>
+                                <!--end::Heading-->
+                                <!--begin::Body-->
+                                <div id="kt_support_1_4" class="collapse fs-6 ms-10">
+                                    <!--begin::Block-->
+                                    <div class="mb-2">
+                                    </div>
+                                    <!--end::Block-->
+                                    <div>
+                                        <ul class="nav nav-tabs nav-line-tabs mb-5 fs-6">
+                                            <li class="nav-item">
+                                                <a class="nav-link active" data-bs-toggle="tab" href="#kt_tab_pane_post_1">PHP</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_post_2">CURL</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_post_3">PYTHON</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_post_4">NODE JS</a>
+                                            </li>
+                                        </ul>
+                                        <div class="tab-content" id="myTabContent">
+
+                                            <div class="tab-pane fade show active" id="kt_tab_pane_post_1" role="tabpanel">
+                                                <!--begin::Code-->
+										        <div class="py-5">
+                                                    <!--begin::Highlight-->
+                                                    <div class="highlight"> 
+                                                        <button class="highlight-copy btn" data-bs-toggle="tooltip" title="{{"Copier le code"|trans}}">{{"Copier"|trans}}</button>
+                                                        <div class="highlight-code">
+                                                            <pre class="language-html" style="min-height:50px; max-height:400px">
+                                                                <code class="text-primary">
+                                                                    &lt;?php <br>
+                                                                    $url            = '{{ base_url}}{{ v1send_link }}'; <br>
+                                                                    $apiKey         = '{{ app.user.apikey }}';<br>
+                                                                    $smsData        = array(<br>
+                                                                    'from'      => "{{ 'senderDefault' }}",<br>
+                                                                    'to'        => "22990909090",<br>
+                                                                    'text'      => "Hello world",<br>
+                                                                    );<br>
+                                                                    $ch = curl_init($url);<br>
+                                                                    curl_setopt($ch, CURLOPT_TIMEOUT, 30);<br>
+                                                                    curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);<br>
+                                                                    curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_ANY);<br>
+                                                                    curl_setopt($ch, CURLOPT_HTTPHEADER, array("X-API-KEY: " . $apiKey));<br>
+                                                                    curl_setopt($ch, CURLOPT_POST, 1);<br>
+                                                                    curl_setopt($ch, CURLOPT_POSTFIELDS, $smsData);<br>
+                                                                    $result = curl_exec($ch);<br>
+                                                                    curl_close($ch);<br>
+                                                                    ?&gt;
+                                                                </code>
+                                                            </pre>
+                                                        </div>
+                                                    </div>
+                                                    <!--end::Highlight-->
+                                                </div>
+										        <!--end::Code-->
+                                            </div>
+                                            <div class="tab-pane fade" id="kt_tab_pane_post_2" role="tabpanel">
+                                               <!--begin::Code-->
+										        <div class="py-5">
+                                                    <!--begin::Highlight-->
+                                                    <div class="highlight"> 
+                                                        <button class="highlight-copy btn" data-bs-toggle="tooltip" title="{{"Copier le code"|trans}}">{{"Copier"|trans}}</button>
+                                                        <div class="highlight-code">
+                                                            <pre class="language-html" style="min-height:50px; max-height:400px">
+                                                                <code class="text-primary">
+                                                                    <br>
+                                                                    
+                                                    curl "{{ base_url }}{{ v1send_link }}?from={{ 'senderDefault '}}&to=22990909090&text=Hello world" \<br>
+                                                    -X POST \<br>
+                                                    -H "x-api-key: {{ app.user.apikey }}"<br>
+                                                                </code>
+                                                            </pre>
+                                                        </div>
+                                                    </div>
+                                                    <!--end::Highlight-->
+                                                </div>
+										        <!--end::Code-->
+                                            </div>
+                                            <div class="tab-pane fade" id="kt_tab_pane_post_3" role="tabpanel">
+                                                <!--begin::Code-->
+										        <div class="py-5">
+                                                    <!--begin::Highlight-->
+                                                    <div class="highlight"> 
+                                                        <button class="highlight-copy btn" data-bs-toggle="tooltip" title="{{"Copier le code"|trans}}">{{"Copier"|trans}}</button>
+                                                        <div class="highlight-code">
+                                                            <pre class="language-html" style="min-height:50px; max-height:400px">
+                                                                <code class="text-primary">
+                                                                   
+                                                    import httplib<br>
+
+                                                    headers = {'x-api-key': '{{ app.user.apikey }}'}<br>
+
+                                                    conn = httplib.HTTPSConnection('{{ base_url }}')<br>
+                                                    conn.request('POST','{{ v1send_link }}?from={{ 'senderDefault' }}&to=22990909090&text=Hello%20world', headers)<br>
+                                                    res = conn.getresponse()<br>
+
+                                                    print(res.status, res.reason)<br>
+                                                    print(res.read())<br>
+                                                    print(res.getheaders())<br>
+                                                                </code>
+                                                            </pre>
+                                                        </div>
+                                                    </div>
+                                                    <!--end::Highlight-->
+                                                </div>
+										        <!--end::Code-->
+                                            </div>
+                                            <div class="tab-pane fade" id="kt_tab_pane_post_4" role="tabpanel">
+                                                <!--begin::Code-->
+										        <div class="py-5">
+                                                    <!--begin::Highlight-->
+                                                    <div class="highlight"> 
+                                                        <button class="highlight-copy btn" data-bs-toggle="tooltip" title="{{"Copier le code"|trans}}">{{"Copier"|trans}}</button>
+                                                        <div class="highlight-code">
+                                                            <pre class="language-html" style="min-height:50px; max-height:400px">
+                                                                <code class="text-primary">
+                                                                    const http = require('https');<br>
+                                                    const init = {<br>
+                                                    host: '{{ hostApi }}',<br>
+                                                    path: '{{ v1send_link }}?from={{ 'senderDefault' }}&to=22990909090&text=Hello%20world',<br>
+                                                    method: 'POST',<br>
+                                                    headers: {<br>
+                                                        'x-api-key': '{{ app.user.apikey }}'<br>
+                                                    }<br>
+                                                    };<br>
+                                                    const callback = function(response) {<br>
+                                                    let result = Buffer.alloc(0);<br>
+                                                    response.on('data', function(chunk) {<br>
+                                                        result = Buffer.concat([result, chunk]);<br>
+                                                    });<br>
+
+                                                    response.on('end', function() {<br>
+                                                        // result has response body buffer<br>
+                                                        console.log(result.toString());<br>
+                                                    });<br>
+                                                    };<br>
+
+                                                    const req = http.request(init, callback);<br>
+                                                    req.end();<br>
+
+                                                                </code>
+                                                            </pre>
+                                                        </div>
+                                                    </div>
+                                                    <!--end::Highlight-->
+                                                </div>
+										        <!--end::Code-->
+                                            </div>
+                                           
+                                        </div>
+                                    </div>
+                                      <!--begin::Alert-->
+                                    <div class="alert alert-dismissible bg-light-danger border border-danger mt-6 border-dashed  h-lg-100 d-flex flex-column flex-sm-row w-100 p-5">
+                                        <!--begin::Icon-->
+                                        <!--begin::Svg Icon | path: icons/duotune/communication/com003.svg-->
+                                        <span class="svg-icon svg-icon-2hx svg-icon-danger me-4 mb-5 mb-sm-0">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                <path opacity="0.3" d="M12 22C13.6569 22 15 20.6569 15 19C15 17.3431 13.6569 16 12 16C10.3431 16 9 17.3431 9 19C9 20.6569 10.3431 22 12 22Z" fill="currentColor" />
+                                                <path d="M19 15V18C19 18.6 18.6 19 18 19H6C5.4 19 5 18.6 5 18V15C6.1 15 7 14.1 7 13V10C7 7.6 8.7 5.6 11 5.1V3C11 2.4 11.4 2 12 2C12.6 2 13 2.4 13 3V5.1C15.3 5.6 17 7.6 17 10V13C17 14.1 17.9 15 19 15ZM11 10C11 9.4 11.4 9 12 9C12.6 9 13 8.6 13 8C13 7.4 12.6 7 12 7C10.3 7 9 8.3 9 10C9 10.6 9.4 11 10 11C10.6 11 11 10.6 11 10Z" fill="currentColor" />
+                                            </svg>
+                                        </span>
+                                        <!--end::Svg Icon-->
+                                        <!--end::Icon-->
+                                        <!--begin::Content-->
+                                        <div class="d-flex flex-column pe-0 pe-sm-10">
+                                            <h4 class="text-gray-900 fw-bolder">{% trans %}Note{% endtrans %}</h4>
+                                            <div class="fs-6 text-gray-700">{% trans %}Ces deux fonctions ne sont données qu’en guise d’exemple. Quelques soit votre langage de programmation, vous pouvez simplement envoyer un SMS en soumettant une requête HTTP avec les paramètres directement dans l’URL.{% endtrans %}
+                                            </div>
+                                        </div>
+                                        <!--end::Content-->
+                                    </div>
+                                    <!--end::Alert-->
+                                </div>
+                                <!--end::Content-->
+                            </div>
+                            <!--end::Section-->
+                            <!--begin::Section-->
+                            <div class="m-0 mt-2">
+                                <!--begin::Heading-->
+                                <div class="d-flex align-items-center collapsible py-3 toggle collapsed mb-0" data-bs-toggle="collapse" data-bs-target="#kt_support_1_5">
+                                    <!--begin::Icon-->
+                                    {% include 'developer/icon.html.twig' %}
+                                    <!--end::Icon-->
+                                    <!--begin::Section-->
+                                    <div class="d-flex align-items-center flex-wrap">
+                                        <!--begin::Title-->
+                                        <h3 class="text-gray-800 fw-bold cursor-pointer me-3 mb-0">{% trans %}Réponse après envoi{% endtrans %}</h3>
+                                        <!--end::Title-->
+                                        <!--begin::Label-->
+                                        <span class="badge badge-light-success my-1 d-block">Json</span>
+                                        <!--end::Label-->
+                                    </div>
+                                    <!--end::Section-->
+                                </div>
+                                <!--end::Heading-->
+                                <!--begin::Body-->
+                                <div id="kt_support_1_5" class="collapse fs-6 ms-10">
+                                    <!--begin::Block-->
+                                    <div class="mb-2">
+                                    </div>
+                                    <!--end::Block-->
+                                    <div>
+                                        <p>{% trans %}Après l’envoi d’un SMS via l’API FASTERMESSAGE, vous obtiendrez en retour une réponse du serveur au format JSON comme ci-après.{% endtrans %}</p>
+                                        <!--begin::Code-->
+                                        <div class="py-5">
+                                            <!--begin::Highlight-->
+                                            <div class="highlight"> 
+                                                <button class="highlight-copy btn" data-bs-toggle="tooltip" title="{{"Copier le code"|trans}}">{{"Copier"|trans}}</button>
+                                                <div class="highlight-code">
+                                                    <pre class="language-html" style="min-height:50px; max-height:400px">
+                                                        <code class="text-warning">
+                                                            {<br>
+                                                        "status" : true,<br>
+                                                        "from" : "{{ 'senderDefault' }}",<br>
+                                                        "to" : "22990909090",<br>
+                                                        "text" : "Hello-World-!",<br>
+                                                        "code" : 1,<br>
+                                                        "description" : "Accepted for delivery",<br>
+                                                        "smsCount" : 1,<br>
+                                                        "devise" : "XOF",<br>
+                                                        "unitPrice" : "12",<br>
+                                                        "messagePrice" : 12,<br>
+                                                        "messageId" : "1550226919288536"<br>
+                                                    }<br>
+                                                        </code>
+                                                    </pre>
+                                                </div>
+                                            </div>
+                                            <!--end::Highlight-->
+                                        </div>
+                                        <!--end::Code-->
+                                    </div>
+                                     <!--begin::Block-->
+                                    <div class="mb-4">
+                                        <!--begin::Text-->
+                                        <p>{% trans %}Passons en revue les informations renvoyées par le serveur à la suite de la requête d’envoi :{% endtrans %}</p>
+                                        <ul>
+                                            <li> 
+                                                <span class="badge badge-light-primary my-1">status</span> : {% trans %}c’est l’état de soumission de la requête. Il est <span class="badge badge-light-success">TRUE</span> si tout s’est bien passé ou <span class="badge badge-light-danger">FALSE</span> s’il y a un problème ;{% endtrans %}
+                                            </li>
+                                             <li> 
+                                                <span class="badge badge-light-primary my-1">text</span> : {% trans %}c’est le contenu du SMS envoyé{% endtrans %}
+                                            </li>
+                                             <li> 
+                                                <span class="badge badge-light-primary my-1">from</span> : {% trans %}c’est l’expéditeur du SMS envoyé;{% endtrans %}
+                                            </li>
+                                            <li> 
+                                                <span class="badge badge-light-primary my-1">to</span> : {% trans %}c’est le destinataire du SMS envoyé{% endtrans %}
+                                            </li>
+                                             <li> 
+                                                <span class="badge   badge-light-primary my-1">code</span> : {% trans %}c’est le code du statut du SMS. Il peut prendre les valeurs {% endtrans %}
+                                                0<span class="badge  badge-light-danger">({% trans %}rejeté{% endtrans %}) </span>, 
+                                                1 <span class="badge badge-light-warning">({% trans %}en attente{% endtrans %}) </span>, 
+                                                2 <span class="badge badge-light-primary">({% trans %}programmé{% endtrans %}) </span>, 
+                                                3 <span class="badge badge-light-success">({% trans %}délivré{% endtrans %}) </span>;
+                                            </li>
+                                             <li> 
+                                                <span class="badge badge-light-primary my-1">description</span> : {% trans %}c’est le message descriptif du code statut du SMS;{% endtrans %}
+                                            </li>
+                                             <li> 
+                                                <span class="badge badge-light-primary my-1">smsCount</span> : {% trans %} c’est le nombre de page du SMS envoyé. Rappelons qu’une page SMS est de 160 caractères théoriques et de 153 caractères pratiques. 
+                                                Certains caractères sont comptés en double comme le caractère de retour chariot ;{% endtrans %}
+                                            </li>
+                                             <li> 
+                                                <span class="badge badge-light-primary my-1">devise</span> : {% trans %} c’est la devise de facturation de votre compte {% endtrans %} {{brand.name}}
+                                            </li>
+                                             <li> 
+                                                <span class="badge badge-light-primary my-1">unitPrice</span> : {% trans %}c’est le prix unitaire d’une page d’un SMS envoyé ;{% endtrans %}
+                                            </li>
+                                            <li> 
+                                                <span class="badge badge-light-primary my-1">messagePrice</span> : {% trans %}c’est le coût total du SMS envoyé{% endtrans %}
+                                            </li>
+                                            <li> 
+                                                <span class="badge badge-light-primary my-1">messageId</span> : {% trans %} c’est l’identifiant du message envoyé.{% endtrans %}
+                                            </li>
                                         </ul>
                                         </span>
                                         <!--end::Text-->
@@ -220,114 +736,8 @@
                                 </div>
                                 <!--end::Content-->
                             </div>
-                            <!--end::Body-->
-                            {#<!--begin::Section-->
-                            <div class="m-0">
-                                <!--begin::Heading-->
-                                <div class="d-flex align-items-center collapsible py-3 toggle collapsed mb-0" data-bs-toggle="collapse" data-bs-target="#kt_support_1_3">
-                                    <!--begin::Icon-->
-                                    {% include 'developer/icon.html.twig' %}
-                                    <!--end::Icon-->
-                                    <!--begin::Section-->
-                                    <div class="d-flex align-items-center flex-wrap">
-                                        <!--begin::Title-->
-                                        <h3 class="text-gray-800 fw-bold cursor-pointer me-3 mb-0">How to install on a local machine?</h3>
-                                        <!--end::Title-->
-                                        <!--begin::Label-->
-                                        <span class="badge badge-light my-1 d-block">VueJS</span>
-                                        <!--end::Label-->
-                                    </div>
-                                    <!--end::Section-->
-                                </div>
-                                <!--end::Heading-->
-                                <!--begin::Body-->
-                                <div id="kt_support_1_3" class="collapse fs-6 ms-10">
-                                    <!--begin::Block-->
-                                    <div class="mb-4">
-                                        <!--begin::Text-->
-                                        <span class="text-muted fw-bold fs-5">By Keenthemes to save tons and more to time money projects are listed and outstanding</span>
-                                        <!--end::Text-->
-                                        <!--begin::Link-->
-                                        <a href="#" class="fs-5 link-primary fw-bold">Check Out</a>
-                                        <!--end::Link-->
-                                    </div>
-                                    <!--end::Block-->
-                                </div>
-                                <!--end::Content-->
-                            </div>
-                            <!--end::Body-->
                             <!--begin::Section-->
-                            <div class="m-0">
-                                <!--begin::Heading-->
-                                <div class="d-flex align-items-center collapsible py-3 toggle collapsed mb-0" data-bs-toggle="collapse" data-bs-target="#kt_support_1_4">
-                                    <!--begin::Icon-->
-                                    {% include 'developer/icon.html.twig' %}
-                                    <!--end::Icon-->
-                                    <!--begin::Section-->
-                                    <div class="d-flex align-items-center flex-wrap">
-                                        <!--begin::Title-->
-                                        <h3 class="text-gray-800 fw-bold cursor-pointer me-3 mb-0">How can I import Google fonts?</h3>
-                                        <!--end::Title-->
-                                        <!--begin::Label-->
-                                        <span class="badge badge-light my-1 d-block">Angular 9</span>
-                                        <!--end::Label-->
-                                    </div>
-                                    <!--end::Section-->
-                                </div>
-                                <!--end::Heading-->
-                                <!--begin::Body-->
-                                <div id="kt_support_1_4" class="collapse fs-6 ms-10">
-                                    <!--begin::Block-->
-                                    <div class="mb-4">
-                                        <!--begin::Text-->
-                                        <span class="text-muted fw-bold fs-5">By Keenthemes to save tons and more to time money projects are listed and outstanding</span>
-                                        <!--end::Text-->
-                                        <!--begin::Link-->
-                                        <a href="#" class="fs-5 link-primary fw-bold">Check Out</a>
-                                        <!--end::Link-->
-                                    </div>
-                                    <!--end::Block-->
-                                </div>
-                                <!--end::Content-->
-                            </div>
-                            <!--end::Body-->
-                            <!--begin::Section-->
-                            <div class="m-0">
-                                <!--begin::Heading-->
-                                <div class="d-flex align-items-center collapsible py-3 toggle collapsed mb-0" data-bs-toggle="collapse" data-bs-target="#kt_support_1_5">
-                                    <!--begin::Icon-->
-                                    {% include 'developer/icon.html.twig' %}
-                                    <!--end::Icon-->
-                                    <!--begin::Section-->
-                                    <div class="d-flex align-items-center flex-wrap">
-                                        <!--begin::Title-->
-                                        <h3 class="text-gray-800 fw-bold cursor-pointer me-3 mb-0">How long the license is valid?</h3>
-                                        <!--end::Title-->
-                                        <!--begin::Label-->
-                                        <span class="badge badge-light my-1 d-block">Bootstrap 5</span>
-                                        <!--end::Label-->
-                                    </div>
-                                    <!--end::Section-->
-                                </div>
-                                <!--end::Heading-->
-                                <!--begin::Body-->
-                                <div id="kt_support_1_5" class="collapse fs-6 ms-10">
-                                    <!--begin::Block-->
-                                    <div class="mb-4">
-                                        <!--begin::Text-->
-                                        <span class="text-muted fw-bold fs-5">By Keenthemes to save tons and more to time money projects are listed and outstanding</span>
-                                        <!--end::Text-->
-                                        <!--begin::Link-->
-                                        <a href="#" class="fs-5 link-primary fw-bold">Check Out</a>
-                                        <!--end::Link-->
-                                    </div>
-                                    <!--end::Block-->
-                                </div>
-                                <!--end::Content-->
-                            </div>
-                            <!--end::Body-->
-                            <!--begin::Section-->
-                            <div class="m-0">
+                            <div class="m-0 mt-2">
                                 <!--begin::Heading-->
                                 <div class="d-flex align-items-center collapsible py-3 toggle collapsed mb-0" data-bs-toggle="collapse" data-bs-target="#kt_support_1_6">
                                     <!--begin::Icon-->
@@ -336,10 +746,10 @@
                                     <!--begin::Section-->
                                     <div class="d-flex align-items-center flex-wrap">
                                         <!--begin::Title-->
-                                        <h3 class="text-gray-800 fw-bold cursor-pointer me-3 mb-0">How many end projects I can build?</h3>
+                                        <h3 class="text-gray-800 fw-bold cursor-pointer me-3 mb-0">{% trans %}Accusé de réception{% endtrans %}</h3>
                                         <!--end::Title-->
                                         <!--begin::Label-->
-                                        <span class="badge badge-light my-1 d-block">PHP</span>
+                                        <span class="badge badge-light-success my-1 d-block">Json</span>
                                         <!--end::Label-->
                                     </div>
                                     <!--end::Section-->
@@ -348,20 +758,311 @@
                                 <!--begin::Body-->
                                 <div id="kt_support_1_6" class="collapse fs-6 ms-10">
                                     <!--begin::Block-->
-                                    <div class="mb-4">
-                                        <!--begin::Text-->
-                                        <span class="text-muted fw-bold fs-5">By Keenthemes to save tons and more to time money projects are listed and outstanding</span>
-                                        <!--end::Text-->
-                                        <!--begin::Link-->
-                                        <a href="#" class="fs-5 link-primary fw-bold">Check Out</a>
-                                        <!--end::Link-->
+                                    <div class="mb-2">
                                     </div>
                                     <!--end::Block-->
+                                    <div>
+                                        <p>{% trans %}Après chaque SMS envoyé, {% endtrans %} {{brand.name}}
+                                        {% trans %}élabore un rapport détaillé sur l’accusé de réception de l’envoi. Vous pouvez consulter le rapport 
+                                        d’envoi sur la plateforme ou le récupérer automatiquement dans votre application en spécifiant l’argument << dlr_url >> 
+                                        lors de la soumission de la requête d’envoi d’un SMS. Le rapport est soumis à votre application par la méthode POST.{% endtrans %}</p>
+                                        <hr>
+                                        <p>{% trans %}Les variables présents dans le rapport d’accusé de réception d’un SMS sont les suivants :{% endtrans %}</p>
+                                        <!--begin::Code-->
+                                        <div class="py-5">
+                                            <!--begin::Highlight-->
+                                            <div class="highlight"> 
+                                                <button class="highlight-copy btn" data-bs-toggle="tooltip" title="{{"Copier le code"|trans}}">{{"Copier"|trans}}</button>
+                                                <div class="highlight-code">
+                                                    <pre class="language-html" style="min-height:50px; max-height:400px">
+                                                        <code class="text-warning">
+                                                           {<br>
+                                                    "messageId": "1234567890",<br>
+                                                    "from": "{{ 'senderDefault' }}",<br>
+                                                    "to": "22990909090",<br>
+                                                    "text": "Ceci est le message envoyé",<br>
+                                                    "smsCount": "1",<br>
+                                                    "devise": "XOF",<br>
+                                                    "unitPrice": "12",<br>
+                                                    "messagePrice": 12,<br>
+                                                    "messageStatusCode": "3",<br>
+                                                    "messageStatus": "Delivered",<br>
+                                                    "description": "Message delivered to handset",<br>
+                                                    "timeZone": "UTC+1",<br>
+                                                    "creationDate": "2019-03-12 15:43:14",<br>
+                                                    "sendingDate": "2019-03-12 15:40:45",<br>
+                                                    "deliveryDate": "2019-03-12 15:43:15"<br>
+                                                    }<br>
+                                                        </code>
+                                                    </pre>
+                                                </div>
+                                            </div>
+                                            <!--end::Highlight-->
+                                        </div>
+                                        <!--end::Code-->
+                                    </div>
+                                      <!--begin::Alert-->
+                                    <div class="alert alert-dismissible bg-light-danger border border-danger mt-6 border-dashed  h-lg-100 d-flex flex-column flex-sm-row w-100 p-5">
+                                        <!--begin::Icon-->
+                                        <!--begin::Svg Icon | path: icons/duotune/communication/com003.svg-->
+                                        <span class="svg-icon svg-icon-2hx svg-icon-danger me-4 mb-5 mb-sm-0">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                <path opacity="0.3" d="M12 22C13.6569 22 15 20.6569 15 19C15 17.3431 13.6569 16 12 16C10.3431 16 9 17.3431 9 19C9 20.6569 10.3431 22 12 22Z" fill="currentColor" />
+                                                <path d="M19 15V18C19 18.6 18.6 19 18 19H6C5.4 19 5 18.6 5 18V15C6.1 15 7 14.1 7 13V10C7 7.6 8.7 5.6 11 5.1V3C11 2.4 11.4 2 12 2C12.6 2 13 2.4 13 3V5.1C15.3 5.6 17 7.6 17 10V13C17 14.1 17.9 15 19 15ZM11 10C11 9.4 11.4 9 12 9C12.6 9 13 8.6 13 8C13 7.4 12.6 7 12 7C10.3 7 9 8.3 9 10C9 10.6 9.4 11 10 11C10.6 11 11 10.6 11 10Z" fill="currentColor" />
+                                            </svg>
+                                        </span>
+                                        <!--end::Svg Icon-->
+                                        <!--end::Icon-->
+                                        <!--begin::Content-->
+                                        <div class="d-flex flex-column pe-0 pe-sm-10">
+                                            <h4 class="text-gray-900 fw-bolder">{% trans %}Note{% endtrans %}</h4>
+                                            <div class="fs-6 text-gray-700">{% trans %}Si vous décidez de récupérer ce même rapport d’accusé de réception en différé, c’est-à-dire bien après l’envoi d’un SMS, vous envoyez votre requête vers le lien suivant par la méthode GET ou POST : {% endtrans %} <a href="https://{{base_url}}{{v1Dlr_link}}">« {{base_url}}{{v1Dlr_link}}?messageId=1234567890 »</a> {% trans %} avec messageId, l’identifiant unique du SMS..{% endtrans %}
+                                            </div>
+                                        </div>
+                                        <!--end::Content-->
+                                    </div>
+                                    <!--end::Alert-->
                                 </div>
                                 <!--end::Content-->
                             </div>
-                            <!--end::Body-->
-                            <!--end::Accordion-->#}
+                            <!--end::Accordion-->
+                            <!--begin::Section-->
+                            <div class="m-0 mt-2">
+                                <!--begin::Heading-->
+                                <div class="d-flex align-items-center collapsible py-3 toggle collapsed mb-0" data-bs-toggle="collapse" data-bs-target="#kt_support_1_7">
+                                    <!--begin::Icon-->
+                                    {% include 'developer/icon.html.twig' %}
+                                    <!--end::Icon-->
+                                    <!--begin::Section-->
+                                    <div class="d-flex align-items-center flex-wrap">
+                                        <!--begin::Title-->
+                                        <h3 class="text-gray-800 fw-bold cursor-pointer me-3 mb-0">{% trans %}Vérifier son solde{% endtrans %}</h3>
+                                        <!--end::Title-->
+                                        <!--begin::Label-->
+                                        <span class="badge badge-light-success my-1 d-block">POST</span>
+                                        <!--end::Label-->
+                                    </div>
+                                    <!--end::Section-->
+                                </div>
+                                <!--end::Heading-->
+                                <!--begin::Body-->
+                                <div id="kt_support_1_7" class="collapse fs-6 ms-10">
+                                    <!--begin::Block-->
+                                    <div class="mb-2">
+                                    </div>
+                                    <!--end::Block-->
+                                    <div>
+                                        <ul class="nav nav-tabs nav-line-tabs mb-5 fs-6">
+                                            <li class="nav-item">
+                                                <a class="nav-link active" data-bs-toggle="tab" href="#kt_tab_pane_balance_post_1">PHP</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_balance_post_2">CURL</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_balance_post_3">PYTHON</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_balance_post_4">NODE JS</a>
+                                            </li>
+                                        </ul>
+                                        <div class="tab-content" id="myTabContent">
+
+                                            <div class="tab-pane fade show active" id="kt_tab_pane_balance_post_1" role="tabpanel">
+                                                <!--begin::Code-->
+										        <div class="py-5">
+                                                    <!--begin::Highlight-->
+                                                    <div class="highlight"> 
+                                                        <button class="highlight-copy btn" data-bs-toggle="tooltip" title="{{"Copier le code"|trans}}">{{"Copier"|trans}}</button>
+                                                        <div class="highlight-code">
+                                                            <pre class="language-html" style="min-height:50px; max-height:400px">
+                                                                <code class="text-primary">
+                                                                    &lt;?php <br>
+                                                    $url            = '{{ base_url }}{{ v1Balance_link }};<br>
+                                                    $apiKey         = '{{app.user.apikey }}';<br>
+
+                                                    $ch = curl_init($url);<br>
+                                                    curl_setopt($ch, CURLOPT_TIMEOUT, 30);<br>
+                                                    curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);<br>
+                                                    curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_ANY);<br>
+                                                    curl_setopt($ch, CURLOPT_HTTPHEADER, array("X-API-KEY: " . $apiKey));<br>
+                                                    curl_setopt($ch, CURLOPT_POST, 1);<br>
+                                                    curl_setopt($ch, CURLOPT_POSTFIELDS, '');<br>
+                                                    curl_exec($ch);<br>
+                                                    curl_close($ch);<br>
+                                                    ?&gt;
+                                                                </code>
+                                                            </pre>
+                                                        </div>
+                                                    </div>
+                                                    <!--end::Highlight-->
+                                                </div>
+										        <!--end::Code-->
+                                            </div>
+                                            <div class="tab-pane fade" id="kt_tab_pane_balance_post_2" role="tabpanel">
+                                               <!--begin::Code-->
+										        <div class="py-5">
+                                                    <!--begin::Highlight-->
+                                                    <div class="highlight"> 
+                                                        <button class="highlight-copy btn" data-bs-toggle="tooltip" title="{{"Copier le code"|trans}}">{{"Copier"|trans}}</button>
+                                                        <div class="highlight-code">
+                                                            <pre class="language-html" style="min-height:50px; max-height:400px">
+                                                                <code class="text-primary">
+                                                                    
+                                                    curl "{{ base_url }}{{ v1Balance_link }}" \<br>
+                                                    -X POST \<br>
+                                                    -H "x-api-key: {{ app.user.apikey }}"<br>
+                                                                </code>
+                                                            </pre>
+                                                        </div>
+                                                    </div>
+                                                    <!--end::Highlight-->
+                                                </div>
+										        <!--end::Code-->
+                                            </div>
+                                            <div class="tab-pane fade" id="kt_tab_pane_balance_post_3" role="tabpanel">
+                                                <!--begin::Code-->
+										        <div class="py-5">
+                                                    <!--begin::Highlight-->
+                                                    <div class="highlight"> 
+                                                        <button class="highlight-copy btn" data-bs-toggle="tooltip" title="{{"Copier le code"|trans}}">{{"Copier"|trans}}</button>
+                                                        <div class="highlight-code">
+                                                            <pre class="language-html" style="min-height:50px; max-height:400px">
+                                                                <code class="text-primary">
+                                                    import httplib<br>
+
+                                                    headers = {'x-api-key': '{{ app.user.apikey }}'}<br>
+
+                                                    conn = httplib.HTTPSConnection('{{ hostApi }}')<br>
+                                                    conn.request('POST','{{ v1Balance_link }}', headers)<br>
+                                                    res = conn.getresponse()<br>
+
+                                                    print(res.status, res.reason)<br>
+                                                    print(res.read())<br>
+                                                    print(res.getheaders())<br>
+                                                                </code>
+                                                            </pre>
+                                                        </div>
+                                                    </div>
+                                                    <!--end::Highlight-->
+                                                </div>
+										        <!--end::Code-->
+                                            </div>
+                                            <div class="tab-pane fade" id="kt_tab_pane_balance_post_4" role="tabpanel">
+                                                <!--begin::Code-->
+										        <div class="py-5">
+                                                    <!--begin::Highlight-->
+                                                    <div class="highlight"> 
+                                                        <button class="highlight-copy btn" data-bs-toggle="tooltip" title="{{"Copier le code"|trans}}">{{"Copier"|trans}}</button>
+                                                        <div class="highlight-code">
+                                                            <pre class="language-html" style="min-height:50px; max-height:400px">
+                                                                <code class="text-primary">
+                                                    const http = require('https');<br>
+                                                    const init = {<br>
+                                                    host: '{{ hostApi }}',<br>
+                                                    path: '{{ v1Balance_link }},<br>
+                                                    method: 'POST',<br>
+                                                    headers: {<br>
+                                                        'x-api-key': '{{ app.user.apikey }}'<br>
+                                                    }<br>
+                                                    };<br>
+                                                    const callback = function(response) {<br>
+                                                    let result = Buffer.alloc(0);<br>
+                                                    response.on('data', function(chunk) {<br>
+                                                        result = Buffer.concat([result, chunk]);<br>
+                                                    });<br>
+
+                                                    response.on('end', function() {<br>
+                                                        // result has response body buffer<br>
+                                                        console.log(result.toString());<br>
+                                                    });<br>
+                                                    };<br>
+
+                                                    const req = http.request(init, callback);<br>
+                                                    req.end();<br>
+
+                                                                </code>
+                                                            </pre>
+                                                        </div>
+                                                    </div>
+                                                    <!--end::Highlight-->
+                                                </div>
+										        <!--end::Code-->
+                                            </div>
+                                           
+                                        </div>
+                                    </div>
+                                    <!--begin::Block-->
+                                <div class="mb-2">
+                                </div>
+                                <!--end::Block-->
+                                <div>
+                                    <p>{% trans %}La réponse renvoyée par l’API est au format JSON comme suit :{% endtrans %}</p>
+                                    <!--begin::Code-->
+                                    <div class="py-5">
+                                        <!--begin::Highlight-->
+                                        <div class="highlight"> 
+                                            <button class="highlight-copy btn" data-bs-toggle="tooltip" title="{{"Copier le code"|trans}}">{{"Copier"|trans}}</button>
+                                            <div class="highlight-code">
+                                                <pre class="language-html" style="min-height:50px; max-height:400px">
+                                                    <code class="text-warning">
+                                                    {<br>
+                                                        "balance": "430",
+
+                                                        "unitPrice": "12",
+
+                                                        "devise": "{{app.user.usetting.currency.code}}"
+                                                    }<br>
+                                                    </code>
+                                                </pre>
+                                            </div>
+                                        </div>
+                                        <!--end::Highlight-->
+                                    </div>
+                                    <ul>
+                                        <li> 
+                                            <span class="badge badge-light-primary my-1">balance</span> : {% trans %}c’est le solde disponible de votre compte {% endtrans %} {{brand.name}}
+                                        </li>
+                                            <li> 
+                                            <span class="badge badge-light-primary my-1">unitPrice</span> : {% trans %}c’est le contenu du SMS envoyé{% endtrans %}
+                                        </li>
+                                            <li> 
+                                            <span class="badge badge-light-primary my-1">devise</span> : {% trans %}c’est la devise de votre compte {% endtrans %} {{brand.name}}
+                                        </li>
+                                    </ul>
+                                    
+                                </div>
+                                </div>
+                                <!--end::Content-->
+                                  <!--begin::Alert-->
+                                    <div class="alert alert-dismissible bg-light-primary border border-primary mt-6 border-dashed  h-lg-100 d-flex flex-column flex-sm-row w-100 p-5">
+                                        <!--begin::Icon-->
+                                        <!--begin::Svg Icon | path: icons/duotune/communication/com003.svg-->
+                                        <span class="svg-icon svg-icon-2hx svg-icon-primary me-4 mb-5 mb-sm-0">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                <path opacity="0.3" d="M12 22C13.6569 22 15 20.6569 15 19C15 17.3431 13.6569 16 12 16C10.3431 16 9 17.3431 9 19C9 20.6569 10.3431 22 12 22Z" fill="currentColor" />
+                                                <path d="M19 15V18C19 18.6 18.6 19 18 19H6C5.4 19 5 18.6 5 18V15C6.1 15 7 14.1 7 13V10C7 7.6 8.7 5.6 11 5.1V3C11 2.4 11.4 2 12 2C12.6 2 13 2.4 13 3V5.1C15.3 5.6 17 7.6 17 10V13C17 14.1 17.9 15 19 15ZM11 10C11 9.4 11.4 9 12 9C12.6 9 13 8.6 13 8C13 7.4 12.6 7 12 7C10.3 7 9 8.3 9 10C9 10.6 9.4 11 10 11C10.6 11 11 10.6 11 10Z" fill="currentColor" />
+                                            </svg>
+                                        </span>
+                                        <!--end::Svg Icon-->
+                                        <!--end::Icon-->
+                                        <!--begin::Content-->
+                                        <div class="d-flex flex-column pe-0 pe-sm-10">
+                                            <h4 class="text-gray-900 fw-bolder">{% trans %}Information{% endtrans %}</h4>
+                                            <div class="fs-6 text-gray-700"> {{brand.name}}
+                                            {% trans %}s’efforce à vous offrir la meilleure expérience d’envoi de SMS 
+                                            au meilleur prix partout dans le monde. Pour toute assistance technique, vous pouvez contacter 
+                                            notre équipe par mail à « {% endtrans %} {{brand.emails.support}} {% trans %} ». Elle est disponible 24h/24 et 7j/7 pour
+                                            vous assister pour l’intégration de l’API et pour répondre à toutes vos questions. 
+                                            Enfin, pour toutes vos préoccupations concernant la facturation, vous pouvez contacter l’équipe de 
+                                            facturation par mail à « {% endtrans %} {{brand.emails.support}} {% trans %}  ».{% endtrans %}
+                                            </div>
+                                        </div>
+                                        <!--end::Content-->
+                                    </div>
+                                    <!--end::Alert-->
+                            </div>
+                            <!--end::Accordion-->
                         </div>
                         <!--end::Body-->
                     </div>
@@ -393,5 +1094,12 @@
 <script src="{{ asset('app/js/queries/chat/chat.js') }}"></script>
 <script src="{{ asset('app/js/queries/utilities/modals/upgrade-plan.js') }}"></script>
 <script src="{{ asset('app/js/queries/utilities/modals/users-search.js') }}"></script>
+<!--end::Page Custom Javascript-->
+<!--begin::Page Vendors Javascript(used by this page)-->
+<script src="{{ asset('app/plugins/custom/prismjs/prismjs.bundle.js') }}"></script>
+<!--end::Page Vendors Javascript-->
+<!--begin::Page Custom Javascript(used by this page)-->
+<script src="{{ asset('app/js/custom/documentation/documentation.js') }}"></script>
+<script src="{{ asset('app/js/custom/documentation/search.js') }}"></script>
 <!--end::Page Custom Javascript-->
 {% endblock %}
