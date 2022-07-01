@@ -161,6 +161,7 @@ var KTContactList = function() {
                             $(document).trigger('toastr.onAjaxError');
                         },
                         dataSrc: function(json) {
+                            $("#stat_contact").text(json.data.length);
                             group=json.group;
                             return json.data;
                         }
@@ -285,14 +286,6 @@ var KTContactList = function() {
                 $('[data-kt-contact-group="group"]').on('change', function() {
                     e.ajax.reload();
                 }),
-                document.querySelector('[data-kt-import-contact-modal-action="cancel"]').addEventListener("click", (function(t) {
-                    $('#kt_modal_import_contacts').modal('hide');
-
-                })),
-                document.querySelector('[data-kt-import-contact-modal-action="close"]').addEventListener("click", (function(t) {
-                    $('#kt_modal_import_contacts').modal('hide');
-
-                })),
                 document.querySelector('[data-kt-contact-table-filter="reset"]').addEventListener("click", (function() {
                     document.querySelector('[data-kt-contact-table-filter="form"]').querySelectorAll("select").forEach((e => {
                             $(e).val("").trigger("change");
@@ -393,21 +386,29 @@ $(document).on('change',"#list_user_contact_id", function (e) {
             
             let obj = response.data;
 
-            document.getElementById("list_group_id").options.length=1;
             document.getElementById("group_id_add_contact").options.length=1;
+            document.getElementById("list_group_id").options.length=1;
+            document.getElementById("id_group_contact_import").options.length=1;
             
             for (const i of obj) 
             {
-                let el         = document.createElement("option");
-                let ele         = document.createElement("option");
+                let el1         = document.createElement("option");
+                let el2         = document.createElement("option");
+                let el3         = document.createElement("option");
 
-                el.textContent = i[1];
-                el.value = i[0];
-                ele.textContent = i[1];
-                ele.value = i[0];
 
-                document.getElementById("list_group_id").appendChild(ele);
-                document.getElementById("group_id_add_contact").appendChild(el);
+                el1.textContent = i[1];
+                el1.value = i[0];
+                el2.textContent = i[1];
+                el2.value = i[0];
+                el3.textContent = i[1];
+                el3.value = i[0];
+
+                document.getElementById("group_id_add_contact").appendChild(el1);
+                document.getElementById("list_group_id").appendChild(el2);
+                document.getElementById("id_group_contact_import").appendChild(el3);
+
+
             }
             $('#kt_modal_add_contact_reload_button').click();
         },

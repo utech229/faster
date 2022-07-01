@@ -187,6 +187,7 @@ var KTGroupList = function() {
                             $(document).trigger('toastr.onAjaxError');
                         },
                         dataSrc: function(json) {
+                            $("#stat_group").text(json.data.length);
                             return json.data;
                         }
                         

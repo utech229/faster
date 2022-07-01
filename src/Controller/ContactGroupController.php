@@ -150,7 +150,11 @@ class ContactGroupController extends AbstractController
         return $this->services->invalid_token_ajax_list($this->intl->trans('Création groupe de contact : token invalide'));
         
         $groupName  =   trim($request->request->get('groupName'));
-        $user       =   $this->getUser();
+
+        $user       =   $this->em->getRepository(User::class)->findOneByUid($request->request->get('user_group'));
+
+        if(!$user) return $this->services->msg_error($this->intl->trans("Echec d'ajout de groupe de contact, Utilisateur manquant") ,$this->intl->trans("Veuillez sélectionner l'utilisateur auquel vous souhaitez ajouter de groupe de contacts au niveau du tableau."));
+         
         if ($groupName !="" ) {
 
             $contactGroup           =   new ContactGroup();
