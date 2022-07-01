@@ -305,6 +305,17 @@
 														<div class="modal-body scroll-y mx-5 mx-xl-15 my-7">
 															<!--begin::Form-->
 															<form id="kt_modal_import_contacts_form" class="form" action="#">
+                                                                <div class="separator separator-dotted separator-content border-dark my-2 mb-15">
+                                                                        <div class="row fv">
+                                                                                    <label class="form-label fs-6 fw-bold">{% trans %}Groupe de contacts{% endtrans %}</label>
+                                                                                    <select name="groupe" id="id_group_contact_import" data-allow-clear="true" data-control="select2" data-dropdown-parent="#kt_modal_import_contacts" class="form-select form-select-solid fw-bolder min-w-300px mw-300px" data-placeholder="{{'Selectionnez un groupe'| trans}}"/>
+                                                                                            <option value="">Sélectionnez un groupe</option>
+                                                                                            {% for group in groups %}
+                                                                                            <option value="{{ group.uid }}" >{{ group.name }}</option>
+                                                                                            {% endfor %}
+                                                                                    </select>
+                                                                        </div>
+                                                                </div>
                                                                 <input type="hidden" name="hidden_file" value=""/>
 																<!--begin::Dropzone-->
                                                                 <div class="dropzone" id="kt_import">
@@ -514,142 +525,142 @@
                 </div>
             <!--end::Modal - Create Contact App-->
 
-                <!--begin::Modal - Update Contact App-->
-                <div class="modal fade" id="kt_modal_update_contact" tabindex="-1" aria-hidden="true">
-                    <!--begin::Modal dialog-->
-                    <div class="modal-dialog modal-dialog-centered mw-900px">
-                        <!--begin::Modal content-->
-                        <form class="form" id="kt_modal_update_contact_form">
-                            <div class="modal-content">
-                                <!--begin::Modal header-->
-                                    <div class="modal-header">
-                                        <!--begin::Modal title-->
-                                        <h2>{{"Modification du Contact"| trans }}</h2>
-                                        <!--end::Modal title-->
-                                        <!--begin::Close-->
-                                        <div class="btn btn-sm btn-icon btn-active-color-primary" data-kt-update-contact-modal-action="cancel" >
-                                            <!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
-                                            <span class="svg-icon svg-icon-1">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                                    <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor" />
-                                                    <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor" />
-                                                </svg>
-                                            </span>
-                                            <!--end::Svg Icon-->
-                                        </div>
-                                        <!--end::Close-->
+            <!--begin::Modal - Update Contact App-->
+            <div class="modal fade" id="kt_modal_update_contact" tabindex="-1" aria-hidden="true">
+                <!--begin::Modal dialog-->
+                <div class="modal-dialog modal-dialog-centered mw-900px">
+                    <!--begin::Modal content-->
+                    <form class="form" id="kt_modal_update_contact_form">
+                        <div class="modal-content">
+                            <!--begin::Modal header-->
+                                <div class="modal-header">
+                                    <!--begin::Modal title-->
+                                    <h2>{{"Modification du Contact"| trans }}</h2>
+                                    <!--end::Modal title-->
+                                    <!--begin::Close-->
+                                    <div class="btn btn-sm btn-icon btn-active-color-primary" data-kt-update-contact-modal-action="cancel" >
+                                        <!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
+                                        <span class="svg-icon svg-icon-1">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor" />
+                                                <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor" />
+                                            </svg>
+                                        </span>
+                                        <!--end::Svg Icon-->
                                     </div>
-                                <!--end::Modal header-->
+                                    <!--end::Close-->
+                                </div>
+                            <!--end::Modal header-->
 
-                                <!--begin::Modal Update body-->
-                                <div class="modal-body py-lg-10 px-lg-10">
-                                
-                                    <!--begin::Form group-->
-                                            <div class="form-group">
-                                                <div class="separator separator-dotted separator-content border-dark my-2 mb-15">
-                                                        <div class="row fv">
-                                                                    <label class="form-label fs-6 fw-bold">{% trans %}Groupe de contacts{% endtrans %}</label>
-                                                                    <select name="groupe" id="id_group_contact" data-allow-clear="true" data-control="select2" data-dropdown-parent="#kt_modal_update_contact" class="form-select form-select-solid fw-bolder min-w-300px mw-300px" data-placeholder="{{'Selectionnez un groupe'| trans}}"/>
-                                                                            <option value="">Sélectionnez un groupe</option>
-                                                                            {% for group in groups %}
-                                                                            <option value="{{ group.uid }}" >{{ group.name }}</option>
-                                                                            {% endfor %}
-                                                                    </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group row">
-                                                        
-                                                        <div class="row">
-                                                            <div class="col-xl-4">
-                                                                <!--begin::Input group-->
-                                                                <div class="fv input-group mb-8">
-                                                                    <input type="tel" name="phone" id="phone_id" class="form-control tel" placeholder="97979797" />
-                                                                </div>
-                                                                <!--end::Input group-->
-                                                            </div>
-                                                            <div class="col-xl-4">
-                                                                <!--begin::Input group-->
-                                                                <div class="fv input-group mb-5">
-                                                                    <input type="hidden" name="_uid" id="contact_id"/>
-                                                                    <input type="text" name="set1" id="contact_set1" class="form-control" placeholder="{{'Param1'| trans}}" aria-label="{{'Param1'| trans}}" aria-describedby="basic-addon2"/>
-                                                                    <span class="input-group-text" id="basic-addon2">
-                                                                        <i class="las la-tools fs-4"></i>
-                                                                    </span>
-                                                                </div>
-                                                                <!--end::Input group-->
-                                                            </div>
-                                                            <div class="col-xl-4">
-                                                                <!--begin::Input group-->
-                                                                <div class="fv input-group mb-5">
-                                                                    <input type="text" name="set2" id="contact_set2" class="form-control" placeholder="{{'Param2'| trans}}" aria-label="{{'Param2'| trans}}" aria-describedby="basic-addon2"/>
-                                                                    <span class="input-group-text" id="basic-addon2">
-                                                                        <i class="las la-tools fs-4"></i>
-                                                                    </span>
-                                                                </div>
-                                                                <!--end::Input group-->
-                                                            </div>
-                                                            
-                                                        </div>
-                                                
-                                                        <div class="row">
-                                                            
-                                                            <div class="col-xl-4">
-                                                                <!--begin::Input group-->
-                                                                <div class="fv input-group mb-5">
-                                                                    <input type="text" name="set3" id="contact_set3" class="form-control" placeholder="{{'Param3'| trans}}" aria-label="{{'Param3'| trans}}" aria-describedby="basic-addon2"/>
-                                                                    <span class="input-group-text" id="basic-addon2">
-                                                                        <i class="las la-tools fs-4"></i>
-                                                                    </span>
-                                                                </div>
-                                                                <!--end::Input group-->
-                                                            </div>
-                                                            <div class="col-xl-4">
-                                                                <!--begin::Input group-->
-                                                                <div class="fv input-group mb-5">
-                                                                    <input type="text" name="set4" id="contact_set4" class="form-control" placeholder="{{'Param4'| trans}}" aria-label="{{'Param4'| trans}}" aria-describedby="basic-addon2"/>
-                                                                    <span class="input-group-text" id="basic-addon2">
-                                                                        <i class="las la-tools fs-4"></i>
-                                                                    </span>
-                                                                </div>
-                                                                <!--end::Input group-->
-                                                            </div>
-                                                            <div class="col-xl-4">
-                                                                <!--begin::Input group-->
-                                                                <div class="fv input-group mb-5">
-                                                                    <input type="text" name="set5" id="contact_set5" class="form-control" placeholder="{{'Param5'| trans}}" aria-label="{{'Param5'| trans}}" aria-describedby="basic-addon2"/>
-                                                                    <span class="input-group-text" id="basic-addon2">
-                                                                        <i class="las la-tools fs-4"></i>
-                                                                    </span>
-                                                                </div>
-                                                                <!--end::Input group-->
-                                                            </div>
-                                                            
-                                                        </div>
-
-                                                        <div class="separator separator-dotted separator-content border-dark my-2 mb-5">
-                                                            <i class="bi bi-telephone"></i>
-                                                        </div>
-
+                            <!--begin::Modal Update body-->
+                            <div class="modal-body py-lg-10 px-lg-10">
+                            
+                                <!--begin::Form group-->
+                                        <div class="form-group">
+                                            <div class="separator separator-dotted separator-content border-dark my-2 mb-15">
+                                                    <div class="row fv">
+                                                                <label class="form-label fs-6 fw-bold">{% trans %}Groupe de contacts{% endtrans %}</label>
+                                                                <select name="groupe" id="id_group_contact" data-allow-clear="true" data-control="select2" data-dropdown-parent="#kt_modal_update_contact" class="form-select form-select-solid fw-bolder min-w-300px mw-300px" data-placeholder="{{'Selectionnez un groupe'| trans}}"/>
+                                                                        <option value="">Sélectionnez un groupe</option>
+                                                                        {% for group in groups %}
+                                                                        <option value="{{ group.uid }}" >{{ group.name }}</option>
+                                                                        {% endfor %}
+                                                                </select>
                                                     </div>
                                             </div>
-                                            <!--end::Form group-->
+                                            <div class="form-group row">
+                                                
+                                                <div class="row">
+                                                    <div class="col-xl-4">
+                                                        <!--begin::Input group-->
+                                                        <div class="fv input-group mb-8">
+                                                            <input type="tel" name="phone" id="phone_id" class="form-control tel" placeholder="97979797" />
+                                                        </div>
+                                                        <!--end::Input group-->
+                                                    </div>
+                                                    <div class="col-xl-4">
+                                                        <!--begin::Input group-->
+                                                        <div class="fv input-group mb-5">
+                                                            <input type="hidden" name="_uid" id="contact_id"/>
+                                                            <input type="text" name="set1" id="contact_set1" class="form-control" placeholder="{{'Param1'| trans}}" aria-label="{{'Param1'| trans}}" aria-describedby="basic-addon2"/>
+                                                            <span class="input-group-text" id="basic-addon2">
+                                                                <i class="las la-tools fs-4"></i>
+                                                            </span>
+                                                        </div>
+                                                        <!--end::Input group-->
+                                                    </div>
+                                                    <div class="col-xl-4">
+                                                        <!--begin::Input group-->
+                                                        <div class="fv input-group mb-5">
+                                                            <input type="text" name="set2" id="contact_set2" class="form-control" placeholder="{{'Param2'| trans}}" aria-label="{{'Param2'| trans}}" aria-describedby="basic-addon2"/>
+                                                            <span class="input-group-text" id="basic-addon2">
+                                                                <i class="las la-tools fs-4"></i>
+                                                            </span>
+                                                        </div>
+                                                        <!--end::Input group-->
+                                                    </div>
+                                                    
+                                                </div>
+                                        
+                                                <div class="row">
+                                                    
+                                                    <div class="col-xl-4">
+                                                        <!--begin::Input group-->
+                                                        <div class="fv input-group mb-5">
+                                                            <input type="text" name="set3" id="contact_set3" class="form-control" placeholder="{{'Param3'| trans}}" aria-label="{{'Param3'| trans}}" aria-describedby="basic-addon2"/>
+                                                            <span class="input-group-text" id="basic-addon2">
+                                                                <i class="las la-tools fs-4"></i>
+                                                            </span>
+                                                        </div>
+                                                        <!--end::Input group-->
+                                                    </div>
+                                                    <div class="col-xl-4">
+                                                        <!--begin::Input group-->
+                                                        <div class="fv input-group mb-5">
+                                                            <input type="text" name="set4" id="contact_set4" class="form-control" placeholder="{{'Param4'| trans}}" aria-label="{{'Param4'| trans}}" aria-describedby="basic-addon2"/>
+                                                            <span class="input-group-text" id="basic-addon2">
+                                                                <i class="las la-tools fs-4"></i>
+                                                            </span>
+                                                        </div>
+                                                        <!--end::Input group-->
+                                                    </div>
+                                                    <div class="col-xl-4">
+                                                        <!--begin::Input group-->
+                                                        <div class="fv input-group mb-5">
+                                                            <input type="text" name="set5" id="contact_set5" class="form-control" placeholder="{{'Param5'| trans}}" aria-label="{{'Param5'| trans}}" aria-describedby="basic-addon2"/>
+                                                            <span class="input-group-text" id="basic-addon2">
+                                                                <i class="las la-tools fs-4"></i>
+                                                            </span>
+                                                        </div>
+                                                        <!--end::Input group-->
+                                                    </div>
+                                                    
+                                                </div>
 
-                                </div>
-                                <!--end::Modal Update body-->
+                                                <div class="separator separator-dotted separator-content border-dark my-2 mb-5">
+                                                    <i class="bi bi-telephone"></i>
+                                                </div>
 
-                                <!--begin::Actions-->
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-light" data-kt-update-contact-modal-action="close">Fermer</button>
-                                        <button type="submit" class="btn btn-primary" data-kt-update-contact-modal-action="submit">Enregistrer</button>
-                                    </div>
-                                <!--end::Actions-->
-                                <input type="hidden" name="_token" value="{{ csrf_token(app.user.uid) }}" class="form-control" />
+                                            </div>
+                                        </div>
+                                        <!--end::Form group-->
+
                             </div>
-                        </form>
-                        <!--end::Modal content-->
-                    </div>
-                    <!--end::Modal dialog-->
+                            <!--end::Modal Update body-->
+
+                            <!--begin::Actions-->
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-light" data-kt-update-contact-modal-action="close">Fermer</button>
+                                    <button type="submit" class="btn btn-primary" data-kt-update-contact-modal-action="submit">Enregistrer</button>
+                                </div>
+                            <!--end::Actions-->
+                            <input type="hidden" name="_token" value="{{ csrf_token(app.user.uid) }}" class="form-control" />
+                        </div>
+                    </form>
+                    <!--end::Modal content-->
                 </div>
+                <!--end::Modal dialog-->
+            </div>
             <!--end::Modal - Update Contact App-->
 
         </div>
