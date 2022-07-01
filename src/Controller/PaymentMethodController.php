@@ -104,8 +104,6 @@ class PaymentMethodController extends AbstractController
 
                 $initPay = $this->sAgregatorRouter->processRouter($countrycode, $data);
 				$trid = $initPay['id_transaction'];
-				//dd($initPay['id_transaction']);
-				//dd($trid);
 				$trans = $createdTrans['entity'];
 				$trans->setTransactionId($trid);
 				$this->em->persist($trans);
