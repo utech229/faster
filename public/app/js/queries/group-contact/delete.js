@@ -1,9 +1,9 @@
 "use strict";
 
-$(document).on('click', ".contactDeleter", function() {
+$(document).on('click', ".groupDeleter", function() {
 	let uid = $(this).data('id');
     let tabUid  =  [];
-    tabUid.push(uid);
+    tabUid.push(uid)
 	$(document).trigger('entityUpBegin', ['#', uid, 'fa-trash-alt']);
 	Swal.fire({
 		text: _Deletion_request,
@@ -19,7 +19,7 @@ $(document).on('click', ".contactDeleter", function() {
 	}).then(function(result) {
 		if (result.value) {
 			$.ajax({
-				url: contact_delete,
+				url: group_delete,
 				type: "post",
 				data: { tabUid: tabUid, _token: function(){ return csrfToken; }},
 				dataType: "json",
@@ -37,7 +37,7 @@ $(document).on('click', ".contactDeleter", function() {
                     if (response.status === 'success') {
 
                         $(document).trigger('entityUpStop', ['#', uid, 'fa-trash-alt']);
-                        $('#kt_modal_add_contact_reload_button').click();
+                        $('#kt_modal_add_contact_group_reload_button').click();
                     }
 				},
                 error:function(response) {

@@ -1,7 +1,7 @@
 "use strict";
-var KTAddGroup = function() {
-    const t = document.getElementById("kt_modal_create_contact_group"),
-        e = t.querySelector("#kt_modal_contact_group_form"),
+var KTUpdateGroup = function() {
+    const t = document.getElementById("kt_modal_update_contact_group"),
+        e = t.querySelector("#kt_modal_update_contact_group_form"),
         n = new bootstrap.Modal(t);
     return {
         init: function() {
@@ -25,19 +25,19 @@ var KTAddGroup = function() {
                         })
                     }
                 });
-                t.querySelector('[data-kt-contact-group-modal-action="close"]').addEventListener("click", (t => {
+                t.querySelector('[data-kt-update-contact-group-modal-action="close"]').addEventListener("click", (t => {
                     t.preventDefault(), 
                         t.value , n.hide()
-                })), t.querySelector('[data-kt-contact-group-modal-action="cancel"]').addEventListener("click", (t => {
+                })), t.querySelector('[data-kt-update-contact-group-modal-action="cancel"]').addEventListener("click", (t => {
                     t.preventDefault(), (e.reset(), n.hide())
                 }));
-                const i = t.querySelector('[data-kt-contact-group-modal-action="submit"]');
+                const i = t.querySelector('[data-kt-update-contact-group-modal-action="submit"]');
                 i.addEventListener("click", (function(t) {
 
                     t.preventDefault(), o && o.validate().then((function(t) {
                         console.log("validated!"), "Valid" == t ? (i.setAttribute("data-kt-indicator", "on"), i.disabled = !0, 
                         $.ajax({
-                            url: group_new,
+                            url: group_edit,
                             type: 'post',
                             data: new FormData(e),
                             dataType: 'json',
@@ -80,5 +80,5 @@ var KTAddGroup = function() {
     }
 }();
 KTUtil.onDOMContentLoaded((function() {
-    KTAddGroup.init()
+    KTUpdateGroup.init()
 }));
