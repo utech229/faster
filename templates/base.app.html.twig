@@ -441,7 +441,8 @@
                                         </div>
                                         <div data-kt-menu-trigger="click" data-kt-menu-placement="bottom-start" class="menu-item menu-lg-down-accordion me-lg-1">
                                             <span class="menu-link py-3"> 
-                                                <span class="menu-title"> <strong>{% if app.user.price != [] %}{{ app.user.balance /  app.user.price[0].price }}{% endif %} SMS</strong> </span>
+                                                <span class="menu-title"> <strong>{% if app.user.price != [] %}{{ app.user.balance /  app.user.price[0].price }} {% else %}
+                                                    0 {% endif %} SMS</strong> </span>
                                                 <span class="menu-arrow d-lg-none"></span>
                                             </span>
                                         </div>
