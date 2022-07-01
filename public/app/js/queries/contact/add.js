@@ -14,6 +14,13 @@ var KTAddContact = function() {
                                     message: 'Le numéro est obligatoire' 
                                 }
                             }
+                        },
+                        'group': {
+                            validators: {
+                                notEmpty: {
+                                    message: 'le groupe est obligatoire' 
+                                }
+                            }
                         }
                     },
                     plugins: {
@@ -37,10 +44,9 @@ var KTAddContact = function() {
                     
                     t.preventDefault();
                     var inputs = document.querySelectorAll("[data-name=phone]");
-
                     inputs.forEach((input, index) => {
                         var hidden = input.closest("div").querySelector("input[type=hidden]");
-                        $(hidden).val(allHidden[index].getNumber());
+                        if(allHidden.length > index) $(hidden).val(allHidden[index].getNumber());
                     });
                     o && o.validate().then((function(t) {
                         console.log("validated!"), "Valid" == t ? (i.setAttribute("data-kt-indicator", "on"), i.disabled = !0, 
@@ -53,7 +59,6 @@ var KTAddContact = function() {
                             contentType: false,
                             cache: false,
                             success: function(response) {
-                                    i.removeAttribute("data-kt-indicator"), i.disabled = !1;
                                     Swal.fire({
                                         text: response.message,
                                         icon: response.type,
@@ -62,11 +67,13 @@ var KTAddContact = function() {
                                         customClass: {
                                             confirmButton: "btn btn-primary"
                                         }
-                                    })
+                                    });
+                                    i.removeAttribute("data-kt-indicator"), i.disabled = !1;
+
                                     if (response.type === 'success') {
-                                        t.isConfirmed && e.reset(),
+                                        t.isConfirmed, e.reset(),
                                         $('#kt_modal_add_contact_reload_button').click();
-                                          n.hide();
+                                        n.hide();
                                     }
                             },
                             error: function () { 

@@ -1,6 +1,6 @@
 
 "use strict";
-
+var tabUpdateGroup = [];
 var KTGroupList = function() {
     var e, t, n, r, o = document.getElementById("kt_contacts_group_table"),
         c = () => {
@@ -61,12 +61,12 @@ var KTGroupList = function() {
                 })),
                 s.addEventListener("click", (function() {
                     Swal.fire({
-                        text: "Are you sure you want to delete selected customers?",
+                        text: _Deletion_request,
                         icon: "warning",
                         showCancelButton: !0,
                         buttonsStyling: !1,
-                        confirmButtonText: "Yes, delete!",
-                        cancelButtonText: "No, cancel",
+                        confirmButtonText: _Yes,
+                        cancelButtonText: _No,
                         customClass: {
                             confirmButton: "btn fw-bold btn-danger",
                             cancelButton: "btn fw-bold btn-active-light-primary"
@@ -75,7 +75,7 @@ var KTGroupList = function() {
                         if (t.value) {
                             let tabUid  =  [];
                             c.forEach((t => {
-                                        if(t.checked){
+                                        if(t.checked && $(t).attr("data-value") != undefined){
                                             tabUid.push($(t).attr("data-value"));
                                         }
                             }));
@@ -108,26 +108,10 @@ var KTGroupList = function() {
                                 })
                             }
 
-                            // Swal.fire({
-                            //         text: "You have deleted all selected customers!.",
-                            //         icon: "success",
-                            //         buttonsStyling: !1,
-                            //         confirmButtonText: "Ok, got it!",
-                            //         customClass: {
-                            //             confirmButton: "btn fw-bold btn-primary"
-                            //         }
-                            //     })
+                          
                         }
                         else{
-                            "cancel" === t.dismiss && Swal.fire({
-                                text: "Selected customers was not deleted.",
-                                icon: "error",
-                                buttonsStyling: !1,
-                                confirmButtonText: "Ok, got it!",
-                                customClass: {
-                                    confirmButton: "btn fw-bold btn-primary"
-                                }
-                            })
+                            "cancel" === t.dismiss && $(document).trigger('onAjaxInfo');
                         }
                         // t.value ? 
                         // Swal.fire({
@@ -198,18 +182,16 @@ var KTGroupList = function() {
                         data: {
                             _token: function(){ return csrfToken; },
                             _uid: function(){ return document.querySelector('[data-kt-contact-group="user"]').value; }
-
                         },
                         error: function () { 
                             $(document).trigger('toastr.onAjaxError');
                         },
                         dataSrc: function(json) {
-
                             return json.data;
                         }
                         
                     },
-                    order: [[ 6, "desc" ]],
+                    order: [[ 7, "desc" ]],
                     'columnDefs': [
                        
                         // Uid
@@ -218,6 +200,7 @@ var KTGroupList = function() {
                             responsivePriority: 0,
                             targets: 0, 
                             render: function (data, type, full, meta) {
+                                tabUpdateGroup[data] = full;
                                 return  `<div class="form-check form-check-sm form-check-custom form-check-solid">
                                 <input class="form-check-input" type="checkbox" data-value="`+data+`" />
                             </div>`;
@@ -250,7 +233,7 @@ var KTGroupList = function() {
                         },
                         // Param3
                         {
-                            responsivePriority: 4,
+                            responsivePriority: 5,
                             targets: 4, 
                             render: function (data, type, full, meta) {
                                 return data;
@@ -258,7 +241,7 @@ var KTGroupList = function() {
                         },
                         // Param4
                         {
-                            responsivePriority: 5,
+                            responsivePriority: 6,
                             targets: 5, 
                             render: function (data, type, full, meta) {
                                 return data;
@@ -266,7 +249,7 @@ var KTGroupList = function() {
                         },
                          // Param5
                          {
-                            responsivePriority: 6,
+                            responsivePriority: 7,
                             targets: 6, 
                             render: function (data, type, full, meta) {
                                 return data;
@@ -274,7 +257,7 @@ var KTGroupList = function() {
                         },
                         // Date de création
                         {
-                            responsivePriority: 7,
+                            responsivePriority: 8,
                             targets: 7, 
                             render: function (data, type, full, meta) {
                             return  dateFormat(moment(data, "YYYY-MM-DDTHH:mm:ssZZ").format());
@@ -282,7 +265,7 @@ var KTGroupList = function() {
                         },
                          // Date de modification
                          {
-                            responsivePriority: 8,
+                            responsivePriority: 9,
                             targets: 8, 
                             render: function (data, type, full, meta) {
                             return  dateFormat(moment(data, "YYYY-MM-DDTHH:mm:ssZZ").format());
@@ -291,18 +274,18 @@ var KTGroupList = function() {
                         // Action
                         {
                             orderable: !1,
-                            responsivePriority: 9,
+                            responsivePriority: 4,
                             targets: 9, 
                             render: function (data, type, full, meta) {
                                 var updaterIcon =  `<!--begin::Update-->
-                                <button class="btn btn-icon btn-active-light-primary w-30px h-30px me-3 userUpdater" data-id=`+data+`>
+                                <button class="btn btn-icon btn-active-light-primary w-30px h-30px me-3 groupUpdater" data-id=`+data+`>
                                     <i id="editUserOption`+data+`" class="fa fa-edit"></i>
                                 </button>
                                 <!--end::Update-->`;
                                 var deleterIcon =  `<!--begin::Delete-->
-                                <button class="btn btn-icon btn-active-light-primary w-30px h-30px userDeleter" 
-                                    data-id=`+data+` data-kt-contact-group-table-filter="delete_row">
-                                        <i id="deleteUserOption`+data+`" class="text-danger fa fa-trash-alt"></i>
+                                <button class="btn btn-icon btn-active-light-primary w-30px h-30px groupDeleter" 
+                                    data-id=`+data+` >
+                                        <i id=`+data+` class="text-danger fa fa-trash-alt"></i>
                                 </button>
                                 <!--end::Delete-->`;
                                 // updaterIcon = (pEditUser) ? updaterIcon : '' ;
@@ -330,6 +313,9 @@ var KTGroupList = function() {
                         })),
                         e.search("").draw()
                 })),
+                $('[data-kt-contact-group="user"]').on('change', function() {
+                    e.ajax.reload();
+                }),
                 c(), (() => {
                     const t = document.querySelector('[data-kt-contact-group-table-filter="form"]'),
                         n = t.querySelector('[data-kt-contact-group-table-filter="filter"]'),
@@ -351,8 +337,17 @@ var KTGroupList = function() {
     }
 }();
 
-KTUtil.onDOMContentLoaded((function() {
-    KTGroupList.init();
-}));
+$(document).on('click', ".groupUpdater", function(e) 
+{
+    var uid = $(this).data('id');
+    $("#group_uid").val(uid);
+    $("#group_name").val(tabUpdateGroup[uid][1]);
+    $("#group_set1").val(tabUpdateGroup[uid][2]);
+    $("#group_set2").val(tabUpdateGroup[uid][3]);
+    $("#group_set3").val(tabUpdateGroup[uid][4]);
+    $("#group_set4").val(tabUpdateGroup[uid][5]);
+    $("#group_set5").val(tabUpdateGroup[uid][6]);
 
+    $('#kt_modal_update_contact_group').modal('show');
 
+});
