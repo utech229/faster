@@ -29,12 +29,8 @@
                         </span>
                     </span>
                     <div class="d-flex flex-column text-end">
-                        <span class="text-dark fw-bolder fs-2" id="stat_all">
-                        {% if stats is defined %}
-                                    {{ stats.all }}
-                                    {% endif %}
-                        </span>
-                        <span class="text-muted fw-bold mt-1">{{ 'Groupe de contacts' | trans }}</span>
+                        <span class="text-dark fw-bolder fs-2" id="stat_group">0</span>
+                        <span class="text-muted fw-bold mt-1">{{ 'Groupe(s) de contacts' | trans }}</span>
                     </div>
                     </div>
                     <!--<div class="statistics-widget-allregisteredusers-chart card-rounded-bottom" data-kt-chart-color="info" style="height: 150px"></div>-->
@@ -67,12 +63,8 @@
                         </span>
                     </span>
                     <div class="d-flex flex-column text-end">
-                        <span class="text-dark fw-bolder fs-2" id="stat_active">
-                        {% if stats is defined %}
-                                    {{ stats.active }}
-                                    {% endif %}
-                        </span>
-                        <span class="text-muted fw-bold mt-1">{{"Contacts"| trans}}</span>
+                        <span class="text-dark fw-bolder fs-2" id="stat_contact">0</span>
+                        <span class="text-muted fw-bold mt-1">{{"Contact(s)"| trans}}</span>
                     </div>
                     </div>
                     <!--<div class="statistics-widget-allactivatedusers-chart card-rounded-bottom" data-kt-chart-color="success" style="height: 150px"></div>-->
@@ -277,85 +269,95 @@
             <!--end::Group actions-->
 
             <!--begin::Modal - Adjust Balance-->
-											<div class="modal fade" id="kt_modal_import_contacts" tabindex="-1" aria-hidden="true">
-												<!--begin::Modal dialog-->
-												<div class="modal-dialog modal-dialog-centered mw-650px">
-													<!--begin::Modal content-->
-													<div class="modal-content">
-														<!--begin::Modal header-->
-														<div class="modal-header">
-															<!--begin::Modal title-->
-															<h2 class="fw-bolder">{{"Importation de contacts"| trans}}</h2>
-															<!--end::Modal title-->
-															<!--begin::Close-->
-															<div class="btn btn-icon btn-sm btn-active-icon-primary" data-kt-import-contact-modal-action="close">
-																<!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
-																<span class="svg-icon svg-icon-1">
-																	<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-																		<rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor" />
-																		<rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor" />
-																	</svg>
-																</span>
-																<!--end::Svg Icon-->
-															</div>
-															<!--end::Close-->
-														</div>
-														<!--end::Modal header-->
-														<!--begin::Modal body-->
-														<div class="modal-body scroll-y mx-5 mx-xl-15 my-7">
-															<!--begin::Form-->
-															<form id="kt_modal_import_contacts_form" class="form" action="#">
-                                                                <div class="separator separator-dotted separator-content border-dark my-2 mb-15">
-                                                                        <div class="row fv">
-                                                                                    <label class="form-label fs-6 fw-bold">{% trans %}Groupe de contacts{% endtrans %}</label>
-                                                                                    <select name="groupe" id="id_group_contact_import" data-allow-clear="true" data-control="select2" data-dropdown-parent="#kt_modal_import_contacts" class="form-select form-select-solid fw-bolder min-w-300px mw-300px" data-placeholder="{{'Selectionnez un groupe'| trans}}"/>
-                                                                                            <option value="">Sélectionnez un groupe</option>
-                                                                                            {% for group in groups %}
-                                                                                            <option value="{{ group.uid }}" >{{ group.name }}</option>
-                                                                                            {% endfor %}
-                                                                                    </select>
-                                                                        </div>
-                                                                </div>
-                                                                <input type="hidden" name="hidden_file" value=""/>
-																<!--begin::Dropzone-->
-                                                                <div class="dropzone" id="kt_import">
-                                                                    <!--begin::Message-->
-                                                                    <div class="dz-message needsclick">
-                                                                        <!--begin::Icon-->
-                                                                        <i class="bi bi-file-earmark-arrow-up text-primary fs-3x"></i>
-                                                                        <!--end::Icon-->
-                                                                        <!--begin::Info-->
-                                                                        <div class="ms-4">
-                                                                            <h3 class="fs-5 fw-bolder text-gray-900 mb-1">
-                                                                                <button type="button" class="btn btn-sm btn-success">{{"Ajouter le fichier"|trans}}</button>
-                                                                            </h3>
-                                                                            <span class="fs-7 fw-bold text-gray-400">{{"Glissez et déposez le fichier ici."|trans}}</span>
-                                                                        </div>
-                                                                        <!--end::Info-->
-                                                                    </div>
-                                                                    <!--end::Message-->
-                                                                </div>
-                                                                <!--end::Dropzone-->
-																<!--begin::Actions-->
-																<div class="text-center mt-5">
-																	<button type="reset" class="btn btn-light me-3" data-kt-import-contact-modal-action="cancel">Fermer</button>
-																	<button type="submit" class="btn btn-primary" data-kt-import-contact-modal-action="submit">
-																		<span class="indicator-label">{{"Enregistrer"| trans}}</span>
-																		<span class="indicator-progress">{{"Veuillez patienter..."| trans}}
-																		<span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
-																	</button>
-																</div>
-																<!--end::Actions-->
-															</form>
-															<!--end::Form-->
-														</div>
-														<!--end::Modal body-->
-													</div>
-													<!--end::Modal content-->
-												</div>
-												<!--end::Modal dialog-->
-											</div>
-											<!--end::Modal - New Card-->
+            <div class="modal fade" id="kt_modal_import_contacts" tabindex="-1" aria-hidden="true">
+                <!--begin::Modal dialog-->
+                <div class="modal-dialog modal-dialog-centered mw-650px">
+                    <!--begin::Modal content-->
+                    <div class="modal-content">
+                        <!--begin::Modal header-->
+                        <div class="modal-header">
+                            <!--begin::Modal title-->
+                            <h2 class="fw-bolder">{{"Importation de contacts"| trans}}</h2>
+                            <!--end::Modal title-->
+                            <!--begin::Close-->
+                            <div class="btn btn-icon btn-sm btn-active-icon-primary" data-kt-import-contact-modal-action="close">
+                                <!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
+                                <span class="svg-icon svg-icon-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                        <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor" />
+                                        <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor" />
+                                    </svg>
+                                </span>
+                                <!--end::Svg Icon-->
+                            </div>
+                            <!--end::Close-->
+                        </div>
+                        <!--end::Modal header-->
+                        <!--begin::Modal body-->
+                        <div class="modal-body scroll-y mx-5 mx-xl-15 my-7">
+                            <!--begin::Form-->
+                            <form id="kt_modal_import_contacts_form" class="form" action="#">
+                                <div class="row">
+                                <div class="fv mb-10 offset-md-2 col-md-8 text-center">
+                                {% if users|length == 0 %}
+                                            <label class="form-label fs-6 fw-bold">{% trans %}Groupe de contacts{% endtrans %}</label>
+                                            <select name="group" id="id_group_contact_import" data-allow-clear="true" data-control="select2" data-dropdown-parent="#kt_modal_import_contacts" class="form-select form-select-solid fw-bolder " data-placeholder="{{'Selectionnez un groupe'| trans}}"/>
+                                                    <option value="">Sélectionnez un groupe</option>
+                                                    
+                                            </select>
+                                {% else %}
+                                            <label class="form-label fs-6 fw-bold">{% trans %}Groupe de contacts{% endtrans %}</label>
+                                            <select name="group" id="id_group_contact_import" data-allow-clear="true" data-control="select2" data-dropdown-parent="#kt_modal_import_contacts" class="form-select form-select-solid fw-bolder " data-placeholder="{{'Selectionnez un groupe'| trans}}"/>
+                                                    <option value="">Sélectionnez un groupe</option>
+                                                    {% for group in groups %}
+                                                    <option value="{{ group.uid }}" >{{ group.name }}</option>
+                                                    {% endfor %}
+                                            </select>
+                                {% endif %}
+                                </div>
+                                <input type="hidden" name="hidden_file" value=""/>
+                                <input type="hidden" name="_token" value="{{ csrf_token(app.user.uid) }}" class="form-control" />
+
+                                <!--begin::Dropzone-->
+                                <div class="dropzone col-md-12" id="kt_import">
+                                    <!--begin::Message-->
+                                    <div class="dz-message needsclick">
+                                        <!--begin::Icon-->
+                                        <i class="bi bi-file-earmark-arrow-up text-primary fs-3x"></i>
+                                        <!--end::Icon-->
+                                        <!--begin::Info-->
+                                        <div class="ms-4">
+                                            <h3 class="fs-5 fw-bolder text-gray-900 mb-1">
+                                                <button type="button" class="btn btn-sm btn-success">{{"Ajouter le fichier"|trans}}</button>
+                                            </h3>
+                                            <span class="fs-7 fw-bold text-gray-400">{{"Glissez et déposez le fichier ici."|trans}}</span>
+                                        </div>
+                                        <!--end::Info-->
+                                    </div>
+                                    <!--end::Message-->
+                                </div>
+                                <!--end::Dropzone-->
+                                </div>
+                                <!--begin::Actions-->
+                                <div class="text-center mt-10">
+                                    <button type="reset" class="btn btn-light me-3" data-kt-import-contact-modal-action="cancel">Fermer</button>
+                                    <button type="submit" class="btn btn-primary" data-kt-import-contact-modal-action="submit">
+                                        <span class="indicator-label">{{"Enregistrer"| trans}}</span>
+                                        <span class="indicator-progress">{{"Veuillez patienter..."| trans}}
+                                        <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                                    </button>
+                                </div>
+                                <!--end::Actions-->
+                            </form>
+                            <!--end::Form-->
+                        </div>
+                        <!--end::Modal body-->
+                    </div>
+                    <!--end::Modal content-->
+                </div>
+                <!--end::Modal dialog-->
+            </div>
+            <!--end::Modal - New Card-->
 
             <!--begin::Modal - Create Contact App-->
                 <div class="modal fade" id="kt_modal_create_contact" tabindex="-1" aria-hidden="true">
@@ -728,7 +730,7 @@
             
         </div>
         <!--begin::Card title-->
-        {% if users|length == 0 %}
+        {% if users|length > 0 %}
         <div class="offset-md-1 mt-3">
         <select  data-allow-clear="true" id="list_user_group_id" data-kt-contact-group="user" data-control="select2" class="form-select form-select-solid fw-bolder min-w-300px mw-300px" data-placeholder="{{'Selectionnez un utilisateur'| trans}}"/>
                 <option value="">Sélectionnez un utilisateur</option>
@@ -881,6 +883,11 @@
                                                         <!--begin::Input group-->
                                                         <div class="fv input-group mb-8">
                                                             <input type="text" name="groupName"  class="form-control required " placeholder="Nom du groupe" />
+                                                            {% if users|length > 0 %}
+                                                            <input type="hidden" name="user_group" id="user_group" value="" data-kt-group-contact-user="user"/>
+                                                            {% else %}
+                                                                <input type="hidden" name="user_group" value="{{ app.user.uid }}" />
+                                                            {% endif %}
                                                         </div>
                                                         <!--end::Input group-->
                                                     </div>
@@ -1154,6 +1161,7 @@
     const contact_new           = "{{ path('app_contact_new') }}";
     const contact_delete        = "{{ path('app_contact_delete') }}";
     const contact_edit          = "{{ path('app_contact_edit') }}";
+    const contact_import        = "{{ path('app_contact_import') }}";
     const csrfToken             = "{{ csrf_token(app.user.uid) }}";
 
     const group_list            = "{{ path('app_group_list') }}";
@@ -1178,6 +1186,7 @@
 <script src="{{ asset('app/js/queries/contact/add.js') }}"></script>
 <script src="{{ asset('app/js/queries/contact/delete.js') }}"></script>
 <script src="{{ asset('app/js/queries/contact/update.js') }}"></script>
+<script src="{{ asset('app/js/queries/contact/import.js') }}"></script>
 
 
 <script src="{{ asset('app/js/queries/group-contact/list.js') }}"></script>

@@ -2,18 +2,21 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use App\Entity\Contact;
 use App\Service\uBrand;
 use App\Form\ContactType;
 use App\Service\Services;
 use App\Service\BrickPhone;
 use App\Entity\ContactGroup;
-use App\Entity\User;
 use App\Repository\UserRepository;
 use App\Repository\StatusRepository;
 use App\Repository\ContactRepository;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 use Doctrine\ORM\EntityManagerInterface;
+use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 use Symfony\Component\HttpFoundation\Request;
+use PhpOffice\PhpSpreadsheet\Reader\Exception;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -157,11 +160,14 @@ class ContactController extends AbstractController
         if ($group) {
             foreach ($request->get('kt_docs_repeater_basic') as $key => $value) {
 
+                if(!is_numeric($value["full_number"]) )
+                return $this->services->msg_info($this->intl->trans("Mauvais format de contact renseigné"),$this->intl->trans("Veuillez renseigner un numéro valide"));
+
                 $contact = new Contact();
 
                 $contact->setUid(uniqid());
                 $contact->setPhone($value["full_number"]);
-                $contact->setIsImported(0);
+                $contact->setIsImported(1);
                 $contact->setField1($value["set1"]);
                 $contact->setField2($value["set2"]);
                 $contact->setField3($value["set3"]);
@@ -175,6 +181,76 @@ class ContactController extends AbstractController
         return $this->services->msg_success($this->intl->trans("Ajout d'un contact"),$this->intl->trans("Votre contact a été ajouté avec succès"));
         }
         return $this->services->msg_info($this->intl->trans("Groupe de contact non choisi lors de l'ajout de contact"),$this->intl->trans("Veuillez sélectionner un groupe de contacts"));
+    }
+
+    #[Route('/contact/import', name: 'app_contact_import', methods: ['GET', 'POST'])]
+    public function import(Request $request): Response
+    {
+        if (!$this->isCsrfTokenValid($this->getUser()->getUid(), $request->request->get('_token')))
+        return $this->services->invalid_token_ajax_list($this->intl->trans('importation de contacts : token invalide'));
+        
+        $group  =   $this->em->getRepository(ContactGroup::class)->findOneByUid($request->request->get('group'));
+        
+        if(!$group) return $this->services->msg_info($this->intl->trans("Echec d'importation de contacts: Groupe manquant."),$this->intl->trans("Veuillez sélectionner un groupe de contact."));
+        if($request->request->get('hidden_file') == "") return $this->services->msg_info($this->intl->trans("Echec d'importation de contacts: Fichier manquant."),$this->intl->trans("Veuillez ajouter votre fichier avant de soumettre."));
+        
+        try {
+            $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReaderForFile($request->request->get('hidden_file'));
+            $reader->setReadDataOnly(true);
+            $spreadsheet = $reader->load($request->request->get('hidden_file'));
+        } catch(\PhpOffice\PhpSpreadsheet\Reader\Exception $e) {
+            die('Error loading file: '.$e->getMessage());
+        }
+        
+
+       //File content getting in variable
+        $worksheet = $spreadsheet->getActiveSheet();
+
+        $highestRow    = $worksheet->getHighestRow();
+        $highestColumn = $worksheet->getHighestColumn(); // e.g 'F'
+        $highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn);
+        //getting of cellulle C1 value type
+        $row1Column1 = $worksheet->getCellByColumnAndRow(1, 2)->getValue();
+        //Verify the type for setting the start row
+        (is_numeric($row1Column1)) ? $startRow = 2 : $startRow = 3;
+        
+        //Verify First Phone number
+        $firstPhone = $worksheet->getCellByColumnAndRow(1, $startRow)->getValue();
+
+        if ($firstPhone == NULL OR $firstPhone == '' OR !is_numeric($firstPhone)) 
+        return $this->services->msg_error($this->intl->trans("Echec d'importation de contact:Mauvais formatage de fichier."),$this->intl->trans("Votre fichier a été mal conçu pour l'importation.Veuillez revoir le contenu du fichier et réessayez."));
+        
+        for($row = $startRow; $row <= $highestRow; $row++)
+        {
+            $contact    = new Contact;
+            $phone      = $worksheet->getCellByColumnAndRow(1, $row)->getValue();
+
+            if ($phone == NULL OR $firstPhone == '' OR !is_numeric($firstPhone)) 
+            return $this->services->msg_error($this->intl->trans("Echec d'importation de contact:Mauvais formatage de fichier. ".$phone." Format du numéro non respecté"),$this->intl->trans("Votre fichier a été mal conçu pour l'importation. ".$phone." Format du numéro non respecté. Veuillez revoir le contenu du fichier et réessayez."));
+            
+            // if($this->brickPhone->getInfosCountryFromCode($phone) == false)
+            
+            $fielder1  = $worksheet->getCellByColumnAndRow(2, $row)->getValue() != "" ? $worksheet->getCellByColumnAndRow(2, $row)->getValue() : "";
+            $fielder2  = $worksheet->getCellByColumnAndRow(3, $row)->getValue() != "" ? $worksheet->getCellByColumnAndRow(3, $row)->getValue() : "";
+            $fielder3  = $worksheet->getCellByColumnAndRow(4, $row)->getValue() != "" ? $worksheet->getCellByColumnAndRow(4, $row)->getValue() : "";
+            $fielder4  = $worksheet->getCellByColumnAndRow(5, $row)->getValue() != "" ? $worksheet->getCellByColumnAndRow(5, $row)->getValue() : "";
+            $fielder5  = $worksheet->getCellByColumnAndRow(6, $row)->getValue() != "" ? $worksheet->getCellByColumnAndRow(6, $row)->getValue() : "";
+
+            $contact->setUid(uniqid())
+                ->setContactGroup($group)
+                ->setPhone($phone)
+                ->setField1($fielder1)
+                ->setField2($fielder2)
+                ->setField3($fielder3)
+                ->setField4($fielder4)
+                ->setField5($fielder5)
+                ->setIsImported(0)
+                ->setPhoneCountry($this->brickPhone->getInfosCountryFromCode($phone))
+                ->setCreatedAt(new \DateTimeImmutable());
+                $this->contactRepository->add($contact);
+        } 
+        
+        return $this->services->msg_success($this->intl->trans("Importation de contacts effectué avec succès"),$this->intl->trans("Importation de contacts effectué avec succès"));
     }
 
     #[Route('/{id}', name: 'app_contact_show', methods: ['GET'])]
@@ -227,14 +303,4 @@ class ContactController extends AbstractController
         return $this->services->msg_success($this->intl->trans("Suppression de contact"),$this->intl->trans("Votre contact a été supprimé avec succès"));
     }
 
-    // #[Route('/delete/{id}', name: 'app_contact_delete', methods: ['POST'])]
-    // public function delete(Request $request,Contact $contact , ContactRepository $contactRepository): Response
-    // {
-    //    //Vérification du tokken
-    //    if (!$this->isCsrfTokenValid($this->getUser()->getUid(), $request->request->get('_token'))) 
-    //         return $this->services->no_access($this->intl->trans("Suppression de contact").': '.$contact->getPhone());
-		
-    //         $contactRepository->remove($contact);
-    //     return $this->services->msg_success($this->intl->trans("Suppression de contact"),$this->intl->trans("Votre contact a été supprimé avec succès"));
-    // }
 }
