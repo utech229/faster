@@ -75,9 +75,6 @@ class SuperController extends AbstractController
         $existed_user = $this->userRepository->findOneById(1);
         if (!$existed_user) {
             $user = new User();
-            $this->dbInitData->addRole();
-            $this->dbInitData->addPermission();
-            $this->dbInitData->addAuthorization();
             $role     = $this->roleRepository->findOneBy(['code' => 'SUP']);
             $phone_number = $this->brand->get()['phone']['bj'];
             $country      = 'BJ';
@@ -132,6 +129,7 @@ class SuperController extends AbstractController
 
             $brand   = $this->brandRepository->findOneByName($this->brand->get()['name']);
             $route   = $this->routerRepository->findOneByName("Fastermessage_moov");
+            dd($route);
             $company = $this->companyRepository->findOneById(1);
             $user->setAccountManager($user)
                 ->setBrand($brand)
