@@ -123,7 +123,7 @@ class UserAuthenticator extends AbstractAuthenticator //AbstractLoginFormAuthent
      */
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
-        $message = $exception ? $this->translator->trans('Identifiants de connexion incorrects')/*$exception->getMessage()*/ : $this->translator->trans('Missing credentials');
+        $message = $exception ? $this->intl->trans('Identifiants de connexion incorrects')/*$exception->getMessage()*/ : $this->intl->trans('Missing credentials');
         $request->getSession()->getFlashBag()->add('error', $message);
         return new RedirectResponse($this->urlGenerator->generate('app_login'));
     }
