@@ -67,9 +67,6 @@ class AddEntity extends AbstractController
         if(isset($SETTINGFILE) && $SETTINGFILE->getError() == 0){
             $return	=	$this->services->checkFile($SETTINGFILE, ["jpeg", "jpg", "png", "JPEG", "JPG", "PNG"], 200024);
             if($return['error'] == false) {
-                if (file_exists($filepath)) {
-                    if(strpos($user->getProfilePhoto(), 'default_') === false) $this->services->removeFile($placeAvatar, $user->getProfilePhoto());
-                }
                 return $this->services->renameFile($SETTINGFILE, $placeAvatar, true, $placeAvatar, $filename);
             }else
                 return [
