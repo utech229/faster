@@ -98,7 +98,7 @@ class SuperController extends AbstractController
                     $this->intl->trans("Insertion du tableau de données pays"),
                     $this->intl->trans("La recherche du nom du pays à échoué : BrickPhone"),
                 );
-                
+
             $brand   = $this->brandRepository->findOneByName($this->brand->get()['name']);
             $route   = $this->routerRepository->findOneByName("Fastermessage_moov");
             $company = $this->companyRepository->findOneById(1);
@@ -116,7 +116,7 @@ class SuperController extends AbstractController
             $user->setStatus($this->statusRepository->findOneByCode(3));
             $user->setCountry($countryDatas);
             $user->setPrice([
-                $countryDatas['code'] = $priceDatas,
+                 $countryDatas['code'] => $priceDatas,
             ]);
             $user->setProfilePhoto('default_avatar_1.png');
             $user->setCreatedAt(new \DatetimeImmutable());

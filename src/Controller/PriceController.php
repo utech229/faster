@@ -60,6 +60,7 @@ class PriceController extends AbstractController
             {
                 $price = $form->get('price')->getData();
                 $countryCode   = strtoupper($request->request->get('country'));
+                dd($countryCode);
                 $countryDatas  = $this->brickPhone->getInfosCountryFromCode($countryCode);
                 if ($countryDatas) {
                     $priceDatas = [ 'dial_code' => $countryDatas['dial_code'], 'code' => $countryCode,'name' => $countryDatas['name'], 'price' => $price];
@@ -76,7 +77,7 @@ class PriceController extends AbstractController
 
                 //return msg
                 $configuredCountry = array();
-                $prices  = $user->getPrice();
+                $prices            = $user->getPrice();
                 foreach ($prices  as $price) 
                 {         
                     array_push($configuredCountry, strtoupper($price['code']));            
