@@ -354,7 +354,7 @@ class DbInitData extends AbstractController
                 "Statut suspendu d'une entité",
                 "Statut approuvé d'une entité",
 				"Statut annulé d'une entité",
-				"Statut délivré d'une entité",
+				"Statut délivré d'une entité", 
 				"Statut rejeté d'une entité",
                 "Statut brouillon d'une entité",
                 "Statut supprimé d'une entité",
