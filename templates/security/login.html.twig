@@ -5,15 +5,14 @@
 {% endblock %}
 
 {% block body %}
-
-	{% for flash_error in app.flashes('verify_email_error') %}
+	{#{% for flash_error in app.flashes('verify_email_error') %}
 		<div class="alert alert-danger" id="flashErrors" role="alert"></div>
-         <input type="hidden" name="flashErrors" id="flashErrors" class="flashErrors" value="{{ flash_error }}"></input>
+         <input type="text" name="flashErrors" id="flashErrors" class="flashErrors" value="{{ flash_error }}"></input>
 	{% endfor %}
 
     {% if error %}
-          <input type="hidden" name="flashMessages" id="flashMessages" value="{{ error.messageKey|trans(error.messageData, 'security') }}"></input>
-    {% endif %}
+          <input type="text" name="flashMessages" id="flashMessages" value="{{ error.messageKey|trans(error.messageData, 'security') }}"></input>
+    {% endif %}#}
 	<!--begin::Wrapper-->
 	<div class="w-lg-500px w-100 p-10 p-lg-15 mx-auto  rounded shadow-sm p-10 p-lg-15 mx-auto border border-dashed border-primary">
 		{% include 'section/login.intl.dropdown.html.twig' %}
@@ -32,44 +31,4 @@
 	</script>
 	<script src="{{ asset('app/js/queries/authentication/sign-in/general.js') }}"></script>
 	<!--end::Page Custom Javascript-->
-    <script>
-			var flashErrors		=  	$('#flashErrors').val();
-			var flashMessages	=  	$('#flashMessages').val();
-
-			if(flashErrors 	!= 	undefined)
-			{
-				Swal.fire({
-                        title: _Information,
-                        text: flashErrors,
-                        icon: "error",
-                        buttonsStyling: false,
-                        confirmButtonText:  _Form_Ok_Swal_Button_Text_Notification,
-                        customClass: {
-                            confirmButton: "btn btn-primary"
-                        }
-                });
-			}
-
-			if(flashMessages != 	undefined)
-			{
-				Swal.fire({
-                        title: _Information,
-                        text: flashMessages,
-                        icon: "warning",
-                        buttonsStyling: false,
-                        allowOutsideClick: false,
-                        confirmButtonText:  _Form_click_Swal_Button_Text_Notification,
-                        customClass: {
-                            confirmButton: "btn btn-primary"
-                        }
-                }).then(function (result) {
-                    if (result.value) {
-                        //location.reload(true);
-                    }
-                });
-			}
-
-
-    	</script>
-
 {% endblock %}

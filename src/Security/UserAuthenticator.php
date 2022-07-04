@@ -59,7 +59,7 @@ class UserAuthenticator extends AbstractAuthenticator //AbstractLoginFormAuthent
     public function authenticate(Request $request): Passport
     {
         $email = $request->request->get('email', '');
-
+        
         $user = $this->userRepository->findOneBy(['brand' => $this->brand->get()['brand'], 'email' => $email]);// find a user based on an "email" form field
         if (!$user) {
             throw new CustomUserMessageAuthenticationException($this->intl->trans("Vos informations de connexion sont 
@@ -82,14 +82,13 @@ class UserAuthenticator extends AbstractAuthenticator //AbstractLoginFormAuthent
                     throw new CustomUserMessageAuthenticationException($this->intl->trans('Oups ! Vous avez désactivé votre compte,
                     veuillez lancer le processus de réactivation du compte'));
                     break;
-                
                 default:
                     break;
             }
         }
 
         $request->getSession()->set(Security::LAST_USERNAME, $user->getUid());
-
+        
         return new Passport(
             new UserBadge($user->getUid()),
             new PasswordCredentials($request->request->get('password', '')),
