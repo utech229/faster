@@ -65,6 +65,9 @@ class SMSMessage
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
     private $createBy;
 
+    #[ORM\Column(type: 'string', length: 15, nullable: true)]
+    private $createFrom;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -270,6 +273,18 @@ class SMSMessage
     public function setCreateBy(?string $createBy): self
     {
         $this->createBy = $createBy;
+
+        return $this;
+    }
+
+    public function getCreateFrom(): ?string
+    {
+        return $this->createFrom;
+    }
+
+    public function setCreateFrom(?string $createFrom): self
+    {
+        $this->createFrom = $createFrom;
 
         return $this;
     }

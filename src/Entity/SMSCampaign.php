@@ -63,6 +63,9 @@ class SMSCampaign
     #[ORM\JoinColumn(nullable: false)]
     private $createBy;
 
+    #[ORM\Column(type: 'array', nullable: true)]
+    private $counting = [];
+
     public function __construct()
     {
         $this->sMSMessages = new ArrayCollection();
@@ -267,6 +270,18 @@ class SMSCampaign
     public function setCreateBy(?User $createBy): self
     {
         $this->createBy = $createBy;
+
+        return $this;
+    }
+
+    public function getCounting(): ?array
+    {
+        return $this->counting;
+    }
+
+    public function setCounting(?array $counting): self
+    {
+        $this->counting = $counting;
 
         return $this;
     }
