@@ -49,7 +49,6 @@ class RechargeRepository extends ServiceEntityRepository
         if($idBrand)    $q->andWhere('r.user = u.id')->andWhere('u.brand = b.id')->andWhere('b.brand = :id')->setParameter('id', $idBrand);
         return $q->orderBy('r.id', 'DESC')->getQuery()->getResult();
     }
-
     //  //Manager id
     //  public function getRechargeByManager($idManager){
     //     return
