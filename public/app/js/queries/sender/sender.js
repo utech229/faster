@@ -225,9 +225,9 @@ const SenderManager = function(){
 
             $(k).on("click", ($this)=>{ $this.preventDefault(); o.hide(); }); // click sur l'icon close du modal
 
-            $(document).on("submit", f, ($this)=>{ // soumission du formulaire
+            $(document).on("submit", "#form", ($this)=>{ // soumission du formulaire
                 $this.preventDefault();
-                btnAnimation(i, true);console.log(g);
+                btnAnimation(i, true);
                 $.ajax({
                     url: $(form).attr("action"),
                     type: 'post',

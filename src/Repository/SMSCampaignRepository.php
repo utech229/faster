@@ -3,6 +3,8 @@
 namespace App\Repository;
 
 use App\Entity\SMSCampaign;
+use App\Entity\User;
+use App\Entity\Brand;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -38,6 +40,73 @@ class SMSCampaignRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
+
+    /**
+    * @return SMSCampaign[] Returns an array of SMSCampaign objects
+    */
+    public function userTypeFindBy($userType, $params): array
+    {
+        $query = $this->createQueryBuilder('c')->from(User::class, "u")->from(Brand::class, "b");
+        $query->andWhere('c.manager = u')->andWhere('u.brand = b');
+
+        // si selection suivant un utilisateur
+        if(isset($params["manager"])) $query->andWhere('c.manager = :manager')->setParameter('manager', $params["manager"]);
+
+        // si rechercher selon status
+        if(isset($params["status"])) $query->andWhere('c.status = :status')->setParameter('status', $params["status"]);
+
+        // si rechercher selon brand
+        if(isset($params["brand"])) $query->andWhere('u.brand = :brand')->setParameter('brand', $params["brand"]);
+
+        // si rechercher selon sender
+        if(isset($params["sender"])) $query->andWhere('c.sender = :sender')->setParameter('sender', $params["sender"]);
+
+        $query->andWhere('c.sendingAt > :send')->setParameter('send', $params["lastday"]);
+
+        switch ($userType) {
+            case 1:
+                // si this user est un manager de compte
+                $query->andWhere('u.accountManager = :account')
+                    ->setParameter('account', $params["managerby"]);
+                break;
+
+            case 2:
+                // si this user est un revender
+                $query->andWhere('b.manager = :reseller')
+                    ->setParameter('reseller', $params["reselby"]);
+                break;
+
+            case 3:
+                // si this user est un Affilié de revender
+                $query->andWhere('b.manager = :reseller')
+                    ->setParameter('reseller', $params["reselby"]);
+                break;
+
+            case 4:
+                // si this user est un utilisateur simple
+                $query->andWhere('c.manager = :user')
+                    ->setParameter('user', $params["user"]);
+                break;
+
+            case 5:
+                // si this user est un Affilié d'un utilisateur simple
+                $query->andWhere('c.manager = :user')
+                    ->setParameter('user', $params["user"]);
+                break;
+            default:
+                // si type de this user n'est pas défini données vide
+                if(!isset($params["master"])) $query->andWhere('c.manager is null');
+                break;
+        }
+
+        //dd($query->orderBy('s.id', 'ASC')->getQuery());
+
+        return $query->orderBy('c.id', 'ASC')
+           ->getQuery()
+           ->getResult()
+       ;
+    }
+
 
 //    /**
 //     * @return SMSCampaign[] Returns an array of SMSCampaign objects
