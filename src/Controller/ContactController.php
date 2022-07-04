@@ -160,8 +160,8 @@ class ContactController extends AbstractController
         if ($group) {
             foreach ($request->get('kt_docs_repeater_basic') as $key => $value) {
 
-                if(!is_numeric($value["full_number"]) )
-                return $this->services->msg_info($this->intl->trans("Mauvais format de contact renseigné"),$this->intl->trans("Veuillez renseigner un numéro valide"));
+                if($this->brickPhone->isValidNumber($value["full_number"]) != true )
+                return $this->services->msg_error($this->intl->trans("Mauvais format de contact renseigné"),$this->intl->trans($value["full_number"]." est invalide. Veuillez renseigner un numéro valide"));
 
                 $contact = new Contact();
 
@@ -201,7 +201,6 @@ class ContactController extends AbstractController
         } catch(\PhpOffice\PhpSpreadsheet\Reader\Exception $e) {
             die('Error loading file: '.$e->getMessage());
         }
-        
 
        //File content getting in variable
         $worksheet = $spreadsheet->getActiveSheet();
@@ -225,10 +224,9 @@ class ContactController extends AbstractController
             $contact    = new Contact;
             $phone      = $worksheet->getCellByColumnAndRow(1, $row)->getValue();
 
-            if ($phone == NULL OR $firstPhone == '' OR !is_numeric($firstPhone)) 
+            if($this->brickPhone->isValidNumber($phone) != true )
+
             return $this->services->msg_error($this->intl->trans("Echec d'importation de contact:Mauvais formatage de fichier. ".$phone." Format du numéro non respecté"),$this->intl->trans("Votre fichier a été mal conçu pour l'importation. ".$phone." Format du numéro non respecté. Veuillez revoir le contenu du fichier et réessayez."));
-            
-            // if($this->brickPhone->getInfosCountryFromCode($phone) == false)
             
             $fielder1  = $worksheet->getCellByColumnAndRow(2, $row)->getValue() != "" ? $worksheet->getCellByColumnAndRow(2, $row)->getValue() : "";
             $fielder2  = $worksheet->getCellByColumnAndRow(3, $row)->getValue() != "" ? $worksheet->getCellByColumnAndRow(3, $row)->getValue() : "";

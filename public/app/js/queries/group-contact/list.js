@@ -113,32 +113,7 @@ var KTGroupList = function() {
                         else{
                             "cancel" === t.dismiss && $(document).trigger('onAjaxInfo');
                         }
-                        // t.value ? 
-                        // Swal.fire({
-                        //     text: "You have deleted all selected customers!.",
-                        //     icon: "success",
-                        //     buttonsStyling: !1,
-                        //     confirmButtonText: "Ok, got it!",
-                        //     customClass: {
-                        //         confirmButton: "btn fw-bold btn-primary"
-                        //     }
-                        // }).then((function() {
-                        //     c.forEach((t => {
-                        //         t.checked && e.row($(t.closest("tbody tr"))).remove().draw()
-                        //     }));
-                        //     o.querySelectorAll('[type="checkbox"]')[0].checked = !1
-                        // })).then((function() {
-                        //     a(),
-                        //         l()
-                        // })) : "cancel" === t.dismiss && Swal.fire({
-                        //     text: "Selected customers was not deleted.",
-                        //     icon: "error",
-                        //     buttonsStyling: !1,
-                        //     confirmButtonText: "Ok, got it!",
-                        //     customClass: {
-                        //         confirmButton: "btn fw-bold btn-primary"
-                        //     }
-                        // })
+                       
                     }))
                 }))
         };

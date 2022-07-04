@@ -419,6 +419,26 @@ $(document).on('change',"#list_user_contact_id", function (e) {
     });
 });
 
+$('#add_group_id').click(function(e) 
+{
+    e.preventDefault();
+
+        // $('#kt_modal_import_contacts')
+        //     .modal('hide')
+        //     .on('hidden.bs.modal', function (e) {
+        //         $('#kt_modal_create_contact_group').modal('show');
+
+        //         $(this).off('hidden.bs.modal'); // Remove the 'on' event binding
+        //     });
+    $('#kt_modal_import_contacts').modal('hide');
+
+    setTimeout(() => {
+    $('#test').click();
+        
+    }, 3000);
+
+});
+
 // Champ Importation
 var myDropzone = new Dropzone("#kt_import", {
     url: url_import, // Set the url for your upload script location

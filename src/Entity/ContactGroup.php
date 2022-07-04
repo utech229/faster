@@ -49,6 +49,9 @@ class ContactGroup
     #[ORM\OneToMany(mappedBy: 'contactGroup', targetEntity: Contact::class, orphanRemoval: true)]
     private $contacts;
 
+    #[ORM\ManyToOne(targetEntity: user::class, inversedBy: 'contactGroupsAdmin')]
+    private $admin;
+
     public function __construct()
     {
         $this->contacts = new ArrayCollection();
@@ -205,6 +208,18 @@ class ContactGroup
                 $contact->setContactGroup(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getAdmin(): ?user
+    {
+        return $this->admin;
+    }
+
+    public function setAdmin(?user $admin): self
+    {
+        $this->admin = $admin;
 
         return $this;
     }
