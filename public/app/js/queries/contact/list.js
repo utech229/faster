@@ -422,7 +422,7 @@ $(document).on('change',"#list_user_contact_id", function (e) {
 $('#add_group_id').click(function(e) 
 {
     e.preventDefault();
-
+    
         // $('#kt_modal_import_contacts')
         //     .modal('hide')
         //     .on('hidden.bs.modal', function (e) {
@@ -439,6 +439,9 @@ $('#add_group_id').click(function(e)
 
 });
 
+function infoImportFile() {
+    window.location.href = 'http://127.0.0.1:8000/app/exemple/exemple.xlsx';
+}
 // Champ Importation
 var myDropzone = new Dropzone("#kt_import", {
     url: url_import, // Set the url for your upload script location
