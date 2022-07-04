@@ -30,7 +30,7 @@
 
     var selectorsPhone = document.querySelectorAll('input.tel');
 
-    var intl = [];
+    if(typeof intl === 'undefined') var intl = [];
 
     selectorsPhone.forEach((selector, index) => {
         let id = $(selector).attr("id");

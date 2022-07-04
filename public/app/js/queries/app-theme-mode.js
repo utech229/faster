@@ -2,88 +2,63 @@
 
 // Class definition
 var THEMECOOKIES = function() {
-    var lightThemeButton;
-    var darkThemeButton;
-    var themeColor;
-    var lightModeIcon;
-    var darkModeIcon;
-    var mjour = 'monjour';
-    var mnuit = 'manuit';
 
     // Init form inputs
     var handleForm = function() {
-        lightModeIcon.removeClass('d-none');
+        var mjour = 'monjour';
+        var mnuit = 'manuit';
 
-        lightThemeButton.click(function(){
-            var date = new Date(Date.now() + 2 * 24 * 60 * 60 * 1000); // +2 day from now
-            var options = { expires: date };
-            KTCookie.remove(mnuit);
-            KTCookie.set(mjour, "yes", options);
-            lightThemeButton.addClass('active');
-            darkThemeButton.removeClass('active');
-            lightModeIcon.removeClass('d-none');
-            darkModeIcon.addClass('d-none');
-            KTApp.setThemeMode("light", function() {
-                console.log("changed to dark mode");
-            });
+        var thememode = document.querySelector('#kt_user_menu_dark_mode_toggle');
+            thememode.addEventListener('change', function(element) {
+            console.log('Agreement changed to ' + thememode.checked);
+            if (thememode.checked == true) {
+                KTApp.setThemeMode("dark", function() {
+                    console.log("changed to dark mode");
+
+                    var date = new Date(Date.now() + 2 * 24 * 60 * 60 * 1000); // +2 day from now
+                    var optionsnuit = { expires: date };
+                    KTCookie.set(mnuit, "yes", optionsnuit);
+                    KTCookie.remove(mjour);
+
+                }); // set dark mode
+            }else{
+                KTApp.setThemeMode("light", function() {
+                    console.log("changed to light mode");
+
+                    var date = new Date(Date.now() + 2 * 24 * 60 * 60 * 1000); // +2 day from now
+                    var options = { expires: date };
+                    KTCookie.remove(mnuit);
+                    KTCookie.set(mjour, "yes", options);
+                }); // set light mode
+                
+            }
             
-        });
-
-
-        darkThemeButton.click(function(){
-            var date = new Date(Date.now() + 2 * 24 * 60 * 60 * 1000); // +2 day from now
-            var optionsnuit = { expires: date };
-            KTCookie.set(mnuit, "yes", optionsnuit);
-            KTCookie.remove(mjour);
-            darkThemeButton.removeClass('active');
-            darkThemeButton.addClass('active');
-            lightModeIcon.addClass('d-none');
-            darkModeIcon.removeClass('d-none');
-            KTApp.setThemeMode("dark", function() {
-                console.log("changed to light mode");
-            });
         });
 
         
         var cookieNuit = KTCookie.get(mnuit);
         var cookieJour = KTCookie.get(mjour);
         if (cookieNuit == "yes") {
-           darkModeIcon.removeClass('d-none');
-            lightModeIcon.addClass('d-none');
-            darkThemeButton.removeClass('active');
-            darkThemeButton.addClass('active');
             KTApp.setThemeMode("dark", function() {
                 console.log("changed to dark mode");
             });
         }
         if (cookieJour == "yes") {
-            lightModeIcon.removeClass('d-none');
-            darkModeIcon.addClass('d-none');
-            lightThemeButton.addClass('active');
-            darkThemeButton.removeClass('active');
             KTApp.setThemeMode("light", function() {
                 console.log("changed to dark mode");
             });
         }
 
         if ((cookieJour == "yes") && (cookieNuit == "yes")) {
-            KTCookie.remove(mnuit);
-            lightModeIcon.removeClass('d-none');
-            darkModeIcon.addClass('d-none');
+            KTCookie.remove(mnuit);;
         }
-                
+                        
     }
 
     return {
         // Public functions
         init: function() {
             // Elements
-
-            lightThemeButton = $('#lightThemeButton');
-            darkThemeButton = $('#darkThemeButton');;
-            themeColor      = $('#themeColor');;
-            lightModeIcon   = $('#lightModeIcon');;
-            darkModeIcon    = $('#darkModeIcon');;
             handleForm();
         }
     };

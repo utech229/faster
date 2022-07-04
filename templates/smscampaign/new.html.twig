@@ -2,302 +2,532 @@
 
 {% block stylesheets %}
 <link href="{{ asset('app/plugins/custom/datatables/datatables.bundle.css') }}" rel="stylesheet" type="text/css" />
+<style media="screen">
+.rotate-270{
+	-ms-transform: rotate(270deg); /* IE 9 */
+	transform: rotate(270deg);
+}
+</style>
 {% endblock %}
 
 {% block body %}
 <!--begin::Post-->
 <div class="post d-flex flex-column-fluid" id="kt_post">
-    <!--begin::Container-->
-    <div id="kt_content_container" class="container-xxl">
-        <!--begin::Card-->
-        <div class="card card-flush">
-            <!--begin::Card header-->
-            <div class="card-header">
-                <!--begin::Card title-->
-                <div class="card-title">
-                    <!--begin::Title-->
-                    <h3 class="fw-bolder my-2">{{"Créer une campagne"|trans}}
-                    <span class="fs-6 text-gray-400 fw-bold ms-1">{{"SMS"|trans}}</span></h3>
-                    <!--end::Title-->
-                </div>
-                <!--end::Card title-->
-                <!--begin::Card toolbar-->
-                <div class="card-toolbar">
-                    <!--begin::Button-->
-                    {% if pCreate %}
-                        <a href="{{path("campaign_sms_created")}}" id="addCampaign" class="btn btn-light-primary">
-                            <!--begin::Svg Icon | path: icons/duotune/general/gen035.svg-->
-                            <span class="svg-icon svg-icon-3">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="currentColor" />
-                                    <rect x="10.8891" y="17.8033" width="12" height="2" rx="1" transform="rotate(-90 10.8891 17.8033)" fill="currentColor" />
-                                    <rect x="6.01041" y="10.9247" width="12" height="2" rx="1" fill="currentColor" />
-                                </svg>
-                            </span>
-                            <!--end::Svg Icon-->
-                            {% trans %}Envoyer un message{% endtrans %}
-                        </a>
-                    {% endif %}
-                    <!--end::Button-->
-                </div>
-                <!--end::Card toolbar-->
-            </div>
-            <!--end::Card header-->
-            <!--begin::Card body-->
-            <div class="card-body pt-0 pb-5">
-                <form class="form" action="{{path("campaign_sms_created")}}" method="post" id="form">
-                    <input type="hidden" name="_token" value="{{csrf_token("campaign_create")}}"/>
-                    <input type="hidden" name="fileUrl" value=""/>
-                    <input type="hidden" name="saveContacts" value="false"/>
-                    <div class="row g-9">
-                        <!--begin::Input group-->
-                        <div class="fv-row col-md-6">
-                            <!--begin::Label-->
-                            <label class="fs-7 fw-bolder form-label mb-2 required" for="brand">
-                                {{"Marque blanche"|trans}}
-                            </label>
-                            <!--end::Label-->
-                            <!--begin::Input-->
-                            <select id="brand" name="brand" data-allow-clear="false" data-control="select2" class="form-select form-select-solid fw-bolder" data-placeholder="{{"Sélectionnez la marque de l'expéditeur" | trans}}">
-                                <option value=""></option>
-                                {% for brand in brands %}
-                                    <option value="{{ brand.uid }}" data-select2-avatar="{{brand.logo}}" data-select2-alt="{{brand.name}}">{{ brand.name }}</option>
-                                {% endfor %}
-                            </select>
-                            <!--end::Input-->
-                        </div>
-                        <!--end::Input group-->
-                        <!--begin::Input group-->
-                        <div class="fv-row col-md-6">
-                            <!--begin::Label-->
-                            <label class="fs-7 fw-bolder form-label mb-2 required" for="user">
-                                {{"Utilisateur de la marque"|trans}}
-                            </label>
-                            <!--end::Label-->
-                            <!--begin::Input-->
-                            <select id="user" name="user" data-allow-clear="false" data-control="select2" class="form-select form-select-solid fw-bolder" data-placeholder="{{"Sélectionnez l'utilisateur" | trans}}">
-                            </select>
-                            <!--end::Input-->
-                        </div>
-                        <!--end::Input group-->
-                        <!--begin::Input group-->
-                        <div class="fv-row col-md-6 col-lg-8 col-xl-8">
-                            <!--begin::Label-->
-                            <label class="fs-7 fw-bolder form-label mb-2 required" for="name">
-                                {{"Nom de la campagne"|trans}}
-                            </label>
-                            <!--end::Label-->
-                            <!--begin::Input-->
-                            <input type="text" id="name" name="name" value="" class="form-control form-control-solid" required/>
-                            <!--end::Input-->
-                        </div>
-                        <!--end::Input group-->
-                        <!--begin::Input group-->
-                        <div class="fv-row col-md-6 col-lg-4">
-                            <!--begin::Label-->
-                            <label class="fs-7 fw-bolder form-label mb-2 required" for="sender">
-                                {{"Expéditeur"|trans}}
-                            </label>
-                            <!--end::Label-->
-                            <!--begin::Input-->
-                            <select id="sender" name="sender" data-allow-clear="false" data-control="select2" class="form-select form-select-solid fw-bolder" data-placeholder="{{"Sélectionnez l'identifiant d'envoi" | trans}}">
-                            </select>
-                            <!--end::Input-->
-                        </div>
-                        <!--end::Input group-->
-                        <!--begin::Input group-->
-                        <div class="fv-row mt-4 col-md-4">
-                            <!--begin::Label-->
-                            <label class="fs-7 fw-bolder form-label mb-2" for="datetime">
-                                {{"Date et heure d'envoi"|trans}}
-                                <i class="fas fa-exclamation-circle ms-1 fs-7" data-bs-toggle="tooltip" title="" data-bs-original-title="{{"Laissez vide pour créer une campagne instantanée."|trans}}" aria-label="{{"Laissez vide pour créer une campagne instantanée."|trans}}"></i>
-                            </label>
-                            <!--end::Label-->
-                            <!--begin::Input-->
-                            <input class="form-control form-control-solid" placeholder="{{"Gardez vide pour l'envoi instantané."|trans}}" id="datetime" name="datetime"/>
-                            <!--end::Input-->
-                        </div>
-                        <!--end::Input group-->
-                        <!--begin::Input group-->
-                        <div class="fv-row mt-4 col-md-4">
-                            <!--begin::Label-->
-                            <label class="fs-7 fw-bolder form-label mb-2" for="timezone">
-                                {{"Timezone"|trans}}
-                            </label>
-                            <!--end::Label-->
-                            <!--begin::Input-->
-                            <select id="timezone" name="timezone" data-allow-clear="false" data-control="select2" class="form-select form-select-solid fw-bolder" data-placeholder="{{"Sélectionnez le Timezone" | trans}}">
-                                <option value="+00:00">+00:00</option>
-                                <option value="+01:00">+01:00</option>
-                                <option value="+02:00">+02:00</option>
-                            </select>
-                            <!--end::Input-->
-                        </div>
-                        <!--end::Input group-->
-                        <!--begin::Input group-->
-                        <div class="fv-row mt-4 col-md-4">
-                            <!--begin::Label-->
-                            <label class="fs-7 fw-bolder form-label mb-2 required" for="type">
-                                {{"Type de SMS"|trans}}
-                            </label>
-                            <!--end::Label-->
-                            <!--begin::Input-->
-                            <select id="type" name="type" class="form-select form-select-solid fw-bolder" data-placeholder="{{"Sélectionnez le type du SMS" | trans}}" required>
-                                <option value="1">{{ "SMS Classique"|trans }}</option>
-                                <option value="0">{{ "SMS Flash"|trans }}</option>
-                            </select>
-                            <!--end::Input-->
-                        </div>
-                        <!--end::Input group-->
-                        <!--begin::Input group-->
-                        <div class="fv-row mt-4 col-12">
-                            <!--begin::Navs-->
-                            <ul class="nav nav-stretch nav-line-tabs nav-line-tabs-2x border-transparent fs-7 fw-bolder mb-2" id="dest_nav">
-                                <!--begin::Nav item-->
-                                <li class="nav-item mt-2">
-                                    <!--begin::Label-->
-                                    <label class="ms-0 me-10 py-0 required" for="phones" href="javascript:void(0)">
-                                        {{"Destinataire(s)"|trans}}
-                                    </label>
-                                    <!--end::Label-->
-                                </li>
-                                <!--end::Nav item-->
-                                <!--begin::Nav item-->
-                                <li class="nav-item mt-2" id="li_group">
-                                    <a class="nav-link text-active-primary ms-0 me-10 py-0 active" data-bs-toggle="tab" href="#group">{{"Groupe de contacts"|trans}}</a>
-                                </li>
-                                <!--end::Nav item-->
-                                <!--begin::Nav item-->
-                                <li class="nav-item mt-2" id="li_import">
-                                    <a class="nav-link text-active-primary ms-0 me-10 py-0" data-bs-toggle="tab" href="#import">{{"Importation"|trans}}</a>
-                                </li>
-                                <!--end::Nav item-->
-                                <!--begin::Nav item-->
-                                <li class="nav-item mt-2" id="li_write">
-                                    <a class="nav-link text-active-primary ms-0 me-10 py-0" data-bs-toggle="tab" href="#write">{{"Numéros"|trans}}</a>
-                                </li>
-                                <!--end::Nav item-->
-                            </ul>
-                            <!--begin::Navs-->
-                            <!--begin::Input-->
-                            <div class="tab-content" id="dest_tab">
-                                <div class="tab-pane fade" id="write" role="tabpanel">
-                                    <input type="text" id="phones" name="phones" value="" class="form-control" placeholder="22990909090;22967676767"/>
-                                </div>
-                                <div class="tab-pane fade" id="import" role="tabpanel">
-                                    <!--begin::Dropzone-->
-                                    <div class="dropzone" id="kt_import">
-                                        <!--begin::Message-->
-                                        <div class="dz-message needsclick">
-                                            <!--begin::Icon-->
-                                            <i class="bi bi-file-earmark-arrow-up text-primary fs-3x"></i>
-                                            <!--end::Icon-->
-                                            <!--begin::Info-->
-                                            <div class="ms-4">
-                                                <h3 class="fs-5 fw-bolder text-gray-900 mb-1">
-                                                    <button type="button" class="btn btn-sm btn-success">{{"Ajouter le fichier"|trans}}</button>
-                                                </h3>
-                                                <span class="fs-7 fw-bold text-gray-400">{{"Glissez et déposez le fichier ici."|trans}}</span>
-                                            </div>
-                                            <!--end::Info-->
-                                        </div>
-                                        <!--end::Message-->
-                                    </div>
-                                    <!--end::Dropzone-->
-                                </div>
-                                <div class="tab-pane fade show active" id="group" role="tabpanel">
-                                    <!--begin::Input-->
-                                    <select id="group_contacts" name="groups" data-allow-clear="true" data-control="select2" class="form-select form-select-solid fw-bolder" data-placeholder="{{"Sélectionnez le(s) groupe(s) de contacts."|trans}}" multiple="multiple">
-                                    </select>
-                                    <!--end::Input-->
-                                </div>
-                            </div>
-                            <!--end::Input-->
-                        </div>
-                        <!--end::Input group-->
-                        <!--begin::Input group-->
-                        <div class="fv-row mt-4 col-12">
-                            <!--begin::Label-->
-                            <label class="fs-7 fw-bolder form-label mb-2 required" for="message">
-                                {{"Message"|trans}}
-                            </label>
-                            <!--end::Label-->
-                            <!--begin::Input-->
-                            <textarea name="message" id="message" rows="8" cols="80" class="form-control form-control-solid" placeholder="{{"Vous pouvez utiliser des paramètres dans le message"|trans}}" required></textarea>
-                            <!--end::Input-->
-                            <p>
-                                <span class="text-danger fs-8"><span id="countMessage">0</span> {{"caractère(s)"|trans}} </span>
-                                <span class="text-gray-800 fs-8"> <span id="countPageMessage">0</span> {{"page(s)"|trans}}</span>
-                            </p>
-                        </div>
-                        <!--end::Input group-->
-                        <!--begin::Actions-->
-                        <div class="d-flex justify-content-end">
-                            <a href="{{path("campaign_sms")}}" class="btn btn-secondary fw-bold me-2 px-6" id="cancel">{{"Quitter"|trans}}</a>
-                            <button type="reset" class="btn btn-light btn-active-light-primary fw-bold me-2 px-6" id="reset">{{"Remise à zéro"|trans}}</button>
-                            <button type="submit" class="btn btn-primary fw-bold px-6" id="submit">
-                                <span class="indicator-label">{{'Créer la campagne'|trans}}</span>
-                                <span class="indicator-progress">{{'Veuillez patienter'|trans}}...
-                                <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
-                            </button>
-                        </div>
-                        <!--end::Actions-->
-                    </div>
-                </form>
-                <div class="w-100 mt-10">
-                    <h3 class="fw-bolder fs-6 my-2 text-warning">{{"Ligne de contact à revoir"|trans}}</h3>
-                    <!--begin::Table-->
-                    <table class="table align-middle table-row-dashed fs-6 gy-5 mb-0 w-100%" id="tb_error">
-                        <!--begin::Table head-->
-                        <thead>
-                            <!--begin::Table row-->
-                            <tr class="text-center text-gray-400 fw-bolder fs-7 text-uppercase gs-0">
-                                <th class="min-w-10px">{{"Ligne"|trans}}</th>
-                                <th class="min-w-100px">{% trans %}Téléphone{% endtrans %}</th>
-                                <th class="min-w-100px">{% trans %}Erreur(s){% endtrans %}</th>
-                                <th class="min-w-10px">{{"Pays"|trans}}</th>
-                                <th class="min-w-10px"></th>
-                                <th class="min-w-100px">{% trans %}Action(s){% endtrans %}</th>
-                            </tr>
-                            <!--end::Table row-->
-                        </thead>
-                        <!--end::Table head-->
-                        <!--begin::Table body-->
-                        <tbody class="fw-bold text-gray-600">
-                        </tbody>
-                        <!--end::Table body-->
-                    </table>
-                    <!--end::Table-->
-                </div>
-            </div>
-            <!--end::Card body-->
-        </div>
-        <!--end::Card-->
-    </div>
-    <!--end::Container-->
+	<!--begin::Container-->
+	<div id="kt_content_container" class="container-xxl">
+		<!--begin::Card-->
+		<div class="card card-flush">
+			<!--begin::Card header-->
+			<div class="card-header">
+				<!--begin::Card title-->
+				<div class="card-title">
+					<!--begin::Title-->
+				<h3 class="fw-bolder my-2">
+					{% if campaign %}{{"Modifier une campagne"|trans}}{% else %}{{"Créer une campagne"|trans}}{% endif %}
+					<span class="fs-6 text-gray-400 fw-bold ms-1">{{"SMS"|trans}}</span></h3>
+					<!--end::Title-->
+				</div>
+				<!--end::Card title-->
+				<!--begin::Card toolbar-->
+				<div class="card-toolbar">
+					<!--begin::Button-->
+					{% if pCreate %}
+						<button type="button" id="message_sms_create" class="btn btn-light-primary">
+							<!--begin::Svg Icon | path: icons/duotune/general/gen035.svg-->
+							<span class="svg-icon svg-icon-3">
+								<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+									<rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="currentColor" />
+									<rect x="10.8891" y="17.8033" width="12" height="2" rx="1" transform="rotate(-90 10.8891 17.8033)" fill="currentColor" />
+									<rect x="6.01041" y="10.9247" width="12" height="2" rx="1" fill="currentColor" />
+								</svg>
+							</span>
+							<!--end::Svg Icon-->
+							{% trans %}Envoyer un message{% endtrans %}
+						</button>
+					{% endif %}
+					<!--end::Button-->
+				</div>
+				<!--end::Card toolbar-->
+			</div>
+			<!--end::Card header-->
+			<!--begin::Card body-->
+			<div class="card-body pt-0 pb-5">
+				<form class="form" action="{{path("campaign_sms_created")}}" method="post" id="form">
+					<input type="hidden" name="_token" value="{{csrf_token("campaign_create")}}"/>
+					<input type="hidden" name="fileUrl" value=""/>
+					<input type="hidden" name="saveContacts" value="false"/>
+					<input type="hidden" name="id" value="{% if campaign %}{{campaign.uid}}{% endif %}"/>
+					<input type="hidden" name="saveMode" value="live"/>
+					<input type="hidden" name="messageText" value=""/>
+					<div class="row g-9">
+						<!--begin::Input group-->
+						<div class="fv-row col-md-6 {% if userType > 3 or statusCode == 0 or statusCode == 5 %}sr-only{% endif %}">
+							<!--begin::Label-->
+							<label class="fs-7 fw-bolder form-label mb-2 required" for="brand">
+								{{"Marque blanche"|trans}}
+							</label>
+							<!--end::Label-->
+							<!--begin::Input-->
+							<select id="brand" name="brand" data-allow-clear="false" data-control="select2" class="form-select form-select-solid fw-bolder" data-placeholder="{{"Sélectionnez la marque de l'expéditeur" | trans}}">
+								<option value=""></option>
+								{% for brand in brands %}
+									<option value="{{ brand.uid }}" data-select2-avatar="{{brand.logo}}" data-select2-alt="{{brand.name}}">{{ brand.name }}</option>
+								{% endfor %}
+							</select>
+							<!--end::Input-->
+						</div>
+						<!--end::Input group-->
+						<!--begin::Input group-->
+						<div class="fv-row col-md-6 {% if userType > 3 or statusCode == 0 or statusCode == 5 %}sr-only{% endif %}">
+							<!--begin::Label-->
+							<label class="fs-7 fw-bolder form-label mb-2 required" for="user">
+								{{"Utilisateur de la marque"|trans}}
+							</label>
+							<!--end::Label-->
+							<!--begin::Input-->
+							<select id="user" name="user" data-allow-clear="false" data-control="select2" class="form-select form-select-solid fw-bolder" data-placeholder="{{"Sélectionnez l'utilisateur" | trans}}">
+								<option value=""></option>
+								{% for user in users %}
+									<option value="{{ user.uid }}">{{ user.email }}</option>
+								{% endfor %}
+							</select>
+							<!--end::Input-->
+						</div>
+						<!--end::Input group-->
+						<!--begin::Input group-->
+						<div class="fv-row col-md-6 col-lg-8 col-xl-8">
+							<!--begin::Label-->
+							<label class="fs-7 fw-bolder form-label mb-2 required" for="name">
+								{{"Nom de la campagne"|trans}}
+							</label>
+							<!--end::Label-->
+							<!--begin::Input-->
+							<input type="text" id="name" name="name" value="{% if campaign %}{{campaign.name}}{% endif %}" class="form-control form-control-solid" required/>
+							<!--end::Input-->
+						</div>
+						<!--end::Input group-->
+						<!--begin::Input group-->
+						<div class="fv-row col-md-6 col-lg-4">
+							<!--begin::Label-->
+							<label class="fs-7 fw-bolder form-label mb-2 required" for="sender">
+								{{"Expéditeur"|trans}}
+							</label>
+							<!--end::Label-->
+							<!--begin::Input-->
+							<select id="sender" name="sender" data-allow-clear="false" data-control="select2" class="form-select form-select-solid fw-bolder" data-placeholder="{{"Sélectionnez l'identifiant d'envoi" | trans}}">
+								<option value=""></option>
+								{% for sender in senders %}
+									<option value="{{ sender.uid }}">{{ sender.name }}</option>
+								{% endfor %}
+							</select>
+							<!--end::Input-->
+						</div>
+						<!--end::Input group-->
+						<!--begin::Input group-->
+						<div class="fv-row mt-4 col-md-4">
+							<!--begin::Label-->
+							<span class="clearfix">
+								<label class="fs-7 fw-bolder form-label mb-2 float-start" for="datetime">
+									{{"Date et heure d'envoi"|trans}}
+									<i class="fas fa-exclamation-circle ms-1 fs-7" data-bs-toggle="tooltip" title="" data-bs-original-title="{{"Laissez vide pour créer une campagne instantanée."|trans}}" aria-label="{{"Laissez vide pour créer une campagne instantanée."|trans}}"></i>
+								</label>
+								<span class="float-end me-5 rotate-270" id="clear" data-bs-toggle="tooltip" title="" data-bs-original-title="{{"Vidé le champ."|trans}}" aria-label="{{"Vidé le champ."|trans}}"><i class="bi bi-backspace-fill"></i></span>
+							</span>
+							<!--end::Label-->
+							<!--begin::Input-->
+							<input class="form-control form-control-solid" placeholder="{{"Gardez vide pour l'envoi instantané."|trans}}" id="datetime" name="datetime" value="{% if sendingAt %}{{sendingAt|date('Y-m-d H:i')}}{% endif %}"/>
+							<!--end::Input-->
+						</div>
+						<!--end::Input group-->
+						<!--begin::Input group-->
+						<div class="fv-row mt-4 col-md-4">
+							<!--begin::Label-->
+							<label class="fs-7 fw-bolder form-label mb-2" for="timezone">
+								{{"Fuseau horaire"|trans}}
+							</label>
+							<!--end::Label-->
+							<!--begin::Input-->
+							<select id="timezone" name="timezone" data-allow-clear="false" data-control="select2" class="form-select form-select-solid fw-bolder" data-placeholder="{{"Sélectionnez le Fuseau horaire" | trans}}">
+								<option value="-12:00">(GMT -12:00)</option>
+								<option value="-11:00">(GMT -11:00)</option>
+								<option value="-10:00">(GMT -10:00)</option>
+								<option value="-09:30">(GMT -9:30)</option>
+								<option value="-09:00">(GMT -9:00)</option>
+								<option value="-08:00">(GMT -8:00)</option>
+								<option value="-07:00">(GMT -7:00)</option>
+								<option value="-06:00">(GMT -6:00)</option>
+								<option value="-05:00">(GMT -5:00)</option>
+								<option value="-04:30">(GMT -4:30)</option>
+								<option value="-04:00">(GMT -4:00)</option>
+								<option value="-03:30">(GMT -3:30)</option>
+								<option value="-03:00">(GMT -3:00)</option>
+								<option value="-02:00">(GMT -2:00)</option>
+								<option value="-01:00">(GMT -1:00)</option>
+								<option value="+00:00">(GMT)</option>
+								<option value="+01:00">(GMT +1:00)</option>
+								<option value="+02:00">(GMT +2:00)</option>
+								<option value="+03:00">(GMT +3:00)</option>
+								<option value="+03:30">(GMT +3:30)</option>
+								<option value="+04:00">(GMT +4:00)</option>
+								<option value="+04:30">(GMT +4:30)</option>
+								<option value="+05:00">(GMT +5:00)</option>
+								<option value="+05:50">(GMT +5:30)</option>
+								<option value="+05:75">(GMT +5:45)</option>
+								<option value="+06:00">(GMT +6:00)</option>
+								<option value="+06:30">(GMT +6:30)</option>
+								<option value="+07:00">(GMT +7:00)</option>
+								<option value="+08:00">(GMT +8:00)</option>
+								<option value="+08:75">(GMT +8:45)</option>
+								<option value="+09:00">(GMT +9:00)</option>
+								<option value="+09:30">(GMT +9:30)</option>
+								<option value="+10:00">(GMT +10:00)</option>
+								<option value="+10:50">(GMT +10:30)</option>
+								<option value="+11:00">(GMT +11:00)</option>
+								<option value="+11:30">(GMT +11:30)</option>
+								<option value="+12:00">(GMT +12:00)</option>
+								<option value="+12:75">(GMT +12:45)</option>
+								<option value="+13:00">(GMT +13:00)</option>
+								<option value="+14:00">(GMT +14:00)</option>
+							</select>
+							<!--end::Input-->
+						</div>
+						<!--end::Input group-->
+						<!--begin::Input group-->
+						<div class="fv-row mt-4 col-md-4">
+							<!--begin::Label-->
+							<label class="fs-7 fw-bolder form-label mb-2 required" for="type">
+								{{"Type de SMS"|trans}}
+							</label>
+							<!--end::Label-->
+							<!--begin::Input-->
+							<select id="type" name="type" class="form-select form-select-solid fw-bolder" data-placeholder="{{"Sélectionnez le type du SMS" | trans}}" required>
+								<option value="1">{{ "SMS Classique"|trans }}</option>
+								<option value="0">{{ "SMS Flash"|trans }}</option>
+							</select>
+							<!--end::Input-->
+						</div>
+						<!--end::Input group-->
+						{% if statusCode != 0 and statusCode != 5 %}
+							<!--begin::Input group-->
+							<div class="fv-row mt-4 col-12">
+								<!--begin::Navs-->
+								<ul class="nav nav-stretch nav-line-tabs nav-line-tabs-2x border-transparent fs-7 fw-bolder mb-2" id="dest_nav">
+									<!--begin::Nav item-->
+									<li class="nav-item mt-2">
+										<!--begin::Label-->
+										<label class="ms-0 me-10 py-0 required" for="phones" href="javascript:void(0)">
+											{{"Destinataire(s)"|trans}}
+										</label>
+										<!--end::Label-->
+									</li>
+									<!--end::Nav item-->
+									<!--begin::Nav item-->
+									<li class="nav-item mt-2" id="li_group">
+										<a class="nav-link text-active-primary ms-0 me-10 py-0 active" data-bs-toggle="tab" href="#group">{{"Groupe de contacts"|trans}}</a>
+									</li>
+									<!--end::Nav item-->
+									<!--begin::Nav item-->
+									<li class="nav-item mt-2" id="li_import">
+										<a class="nav-link text-active-primary ms-0 me-10 py-0" data-bs-toggle="tab" href="#import">{{"Importation"|trans}}</a>
+									</li>
+									<!--end::Nav item-->
+									<!--begin::Nav item-->
+									<li class="nav-item mt-2" id="li_write">
+										<a class="nav-link text-active-primary ms-0 me-10 py-0" data-bs-toggle="tab" href="#write">{{"Numéros"|trans}}</a>
+									</li>
+									<!--end::Nav item-->
+								</ul>
+								<!--begin::Navs-->
+								<!--begin::Input-->
+								<div class="tab-content" id="dest_tab">
+									<div class="tab-pane fade" id="write" role="tabpanel">
+										<input type="text" id="phones" name="phones" value="" class="form-control" placeholder="22990909090;22967676767"/>
+									</div>
+									<div class="tab-pane fade" id="import" role="tabpanel">
+										<!--begin::Dropzone-->
+										<div class="dropzone" id="kt_import">
+											<!--begin::Message-->
+											<div class="dz-message needsclick">
+												<!--begin::Icon-->
+												<i class="bi bi-file-earmark-arrow-up text-primary fs-3x"></i>
+												<!--end::Icon-->
+												<!--begin::Info-->
+												<div class="ms-4">
+													<h3 class="fs-5 fw-bolder text-gray-900 mb-1">
+														<button type="button" class="btn btn-sm btn-success">{{"Ajouter le fichier"|trans}}</button>
+													</h3>
+													<span class="fs-7 fw-bold text-gray-400">{{"Glissez et déposez le fichier ici."|trans}}</span>
+												</div>
+												<!--end::Info-->
+											</div>
+											<!--end::Message-->
+										</div>
+										<!--end::Dropzone-->
+									</div>
+									<div class="tab-pane fade show active" id="group" role="tabpanel">
+										<!--begin::Input-->
+										<select id="group_contacts" name="groups" data-allow-clear="true" data-control="select2" class="form-select form-select-solid fw-bolder" data-placeholder="{{"Sélectionnez le(s) groupe(s) de contacts."|trans}}" multiple="multiple">
+											{% for oneGroup in allGroup %}
+												<option value="{{oneGroup.uid}}">{{oneGroup.name}}</option>
+											{% endfor %}
+										</select>
+										<!--end::Input-->
+									</div>
+								</div>
+								<!--end::Input-->
+							</div>
+							<!--end::Input group-->
+							<!--begin::Input group-->
+							<div class="fv-row mt-4 col-12">
+								<!--begin::Label-->
+								<label class="fs-7 fw-bolder form-label mb-2" for="template">
+									{{"Modèle de message existant"|trans}}
+								</label>
+								<!--end::Label-->
+								<!--begin::Input-->
+								<select name="template" id="template" data-allow-clear="true" data-control="select2" class="form-select form-select-solid fw-bolder" data-placeholder="{{"Séléctionnez la campagne."|trans}}">
+								</select>
+								<!--end::Input-->
+							</div>
+							<!--end::Input group-->
+						{% endif %}
+						<!--begin::Input group-->
+						<div class="fv-row mt-4 col-md-6 {% if statusCode == 0 or statusCode == 5 %}sr-only{% endif %}">
+							<!--begin::Label-->
+							<label class="fs-7 fw-bolder form-label mb-2 required" for="message">
+								{{"Message"|trans}}
+							</label>
+							<!--end::Label-->
+							<!--begin::Input-->
+							<textarea name="message" id="message" rows="8" cols="80" class="form-control form-control-solid" placeholder="{{"Vous pouvez utiliser des paramètres dans le message"|trans}}" required>{{campaign.message|default("")}}</textarea>
+							<!--end::Input-->
+						</div>
+						<!--end::Input group-->
+						<!--begin::Input group-->
+						<div class="fv-row mt-4 {% if statusCode != 0 and statusCode != 5 %}col-md-6{% else %}col-12{% endif %}">
+							<!--begin::Label-->
+							<label class="fs-7 fw-bolder form-label mb-2" for="true_message">
+								{{"Aperçu du message"|trans}}
+							</label>
+							<!--end::Label-->
+							<!--begin::Input-->
+							<textarea name="true_message" id="true_message" rows="8" cols="80" class="form-control form-control-solid" placeholder="" disabled></textarea>
+							<!--end::Input-->
+							<p id="countOne">
+								<span class="text-danger fs-8"><span id="countMessage">0</span> {{"caractère(s)"|trans}} </span>
+								<span class="text-gray-800 fs-8"> <span id="countPageMessage">0</span> {{"page(s)"|trans}}</span>
+							</p>
+						</div>
+						<!--end::Input group-->
+						<!--begin::Actions-->
+						<div class="d-flex justify-content-end">
+							<a href="{{path("campaign_sms")}}" class="btn btn-danger fw-bold me-2 px-6" id="cancel">{{"Quitter"|trans}}</a>
+							{% if statusCode != 0 and statusCode != 5 %}
+								<button type="button" class="btn btn-light btn-secondary fw-bold me-2 px-6" id="brouillon">{{"Brouillon"|trans}}</button>
+							{% endif %}
+							<button type="submit" class="btn btn-primary fw-bold px-6" id="submit">
+								<span class="indicator-label">{{'Soumettre'|trans}}</span>
+								<span class="indicator-progress">{{'Veuillez patienter'|trans}}...
+								<span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+							</button>
+						</div>
+						<!--end::Actions-->
+					</div>
+				</form>
+				{% if statusCode != 0 and statusCode != 5 %}
+					<div class="w-100 mt-10">
+						<h3 class="fw-bolder fs-6 my-2 text-warning">{{"Ligne de contact à revoir"|trans}}</h3>
+						<!--begin::Table-->
+						<table class="table align-middle table-row-dashed fs-6 gy-5 mb-0 w-100%" id="tb_error">
+							<!--begin::Table head-->
+							<thead>
+								<!--begin::Table row-->
+								<tr class="text-center text-gray-400 fw-bolder fs-7 text-uppercase gs-0">
+									<th class="min-w-10px">{{"Ligne"|trans}}</th>
+									<th class="min-w-20px">{% trans %}Téléphone{% endtrans %}</th>
+									<th class="min-w-100px">{% trans %}Erreur(s){% endtrans %}</th>
+									<th class="min-w-10px">{{"Infos"|trans}}</th>
+									<th class="min-w-10px"></th>
+									<th class="min-w-50px">{% trans %}Action(s){% endtrans %}</th>
+								</tr>
+								<!--end::Table row-->
+							</thead>
+							<!--end::Table head-->
+							<!--begin::Table body-->
+							<tbody class="fw-bold text-gray-600">
+							</tbody>
+							<!--end::Table body-->
+						</table>
+						<!--end::Table-->
+					</div>
+				{% endif %}
+			</div>
+			<!--end::Card body-->
+		</div>
+		<!--end::Card-->
+	</div>
+	<!--end::Container-->
+	
+	<!--begin::Modal - Sender-->
+	<div class="modal fade" id="modal_edit" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+		<!--begin::Modal dialog-->
+		<div class="modal-dialog modal-dialog-centered mw-650px">
+			<!--begin::Modal content-->
+			<div class="modal-content">
+				<!--begin::Form-->
+				<form id="formEdith" class="" action="{{path("smscampaign_edit")}}" method="post">
+					<!--begin::Modal header-->
+					<div class="modal-header" id="modal_header">
+						<!--begin::Modal title-->
+						<h2 class="fw-bolder" id="title">{% trans %}Correction du message{% endtrans %}</h2>
+						<!--end::Modal title-->
+						<!--begin::Close-->
+						<div class="btn btn-icon btn-sm btn-active-icon-primary" id="close">
+							<!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
+							<span class="svg-icon svg-icon-1">
+								<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+									<rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor" />
+									<rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor" />
+								</svg>
+							</span>
+							<!--end::Svg Icon-->
+						</div>
+						<!--end::Close-->
+					</div>
+					<!--end::Modal header-->
+					<!--begin::Modal body-->
+					<div class="row modal-body scroll-y mx-5 my-7" id="modal_body" data-kt-scroll="true" data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-max-height="auto" data-kt-scroll-dependencies="#modal_header" data-kt-scroll-wrappers="#modal_body" data-kt-scroll-offset="300px">
+						<input type="hidden" name="campaign" value=""/>
+						<input type="hidden" name="position" value=""/>
+						<!--begin::input group-->
+						<div class="fv-row mb-10 col-lg-6">
+							<!--begin::Label-->
+							<label class="fs-5 fw-bolder form-label mb-2 required" for="phone">{{"Téléphone"|trans}}</label>
+							<!--end::Label-->
+							<!--begin::Input-->
+							<input type="text" id="phone" name="phone" required="required" class="form-control form-control-solid tel" maxlength="50" />
+							<!--end::Input-->
+						</div>
+						<!--end::Input group-->
+						{#<!--begin::input group-->
+						<div class="fv-row mb-10 col-lg-6">
+							<!--begin::Label-->
+							<label class="fs-5 fw-bolder form-label mb-2" for="param1">{{"Paramètre 1"|trans}}</label>
+							<!--end::Label-->
+							<!--begin::Input-->
+							<input type="text" id="param1" name="param1" class="form-control form-control-solid" />
+							<!--end::Input-->
+						</div>
+						<!--end::Input group-->
+						<!--begin::input group-->
+						<div class="fv-row mb-10 col-lg-6">
+							<!--begin::Label-->
+							<label class="fs-5 fw-bolder form-label mb-2" for="param2">{{"Paramètre 2"|trans}}</label>
+							<!--end::Label-->
+							<!--begin::Input-->
+							<input type="text" id="param2" name="param2" class="form-control form-control-solid" />
+							<!--end::Input-->
+						</div>
+						<!--end::Input group-->
+						<!--begin::input group-->
+						<div class="fv-row mb-10 col-lg-6">
+							<!--begin::Label-->
+							<label class="fs-5 fw-bolder form-label mb-2" for="param3">{{"Paramètre 3"|trans}}</label>
+							<!--end::Label-->
+							<!--begin::Input-->
+							<input type="text" id="param3" name="param3" class="form-control form-control-solid" />
+							<!--end::Input-->
+						</div>
+						<!--end::Input group-->
+						<!--begin::input group-->
+						<div class="fv-row mb-10 col-lg-6">
+							<!--begin::Label-->
+							<label class="fs-5 fw-bolder form-label mb-2" for="param4">{{"Paramètre 4"|trans}}</label>
+							<!--end::Label-->
+							<!--begin::Input-->
+							<input type="text" id="param4" name="param4" class="form-control form-control-solid" />
+							<!--end::Input-->
+						</div>
+						<!--end::Input group-->
+						<!--begin::input group-->
+						<div class="fv-row mb-10 col-lg-6">
+							<!--begin::Label-->
+							<label class="fs-5 fw-bolder form-label mb-2" for="param5">{{"Paramètre 5"|trans}}</label>
+							<!--end::Label-->
+							<!--begin::Input-->
+							<input type="text" id="param5" name="param5" class="form-control form-control-solid" />
+							<!--end::Input-->
+						</div>
+						<!--end::Input group-->#}
+						<!--begin::input group-->
+						<div class="fv-row mb-10 col-12">
+							<!--begin::Label-->
+							<label class="fs-5 fw-bolder form-label mb-2" for="message">{{"Message final"|trans}}</label>
+							<!--end::Label-->
+							<!--begin::Input-->
+							<textarea id="message" name="message" class="form-control form-control-solid h-100px"></textarea>
+							<!--end::Input-->
+							<p id="countTwo">
+								<span class="text-danger fs-8"><span id="countMessage">0</span> {{"caractère(s)"|trans}} </span>
+								<span class="text-gray-800 fs-8"> <span id="countPageMessage">0</span> {{"page(s)"|trans}}</span>
+							</p>
+						</div>
+						<!--end::Input group-->
+					</div>
+					<!--end::Modal body-->
+					<!--begin::Modal footer-->
+					<div class="modal-footer">
+						<button type="button" class="btn btn-light btn-active-light-primary fw-bold me-2 px-6" id="cancel">{{"Fermer"|trans}}</button>
+						<button type="submit" class="btn btn-primary fw-bold px-6" id="submit">
+							<span class="indicator-label">{{'Valider'|trans}}</span>
+							<span class="indicator-progress">{{'Veuillez patienter'|trans}}...
+							<span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+						</button>
+					</div>
+					<!--end::Modal footer-->
+				</form>
+				<!--end::Form-->
+			</div>
+			<!--end::Modal content-->
+		</div>
+		<!--end::Modal dialog-->
+	</div>
+	<!--end::Modal - sender-->
 </div>
 <!--end::Post-->
 {% endblock %}
 
 {% block javascripts %}
 <script type="text/javascript">
-    const url_user  = "{{ path('filter_user') }}",
-    url_sender      = "{{ path('filter_sender') }}",
-    url_import      = "{{path("smscampaign_import")}}",
-    url_home        = "{{path("campaign_sms")}}",
-    _token          = "{{ csrf_token("campaign") }}";
-    const filter_token   = "{{ csrf_token("") }}";
+	const url_user	= "{{path('filter_user')}}",
+	url_sender		= "{{path('filter_sender')}}",
+	url_template	= "{{path('filter_template')}}",
+	url_groups		= "{{path('filter_groups')}}",
+	url_import		= "{{path("smscampaign_import")}}",
+	url_home		= "{{path("campaign_sms")}}",
+	url_this		= "{{path("campaign_sms_view_created")}}",
+	url_delete 		= "{{path("smscampaign_delete")}}",
+	url_check		= "{{path("campaign_sms_check")}}",
+	_token			= "{{csrf_token("campaign")}}";
 
-    const pList = {{pList|default(0)}},
-    clnUser = {{clnUser|default(0)}},
-    pEdit = {{pEdit|default(0)}},
-    pDelete = {{pDelete|default(0)}},
-    pStatus = {{pStatus|default(0)}};
+	const filter_token	= "{{csrf_token("")}}";
 
-    const ongletAlert = "{{"Voulez-vous fermer cet onget ? Vous allez perdre les données incrites."|trans}}",
-    saveContacts = "{{"Voulez-vous créer un groupe de contacts avec les contacts importés ?"|trans}}";
+	const ongletAlert	= "{{"Voulez-vous fermer cet onget ? Vous allez perdre les données incrites."|trans}}",
+	saveContacts		= "{{"Voulez-vous créer un groupe de contacts avec les contacts importés ?"|trans}}",
+	deleteConfirm		= "{{"Voulez-vous supprimer cette ligne ?"|trans}}",
+	textBrouillon		= "{{"Enregistrement du brouillon"|trans}}";
+
+	const brandInit	= {% if brands|length == 1 %} "{{brands[0].uid}}" {% else %} false {% endif %},
+	userInit		= {% if users|length == 1 %} "{{users[0].uid}}" {% else %} false {% endif %},
+	senderInit		= {% if senders %} "{{senders[0].uid}}" {% else %} false {% endif %},
+	campaignType	= {% if campaign %}{{campaign.smsType}}{% else %} false {% endif %},
+	timezone		= {% if campaign %}"{{campaign.timezone}}"{% else %} false {% endif %},
+	groups			= {{groups|raw}};
+
+	const statusCode	= {{statusCode}};
 </script>
 <script type="text/javascript" src="{{ asset('app/plugins/custom/datatables/datatables.bundle.js') }}"></script>
+{{ include('smsmessage/new.html.twig', {'brands':brands}) }}
 <script type="text/javascript" src="{{ asset('app/js/queries/sms/messageError.js')}}"></script>
 <script type="text/javascript" src="{{ asset('app/js/queries/sms/campaign.js')}}"></script>
 {% endblock %}
