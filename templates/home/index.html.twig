@@ -52,13 +52,13 @@
                             <div class="text-center mb-1">
                                 <!--begin::Link-->
                                 {% if brand.name == "FASTERMESSAGE" %}
-                                    <a  href="{{ path('brand') }}" class="btn btn-sm btn-primary me-2">{% trans %}Devenir revendeur{% endtrans %}</a>
+                                    <a  href="{{ path('brand') }}" class="btn btn-sm btn-primary mt-2 me-2">{% trans %}Devenir revendeur{% endtrans %}</a>
                                 {% else %}
-                                    <a  href="{{ path('campaign_sms') }}" class="btn btn-sm btn-primary me-2">{% trans %}Envoyer un SMS{% endtrans %}</a>
+                                    <a  href="{{ path('campaign_sms') }}" class="btn btn-sm mt-2 btn-primary me-2">{% trans %}Envoyer un SMS{% endtrans %}</a>
                                 {% endif %}
                                 <!--end::Link-->
                                 <!--begin::Link-->
-                                <a class="btn btn-sm btn-light" href="{{ path('app_developer') }}">{% trans %}API développeur{% endtrans %}</a>
+                                <a class="btn btn-sm btn-light mt-2" href="{{ path('app_developer') }}">{% trans %}API développeur{% endtrans %}</a>
                                 <!--end::Link-->
                             </div>
                             <!--end::Links-->
@@ -141,7 +141,6 @@
                             <div class="mb-1 mt-4 p-4">
                                 <a href="{{ path('campaign_sms')}}" class="btn btn-primary me-2">{% trans %}Envoyer un SMS{% endtrans %}</a>
                                 <a href="{{ path('campaign_sms')}}" style="background: #fc6" class="btn me-2">{% trans %}Créer une Campagne{% endtrans %}</a>
-                                <a href="{{ path('app_developer')}}" class="btn btn-light me-2">{% trans %}API SMS{% endtrans %}</a>
                                 <a href="{{ path('app_contact_index')}}" class="btn btn-success">{% trans %}Importer des contacts{% endtrans %}</a>
                             </div>
                             <!--end::Action-->
