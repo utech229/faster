@@ -234,7 +234,7 @@ var KTUsersLoadRecharge = function() {
                     targets: 0,
                 },
                 {
-                    targets: 4,
+                    targets: 6,
                     render: function(data, type, full, meta) {
                         var status = {
                             2 : { 'title': _Pending, 'class': 'warning' },
@@ -250,7 +250,7 @@ var KTUsersLoadRecharge = function() {
                 },
                 {
                     orderable: !1,
-                    targets: 6,
+                    targets: 8,
                     visible: (!pDownload && !pRefresh) ? false : true,
                     render : function (data,type, full, meta) {
                         var downloadIcon =  `<button class="btn btn-icon btn-active-light-primary w-30px h-30px me-3 download" data-id=`+data.uid+`>
@@ -273,6 +273,10 @@ var KTUsersLoadRecharge = function() {
                     { data: 'ref'},
 
                     { data: 'amount', responsivePriority: -5},
+
+                    { data: 'soldeBefore', responsivePriority: -5},
+
+                    { data: 'soldeAfter', responsivePriority: -5},
 
                     { data: 'emailS', responsivePriority: -4  },
 

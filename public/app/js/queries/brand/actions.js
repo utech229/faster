@@ -11,6 +11,7 @@ $(document).on('click', '#lauch_modal_submit_folder', function(e){
 $(document).on('click', '.updateBrand', function(e){
     e.preventDefault();
     $('#waiting').modal('show');
+
     $.ajax({
         url: checkbrand,
         type: "post",
@@ -28,7 +29,11 @@ $(document).on('click', '.updateBrand', function(e){
             $('#thisU').val(r.manager[1]);
             $('#_uSelect').val(r.manager[0]).trigger('change');
             $('#waiting').modal('hide');
+            var cover = user_brand_logo_link .replace("_1_", r.uriLogo);
+            $("#logo_input").css("background-image", "url(" + cover + ")");
             $('#kt_modal_create_folder').modal('show');
+
+
         },
         error: function () {
             // $(document).trigger('entityUpStop', ['#editUserOption', uid, 'fa-edit']);
