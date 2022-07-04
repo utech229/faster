@@ -53,8 +53,8 @@ class SecurityController extends AbstractController
 
         return $this->render('security/'.$this->brand->get()['loginform'], 
         [
-            'last_username' => $lastUsername, 
-            'error' => $error,
+            'last_username'   => $lastUsername, 
+            'error'           => $error,
             'title'           => $this->intl->trans('Connexion').' - '. $this->brand->get()['name'],
             'menu_text'       => $this->intl->trans('Connexion'),
             'brand'           => $this->brand->get(),

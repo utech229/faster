@@ -343,8 +343,8 @@ class DbInitData extends AbstractController
 
     public function addStatus():void
     {
-            $statusCodes = [0,1,2,3,4,5,6,7,8,9];
-            $statusNames = [ "Programmé","En cours", "En attente", "Actif", "Désactivé", "Suspendu", "Approuvé", "Annulé","Supprimé", "Rejeté"];
+        $statusCodes = [0,1,2,3,4,5,6,7,8,9,10,11];
+            $statusNames = [ "Programmé","En cours", "En attente", "Actif", "Désactivé", "Suspendu", "Approuvé", "Annulé", "Délivré", "Rejeté","Brouillon","Supprimé"];
             $statusDescription = [
                 "Statut programmé sur une entité",
                 "Statut en cours  d'une entité",
@@ -353,21 +353,11 @@ class DbInitData extends AbstractController
                 "Statut désactivé d'une entité",
                 "Statut suspendu d'une entité",
                 "Statut approuvé d'une entité",
-                "Statut annulé d'une entité",
+				"Statut annulé d'une entité",
+				"Statut délivré d'une entité",
+				"Statut rejeté d'une entité",
+                "Statut brouillon d'une entité",
                 "Statut supprimé d'une entité",
-                "Statut rejeté d'une entité"
-            ];
-            $statusLabel = [
-                "primary",
-                "warning",
-                "warning",
-                "success",
-                "danger",
-                "danger",
-                "success",
-                "danger",
-                "secondary",
-                "danger"
             ];
             for ($i=0; $i < (count($statusCodes)); $i++) {
                 $status  = $this->statusRepository->findOneBy(['code' => $statusCodes[$i]]);
@@ -378,12 +368,9 @@ class DbInitData extends AbstractController
                     $status->setName($statusNames[$i]);
                     $status->setDescription($statusDescription[$i]);
                     $status->setCreatedAt(new \DatetimeImmutable());
-                    $status->setLabel($statusLabel[$i]);
                     $this->em->persist($status);
                 }
             }
-            $this->em->flush();
-            $response = true;
     }
 
     public function addRoute():void
