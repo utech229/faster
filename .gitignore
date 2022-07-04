@@ -10,3 +10,5 @@
 /config/packages/framework.yaml.local
 #/vendor/
 ###< symfony/framework-bundle ###
+config/packages/framework.yaml
+config/packages/framework.yaml

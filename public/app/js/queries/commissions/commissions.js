@@ -231,17 +231,8 @@ var KTTransactionsList = function() {
                 $('[data-kt-commission-table-filter="user"]').on('change', function() {
                     e.ajax.reload();
                 }),
-                // document.querySelector('[data-kt-transaction-table-filter="reset"]').addEventListener("click", (function() {
-                //     document.querySelector('[data-kt-transaction-table-filter="form"]').querySelectorAll("select").forEach((e => {
-                //             $(e).val("").trigger("change");
-                //         })),
-                //         e.search("").draw()
-                // })),
                 c(), 
                 (() => {
-                    // const t = document.querySelector('[data-kt-transaction-table-filter="form"]'),
-                    //     n = t.querySelector('[data-kt-transaction-table-filter="filter"]'),
-                    //     r = t.querySelectorAll("select");
                     n.addEventListener("click", (function() {
                         var t = "";
                         r.forEach(((e, n) => {

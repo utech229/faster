@@ -34,7 +34,6 @@ $(document).on('click', ".userDeleter", function() {
 						}
 					});
 					if (response.status === 'success'){
-						statisticsReload(),
 						tableReloadButton.click();	
 					}
 				},

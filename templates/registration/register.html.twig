@@ -6,135 +6,12 @@
     {% for flash_error in app.flashes('verify_email_error') %}
         <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
     {% endfor %}
-
-    {% if app.request.query.get('ref') is empty %}
-        {% set ureferralCode = brand.default_ref_code %}
-    {% else %}
-        {% set ureferralCode = app.request.query.get('ref') %}
-    {% endif %}
     
     <!--begin::Wrapper-->
-    <div class="w-lg-600px bg-body rounded shadow-sm p-10 p-lg-15 mx-auto">
+    <div class="w-lg-600px bg-body rounded shadow-sm p-10 p-lg-15 mx-auto border border-dashed border-primary">
+        {% include 'section/login.intl.dropdown.html.twig' %}
         <!--begin::Form-->
-         {{ form_start(registrationForm,{'attr': {'class': 'form w-100','novalidate': 'novalidate','id':'kt_sign_up_form' }}) }}
-        {#<form class="form w-100" novalidate="novalidate" id="kt_sign_up_form">#}
-            <!--begin::Heading-->
-            <div class="mb-10 text-center">
-                <!--begin::Title-->
-                <h1 class="text-dark mb-3">{% trans %}Créer un compte {% endtrans %}</h1>
-                <!--end::Title-->
-                <!--begin::Link-->
-                <div class="text-gray-400 fw-bold fs-4">{% trans %}Vous avez déjà un compte {% endtrans %}
-                <a href="{{ path('app_login') }}" class="link-primary fw-bolder">{% trans %}se connecter {% endtrans %}</a></div>
-                <!--end::Link-->
-            </div>
-            <!--end::Heading-->
-            <!--begin::Action-->
-            <button type="button" class="btn btn-light-primary fw-bolder w-100 mb-10">
-            <img alt="Logo" src="{{ asset('app/media/svg/brand-logos/google-icon.svg') }}" class="h-20px me-3" />{% trans %}S'inscrire avec google {% endtrans %}</button>
-            <!--end::Action-->
-            <!--begin::Separator-->
-            <div class="d-flex align-items-center mb-10">
-                <div class="border-bottom border-gray-300 mw-50 w-100"></div>
-                <span class="fw-bold text-gray-400 fs-7 mx-2">{% trans %}OU{% endtrans %}</span>
-                <div class="border-bottom border-gray-300 mw-50 w-100"></div>
-            </div>
-            <!--end::Separator-->
-            <!--begin::Input group-->
-            <div class="row fv-row mb-7">
-                <!--begin::Col-->
-                <div class="col-xl-6">
-                    <label class="form-label fw-bolder text-dark fs-6 required">{% trans %}Prénoms{% endtrans %}</label>
-                     {{ form_row(registrationForm.firstName, {'attr': {'class': 'form-control form-control-lg form-control-solid',
-                     'autocomplete':"off" ,'placeholder': '', 'value' : 'Enock', 'maxlength': '25' }}) }}
-                </div>
-                <!--end::Col-->
-                <!--begin::Col-->
-                <div class="col-xl-6">
-                    <label class="form-label fw-bolder text-dark fs-6 required">{% trans %}Noms{% endtrans %}</label>
-                    {{ form_row(registrationForm.lastName, {'attr': {'class': 'form-control form-control-lg form-control-solid',
-                    'autocomplete':"off" ,'placeholder': '', 'value' : 'ATEDEKON', 'maxlength': '25' }}) }}
-                    {{ form_row(registrationForm.referrerCode, {'attr': {'value' : ureferralCode }}) }}
-                </div>
-                <!--end::Col-->
-            </div>
-            <!--end::Input group-->
-             <!--begin::Input group-->
-            <div class="row fv-row mb-7">
-                <!--begin::Col-->
-                <div class="col-xl-6">
-                    <label class="form-label fw-bolder text-dark fs-6 required">{% trans %}Email{% endtrans %}</label>
-                    {{ form_row(registrationForm.email, {'attr': {'class': 'form-control form-control-lg form-control-solid',
-                    'type': 'email','placeholder': 'monemail@...com' ,'value' : 'enockiatk@gmail.com' }}) }}
-                </div>
-                <!--end::Col-->
-                <!--begin::Col-->
-                <div class="col-xl-6">
-                    <label class="form-label fw-bolder text-dark fs-6 required">{% trans %}Téléphone{% endtrans %} </label>
-                    {{ form_row(registrationForm.phone, {'attr': {'class': 'form-control form-control-lg form-control-solid', 
-                    'value' : '96117156', onkeyup:'verif_nombre(this)' }}) }}
-                </div>
-            </div>
-            <!--end::Input group-->
-            <!--begin::Input group-->
-            <div class="mb-10 fv-row" data-kt-password-meter="true">
-                <!--begin::Wrapper-->
-                <div class="mb-1">
-                    <!--begin::Label-->
-                    <label class="form-label fw-bolder text-dark fs-6 required">{% trans %}Mot de passe{% endtrans %}</label>
-                    <!--end::Label-->
-                    <!--begin::Input wrapper-->
-                    <div class="position-relative mb-3">
-                        {#<input class="form-control form-control-lg form-control-solid" type="password" placeholder="" name="password" autocomplete="off" />#}
-                        {{ form_row(registrationForm.plainPassword, {'attr': {'class': 'form-control form-control-lg form-control-solid',
-                        value: '@21061AdminDefault','maxlength': '30' }}) }}
-                        <span class="btn btn-sm btn-icon position-absolute translate-middle top-50 end-0 me-n2" data-kt-password-meter-control="visibility">
-                            <i class="bi bi-eye-slash fs-2"></i>
-                            <i class="bi bi-eye fs-2 d-none"></i>
-                        </span>
-                    </div>
-                    <!--end::Input wrapper-->
-                    <!--begin::Meter-->
-                    <div class="d-flex align-items-center mb-3" data-kt-password-meter-control="highlight">
-                        <div class="flex-grow-1 bg-secondary bg-active-success rounded h-5px me-2"></div>
-                        <div class="flex-grow-1 bg-secondary bg-active-success rounded h-5px me-2"></div>
-                        <div class="flex-grow-1 bg-secondary bg-active-success rounded h-5px me-2"></div>
-                        <div class="flex-grow-1 bg-secondary bg-active-success rounded h-5px"></div>
-                    </div>
-                    <!--end::Meter-->
-                </div>
-                <!--end::Wrapper-->
-                <!--begin::Hint-->
-                <div class="text-muted">{% trans %}Utilisez 8 caractères ou plus avec un mélange de lettres, de chiffres et de symboles.{% endtrans %}</div>
-                <!--end::Hint-->
-            </div>
-            <!--end::Input group=-->
-            <!--begin::Input group-->
-            <div class="fv-row mb-5">
-                <label class="form-label fw-bolder text-dark fs-6 required">{% trans %}Confirmez le mot de passe{% endtrans %}</label>
-                <input class="form-control form-control-lg form-control-solid" type="password" id="cpasssword" value="@21061AdminDefault" name="confirm-password" autocomplete="off" />
-            </div>
-            <!--end::Input group-->
-            <!--begin::Input group-->
-            <div class="fv-row mb-10">
-                <label class="form-check form-check-custom form-check-solid form-check-inline">
-                     {{ form_row(registrationForm.agreeTerms, {'attr': {'class': 'form-check-input','type' : 'checkbox', value: 1,' placeholder': '..........' }}) }}
-                    <span class="form-check-label fw-bold text-gray-700 fs-6">{% trans %}J'accepte {% endtrans %}
-                    <a href="#" class="ms-1 link-primary">{% trans %}les termes et conditions d'utilisation.</a>{% endtrans %}</span>
-                </label>
-            </div>
-            <!--end::Input group-->
-            <!--begin::Actions-->
-            <div class="text-center">
-                <button type="submit" id="kt_sign_up_submit" class="btn btn-lg btn-primary">
-                    <span class="indicator-label">{% trans %}Enrégistrer{% endtrans %}</span>
-                    <span class="indicator-progress">{% trans %}Patienter...{% endtrans %}
-                    <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
-                </button>
-            </div>
-            <!--end::Actions-->
-        {#</form>#}
-        {{ form_end(registrationForm) }}
+        {% include 'registration/form.html.twig' %}
         <!--end::Form-->
     </div>
     <!--end::Wrapper-->
@@ -143,26 +20,6 @@
 {% block javascripts %} 
 <!--begin::Page Custom Javascript(used by this page)-->
 <script>
-    function verif_nombre(phone) {
-        var chiffres = new RegExp("[0-9]");
-        var verif;
-        var points = 0;
-
-        for (x = 0; x < phone.value.length; x++) {
-            verif = chiffres.test(phone.value.charAt(x));
-            if (phone.value.charAt(x) == ".") {
-                points++;
-            }
-            if (points > 1) {
-                verif = false;
-                points = 1;
-            }
-            if (verif == false) {
-                phone.value = phone.value.substr(0, x) + phone.value.substr(x + 1, phone.value.length - x + 1);
-                x--;
-            }
-        }
-    }
     const register_url = "{{path('app_register')}}";
     const login_url    = "{{path('app_login', {'slug': 'registered'})}}";
 </script>

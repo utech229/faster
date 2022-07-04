@@ -1,8 +1,10 @@
 "use strict";
 
-$(document).on('click', ".paymentDeleter", function() {
-	var uid = $(this).data('id');
-	$(document).trigger('entityUpBegin', ['#deletePaymentOption', uid, 'fa-trash-alt']);
+$(document).on('click', ".contactDeleter", function() {
+	let uid = $(this).data('id');
+    let tabUid  =  [];
+    tabUid.push(uid);
+	$(document).trigger('entityUpBegin', ['#', uid, 'fa-trash-alt']);
 	Swal.fire({
 		text: _Deletion_request,
 		icon: "warning",
@@ -16,37 +18,36 @@ $(document).on('click', ".paymentDeleter", function() {
 		}
 	}).then(function(result) {
 		if (result.value) {
-			loading(true);
 			$.ajax({
-				url: window.location.href +'/'+ uid + '/delete',
+				url: contact_delete,
 				type: "post",
-				data: {uid : uid, _token : csrfToken},
+				data: { tabUid: tabUid, _token: function(){ return csrfToken; }},
 				dataType: "json",
 				success: function(response) {
-					$(document).trigger('securityFirewall', [response, '#deletePaymentOption', uid, 'fa-trash-alt']);
-					if (response.status === 'success') 
+					$(document).trigger('securityFirewall', [response, '#', uid, 'fa-trash-alt']);
 					Swal.fire({
-						text: response.message,
-						icon: response.status,
-						buttonsStyling: false,
-						confirmButtonText: _Form_Ok_Swal_Button_Text_Notification,
-						customClass: {
-							confirmButton: "btn btn-primary"
-						}
-					});
-					loading();
-					$(document).trigger('entityUpStop', ['#deletePaymentOption', uid, 'fa-trash-alt']),
-					tableReloadButton.click();
+                        text: response.message,
+                        icon: response.type,
+                        buttonsStyling: false,
+                        confirmButtonText: _Form_Ok_Swal_Button_Text_Notification,
+                        customClass: {
+                            confirmButton: "btn btn-primary"
+                        }
+                    });
+                    if (response.status === 'success') {
+
+                        $(document).trigger('entityUpStop', ['#', uid, 'fa-trash-alt']);
+                        $('#kt_modal_add_contact_reload_button').click();
+                    }
 				},
                 error:function(response) {
 					$(document).trigger('onAjaxError');
-					loading();
+					$(document).trigger('entityUpStop', ['#', uid, 'fa-trash-alt']);
 				}
 			});	
 		} else if (result.dismiss === 'cancel') {
-			$(document).trigger('entityUpStop', ['#deletePaymentOption', uid, 'fa-trash-alt']),
+			$(document).trigger('entityUpStop', ['#', uid, 'fa-trash-alt']);
 			$(document).trigger('onAjaxInfo');
-			loading();
 		}
 	});
 	

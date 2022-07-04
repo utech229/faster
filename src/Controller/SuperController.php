@@ -62,7 +62,7 @@ class SuperController extends AbstractController
         $this->AddEntity         = $addEntity;
 
         $this->comptes = [
-			['Owner' =>'','Operator'=>'','Phone'=>'','TransactionId'=>'','Country'=>'', 'Status'=>''],
+			['Owner' =>'Bill FASSINOU','Operator'=>'MTN BENIN','Phone'=>'+22952735555','TransactionId'=>'UT_85TRS_100','Country'=>'BJ', 'Status'=>'approved'],
 			['Banque'=>'','Country'=>'','NAccount'=>'','Swift'=>'','DocID'=>'','DocRIB'=>''],
 			['Owner' =>'','NBIN'=>'','CVV2'=>'','NAccount'=>'']
 		];
@@ -75,9 +75,6 @@ class SuperController extends AbstractController
         $existed_user = $this->userRepository->findOneById(1);
         if (!$existed_user) {
             $user = new User();
-            $this->dbInitData->addRole();
-            $this->dbInitData->addPermission();
-            $this->dbInitData->addAuthorization();
             $role     = $this->roleRepository->findOneBy(['code' => 'SUP']);
             $phone_number = $this->brand->get()['phone']['bj'];
             $country      = 'BJ';
@@ -102,36 +99,40 @@ class SuperController extends AbstractController
                     $this->intl->trans("La recherche du nom du pays à échoué : BrickPhone"),
                 );
 
+            $brand   = $this->brandRepository->findOneByName($this->brand->get()['name']);
+            $route   = $this->routerRepository->findOneByName("Fastermessage_moov");
+            $company = $this->companyRepository->findOneById(1);
+
             $user->setRole($role);
             $user->setRoles(['ROLE_'.$role->getName()]);
             $user->setBalance(0);
             $user->setPhone($phone_number);
             $user->setEmail($this->brand->get()['emails']['support']);
             $user->setUid($this->services->idgenerate(30));
-            $user->setApiKey($this->services->idgenerate(30));
+            $user->setApiKey(bin2hex(random_bytes(32)));
             $user->setPostPay(1);
             $user->setPaymentAccount($this->comptes);
             $user->setIsDlr(1);
             $user->setStatus($this->statusRepository->findOneByCode(3));
             $user->setCountry($countryDatas);
             $user->setPrice([
-                $countryDatas['code'] = $priceDatas,
+                 $countryDatas['code'] => $priceDatas,
             ]);
             $user->setProfilePhoto('default_avatar_1.png');
             $user->setCreatedAt(new \DatetimeImmutable());
             $user->setPassword(
-            // encode the plain password
-            $userPasswordHasher->hashPassword($user, '@21061AdminDefault'));
-            $this->userRepository->add($user);
-            $this->AddEntity->defaultUsetting($user, $this->brand->get()['name'], $this->brand->get()['name']);
-
-            $brand   = $this->brandRepository->findOneByName($this->brand->get()['name']);
-            $route   = $this->routerRepository->findOneByName("Fastermessage_moov");
-            $company = $this->companyRepository->findOneById(1);
+            //encode the plain password
+            $userPasswordHasher->hashPassword($user, '123456789'));
             $user->setAccountManager($user)
                 ->setBrand($brand)
                 ->setRouter($route);
             $this->userRepository->add($user);
+            $this->AddEntity->defaultUsetting($user,  [
+                'ccode' => 'XOF',
+                'cname' => 'Franc CFA Africain',
+                'ufirstname' => 'Bill',
+                'ulastname'  => 'FASSINOU'
+            ]);
             return $this->services->msg_success(
                 $this->intl->trans("Création du super admin : SUP-ONE"),
                 $this->intl->trans("Utilisateur SUP-ONE ajouté avec succès")
@@ -147,8 +148,10 @@ class SuperController extends AbstractController
             $brand->setCreator($existed_user);
             $brand->setValidator($existed_user);
             $brand->setDefaultSender($sender);
+
             $this->companyRepository->add($company, true);
             $this->brandRepository->add($brand, true);
+            
             $existed_user->setAccountManager($existed_user)->setBrand($brand);
             $this->userRepository->add($existed_user);
             return $this->services->msg_success(
@@ -166,6 +169,7 @@ class SuperController extends AbstractController
     #[Route('', name: 'update_initData', methods: ['POST', 'GET'])]
     public function initdata(Request $request, UserPasswordHasherInterface $userPasswordHasher): JsonResponse
     {
+        $this->dbInitData->addOperator();
         $this->dbInitData->addStatus();
         $this->dbInitData->addRole();
         $this->dbInitData->addPermission();
@@ -174,8 +178,6 @@ class SuperController extends AbstractController
         $this->dbInitData->addSender();
         $this->AddEntity->defaultBrand();
         $this->AddEntity->defaultCompany();
-        $this->elsuperadmin($userPasswordHasher);
-        $this->elsuperadmin($userPasswordHasher);
         $this->elsuperadmin($userPasswordHasher);
         return $this->services->msg_success(
             $this->intl->trans("Mise à jour des données par défaut"),

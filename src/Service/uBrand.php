@@ -34,8 +34,8 @@ class uBrand extends AbstractController
         return[
            'name'               => $brand->getName(),
            'site_url'           => $brand->getSiteUrl(),
-           'logo'               => $brand->getLogo(),
-           'white_logo'         => $brand->getLogo(),
+           'logo'               => strtolower($brand->getLogo()),
+           'white_logo'         => strtolower($brand->getLogo()),
            'favicon'            => $brand->getFavicon(),
            'apple_touch_icon'   => $brand->getLogo(),
            'phone'              => $brand->getName(),
@@ -50,8 +50,8 @@ class uBrand extends AbstractController
            ],
            'year'               => date('Y'),
            'brand'              =>  $brand,
-
-           
+           'loginform'           => ($brand->getName() == "FASTERMESSAGE") ? "login.html.twig" : "login2.html.twig",           
+           'regisform'           => ($brand->getName() == "FASTERMESSAGE") ? "register.html.twig" : "register2.html.twig",           
        ];
     }
   

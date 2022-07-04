@@ -8,6 +8,7 @@ use App\Entity\Brand;
 use App\Service\BaseUrl;
 use App\Service\Services;
 use App\Entity\User;
+use App\Entity\Recharge;
 use App\Entity\Status;
 use App\Service\AddEntity;
 
@@ -18,6 +19,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use App\Repository\UserRepository;
 use App\Repository\BrandRepository;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -38,51 +40,62 @@ class BrandController extends AbstractController
         $this->addEntity	   = $addEntity;
         $this->uRepository     = $userRepository;
         $this->bRepository     = $brandRepository;
-        $this->permission      = ["REC0", "REC1", "REC2", "REC3", "REC4", "REC5"];
+        $this->permission      = ["BRND0", "BRND1", "BRND2", "BRND3", "BRND4", "BRND5"];
         $this->pAccess         = $this->services->checkPermission($this->permission[0]);
-        $this->pRecharge       = $this->services->checkPermission($this->permission[1]);
-        $this->pAllAccess      = $this->services->checkPermission($this->permission[5]);
-        $this->pRechargeUser   = $this->services->checkPermission($this->permission[2]);
-        $this->pManager        = $this->services->checkPermission($this->permission[4]);
-        //0--> Vérifier le statut; 1--> Annuler une recharge;
-        $updateRecharge        = ['DPF3qslEgI46', 'cglN0BPfxX33'];
+        $this->pCreate         = $this->services->checkPermission($this->permission[1]);
+        $this->pUpdate         = $this->services->checkPermission($this->permission[3]);
+        $this->pADelete        = $this->services->checkPermission($this->permission[4]);
+        $this->pAllAccess      = $this->services->checkPermission($this->permission[2]);
+        $this->ext             = ['jpg', 'png' , 'JPG', 'PNG', 'JPEG'];
+
     }
 
+    //Load index page of brand
     #[Route('{_locale}/brand', name: 'brand')]
     public function index(): Response
     {
+        if(!$this->pAccess){
+            $this->addFlash('error', $this->intl->trans("Tentative d'accès à la page marque échouée.")); return $this->redirectToRoute("app_home");
+        }
+        $inBrand   = $users = false;
+        $checkEtat = $this->services->checkThisUser($this->pAllAccess);
+        switch($checkEtat[0]){
+            case 0: $inBrand  = true; $users = $this->uRepository->findAll(); break;
+            case 1: $inBrand  = true; $users = $this->services->getUserByPermission('MANGR'); break;
+            case 2: $inBrand  = $this->bRepository->findOneBy(['manager'=> $this->getUser()]); break;
+            case 4: $inBrand  = $this->bRepository->findOneBy(['manager'=> $this->getUser()]); break;
+            default: $inBrand = $this->bRepository->findOneBy(['manager'=> $this->getUser()->getAffiliationManager()]); break;
+        }
 
-        $user= $this->bRepository->findOneBy(['manager'=> $this->getUser()]);
-        $vCreateDiv = (!$user) ? true : false;
-
-        // dd($vCreateDiv);
-        // dd($this->services->checkThisUser($this->pAllAccess, $this->pManager, NULL, $this->getUser()));
         return $this->render('brand/index.html.twig', [
             'controller_name' => 'BrandController',
-            'brand'              => $this->brand->get(),
-            'sStatus'     => $this->em->getRepository(Status::class)->findByCode([6,2,7]),
-            'pAccess'     => $this->pAccess,
-            'sBrand'      => $this->em->getRepository(Brand::class)->findByStatus($this->services->status(3)),
-            'baseUrl'            => $this->baseUrl->init(),
-            'title'              => $this->intl->trans('Mes marques'),
-            'pageTitle'          => [
-                                        [$this->intl->trans('Gestion des marques')],
+            'brand'           => $this->brand->get(),
+            'sStatus'         => $this->em->getRepository(Status::class)->findByCode([6,2,7]),
+            'pAccess'         => $this->pAccess,
+            'pAllAcess'       => $this->pAllAccess,
+            'sBrand'          => $this->bRepository->findByStatus($this->services->status(3)),
+            'baseUrl'         => $this->baseUrl->init(),
+            'title'           => $this->intl->trans('Mes marques'),
+            'pageTitle'       => [
+                                    [$this->intl->trans('Gestion des marques')],
             ],
-            'vCreateDiv' => $vCreateDiv
+            'inBrand'         => $inBrand,
+            'users'           => $users
         ]);
     }
 
     #[Route('{_locale}/create_brand', name: 'create_brand')]
     public function createBrand(Request $request): Response
     {
-        if(!$this->isCsrfTokenValid($this->getUser()->getUid(), $request->request->get('_token'))) return $this->services->no_access($this->intl->trans("Initialisation d'une recharge pour l'utiliateur ").': '.$this->getUser()->getEmail());
-
+        if(!$this->isCsrfTokenValid($this->getUser()->getUid(), $request->request->get('_token'))) return $this->services->no_access($this->intl->trans("Initialisation d'une recharge pour utiliateur échouée"));
+        if(!$this->pAccess){return $this->services->msg_error(
+            $this->intl->trans("Tentative de validation de marque blanche échouée."), $this->intl->trans("Vous n'êtes pas autorisé(e) à effectuer cette action.")
+        );}
         $linkLogo   = 'loadPicture';
-        $buildImg = $this->addEntity->profilePhotoSetter($request , $this->getUser());
 
-        if (isset($buildImg['error']) && $buildImg['error'] == true){
-            return $this->services->ajax_error_crud($this->intl->trans('Traitement du fichier image de profile'), $avatarProcess['info']);
-        }
+        // $buildImg = $this->addEntity->profilePhotoSetter($request , $this->getUser());
+        // $buildImg = $this->addEntity->imageSetter($request , $this->getUser());
+
         $user       = $this->getUser();
         $isSelect   = $request->request->get('uSelect');
         if($isSelect){
@@ -90,7 +103,7 @@ class BrandController extends AbstractController
             if(!$user) return $this->services->msg_error($this->intl->trans("Utilisateur incorrect.").': '.$this->getUser()->getEmail(), $this->intl->trans("L'utilisateur sélectionné n'existe pas ou n'est pas actif."));
         }
 
-        $executeReq = $this->services->checkThisUser($this->pAllAccess, $this->pManager, NULL, $user);
+        $executeReq  = $this->services->checkThisUser($this->pAllAccess, NULL, NULL, $user);
         if($executeReq[0]== 0 || $executeReq[0] == 1){
             $creator = $this->getUser();
             $manager = $user;
@@ -99,95 +112,179 @@ class BrandController extends AbstractController
             $manager = $this->getUser();
         }
 
-        $newBrand   = new Brand;
-        $newBrand-> setManager($manager)
-                    -> setStatus($this->services->status(1))
-                    -> setUid($this->services->getUniqid())
-                    -> setName($request->request->get('_name_brand'))
-                    -> setSiteUrl($request->request->get('_url_brand'))
-                    -> setLogo($buildImg)
-                    -> setFavicon($buildImg)
-                    -> setEmail($request->request->get('_mail_support'))
-                    -> setNoreplyEmail($request->request->get('_mail_noreply'))
-                    -> setIsDefault(1)
-                    -> setPhone($request->request->get('_phone_support'))
-                    -> setCreatedAt(new \DatetimeImmutable())
-                    -> setCommission(0)
-                    -> setCreator($creator);
-        $this->bRepository->add($newBrand);
-
-        return $this->services->msg_success(
-            $this->intl->trans("Création de marque ").': '.$this->getUser()->getEmail(),
-            $this->intl->trans("Votre dossier de création de marque a été soumis avec succès.")
-        );
-
+        if($request->request->get('thisU')){
+            $inBrand = $this->bRepository->findOneBy(['uid'=> $request->request->get('thisU')]);
+            //Permettre également à l'utilisateur de pouvoir changer le statut
+            if($inBrand){
+                /** @var UploadedFile $logo */
+                $logo = $request->files->get("_logo");
+                if (isset($logo) && $logo->getError() == 0) {$loadFile  = $this->services->checkFile($logo, $this->ext, 1024000);
+                    if($loadFile['error'] ==false ){ $targetPath = "app/uploads/brands/logos/"; $new_file_name  = $inBrand->getUid();
+                        $upload_result  = $this->services->renameFile($logo, $targetPath, 1, $new_file_name, $new_file_name);
+                    }else{
+                        return $this->services->msg_error($this->intl->trans("Image logo sélectionnée incorrecte."), $this->intl->trans("Le format du logo que vous avez sélectionné est incorrect ou la taille est trop grande. veuillez choisir une autre image SVP."));
+                    }
+                    // dd($upload_result);
+                }
+                $inBrand-> setManager($manager)
+                        -> setName($request->request->get('_name_brand'))
+                        -> setSiteUrl($request->request->get('_url_brand'))
+                        -> setLogo('$buildImg')
+                        -> setFavicon('$buildImg')
+                        -> setEmail($request->request->get('_mail_support'))
+                        -> setNoreplyEmail($request->request->get('_mail_noreply'))
+                        -> setIsDefault(1)
+                        -> setPhone($request->request->get('_phone_support'))
+                        -> setCreatedAt(new \DatetimeImmutable())
+                        -> setCreator($creator);
+                        // -> setObservations($request->request->get('observations'));
+                        $this->bRepository->add($inBrand);
+                $msg1 =$this->intl->trans("Modification de marque blanche").': '.$this->getUser()->getEmail();
+                $msg2 = $this->intl->trans("La marque a été modifiée avec succès.");
+            }else{
+                return $this->services->msg_error($this->intl->trans("La marque est inexistante."), $this->intl->trans("Impossible de continuer cette action ! Contactez les administrateurs si vous pensez que c'est une erreur."));
+            }
+        }else{
+            $existBrand = $this->bRepository->findOneBy(['name'=> $request->request->get('_name_brand')]);
+            if($existBrand){ return $this->services->msg_error($this->intl->trans("Création de marque échouée."), $this->intl->trans("Ce nom de marque n'est pas disponible. Veuillez changer le nom pour continuer."));}
+            $uid = $this->services->getUniqid();
+            /** @var UploadedFile $logo */
+            $logo = $request->files->get("_logo");
+            if (isset($logo) && $logo->getError() == 0) {$loadFile  = $this->services->checkFile($logo, $this->ext, 1024000);
+                if($loadFile['error'] ==false ){$targetPath     = "app/uploads/brands/logos/"; $new_file_name  = $uid;
+                    $upload_result  = $this->services->renameFile($logo, $targetPath, 1, $new_file_name, $new_file_name);
+                }else{
+                    return $this->services->msg_error($this->intl->trans("Image logo sélectionnée incorrecte."), $this->intl->trans("Le format du logo que vous avez sélectionné est incorrect ou la taille est trop grande. veuillez choisir une autre image SVP."));
+                }
+                // dd($upload_result);
+            }
+            // $buildImg = $this->services->imageSetter($request , $request->request->get('_name_brand'));
+            // dd($buildImg);
+            // if (isset($buildImg['error']) && $buildImg['error'] == true){
+            //     return $this->services->ajax_error_crud($this->intl->trans('Traitement du fichier image de profil'), $avatarProcess['info']);
+            // }
+            $newBrand   = new Brand;
+            $newBrand   -> setManager($manager)
+                        -> setStatus($this->services->status(1))
+                        -> setUid($uid)
+                        -> setName($request->request->get('_name_brand'))
+                        -> setSiteUrl($request->request->get('_url_brand'))
+                        -> setLogo($upload_result)
+                        -> setFavicon($upload_result)
+                        -> setEmail($request->request->get('_mail_support'))
+                        -> setNoreplyEmail($request->request->get('_mail_noreply'))
+                        -> setIsDefault(1)
+                        -> setPhone($request->request->get('_phone_support'))
+                        -> setCreatedAt(new \DatetimeImmutable())
+                        -> setCommission(0)
+                        -> setCreator($creator);
+            $this->bRepository->add($newBrand);
+            $msg1 =$this->intl->trans("Création de marque ").': '.$this->getUser()->getEmail();
+            $msg2 = $this->intl->trans("Votre dossier de création de marque a été soumis avec succès.");
+            //Envoie de mail pour la création de marque blanche
+        }
+        return $this->services->msg_success($msg1,$msg2);
+    }
+    //This function reload brand
+    #[Route('{_locale}/rbrand', name: 'rbrand')]
+    public function validateBrand(Request $request): Response
+    {
+        if(!$this->isCsrfTokenValid($this->getUser()->getUid(), $request->request->get('_token'))) return $this->services->no_access($this->intl->trans("Initialisation d'une recharge pour l'utiliateur "));
+        $executeReq = $this->services->checkThisUser($this->pAllAccess);
+        if($executeReq[0]== 0 || $executeReq[0] == 1){
+            $inBrand = $this->bRepository->findOneBy(['uid'=> $request->request->get('key')]);
+            if($inBrand){
+                $inBrand-> setStatus($this->services->status($request->request->get('st')))
+                        -> setUpdatedAt(new \DatetimeImmutable())
+                        -> setObservations($request->request->get('observations'))
+                        -> setValidator($this->getUser());
+                $this->bRepository->add($inBrand);
+                return $this->services->msg_success($this->intl->trans("Changement de statut."), $this->intl->trans("Le statut de la marque a été changé avec succès."));
+            }
+        }else{
+            return $this->services->msg_error(
+                $this->intl->trans("Tentative de validation de marque blanche échouée."),
+                $this->intl->trans("Vous n'êtes pas autorisé(e) à effectuer cette action.")
+            );
+        }
     }
 
-
-    public function getBrand($allAcess = NULL, $isSelect = NULL, $user = NULL){
+    //Use this function for check all brand make
+    public function getBrand($allAcess = NULL, $user = NULL, $manager = NULL){
         if($allAcess){
-            $allBrand = ($isSelect) ? $this->bRepository->findBy(['manager'=> $isSelect]) : $this->bRepository->findAll();
+            $allBrand = $this->bRepository->findAll();
+        }else if($manager){
+            $allBrand = [];
+            $getUsers  = $this->getUserByPermission('MANGR');
+            foreach($getUsers as $getUser){
+                $data = [];
+                if($this->bRepository->findBy(['manager'=> $getUser->getUser])){$data[] = $this->bRepository->findBy(['manager'=> $getUser->getUser]); $allBrand[] = $data;}
+            }
         }else{
-            $allBrand = ($isSelect) ? $this->bRepository->findBy(['manager'=> $isSelect]) : $this->bRepository->findBy(['user'=> $user]);
+            $allBrand = $this->bRepository->findBy(['manager'=> $user]);
         }
         return $allBrand;
     }
+
+    //This function is used to check brand info
+    #[Route('{_locale}/checkbrand', name: 'check_brand')]
+    public function checkbrand(Request $request){
+        if(!$this->isCsrfTokenValid($this->getUser()->getUid(), $request->request->get('_token'))) return $this->services->no_access($this->intl->trans("Initialisation d'une recharge pour l'utiliateur ").': '.$this->getUser()->getEmail());
+        $checkBrand      = $this->bRepository->findOneBy(['uid'=> $request->request->get('b') ]);
+        if(!$checkBrand){return $this->services->msg_error(
+            $this->intl->trans("Récupération détails de marque échouée."),
+            $this->intl->trans("La marque n'existe plus ou une erreur s'est produite. Si vous pensez à une erreur, contactez les administrateurs.")
+        );}
+        $infoBrand = [
+                        'name'      => $checkBrand->getName(),
+                        'manager'   => [$checkBrand->getManager()->getUid(), $checkBrand->getUid()],
+                        'urlSite'   => $checkBrand->getSiteUrl(),
+                        'adressS'   => $checkBrand->getEmail(),
+                        'adressN'   => $checkBrand->getNoreplyEmail(),
+                        'phone'     => $checkBrand->getPhone(),
+                        'uriLogo'   => $checkBrand->getLogo(),
+                        'status'    => $checkBrand->getStatus()->getCode(),
+                        // 'observation'    => $checkBrand->getStatus()->getCode()
+        ];
+        $this->services->addLog($this->intl->trans("Récupération des informations d'une marque de revente de la solution."));
+        return new JsonResponse($infoBrand);
+    }
+    //This function is used to check all brand
     #[Route('{_locale}/loadbrand', name: 'load_brand')]
     public function loadbrand(Request $request){
-        // if(!$this->isCsrfTokenValid($this->getUser()->getUid(), $request->request->get('_token'))) return $this->services->no_access($this->intl->trans("Initialisation d'une recharge pour l'utiliateur ").': '.$this->getUser()->getEmail());
-        $isSelect       = $request->get('uSelect');
-        $userSelect     = '';
-        if($isSelect){
-            $userSelect = $this->uRepository->findOneBy(['uid'=> $isSelect]);
-            if(!$userSelect) return $this->services->msg_error($this->intl->trans("Utilisateur inexistant.").': '.$this->getUser()->getEmail(), $this->intl->trans("L'utilisateur n'existe pas."));
+        if(!$this->isCsrfTokenValid($this->getUser()->getUid(), $request->request->get('_token'))) return $this->services->no_access($this->intl->trans("Initialisation d'une recharge pour l'utiliateur ").': '.$this->getUser()->getEmail());
+        if(!$this->pAccess){$this->addFlash('error', $this->intl->trans("Vous n'êtes pas autorisé(e) pour accéder à cette page !")); return $this->redirectToRoute("app_home");}
+        $checkEtat = $this->services->checkThisUser($this->pAllAccess);
+        switch($checkEtat[0]){
+            case 0: $allBrand  = $this->getBrand($this->pAllAccess); break;
+            case 1: $allBrand  = $this->getBrand($this->pAllAccess, NULL, 1); break;
+            case 2: $allBrand  = $this->getBrand($this->pAllAccess, $this->getUser()); break;
+            case 3: $allBrand  = $this->getBrand($this->pAllAccess, $this->getUser()->getAffiliateManager()); break;
+            case 4: $allBrand  = $this->getBrand($this->pAllAccess, $this->getUser()); break;
+            default: $allBrand = $this->getBrand($this->pAllAccess, $this->getUser()->getAffiliateManager()); break;
         }
-
-
-        if(!$this->pAllAccess){
-            if($this->pManager){
-                if($userSelect->getBrand()->getManager()->getUid() == $this->getUser()->getUid()){
-                    $allBrand = $this->getBrand($this->pAllAccess, $userSelect, $this->getUser());
-                }else{
-                    if(!$this->pAffiliate){
-                        $allBrand = $this->getBrand($this->pAllAccess, $userSelect, $this->getUser()->getAffiliateManager());
-                    }else{
-                        // $allBrand = ($userSelect->getId() == $this->getUser()->getAdmin()) ? $allBrand = $this->getBrand($this->pAllAccess, $userSelect, $this->getUser()) : [];
-                        if($userSelect->getId() == $this->getUser()->getAdmin()){
-
-                        }else{
-                            $allBrand = [];
-                        }
-                    }
-                }
-            }else{
-                $this->getUser()->getBrand()->getUid();
-                $inBrand      = $this->bRepository->findOneBy(['uid'=> $this->getUser()->getBrand()->getUid()]);
-                if($inBrand){
-                    // if()
-                }
-                $allBrand = ($this->getUser()->getId() == $userSelect->getId()) ? $this->getBrand($this->pAllAccess, $userSelect, $this->getUser()) : [];
-            }
-        }else{
-            $allBrand = $this->getBrand($this->pAllAccess, $userSelect, $this->getUser());
-        }
-        // dd($this->pAllAccess, $userSelect, $this->getUser());
         $data = [];
         if($allBrand){
             foreach($allBrand as $getBrand){
-                $row                 = array();
-                $row[]               = null;
-                $row[]               = $getBrand->getName();
-                $row[]               = $getBrand->getManager()->getEmail();
-                $row[]               = $getBrand->getSiteUrl();
-                $row[]               = $getBrand->getEmail();
-                $row[]               = ($this->intl->trans($getBrand->getStatus()->getName()));
-                $row[]               = $getBrand->getCreatedAt()->format("d-m-Y H:i");
-                $row[]               = ($getBrand->getStatus()->getName()== 'En attente' && $this->pAllAccess) ? '<a data-u="'.$getBrand->getUid().'" href="#"><i class="fa fa-delete">Actualisé</i></a>' : 'null';
-                $data[]              = $row;
+                $row                   = array();
+                $row['brand']          = $getBrand->getName();
+                $row['administrator']  = $getBrand->getManager()->getEmail();
+                $row['urlSite']        = $getBrand->getSiteUrl();
+                $row['emailV']         = ($getBrand->getValidator()) ? $getBrand->getValidator()->getEmail() : '';
+                $row['status']         = $getBrand->getStatus()->getCode();
+                $row['createdAt']      = $getBrand->getCreatedAt()->format("d-m-Y H:i");
+                $row['action']         = [
+                                            'uid'       => $getBrand->getUid(),
+                                            'status'    => $getBrand->getStatus()->getCode(),
+                                            'pvalidate' => $this->pAllAccess,
+                                            'link'      => 'https://'.$getBrand->getSiteUrl(),
+                                            'name'      => $getBrand->getName()
+                ];
+                $data[]                = $row;
             }
         }
         $output = array("data" => $data);
+        $this->services->addLog($this->intl->trans('Récupération de la liste des marques créées.'));
         return new JsonResponse($output);
-
     }
 }

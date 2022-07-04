@@ -371,4 +371,35 @@ class Services extends AbstractController
         else if(!$pBrand && !$session->getAffiliateManager()) return [4, $session->getId(), ["user"=>$session->getId()]]; // Utilisateur
         else if($session->getAffiliateManager()) return [5, $session->getAffiliateManager()->getId(), ["user"=>$session->getAffiliateManager()->getId()]]; // Affilié à un utilisateur
 	}
+
+
+    public function imageSetter($request , $_fileName, $isUpdating = false, $route = false)
+	{
+        dd("der");
+        $response = new Response();
+
+        $placeAvatar  = $this->getParameter($route);
+        $filename     = $_fileName;
+        $filepath     = $placeAvatar.$filename;
+
+		$response->headers->set('Content-Type', 'application/json');
+		$response->headers->set('Access-Control-Allow-Origin', '*');
+
+		$image_remove	=	$request->request->get("avatar_remove");
+		/** @var UploadedFile $SETTINGFILE */
+        $SETTINGFILE    =	$request->files->get('avatar');
+        $image  = ($image_remove == "1") ? "default_logo_1.png" : (($isUpdating) ? $filename : "default_logo_1.png" );
+        if(isset($SETTINGFILE) && $SETTINGFILE->getError() == 0){
+            $return	=	$this->services->checkFile($SETTINGFILE, ["jpeg", "jpg", "png", "JPEG", "JPG", "PNG"], 200024);
+            if($return['error'] == false) {
+                return $this->services->renameFile($SETTINGFILE, $placeAvatar, true, $placeAvatar, $filename);
+            }else
+                return [
+                    'error' => true,
+                    'info'  => $return['info'],
+                ];
+
+        } else
+        return $image;
+	}
 }

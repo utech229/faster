@@ -127,7 +127,7 @@ var KTUsersManagePayment = function() {
                                                     confirmButton: "btn btn-primary"
                                                 }
                                             })
-                                            if (response.type === 'success') {
+                                            if (response.type !== 'error') {
                                                 t.isConfirmed ,e.reset(), n.hide();
                                             }
 

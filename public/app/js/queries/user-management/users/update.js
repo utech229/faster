@@ -46,6 +46,8 @@ $(document).on('click', ".userUpdater", function(e) {
                 $('#user_phone').val(phone.substring(4, 20));
                 $('#user_is_dlr').val(r.data.isDlr).trigger('change');
                 $('#user_post_pay').val(r.data.isPostPay).trigger('change');
+                $('#user_currency').val(r.data.currency).trigger('change');
+                $('#user_currency').prop('disabled', true);
                 $('#user_role').val(r.data.role.code).trigger('change');
                 $('#kt_user_add_select2_country').val(r.data.countryCode).trigger('change');
                 $('#user_status').val(r.data.status).trigger('change');
@@ -70,6 +72,7 @@ $('#kt_modal_add_user').on('hidden.bs.modal', function(e) {
     $('#user_is_dlr').val('false').trigger('change');
     $('#user_post_pay').val('false').trigger('change');
     $("#modalbrand").prop('disabled', false);
+    $('#user_currency').prop('disabled', false);
     $("#brand_input").show()
 });
 

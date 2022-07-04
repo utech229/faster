@@ -29,7 +29,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         parent::__construct($registry, User::class);
     }
 
-    public function add(User $entity, bool $flush = false): void
+    public function add(User $entity, bool $flush = true): void
     {
         $this->getEntityManager()->persist($entity);
 
@@ -142,27 +142,6 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         ;
     }
 
-    public function countAllUsers()
-    {
-        return $this->createQueryBuilder('m')
-        ->select('COUNT(m.id)')
-        ->Where("m.status !=:status")
-        ->setParameter('status', 4)
-        ->getQuery()
-        ->getResult()
-        ;
-    }
-
-    public function countAllUsersByStatus($status)
-    {
-        return $this->createQueryBuilder('m')
-        ->Where("m.status =:status")
-        ->setParameter('status', $status)
-        ->select('COUNT(m.id)')
-        ->getQuery()
-        ->getResult()
-        ;
-    }
 
     // Retourne les utilisateur ayant un level de role inférieur à celui de l'utilisteur actuel
     public function findUserByLevel($level, $brand = null)
@@ -215,7 +194,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     /**
     * @return User[] Returns an array of User objects
     */
-    public function getUsersByPermission($codePermission, $userType = null, $user = null, $level = null)
+    public function getUsersByPermission($codePermission, $userType = null, $user = null, $level = null, $status = null)
     {
         $qb = $this->createQueryBuilder('u');
 
@@ -231,7 +210,6 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->andWhere('p.status = s')
             ->andWhere('r.status = s')
             ->andWhere('a.status = s')
-            //->andWhere('u.status = s')
             ->andWhere('u.brand = b');
 
         if($codePermission != "") {
@@ -255,7 +233,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
                 default: break;
             }
         }
-        
+
         $query = $qb->getQuery();
         //dd($query->execute());
         return $query->execute();

@@ -28,18 +28,21 @@ class sTransaction extends AbstractController
     {
         $user        = $this->getUser();
         $transaction = new Transaction();
-
+        $ref         = $this->services->idgenerate(12);
         $transaction->setUser($user);
-        $transaction->setTransactionId($data['idTransaction']);
-        $transaction->setReference($data['reference']);
+        $transaction->setReference($ref);
         $transaction->setAmount($data['amount']);
         $transaction->setBeforeBalance($user->getBalance());
-        $transaction->setAfterBalance($user->getBalance() - $data['amount']);
-        $transaction->setStatus($this->services->status(3));
+        $transaction->setAfterBalance($data['afterBalance']);
+        $transaction->setStatus($this->services->status(2));
         $transaction->setCreatedAt(new \DatetimeImmutable());
         $this->transactionRepository->add($transaction);
-        $this->services->addLog($this->intl->trans("Création de la transaction").' : '.$data['reference']);
-        return true;
+        $this->services->addLog($this->intl->trans("Création de la transaction").' : '.$ref);
+        return [
+            'reference' => $ref,
+            'status'    => true,
+            'entity'    => $transaction
+        ];
     }
     
 }

@@ -1,0 +1,73 @@
+{% extends 'base.login2.html.twig' %}
+
+{% block title %}
+	{{ title }}
+{% endblock %}
+
+{% block body %}
+
+	{% for flash_error in app.flashes('verify_email_error') %}
+		<div class="alert alert-danger" id="flashErrors" role="alert"></div>
+         <input type="hidden" name="flashErrors" id="flashErrors" class="flashErrors" value="{{ flash_error }}"></input>
+	{% endfor %}
+
+    {% if error %}
+          <input type="hidden" name="flashMessages" id="flashMessages" value="{{ error.messageKey|trans(error.messageData, 'security') }}"></input>
+    {% endif %}
+	<!--begin::Wrapper-->
+	<div class="d-flex flex-center p-15 shadow-sm bg-body rounded w-100 w-md-550px mx-auto ms-xl-20">
+		<!--begin::Form-->
+		{% include 'security/form.html.twig' %}
+		<!--end::Form-->
+	</div>
+
+{% endblock %}
+
+{% block javascripts %}
+	<!--begin::Page Custom Javascript(used by this page)-->
+	<script>
+		const login_url = "{{ path('app_login') }}";
+	</script>
+	<script src="{{ asset('app/js/queries/authentication/sign-in/general.js') }}"></script>
+	<!--end::Page Custom Javascript-->
+    <script>
+			var flashErrors		=  	$('#flashErrors').val();
+			var flashMessages	=  	$('#flashMessages').val();
+
+			if(flashErrors 	!= 	undefined)
+			{
+				Swal.fire({
+                        title: _Information,
+                        text: flashErrors,
+                        icon: "error",
+                        buttonsStyling: false,
+                        confirmButtonText:  _Form_Ok_Swal_Button_Text_Notification,
+                        customClass: {
+                            confirmButton: "btn btn-primary"
+                        }
+                });
+			}
+
+			if(flashMessages != 	undefined)
+			{
+				Swal.fire({
+                        title: _Information,
+                        text: flashMessages,
+                        icon: "warning",
+                        buttonsStyling: false,
+                        allowOutsideClick: false,
+                        confirmButtonText:  _Form_click_Swal_Button_Text_Notification,
+                        customClass: {
+                            confirmButton: "btn btn-primary"
+                        }
+                }).then(function (result) {
+                    if (result.value) {
+                        //location.reload(true);
+                    }
+                });
+			}
+
+
+    	</script>
+
+{% endblock %}

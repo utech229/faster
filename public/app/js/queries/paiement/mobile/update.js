@@ -2,7 +2,7 @@
 const paymentIDInput       = $('#payment_id');
 const tableReloadButton    = $('#kt_modal_add_payment_reload_button');
 const btn1 = $('#kt_modal_payment_request_treat_submit_reject') , 
-btn2 = $('#kt_modal_payment_request_treat_submit_validate');
+btn2 = $('#kt_modal_payment_request_treat_submit_validate') , transID = $('#idtransaction');
 
 $(document).on('entityUpBegin', function(e, identifier, id, icon) {
     $(identifier + id).removeClass("fa");
@@ -30,26 +30,20 @@ $(document).on('click', ".paymentUpdater", function(e) {
         success: function(r) {
             var statusColor, statusText;
             switch (r.data.status) {
-                case 0:
-                    statusColor = 'warning', statusText = 'Waiting';   
-                    break;
-                case 1:
-                    statusColor = 'success', statusText = 'Validated';
-                    btn1.hide()
-                    btn2.hide()
-                    $('#idtransaction').hide()
-                    break;
                 case 2:
-                    statusColor = 'danger', statusText = 'Rejected';
-                    btn1.hide()
-                    btn2.hide()
-                    $('#idtransaction').hide()
+                    statusColor = 'warning', statusText = _Pending;   
                     break;
-                case 3:
-                    statusColor = 'primary', statusText = 'Waiting';
+                case 6:
+                    statusColor = 'success', statusText = _Approved;
                     btn1.hide()
                     btn2.hide()
-                    $('#idtransaction').hide()
+                    transID.hide()
+                    break;
+                case 9:
+                    statusColor = 'danger', statusText = _Rejected;
+                    btn1.hide()
+                    btn2.hide()
+                    transID.hide()
                     break;
                 default:
                     break;
@@ -68,6 +62,7 @@ $(document).on('click', ".paymentUpdater", function(e) {
             (r.data.type == true) ? 
             document.getElementById("kt_modal_payment_type").checked = true:
             document.getElementById("kt_modal_payment_type").checked = false;
+            console.log(statusColor, statusText, r.data.status)
             $("#d_status").html('<span class="badge badge-light-' + statusColor + '">' + statusText + '</span>')
             formMModalButton.click();
         },
@@ -82,7 +77,7 @@ $('#kt_modal_payment_request_treat').on('hidden.bs.modal', function(e) {
     paymentIDInput.val(0);
     btn1.show()
     btn2.show()
-    $('#idtransaction').show()
+    transID.show()
     tableReloadButton.click();
 });
 

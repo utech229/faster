@@ -1,114 +1,104 @@
+
 {% set _locale = app.request.locale|default('fr') %}
 {% set route   = app.request.attributes.get('_route') %}
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ title }}</title>
-    <link href={{ brand.white_logo }} rel="icon">
-    <link href="{{ asset('login/bootstrap/dist/css/bootstrap.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('librairies/fontawesome/css/all.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('login/plugins/bower_components/bootstrap-extension/css/bootstrap-extension.css') }}" rel="stylesheet">
-    <link href="{{ asset('login/css/animate.css') }}" rel="stylesheet">
-    <link href="{{ asset('login/css/style.css') }}" rel="stylesheet">
-    <link href="{{ asset('login/plugins/add-css/style-add.css') }}" rel="stylesheet">
-    <link href="{{ asset('login/css/colors/purple.css') }}" id="theme" rel="stylesheet">
-    <link  rel="stylesheet" href="{{ asset('login/plugins/add-css/demomm.css') }}">
-    <!-- SWEETALERT CSS -->
-    <link href="{{ asset('login/plugins/vendor/sweetalert2/dist/sweetalert2.min.css') }}" rel="stylesheet" type="text/css"/>
-    <link rel="stylesheet" href="{{ asset('librairies/intl/build/css/intlTelInput.css') }}">
-    <input type="hidden" value="{{app.request.locale|locale_name(app.request.locale)}}" id="login_locale">
-    <style type="text/css">
-    .login-carem-box {
-            margin :3%
-        }
-    </style>
-</head>
-<body>
-	<input type="hidden" value="{{app.request.locale}}" id="in_session_locale">
-    <section id="wrapper" class="login-register" style="background-color: rgb(0,0,0,0.5);">
-        <a href="{{ path('app_login') }}" class="text-center db login-carem-box">
-        <img width="60" height="60" src={{ brand.white_logo }} /></a>
-        <!-- content begin -->
-		{% block body %}{% endblock %}
-		<!-- content end -->
-		<div  class="text-center" style="margin-top: 90px; color: #fff !important;">
-			<footer>
-				<strong><a href="" target="_blank" style="color: #fff !important;">{{ brand.name }}</a> </strong>© 2021
-			</footer>
-
-			{% if brand.name == "FASTERMESSAGE" %}
-					<script type="text/javascript">
-				var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-				(function(){
-				var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-				s1.async=true;
-				s1.src='https://embed.tawk.to/621793d51ffac05b1d7b8bf3/1fsm1j00n';
-				s1.charset='UTF-8';
-				s1.setAttribute('crossorigin','*');
-				s0.parentNode.insertBefore(s1,s0);
-				})();
-				</script>
-			{% else %}
-				<script type="text/javascript">
-							var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-							(function(){
-							var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-							s1.async=true;
-							s1.src='https://embed.tawk.to/6218920d1ffac05b1d7bad46/1fsnvl2i5';
-							s1.charset='UTF-8';
-							s1.setAttribute('crossorigin','*');
-							s0.parentNode.insertBefore(s1,s0);
-							})();
-
-				</script>
-
-			{% endif %}
-			<!--Start of Tawk.to Script-->
-		<!--End of Tawk.to Script-->
+	<!--begin::Head-->
+	<head><base href="">
+		<meta charset="UTF-8">
+        <title>{% block title %}{{title}} {% endblock %}</title>
+		<meta name="keywords" content="SMS, SMS Banking">
+        <meta name="description" content="{{"Fastermessage est une solution SMS professionnels, elle vous permet d'importer votre base de données de contacts et de gérer vos campagnes SMS. C'est un moyen d'envoi de messages personnalisés, groupés en quantité importante partout dans le monde. Elle dispose également d'une API facile à intégrer et flexible, très pratique pour les développeurs."| trans}}">
+        <meta name="author" content="{{ brand.name }}">
+		<meta property="og:locale" content="{{ _locale }}" />
+		<meta property="og:type" content="article" />
+		<meta property="og:title" content="{{title}}" />
+		<meta property="og:url" content="{{ baseUrl }}" />
+		<meta property="og:site_name" content="{{ brand.name }} |{{ brand.name }}" />
+		<!-- Favicons -->
+        <link href="{{ asset('app/uploads/brands/logos/'~ brand.name|lower ~'.png') }}" rel="icon">
+        <link href="{{ brand.apple_touch_icon }}" rel="apple-touch-icon">
+		<!--begin::Fonts-->
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" />
+		<!--end::Fonts-->
+		<!--begin::Global Stylesheets Bundle(used by all pages)-->
+		<link href="{{ asset('app/plugins/global/plugins.bundle.css') }}" rel="stylesheet" type="text/css" />
+		<link href="{{ asset('app/css/style.bundle.css') }}" rel="stylesheet" type="text/css" />
+		<!--end::Global Stylesheets Bundle-->
+        <link rel="stylesheet" href="{{ asset('librairies/intl/build/css/intlTelInput.css') }}">
+        {% block stylesheets %}{% endblock %}
+	</head>
+	<!--end::Head-->
+	<!--begin::Body-->
+	<body id="kt_body" class="bg-body">
+		<!--begin::Main-->
+		<!--begin::Root-->
+		<div class="d-flex flex-column flex-root">
+			<!--begin::Authentication - Sign-in -->
+			<div class="d-flex flex-column flex-lg-row flex-column-fluid">
+				<!--begin::Aside-->
+				<div class="d-flex flex-column flex-lg-row-auto w-xl-50 positon-xl-relative" style="background-color: #003366">
+					<!--begin::Wrapper-->
+					<div class="d-flex flex-column position-xl-fixed top-0 bottom-0 w-xl-50 scroll-y">
+						<!--begin::Content-->
+						<div class="d-flex flex-row-fluid flex-column text-center p-10 pt-lg-20">
+							<!--begin::Logo-->
+							<a href="{{ path('app_login')}}" class="mb-12">
+								<img alt="{{ brand.name}}" style="-webkit-filter: saturate(100%);filter: saturate(100%);"  src="{{ asset('app/uploads/brands/logos/'~ brand.name|lower ~'.png') }}" class="h-60px" />
+							</a>
+							<!--end::Logo-->
+							<!--begin::Description-->
+							<p class="fw-bold fs-2" style="color: #fff;">{% trans %}Vos SMS professionnels partout{% endtrans %}
+							<br />{% trans %}dans le monde{% endtrans %}</p>
+							<!--end::Description-->
+						</div>
+						<!--end::Content-->
+						<!--begin::Illustration-->
+						<div class="d-flex flex-row-auto bgi-no-repeat bgi-position-x-center bgi-size-contain bgi-position-y-bottom min-h-100px min-h-lg-450px" style="background-image: url({{ asset('app/media/login/faster-img.png') }}"></div>
+						<!--end::Illustration-->
+					</div>
+					<!--end::Wrapper-->
+				</div>
+				<!--end::Aside-->
+				<!--begin::Body-->
+				<div class="d-flex flex-column flex-lg-row-fluid py-10">
+					<!--begin::Content-->
+					<div class="d-flex flex-center flex-column flex-column-fluid">
+						{% block body %}{% endblock %}
+					</div>
+					<!--end::Content-->
+					<!--begin::Footer-->
+					<div class="d-flex flex-center flex-wrap fs-6 p-5 pb-0">
+						<!--begin::Links-->
+						<div class="d-flex flex-center fw-bold fs-6">
+							<a href="{{ path('app_login')}}" class="text-muted text-hover-primary px-2">{% trans %}A propos{% endtrans %} </a>
+							<a href="{{brand.emails.support}}" class="text-muted text-hover-primary px-2">{% trans %}Contact{% endtrans %}</a>
+							<a href="{{ path('app_login')}}" class="text-muted text-hover-primary px-2">{% trans %}Contactez-nous{% endtrans %}</a>
+						</div>
+						<!--end::Links-->
+					</div>
+					<!--end::Footer-->
+				</div>
+				<!--end::Body-->
+			</div>
+			<!--end::Authentication - Sign-in-->
 		</div>
-    </section>
-    <!-- jQuery -->
-    <script src="{{ asset('login/plugins/bower_components/jquery/dist/jquery.min.js') }}"></script>
-    <script src="{{ asset('login/bootstrap/dist/js/tether.min.js') }}"></script>
-    <script src="{{ asset('login/bootstrap/dist/js/bootstrap.min.js') }}"></script>
-    <script src="{{ asset('login/plugins/bower_components/bootstrap-extension/js/bootstrap-extension.min.js') }}"></script>
-    <script src="{{ asset('login/plugins/bower_components/sidebar-nav/dist/sidebar-nav.min.js') }}"></script>
-    <script src="{{ asset('login/js/jquery.slimscroll.js') }}"></script>
-    <script src="{{ asset('login/js/waves.js') }}"></script>
-    <script src="{{ asset('login/js/custom.min.js') }}"></script>
-    <script src="{{ asset('login/js/validator.js') }}"></script>
-    <script src="{{ asset('login/plugins/bower_components/styleswitcher/jQuery.style.switcher.js') }}"></script>
-    <!-- Intl-tel-input -->
-    <script src="{{ asset('login/plugins/ajax-query/users/open_account.js') }}"></script>
-    <script src="{{ asset('login/plugins/vendor/axios/dist/axios.min.js') }}"> </script>
- 
-	<script src="{{ asset('librairies/intl/build/js/intlTelInput.min.js') }}"></script>
-
-	{% include 'translations/global.html.twig' %}
-	<script type="text/javascript">
-		const route = "{{ route }}";
-		var input = document.querySelector('#registration_form_phone');
-		function verif_nombre(phone)
-		{
-			var chiffres = new RegExp("[0-9]");
-			var verif;
-			var points = 0;
-
-			for(x = 0; x < phone.value.length; x++)
-			{
-				verif = chiffres.test(phone.value.charAt(x));
-				if(phone.value.charAt(x) == "."){points++;}
-					if(points > 1){verif = false; points = 1;}
-				if(verif == false){phone.value = phone.value.substr(0,x) + phone.value.substr(x+1,phone.value.length-x+1); x--;}
-			}
-		}
-	</script>
+		<!--end::Root-->
+		<!--end::Main-->
+		<!--begin::Javascript-->
+        <!--begin::Global Javascript Bundle(used by all pages)-->
+        <script src="{{ asset('app/plugins/global/plugins.bundle.js') }}"></script>
+        <script src="{{ asset('app/js/scripts.bundle.js') }}"></script>
+        <script src="{{ asset('librairies/intl/build/js/intlTelInput.min.js') }}"></script>
+		<script src="{{ asset('app/js/queries/public-app/country-flag-input.js') }}"></script>
+		 <script src="{{ asset('app/js/queries/general.js') }}"></script>
+        <!--end::Global Javascript Bundle-->
+		<!--end::Javascript-->
+        {% include 'translations/global.html.twig' %}
 		{% include 'section/intl.input.html.twig' %}
-	{% block javascripts %} {% endblock %}
-	<!--end::Javascript-->
-</body>
+    	{% include 'section/toastr.flash.html.twig' %}
+        {% block javascripts %} {% endblock %}
+		<!--end::Javascript-->
+	</body>
+	<!--end::Body-->
 </html>
-

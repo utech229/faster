@@ -52,22 +52,6 @@ class AffiliateType extends AbstractType
                 },
                 'choice_label'=>'name',
                 'choice_value'=>'uid',
-            ])
-            ->add('role', EntityType::class, [
-                'label' => false,
-                'class'=>Role::class,
-                'query_builder'=>function(EntityRepository $er){
-                        return $er->createQueryBuilder('r')
-                            ->where('r.code = :text1')
-                            ->orWhere('r.code = :text2')
-                            ->andWhere('r.level < :level')
-                            ->setParameter('text1', 'AFF0')
-                            ->setParameter('text2', 'AFF1')
-                            ->setParameter('level', $this->services->connectedUser()->getRole()->getLevel())
-                            ->orderBy('r.level', 'ASC');
-                },
-                'choice_label'=>'name',
-                'choice_value'=>'code',
             ]);
     }
 

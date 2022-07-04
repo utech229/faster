@@ -1,275 +1,512 @@
-
 {% extends 'base.app.html.twig' %}
 
-{% block title %}{{ title|default("") }}{% endblock %}
+{% block title %}{{ title }}{% endblock %}
 
 {% block stylesheets %} {% endblock %}
 
 {% block body %}
-
-
+<!--begin::Content-->
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
     <!--begin::Post-->
     <div class="post d-flex flex-column-fluid" id="kt_post">
         <!--begin::Container-->
         <div id="kt_content_container" class="container-xxl">
-
             <!--begin::Card-->
-            <div class="card">
+            <div class="card card-flush">
+
+
+                <div class="card-header mt-6">
+                    <!--begin::Card title-->
+                    <div class="card-title">
+                        <!--begin::Search-->
+                        <div class="d-flex align-items-center position-relative my-1 me-5">
+                            <!--begin::Svg Icon | path: icons/duotune/general/gen021.svg-->
+                            <span class="svg-icon svg-icon-1 position-absolute ms-6">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                    <rect opacity="0.5" x="17.0365" y="15.1223" width="8.15546" height="2" rx="1" transform="rotate(45 17.0365 15.1223)" fill="currentColor" />
+                                    <path d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z" fill="currentColor" />
+                                </svg>
+                            </span>
+                            <!--end::Svg Icon-->
+                            <input type="text" data-kt-brand-table-filter="search" class="form-control form-control-solid w-250px ps-15" placeholder="{{'Chercher une marque'| trans}}" />
+                        </div>
+                        <!--end::Search-->
+                    </div>
+                    <!--end::Card title-->
+                    <!--begin::Card toolbar-->
+                    <div class="card-toolbar">
+                        <!--begin::Button-->
+                        <button type="button" class="btn btn-light-primary" id="lauch_modal_submit_folder">
+                        <!--begin::Svg Icon | path: icons/duotune/general/gen035.svg-->
+                        <span class="svg-icon svg-icon-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="currentColor" />
+                                <rect x="10.8891" y="17.8033" width="12" height="2" rx="1" transform="rotate(-90 10.8891 17.8033)" fill="currentColor" />
+                                <rect x="6.01041" y="10.9247" width="12" height="2" rx="1" fill="currentColor" />
+                            </svg>
+                        </span>
+                        <!--end::Svg Icon-->{% trans %}Soumettre dossier revendeur{% endtrans %}</button>
+
+                        <button type="button" id="kt_table_brand_reload_button" class="btn btn-light-primary d-none">
+                        <span class="svg-icon svg-icon-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="currentColor" />
+                                <rect x="10.8891" y="17.8033" width="12" height="2" rx="1" transform="rotate(-90 10.8891 17.8033)" fill="currentColor" />
+                                <rect x="6.01041" y="10.9247" width="12" height="2" rx="1" fill="currentColor" />
+                            </svg>
+                        </span>
+                        {% trans %}Soumettre dossier revendeur{% endtrans %}</button>
+                    </div>
+                    <!--end::Card toolbar-->
+                </div>
 
                 <!--begin::Card body-->
-                <div class="card-body py-4">
-                    <div class="card">
-                        <div class="card-body p-0">
-                            <!--begin::Wrapper-->
-                                <div class="card-px text-center py-20 my-10" id="gettingSubmit">
-                                    <!--begin::Title-->
-                                    <h2 class="fs-2x fw-bolder mb-10">DEVENIR REVENDEUR DE FASTERMESSAGE</h2>
-                                    <!--end::Title-->
-                                    <!--begin::Description-->
-                                    <p class="text-gray-400 fs-4 fw-bold mb-10">Devenez revendeur de notre solution en
-                                    <br />soumettant votre dossier de création de marque blanche. </p>
-                                    <!--end::Description-->
-                                    <!--begin::Action-->
-                                    <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_create_folder">Soumettre mon dossier revendeur</a>
-                                    <!--end::Action-->
-                                </div>
-                                <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_create_folder">Soumettre mon dossier revendeur</a>
-                                <div class="modal fade" id="kt_modal_create_folder" tabindex="-1" aria-hidden="true">
-                                    <!--begin::Modal dialog-->
-                                    <div class="modal-dialog modal-dialog-centered mw-900px">
-                                        <!--begin::Modal content-->
-                                        <div class="modal-content">
-                                            <!--begin::Modal header-->
-                                            <div class="modal-header">
-                                                <!--begin::Modal title-->
-                                                <h2>{{"Création de marque blanche"|trans }}</h2>
-                                                <!--end::Modal title-->
-                                                <!--begin::Close-->
-                                                <div class="btn btn-icon btn-sm btn-active-icon-primary" data-kt-modal-action="close">
-                                                    <!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
-                                                    <span class="svg-icon svg-icon-1">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                                            <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor" />
-                                                            <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor" />
-                                                        </svg>
-                                                    </span>
-                                                    <!--end::Svg Icon-->
-                                                </div>
-                                                <!--end::Close-->
-                                            </div>
-                                            <!--end::Modal header-->
-                                            <!--begin::Modal body-->
-                                            <form class="form" id="kt_modal_brand_form">
-                                                <input type="hidden" value="{{ csrf_token(app.user.uid) }}" name="_token">
+                    <div class="card-body pt-0">
+                        <!--begin::Table-->
+                        <table class="table align-middle table-row-dashed fs-6 gy-5 mb-0" id="kt_brand_table">
+                                    <!--begin::Table head-->
+                            <thead>
+                                <!--begin::Table row-->
+                                <tr class="text-start text-gray-400 fw-bolder fs-7 text-uppercase gs-0">
+                                    <th class="min-w-125px">{% trans %}Marque{% endtrans %}</th>
+                                    <th class="min-w-125px">{% trans %}Administrateur{% endtrans %}</th>
+                                    <th class="min-w-125px">{% trans %}Nom de domaine{% endtrans %}</th>
+                                    <th class="min-w-100px">{% trans %}Validée par{% endtrans %}</th>
+                                    <th class="min-w-100px">{% trans %}Statut{% endtrans %}</th>
+                                    <th class="min-w-100px">{% trans %}Créer le{% endtrans %}</th>
+                                    <th class="text-center min-w-100px">{% trans %}Actions{% endtrans %}</th>
+                                </tr>
+                                <!--end::Table row-->
+                            </thead>
+                            <!--end::Table head-->
+                            <!--begin::Table body-->
+                            <tbody class="fw-bold text-gray-600">
 
-                                                <div class="modal-body py-lg-10 px-lg-10">
-                                                    <!--begin::Stepper-->
-                                                    <div class="stepper stepper-pills stepper-column d-flex flex-column flex-xl-row flex-row-fluid mb-0" id="kt_modal_create_brand_stepper">
-                                                        <!--begin::Aside-->
-                                                        <div class="flex-row-fluid py-lg-6 px-lg-6">
-                                                            <div class="fv-row mb-10">
-                                                                <!--begin::Label-->
-                                                                <label class="d-flex align-items-center fs-5 fw-bold mb-2">
-                                                                    <span class="required">{{"Nom de la marque"|trans }}</span>
-                                                                    <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="Ce nom représente le nom sous lequel, la solution sera commercialisée."></i>
-                                                                </label>
-                                                                <!--end::Label-->
-                                                                <!--begin::Input-->
-                                                                <input type="text" class="form-control form-control-lg form-control-solid" name="_name_brand" placeholder="{{"Nom de la marque"|trans}}" value="" />
-                                                                <!--end::Input-->
-                                                            </div>
-                                                            <div class="fv-row mb-10">
-                                                                <!--begin::Label-->
-                                                                <label class="d-flex align-items-center fs-5 fw-bold mb-2">
-                                                                    <span class="required">{{"URL de domaine"|trans }}</span>
-                                                                    <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="{{"L'URL représente l'adresse sur laquelle la solution sera hébergée."|trans }}"></i>
-                                                                </label>
-                                                                <!--end::Label-->
-                                                                <!--begin::Input-->
-                                                                <input type="text" class="form-control form-control-lg form-control-solid" name="_url_brand" placeholder="{{"URL de votre domaine"|trans }}" value="" />
-                                                                <!--end::Input-->
-                                                            </div>
-                                                            <div class="fv-row mb-10">
-                                                                <!--begin::Label-->
-                                                                <label class="d-flex align-items-center fs-5 fw-bold mb-2">
-                                                                    <span class="required">{{"Adresse email support"|trans }}</span>
-                                                                    <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="{{"Il s'agit de l'adresse mail professionnelle sur laquelle, les utilisateurs qui sont sous votre marque vous contacterons. Ex: support@fastermessage.com"|trans }}"></i>
-                                                                </label>
-                                                                <!--end::Label-->
-                                                                <!--begin::Input-->
-                                                                <input type="text" class="form-control form-control-lg form-control-solid" name="_mail_support" placeholder="{{"Adresse email support"|trans }}" value="" />
-                                                                <!--end::Input-->
-                                                            </div>
-                                                            <div class="fv-row mb-10">
-                                                                <!--begin::Label-->
-                                                                <label class="d-flex align-items-center fs-5 fw-bold mb-2">
-                                                                    <span class="required">{{"Adresse email noreply"|trans }}</span>
-                                                                    <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="{{"Il s'agit de l'adresse mail par défaut qui sera utilisée pour envoyer des messages sans réponses. Ex: noreply@fastermessage.com"|trans }}"></i>
-                                                                </label>
-                                                                <!--end::Label-->
-                                                                <!--begin::Input-->
-                                                                <input type="text" class="form-control form-control-lg form-control-solid" name="_mail_noreply" placeholder="{{"Adresse email support"|trans }}" value="" />
-                                                                <!--end::Input-->
-                                                            </div>
-                                                        </div>
-                                                        <!--begin::Aside-->
-                                                        <!--begin::Content-->
-                                                        <div class="flex-row-fluid py-lg-6 px-lg-6">
-                                                            <div class="fv-row mb-10">
-                                                                <!--begin::Label-->
-                                                                <label class="d-flex align-items-center fs-5 fw-bold mb-2">
-                                                                    <span class="required">{{"Téléphone de la marque"|trans }}</span>
-                                                                    <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="{{"Il s'agit des numéros de contact, en cas de besoin pour joindre la marque."|trans }}"></i>
-                                                                </label>
-                                                                <!--end::Label-->
-                                                                <!--begin::Input-->
-                                                                <input type="text" class="form-control form-control-lg form-control-solid" name="_phone_support" placeholder="{{"Téléphone support"|trans }}" value="" />
-                                                                <!--end::Input-->
-                                                            </div>
-                                                            <div class="fv-row mb-10">
-                                                                <label class="d-flex align-items-center fs-5 fw-bold mb-2">
-                                                                    <span class="required">{{"Télécharger un logo"|trans }}</span>
-                                                                    <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="{{"Il s'agit du logo de votre marque. Type de fichier autorisé: png, jpg, jpeg."|trans }}"></i>
-                                                                </label>
-                                                                <br />
-                                                                <div class="image-input image-input-outline" data-kt-image-input="true" style="background-image: url('assets/media/svg/avatars/blank.svg')">
-                                                                    <!--begin::Preview existing avatar-->
-                                                                    <div class="image-input-wrapper w-125px h-125px" style="background-image: url({{ asset('app/uploads/avatars/'~ app.user.profilePhoto ~'') }})"></div>
-                                                                    <!--end::Preview existing avatar-->
-                                                                    <!--begin::Label-->
-                                                                    <label class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="change" data-bs-toggle="tooltip" title="{{'Changer le logo'|trans}}">
-                                                                        <i class="bi bi-pencil-fill fs-7"></i>
-                                                                        <!--begin::Inputs-->
-                                                                        <input type="file" name="_logo" accept=".png, .jpg, .jpeg" />
-                                                                        <input type="hidden" name="avatar_remove" />
-                                                                        <!--end::Inputs-->
-                                                                    </label>
-                                                                    <!--end::Label-->
-                                                                    <!--begin::Cancel-->
-                                                                    <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="cancel" data-bs-toggle="tooltip" title="{{'Annuler avatar'|trans}}">
-                                                                        <i class="bi bi-x fs-2"></i>
-                                                                    </span>
-                                                                    <!--end::Cancel-->
-                                                                    <!--begin::Remove-->
-                                                                    <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="remove" data-bs-toggle="tooltip" title="{{'Supprimer l\'avatar'|trans}}">
-                                                                        <i class="bi bi-x fs-2"></i>
-                                                                    </span>
-                                                                    <!--end::Remove-->
-                                                                </div>
-                                                            </div>
-                                                            <div class="fv-row mb-10">
-                                                                <label class="d-flex align-items-center fs-5 fw-bold mb-2">{% trans %}Compte{% endtrans %}</label>
-                                                                <select id="kt_user_filter_select2_country" data-allow-clear="true" data-control="select2" data-kt-user-table-filter="two-step"
-                                                                    class="form-select form-select-solid fw-bolder" name="uSelect" data-placeholder="{{'Sélectionnez un compte' | trans}}"
-                                                                    data-kt-user-settings-type="select2_flags"/>
-                                                                    <option value='9V4mn91t1bzkV7W6WxA3'>user@fastermessage.com</option>
-                                                                    <option value='WDA2n91t1bzkV7W6VX5E'>reseller@fastermessage.com</option>
-                                                                </select>
-                                                            </div>
-                                                        </div>
-                                                        <!--end::Content-->
-                                                    </div>
-                                                    <div class="flex-row-fluid pt-0 text-center" style="margin-top: 0px !important; margin-bottom:0px !important;">
-                                                            <button type="reset" class="btn btn-light me-3" data-kt-modal-action="cancel">{{'Annuler'| trans}}</button>
-                                                            <button type="submit" class="btn btn-primary" data-kt-modal-action="submit">
-                                                                <span class="indicator-label">{{'Enregistrer'| trans}}</span>
-                                                                <span class="indicator-progress">{{'Veuillez patienter'| trans}}...
-                                                                <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
-                                                            </button>
-                                                        </div>
-                                                    <!--end::Stepper-->
-                                                </div>
-                                            </form>
-                                            <!--end::Modal body-->
-                                        </div>
-                                        <!--end::Modal content-->
-                                    </div>
-                                    <!--end::Modal dialog-->
-                                </div>
-                            <!--end::Wrapper-->
-                            <!--begin::Illustration-->
-
-                            <!--end::Illustration-->
-                        </div>
-
-
-                        <div class="card-body p-0">
-                            <div class="card-title">
-                                <button type="button" id="kt_table_brand_reload_button" class="btn btn-light-primary d-none">
-                                <!--begin::Search-->
-                                <div class="d-flex align-items-center position-relative my-1 me-5">
-                                    <!--begin::Svg Icon | path: icons/duotune/general/gen021.svg-->
-                                    <span class="svg-icon svg-icon-1 position-absolute ms-6">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                            <rect opacity="0.5" x="17.0365" y="15.1223" width="8.15546" height="2" rx="1" transform="rotate(45 17.0365 15.1223)" fill="currentColor" />
-                                            <path d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z" fill="currentColor" />
-                                        </svg>
-                                    </span>
-                                    <!--end::Svg Icon-->
-                                    <input type="text" data-kt-brand-table-filter="search" class="form-control form-control-solid w-250px ps-15" placeholder="{{'Chercher une marque'| trans}}" />
-                                </div>
-                                <!--end::Search-->
-                            </div>
-                            <table class="table align-middle table-row-dashed fs-6 gy-5 mb-0" id="kt_brand_table">
-                                <!--begin::Table head-->
-                                <thead>
-                                    <!--begin::Table row-->
-                                    <tr class="text-start text-gray-400 fw-bolder fs-7 text-uppercase gs-0">
-                                        <th class="w-10px pe-2">
-                                            <div class="form-check form-check-sm form-check-custom form-check-solid me-3">
-                                            <input class="form-check-input d-none" type="checkbox" data-kt-check="true" data-kt-check-target="#kt_recharge_table .form-check-input" value="1" />
-                                            </div>
-                                        </th>
-                                        <th class="min-w-125px">{% trans %}Marque{% endtrans %}</th>
-                                        <th class="min-w-125px">{% trans %}Administrateur{% endtrans %}</th>
-                                        <th class="min-w-125px">{% trans %}Nom de domaine{% endtrans %}</th>
-                                        <th class="min-w-100px">{% trans %}Validée par{% endtrans %}</th>
-                                        <th class="min-w-100px">{% trans %}Statut{% endtrans %}</th>
-                                        <th class="min-w-100px">{% trans %}Créer le{% endtrans %}</th>
-                                        <th class="text-end min-w-100px">{% trans %}Actions{% endtrans %}</th>
-                                    </tr>
-                                    <!--end::Table row-->
-                                </thead>
-                                <!--end::Table head-->
-                                <!--begin::Table body-->
-                                <tbody class="fw-bold text-gray-600">
-
-                                </tbody>
-                                <!--end::Table body-->
-                            </table>
-                        </div>
+                            </tbody>
+                            <!--end::Table body-->
+                        </table>
+                        <!--end::Table-->
                     </div>
-                </div>
                 <!--end::Card body-->
             </div>
             <!--end::Card-->
+            <div class="modal fade" id="kt_modal_create_folder" tabindex="-1" aria-hidden="true">
+                <!--begin::Modal dialog-->
+                <div class="modal-dialog modal-dialog-centered mw-900px">
+                    <!--begin::Modal content-->
+                    <div class="modal-content">
+                        <!--begin::Modal header-->
+                        <div class="modal-header">
+                            <!--begin::Modal title-->
+                            <h2>{{"Création de marque blanche"|trans }}</h2>
+                            <!--end::Modal title-->
+                            <!--begin::Close-->
+                            <div class="btn btn-icon btn-sm btn-active-icon-primary" data-kt-modal-action="close">
+                                <!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
+                                <span class="svg-icon svg-icon-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                        <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor" />
+                                        <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor" />
+                                    </svg>
+                                </span>
+                                <!--end::Svg Icon-->
+                            </div>
+                            <!--end::Close-->
+                        </div>
+                        <!--end::Modal header-->
+                        <!--begin::Modal body-->
+                        <form class="form" id="kt_modal_brand_form">
+                            <input type="hidden" value="{{ csrf_token(app.user.uid) }}" name="_token">
+                            <input type="hidden" name="thisU" id="thisU">
+                            <div class="modal-body py-lg-10 px-lg-10">
+                                <!--begin::Stepper-->
+                                <div class="stepper stepper-pills stepper-column d-flex flex-column flex-xl-row flex-row-fluid mb-0" id="kt_modal_create_brand_stepper">
+                                    <!--begin::Aside-->
+                                    <div class="flex-row-fluid py-lg-6 px-lg-6">
+                                        <div class="fv-row mb-10">
+                                            <!--begin::Label-->
+                                            <label class="d-flex align-items-center fs-5 fw-bold mb-2">
+                                                <span class="required">{{"Nom de la marque"|trans }}</span>
+                                                <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="Ce nom représente le nom sous lequel, la solution sera commercialisée."></i>
+                                            </label>
+                                            <!--end::Label-->
+                                            <!--begin::Input-->
+                                            <input type="text" id="nameB" class="form-control form-control-lg form-control-solid" name="_name_brand" placeholder="{{"Nom de la marque"|trans}}" value="" />
+                                            <!--end::Input-->
+                                        </div>
+                                        <div class="fv-row mb-10">
+                                            <!--begin::Label-->
+                                            <label class="d-flex align-items-center fs-5 fw-bold mb-2">
+                                                <span class="required">{{"URL de domaine"|trans }}</span>
+                                                <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="{{"L'URL représente l'adresse sur laquelle la solution sera hébergée."|trans }}"></i>
+                                            </label>
+                                            <!--end::Label-->
+                                            <!--begin::Input-->
+                                            <input type="text" id="uriB" class="form-control form-control-lg form-control-solid" name="_url_brand" placeholder="{{"URL de votre domaine"|trans }}" value="" />
+                                            <!--end::Input-->
+                                        </div>
+                                        <div class="fv-row mb-10">
+                                            <!--begin::Label-->
+                                            <label class="d-flex align-items-center fs-5 fw-bold mb-2">
+                                                <span class="required">{{"Adresse email support"|trans }}</span>
+                                                <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="{{"Il s'agit de l'adresse mail professionnelle sur laquelle, les utilisateurs qui sont sous votre marque vous contacterons. Ex: support@fastermessage.com"|trans }}"></i>
+                                            </label>
+                                            <!--end::Label-->
+                                            <!--begin::Input-->
+                                            <input type="text" id="adressEmail" class="form-control form-control-lg form-control-solid" name="_mail_support" placeholder="{{"Adresse email support"|trans }}" value="" />
+                                            <!--end::Input-->
+                                        </div>
+                                        <div class="fv-row mb-10">
+                                            <!--begin::Label-->
+                                            <label class="d-flex align-items-center fs-5 fw-bold mb-2">
+                                                <span class="required">{{"Adresse email noreply"|trans }}</span>
+                                                <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="{{"Il s'agit de l'adresse mail par défaut qui sera utilisée pour envoyer des messages sans réponses. Ex: noreply@fastermessage.com"|trans }}"></i>
+                                            </label>
+                                            <!--end::Label-->
+                                            <!--begin::Input-->
+                                            <input type="text" id="noreplyEmail" class="form-control form-control-lg form-control-solid" name="_mail_noreply" placeholder="{{"Adresse email support"|trans }}" value="" />
+                                            <!--end::Input-->
+                                        </div>
+                                    </div>
+                                    <!--begin::Aside-->
+                                    <!--begin::Content-->
+                                    <div class="flex-row-fluid py-lg-6 px-lg-6">
+                                        <div class="fv-row mb-10">
+                                            <!--begin::Label-->
+                                            <label class="d-flex align-items-center fs-5 fw-bold mb-2">
+                                                <span class="required">{{"Téléphone de la marque"|trans }}</span>
+                                                <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="{{"Il s'agit des numéros de contact, en cas de besoin pour joindre la marque."|trans }}"></i>
+                                            </label>
+                                            <!--end::Label-->
+                                            <!--begin::Input-->
+                                            <input type="text" id="phoneb" class="form-control form-control-lg form-control-solid" name="_phone_support" placeholder="{{"Téléphone support"|trans }}" value="" />
+                                            <!--end::Input-->
+                                        </div>
+                                        <div class="fv-row mb-10">
+                                            <label class="d-flex align-items-center fs-5 fw-bold mb-2">
+                                                <span class="required">{{"Télécharger un logo"|trans }}</span>
+                                                <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="{{"Il s'agit du logo de votre marque. Type de fichier autorisé: png, jpg, jpeg."|trans }}"></i>
+                                            </label>
+                                            <br />
+                                            <div class="image-input image-input-outline" data-kt-image-input="true" style="background-image: url({{ asset('app/uploads/brands/logos/default_logo_1.png') }})">
+                                                <!--begin::Preview existing avatar-->
+                                                <div class="image-input-wrapper w-125px h-125px" id="logo_input"  style="background-image: url({{ asset('app/uploads/brands/logos/default_logo_1.png') }})"></div>
+                                                <!--end::Preview existing avatar-->
+                                                <!--begin::Label-->
+                                                <label class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="change" data-bs-toggle="tooltip" title="{{'Changer le logo'|trans}}">
+                                                    <i class="bi bi-pencil-fill fs-7"></i>
+                                                    <!--begin::Inputs-->
+                                                    <input type="file" name="_logo" accept=".png, .jpg, .jpeg" />
+                                                    <input type="hidden" name="avatar_remove" />
+                                                    <!--end::Inputs-->
+                                                </label>
+                                                <!--end::Label-->
+                                                <!--begin::Cancel-->
+                                                <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="cancel" data-bs-toggle="tooltip" title="{{'Annuler avatar'|trans}}">
+                                                    <i class="bi bi-x fs-2"></i>
+                                                </span>
+                                                <!--end::Cancel-->
+                                                <!--begin::Remove-->
+                                                <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="remove" data-bs-toggle="tooltip" title="{{'Supprimer l\'avatar'|trans}}">
+                                                    <i class="bi bi-x fs-2"></i>
+                                                </span>
+                                                <!--end::Remove-->
+                                            </div>
+                                        </div>
+                                        {% if users  != false %}
+                                            <div class="fv-row mb-10">
+                                                <label class="d-flex align-items-center fs-5 fw-bold mb-2">{% trans %}Compte{% endtrans %}</label>
+                                                <select class="form-select form-select-solid fw-bolder" name='uSelect' id='_uSelect' data-kt-select2="true" data-dropdown-parent="#kt_modal_create_folder" data-placeholder="{{"Choisissez l'utilisateur"}}" data-allow-clear="true">
+                                                    {% for user in users %}
+                                                        <option value='{{user.uid }}'>{{ user.email }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <!--end::Content-->
+                                </div>
+                                <div class="flex-row-fluid pt-0 text-center" style="margin-top: 0px !important; margin-bottom:0px !important;">
+                                        <button type="reset" class="btn btn-light me-3" data-kt-modal-action="cancel">{{'Annuler'| trans}}</button>
+                                        <button type="submit" class="btn btn-primary" data-kt-modal-action="submit">
+                                            <span class="indicator-label">{{'Enregistrer'| trans}}</span>
+                                            <span class="indicator-progress">{{'Veuillez patienter'| trans}}...
+                                            <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                                        </button>
+                                    </div>
+                                <!--end::Stepper-->
+                            </div>
+                        </form>
+                        <!--end::Modal body-->
+                    </div>
+                    <!--end::Modal content-->
+                </div>
+                <!--end::Modal dialog-->
+            </div>
+            <div class="modal fade" id="waiting" tabindex="-1" aria-hidden="true">
+                <!--begin::Modal dialog-->
+                <div class="modal-dialog modal-dialog-centered mw-400px">
+                    <!--begin::Modal content-->
+                    <div class="modal-content text-center">
+                        <div class="fv-row p-10 text-warning">
+                            <span class="spinner-border spinner-border-sm align-middle ms-2"></span> En cours de chargement</span>
+                        </div>
+
+                    </div>
+                    <!--end::Modal content-->
+                </div>
+                <!--end::Modal dialog-->
+            </div>
+            <div class="modal fade" id="kt_modal_reload_brand" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+                    <!--begin::Modal dialog-->
+                <div class="modal-dialog modal-dialog-centered mw-600px">
+                    <!--begin::Modal content-->
+                    <div class="modal-content">
+                        <!--begin::Modal header-->
+                        <div class="modal-header">
+                            <!--begin::Modal title-->
+                            <h2>{{"Changement de statut"|trans }}: <span id="brand_name"></span></h2>
+                            <!--end::Modal title-->
+                            <!--begin::Close-->
+                            <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
+                                <!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
+                                <span class="svg-icon svg-icon-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                        <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor" />
+                                        <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor" />
+                                    </svg>
+                                </span>
+                                <!--end::Svg Icon-->
+                            </div>
+                            <!--end::Close-->
+                        </div>
+                        <!--end::Modal header-->
+                        <!--begin::Modal body-->
+
+                        <div class="modal-body py-lg-10 px-lg-10">
+                            <!--begin::Stepper-->
+                            <div class="stepper stepper-pills stepper-column d-flex flex-column flex-xl-row flex-row-fluid" id="kt_modal_create_app_stepper">
+
+                                <!--begin::Aside-->
+                                <!--begin::Content-->
+                                <div class="flex-row-fluid py-lg-5 px-lg-15">
+                                    <!--begin::Form-->
+                                    <form class="form" novalidate="novalidate" id="kt_form_validate_brand">
+                                        <!--begin::Step 1-->
+                                        <div class="current" data-kt-stepper-element="content">
+                                            <div class="w-100 pt-0">
+                                                <div class="fv-row">
+                                                    <!--begin::Label-->
+                                                    <input type="hidden" name="key" id="key">
+                                                    <input type="hidden" value="{{ csrf_token(app.user.uid) }}" name="_token">
+                                                    <label class="d-flex align-items-center fs-5 fw-bold mb-4">
+                                                        <span class="required">{{"Choix de statut"|trans }}</span>
+                                                        <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="Select your app category"></i>
+                                                    </label>
+                                                    <!--end::Label-->
+                                                    <!--begin:Options-->
+                                                    <div class="fv-row">
+                                                        <!--begin:Option-->
+
+                                                        <!--end::Option-->
+                                                        <!--begin:Option-->
+                                                        <label class="d-flex flex-stack mb-5 cursor-pointer vischeck">
+                                                            <!--begin:Label-->
+                                                            <span class="d-flex align-items-center me-2">
+                                                                <!--begin:Icon-->
+                                                                <span class="symbol symbol-50px me-6">
+                                                                    <span class="symbol-label bg-light-danger">
+                                                                        <!--begin::Svg Icon | path: icons/duotune/general/gen025.svg-->
+                                                                        <span class="svg-icon svg-icon-1 svg-icon-danger">
+                                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                                                <rect x="2" y="2" width="9" height="9" rx="2" fill="currentColor" />
+                                                                                <rect opacity="0.3" x="13" y="2" width="9" height="9" rx="2" fill="currentColor" />
+                                                                                <rect opacity="0.3" x="13" y="13" width="9" height="9" rx="2" fill="currentColor" />
+                                                                                <rect opacity="0.3" x="2" y="13" width="9" height="9" rx="2" fill="currentColor" />
+                                                                            </svg>
+                                                                        </span>
+                                                                        <!--end::Svg Icon-->
+                                                                    </span>
+                                                                </span>
+                                                                <!--end:Icon-->
+                                                                <!--begin:Info-->
+                                                                <span class="d-flex flex-column">
+                                                                    <span class="fw-bolder fs-6">{{"Valider la marque"|trans }}</span>
+                                                                    <span class="fs-7 text-muted">{{"La validation de la marque suppose que toutes les configurations ont été faites et le site est opérationnel."|trans }}</span>
+                                                                </span>
+                                                                <!--end:Info-->
+                                                            </span>
+                                                            <!--end:Label-->
+                                                            <!--begin:Input-->
+                                                            <span class="form-check form-check-custom form-check-solid">
+                                                                <input class="form-check-input" type="radio" name="st" checked value="3"/>
+                                                            </span>
+                                                            <!--end:Input-->
+                                                        </label>
+                                                        <!--end::Option-->
+                                                        <!--begin:Option-->
+                                                        <label class="d-flex flex-stack mb-5 cursor-pointer">
+                                                            <!--begin:Label-->
+                                                            <span class="d-flex align-items-center me-2">
+                                                                <!--begin:Icon-->
+                                                                <span class="symbol symbol-50px me-6">
+                                                                    <span class="symbol-label bg-light-danger">
+                                                                        <!--begin::Svg Icon | path: icons/duotune/general/gen025.svg-->
+                                                                        <span class="svg-icon svg-icon-1 svg-icon-danger">
+                                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                                                <rect x="2" y="2" width="9" height="9" rx="2" fill="currentColor" />
+                                                                                <rect opacity="0.3" x="13" y="2" width="9" height="9" rx="2" fill="currentColor" />
+                                                                                <rect opacity="0.3" x="13" y="13" width="9" height="9" rx="2" fill="currentColor" />
+                                                                                <rect opacity="0.3" x="2" y="13" width="9" height="9" rx="2" fill="currentColor" />
+                                                                            </svg>
+                                                                        </span>
+                                                                        <!--end::Svg Icon-->
+                                                                    </span>
+                                                                </span>
+                                                                <!--end:Icon-->
+                                                                <!--begin:Info-->
+                                                                <span class="d-flex flex-column">
+                                                                    <span class="fw-bolder fs-6">{{"Demande de classification"|trans }}</span>
+                                                                    <span class="fs-7 text-muted">{{"Demandez une classification si les configurations du revendeur ne sont pas complètes."|trans }}</span>
+                                                                </span>
+                                                                <!--end:Info-->
+                                                            </span>
+                                                            <!--end:Label-->
+                                                            <!--begin:Input-->
+                                                            <span class="form-check form-check-custom form-check-solid">
+                                                                <input class="form-check-input" type="radio" name="st" id="st5" value="5"/>
+                                                            </span>
+                                                            <!--end:Input-->
+                                                        </label>
+                                                        <!--end::Option-->
+                                                        <!--begin:Option-->
+                                                        <label class="d-flex flex-stack mb-5 cursor-pointer">
+                                                            <!--begin:Label-->
+                                                            <span class="d-flex align-items-center me-2">
+                                                                <!--begin:Icon-->
+                                                                <span class="symbol symbol-50px me-6">
+                                                                    <span class="symbol-label bg-light-danger">
+                                                                        <!--begin::Svg Icon | path: icons/duotune/general/gen025.svg-->
+                                                                        <span class="svg-icon svg-icon-1 svg-icon-danger">
+                                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                                                <rect x="2" y="2" width="9" height="9" rx="2" fill="currentColor" />
+                                                                                <rect opacity="0.3" x="13" y="2" width="9" height="9" rx="2" fill="currentColor" />
+                                                                                <rect opacity="0.3" x="13" y="13" width="9" height="9" rx="2" fill="currentColor" />
+                                                                                <rect opacity="0.3" x="2" y="13" width="9" height="9" rx="2" fill="currentColor" />
+                                                                            </svg>
+                                                                        </span>
+                                                                        <!--end::Svg Icon-->
+                                                                    </span>
+                                                                </span>
+                                                                <!--end:Icon-->
+                                                                <!--begin:Info-->
+                                                                <span class="d-flex flex-column">
+                                                                    <span class="fw-bolder fs-6">{{"Désactiver la marque"|trans }}</span>
+                                                                    <span class="fs-7 text-muted">{{"Cette option engendre la désactivation temporaire du nom de domaine du revendeur."|trans }}</span>
+                                                                </span>
+                                                                <!--end:Info-->
+                                                            </span>
+                                                            <!--end:Label-->
+                                                            <!--begin:Input-->
+                                                            <span class="form-check form-check-custom form-check-solid">
+                                                                <input class="form-check-input"  type="radio" name="st" id="st4" value="4"/>
+                                                            </span>
+                                                            <!--end:Input-->
+                                                        </label>
+                                                        <!--end::Option-->
+                                                    </div>
+                                                    <!--end:Options-->
+
+                                                </div>
+                                                <div class="fv-row mb-8">
+                                                    <label class="d-flex align-items-center fs-5 fw-bold mb-2">
+                                                        <span class="required">{{'Observations'|trans }}</span>
+                                                        <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="{{'Remplissez ce champs si vous avez un commentaire à faire sur la marque.'|trans }}"></i>
+                                                    </label>
+                                                    <textarea type="text" rows="5" class="form-control form-control-lg form-control-solid" name="observations" placeholder="{{"Optionnel."|trans }}" value="" /></textarea>
+                                                </div>
+                                                <!--end::Input group-->
+                                            </div>
+                                        </div>
+                                        <!--begin::Actions-->
+                                        <div class="d-flex flex-stack pt-1">
+                                            <!--begin::Wrapper-->
+                                            <div class="me-2">
+
+                                            </div>
+                                            <!--end::Wrapper-->
+                                            <!--begin::Wrapper-->
+                                            <div>
+                                                <button type="reset" class="btn btn-light me-3" data-kt-modal-action="cancel">{{'Annuler'| trans}}</button>
+                                                <button type="submit" class="btn btn-primary" data-kt-modal-action="submit">
+                                                    <span class="indicator-label">{{'Enregistrer'| trans}}</span>
+                                                    <span class="indicator-progress">{{'Veuillez patienter'| trans}}...
+                                                    <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                                                </button>
+                                            </div>
+                                            <!--end::Wrapper-->
+                                        </div>
+                                        <!--end::Actions-->
+                                    </form>
+                                    <!--end::Form-->
+                                </div>
+                                <!--end::Content-->
+                            </div>
+                            <!--end::Stepper-->
+                        </div>
+
+                    </div>
+                    <!--end::Modal content-->
+                </div>
+                <!--end::Modal dialog-->
+            </div>
+            <!--end::Modal - Add statuss-->
+            <!--end::Modals-->
         </div>
         <!--end::Container-->
     </div>
     <!--end::Post-->
-{% endblock %}
+    <!--end::Post-->
+</div>
+<div class="sr-only" id="loading-container" >
+    <img id="loading" src="/app/media/loading/loading.gif"/>
+</div>
 
+{% endblock %}
 
 {% block javascripts %}
 <script type="text/javascript">
+	const createBrandJ          = "{{path('create_brand') }}";
+    const csrfToken             = "{{ csrf_token(app.user.uid) }}";
+    const loadBrand             = "{{ path('load_brand') }}";
+    const checkbrand            = "{{ path('check_brand') }}";
+    const reload_brand          = "{{ path('rbrand') }}";
 
-    const createBrand = "{{path('create_brand') }}";
-
-    const csrfToken   = "{{ csrf_token(app.user.uid) }}";
-    const loadBrand   = "{{path('load_brand') }}";
-
+    const _ask_confirm          = `{{"Confirmez-vous la validation de la marque "|trans }}`;
+    const _pendingb             = `{{"En cours"|trans }}`;
+    const _validateb            = `{{"Validé"|trans }}`;
+    const _statusInfo           = `{{"Changer de statut"|trans }}`;
+    const _canceledb            = `{{"Désactivé"|trans }}`;
+    const _disabled             = `{{"Suspendu"|trans }}`;
+    const _validateInfo         = `{{"Changer de statut"|trans }}`;
+    const _detalMsg             = `{{"Vérifier le domaine"|trans }}`;
+    const _msgUpdate            = `{{"Modifier la marque"|trans }}`;
     const _brand_Required       = `{{"Le nom de la marque doit être d'au moins 3 et d'au plus 30"|trans }}`;
     const _mail_required        = `{{"Veuillez entrer un mail correct SVP !"|trans }}`;
     const _number_required_mail = `{{"Le nombre de caractère pour le mail est d'au moins 11 et d'au plus 60 caractères."|trans }}`;
     const _url_brand            = `{{"Assurez-vous de mettre un nom de domaine correct SVP !"|trans }}`;
     const _phone_required       = `{{"Le numéro de téléphone doit contenir au moins 8 et au plus 25 caractères."|trans }}`;
     const _empty_info           = `{{"Ce champs est requis. Renseignez pour continuer SVP !"|trans }}`;
-</script>
-<script src="{{ asset('app/js/queries/public-app/country-flag-input.js') }}"></script>
 
+</script>
+<!--begin::Page Vendors Javascript(used by this page)-->
+<script src="{{ asset('app/plugins/custom/datatables/datatables.bundle.js') }}"></script>
+<!--end::Page Vendors Javascript-->
+<!--begin::Page Custom Javascript(used by this page)-->
+{# <script src="{{ asset('app/js/queries/brand/list.js') }}"></script> #}
 <script src="{{ asset('app/js/queries/brand/actions.js') }}"></script>
 
-<script src="{{ asset('app/plugins/custom/datatables/datatables.bundle.js') }}"></script>
-
-
+<script src="{{ asset('app/js/queries/brand/delete.js') }}"></script>
+<!--end::Page Custom Javascript-->
+<!--end::Javascript-->
 {% endblock %}

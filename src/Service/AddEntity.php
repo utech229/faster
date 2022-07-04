@@ -67,9 +67,6 @@ class AddEntity extends AbstractController
         if(isset($SETTINGFILE) && $SETTINGFILE->getError() == 0){
             $return	=	$this->services->checkFile($SETTINGFILE, ["jpeg", "jpg", "png", "JPEG", "JPG", "PNG"], 200024);
             if($return['error'] == false) {
-                if (file_exists($filepath)) {
-                    if(strpos($user->getProfilePhoto(), 'default_') === false) $this->services->removeFile($placeAvatar, $user->getProfilePhoto());
-                }
                 return $this->services->renameFile($SETTINGFILE, $placeAvatar, true, $placeAvatar, $filename);
             }else
                 return [
@@ -82,12 +79,15 @@ class AddEntity extends AbstractController
 	}
 
     //usetting datas for new user
-    public function defaultUsetting($user, $firstname = null, $lastname = null)
+    public function defaultUsetting($user, $data)
     {
         $usetting = new Usetting();
 
         $language  = [ 'code' => 'fr', 'name' => 'French'];
-        $currency  = [ 'code' => 'XOF', 'name' => "West African CFA Franc"];
+        $currency  = [ 'code' => $data['ccode'], 'name' => $data['cname']];
+
+        $firstname = ($data['ufirstname']) ? $data['ufirstname'] : null;
+        $lastname = ($data['ulastname']) ? $data['ulastname'] : null;
 
         $usetting->setUid($this->services->idgenerate(11))
                 ->setFirstname($firstname)
@@ -97,7 +97,6 @@ class AddEntity extends AbstractController
                 ->setTimezone('+01:00')
                 ->setCreatedAt(new \DatetimeImmutable())
                 ->setUser($user);
-
         $this->usettingRepository->add($usetting);
     }
 
@@ -122,18 +121,17 @@ class AddEntity extends AbstractController
         $defaultbrand  = $this->brand->get();
         $brand = new Brand();
         $brand->setUid($this->services->idgenerate(10))
-                    ->setStatus($this->statusRepository->findOneByCode(3))
-                    ->setName($defaultbrand['name'])
-                    ->setSiteUrl($defaultbrand['base_url'])
-                    ->setFavicon($defaultbrand['favicon_link'])
-                    ->setEmail($defaultbrand['emails']['support'])
-                    ->setLogo($defaultbrand['logo_link'])
-                    ->setCommission(0)
-                    ->setNoreplyEmail('noreply@'.$defaultbrand['base_url'])
-                    ->setPhone($defaultbrand['phone']['bj'])
-                    ->setIsDefault(true)
-                    ->setCreatedAt(new \DatetimeImmutable());
-
+            ->setStatus($this->statusRepository->findOneByCode(3))
+            ->setName($defaultbrand['name'])
+            ->setSiteUrl($defaultbrand['base_url'])
+            ->setFavicon($defaultbrand['favicon_link'])
+            ->setEmail($defaultbrand['emails']['support'])
+            ->setLogo(strtolower($defaultbrand['name'].'.png'))
+            ->setCommission(0)
+            ->setNoreplyEmail('noreply@'.$defaultbrand['base_url'])
+            ->setPhone($defaultbrand['phone']['bj'])
+            ->setIsDefault(true)
+            ->setCreatedAt(new \DatetimeImmutable());
         $this->brandRepository->add($brand);
     }
 
@@ -142,18 +140,17 @@ class AddEntity extends AbstractController
     {
         $defaultBrand = $this->brand->get();
         if (count($this->companyRepository->findAll()) > 0) return false;
-        $company      = new Company();
+        $company = new Company();
         $company->setUid($this->services->idgenerate(11))
-                    ->setStatus($this->statusRepository->findOneByCode(3))
-                    ->setIfu($defaultBrand['identifier']['ifu'])
-                    ->setRccm(($defaultBrand['identifier']['rccm']))
-                    ->setAddress(($defaultBrand['author']['address']))
-                    ->setName($defaultBrand['author']['name'])
-                    ->setEmail($defaultBrand['emails']['support'])
-                    ->setPhone($defaultBrand['phone']['bj'])
-                    ->setCreatedAt(new \DatetimeImmutable());
-
-        $this->companyRepository->add($company);
+            ->setStatus($this->statusRepository->findOneByCode(3))
+            ->setIfu($defaultBrand['identifier']['ifu'])
+            ->setRccm(($defaultBrand['identifier']['rccm']))
+            ->setAddress(($defaultBrand['author']['address']))
+            ->setName($defaultBrand['author']['name'])
+            ->setEmail($defaultBrand['emails']['support'])
+            ->setPhone($defaultBrand['phone']['bj'])
+            ->setCreatedAt(new \DatetimeImmutable());
+            $this->companyRepository->add($company);
     }
 
 

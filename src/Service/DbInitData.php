@@ -3,11 +3,12 @@
 namespace App\Service;
 
 use App\Entity\Role;
-use App\Entity\Router;
 use App\Service\User;
+use App\Entity\Router;
 use App\Entity\Sender;
 use App\Entity\Status;
 use App\Service\sBrand;
+use App\Entity\Operator;
 use App\Service\AddLogs;
 use App\Service\BaseUrl;
 use App\Service\Services;
@@ -18,6 +19,7 @@ use App\Repository\UserRepository;
 use App\Repository\RouterRepository;
 use App\Repository\SenderRepository;
 use App\Repository\StatusRepository;
+use App\Repository\OperatorRepository;
 use App\Repository\PermissionRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\AuthorizationRepository;
@@ -32,7 +34,7 @@ class DbInitData extends AbstractController
 	public function __construct(TranslatorInterface $intl, sBrand $brand, Services $services,
     EntityManagerInterface $entityManager,UserRepository $userRepository,  PermissionRepository $permissionRepository,
     RoleRepository $roleRepository, AuthorizationRepository $authorizationRepository, StatusRepository $statusRepository,
-    RouterRepository $routerRepository, SenderRepository $senderRepository)
+    RouterRepository $routerRepository, SenderRepository $senderRepository, OperatorRepository $operatorRepository)
     {
         $this->services      = $services;
         $this->em	         = $entityManager;
@@ -44,6 +46,7 @@ class DbInitData extends AbstractController
         $this->statusRepository = $statusRepository;
         $this->routerRepository = $routerRepository;
         $this->senderRepository = $senderRepository;
+        $this->operatorRepository = $operatorRepository;
     }
 
     public function addRole():void
@@ -94,7 +97,7 @@ class DbInitData extends AbstractController
             "SMSS0", "SMSS1", "SMSS2","SMSS3","SMSS4","SMSC0", "SMSC1", "SMSC2","SMSC3","SMSC4","CTGF0", "CTGF1", "CTGF2","CTGF3","CTGF4",
             "CNPY0", "CNPY1", "CNPY2","CNPY3","CNPY4","BRND0", "BRND1", "BRND2","BRND3","BRND4","XPER0", "XPER1", "XPER2","XPER3","XPER4",
             "REC0", "REC1", "REC2","REC3","REC4", "DEV0", "DEV1", "DEV2","DEV3","DEV4",
-            "MANGR","COMM0", "COMM1", "COMM2","COMM3","COMM4",
+            "MANGR","COMM0", "COMM1", "COMM2","COMM3","COMM4","OPRT0", "OPRT1", "OPRT2","OPRT3","OPRT4",
         ];
         $permissionNames = [
             "Menu utilisateur", "Ajout utilisateur", "Voir utilisateur", "Modification utilisateur",
@@ -121,6 +124,7 @@ class DbInitData extends AbstractController
             "Menu recharge", "Ajout recharge", "Voir recharge","Modification recharge", "Suppression recharge",
             "Menu développeur", "Ajout développeur (clé api)", "Voir développeur (clé api)","Modification développeur (clé api)", "Suppression développeur (clé api)",
             "Gestionnaire de compte","Menu commission", "Ajout commission", "Voir commission","Modification commission", "Suppression commission",
+            "Menu opérateur GSM", "Ajout opérateur GSM", "Voir opérateur GSM","Modification opérateur GSM", "Suppression opérateur GSM",
         ];
         $permissionDescription = [
             "Permet d\'afficher la page utilisateurs",
@@ -248,6 +252,11 @@ class DbInitData extends AbstractController
             "Permet de modifier un ou plusieurs commission(s)",
             "Permet de supprimer un ou plusieurs commission(s)",
             "Permet de gérer le compte d'un ou de plusieurs utilisateur(s)",
+            "Permet d\'afficher le menu opérateur GSM", 
+            "Permet d\'ajouter un ou plusieurs opérateur(s) GSM", 
+            "Permet de voir toutes les  opérateur(s) GSM", 
+            "Permet de modifier un ou plusieurs opérateur(s) GSM",
+            "Permet de supprimer un ou plusieurs opérateur(s) GSM",
         ];
         $status = $this->statusRepository->findOneByCode(3);
         for ($i=0; $i < (count($permissionCodes)); $i++) {
@@ -265,15 +274,53 @@ class DbInitData extends AbstractController
         $this->em->flush();
     }
 
-    #[Route('/addauthorization', name: 'app_authorization')]
     public function addAuthorization(): void
     {
-        $roleId = [7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,
-        7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7];
+        $roleId = [7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,
+        7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,
+        7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,
+
+        6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,
+        6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,
+        6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,
+
+        5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,
+
+        4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,
+        4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,
+
+        3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,
+
+        2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,
+
+        1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1];
+
         $permissionId = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,
         31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,
-        71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,103,104,105,106,107,108,109,110,111,112,
-        113,114,115,116,117];
+        71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,
+        113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,
+
+        1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,
+        31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,
+        71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,
+        113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,
+
+        26,27,28,29,30,38,39,40,41,42,58,59,61,62,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,
+        114,115,116,117,118,
+
+        1,2,4,5,16,17,18,19,21,22,23,24,25,26,27,28,29,30,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,58,59,61,62,69,70,
+        71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,
+        113,114,115,116,117,118,120,121,122,123,124,
+        
+        26,27,28,29,30,38,39,40,41,42,58,59,61,62,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,
+        114,115,116,117,118,
+
+        26,27,28,29,30,38,39,40,41,42,58,59,61,62,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,
+        114,115,116,117,118,
+
+        26,27,28,29,30,38,39,40,41,42,58,59,61,62,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,
+        114,115,116,117,118,
+        ];
         $status = $this->statusRepository->findOneByCode(3);
         for ($i=0; $i < (count($roleId)); $i++)
         {
@@ -296,10 +343,8 @@ class DbInitData extends AbstractController
 
     public function addStatus():void
     {
-        $existedStatus  = $this->statusRepository->findAll();
-        if (!$existedStatus) {
-            $statusCodes = [0,1,2,3,4,5,6,7];
-            $statusNames = [ "Programmé","En cours", "En attente", "Actif", "Désactivé", "Suspendu", "Approuvé", "Annulé"];
+        $statusCodes = [0,1,2,3,4,5,6,7,8,9,10,11];
+            $statusNames = [ "Programmé","En cours", "En attente", "Actif", "Désactivé", "Suspendu", "Approuvé", "Annulé", "Délivré", "Rejeté","Brouillon","Supprimé"];
             $statusDescription = [
                 "Statut programmé sur une entité",
                 "Statut en cours  d'une entité",
@@ -308,7 +353,11 @@ class DbInitData extends AbstractController
                 "Statut désactivé d'une entité",
                 "Statut suspendu d'une entité",
                 "Statut approuvé d'une entité",
-                "Statut annulé d'une entité"
+				"Statut annulé d'une entité",
+				"Statut délivré d'une entité", 
+				"Statut rejeté d'une entité",
+                "Statut brouillon d'une entité",
+                "Statut supprimé d'une entité",
             ];
             for ($i=0; $i < (count($statusCodes)); $i++) {
                 $status  = $this->statusRepository->findOneBy(['code' => $statusCodes[$i]]);
@@ -322,11 +371,6 @@ class DbInitData extends AbstractController
                     $this->em->persist($status);
                 }
             }
-            $this->em->flush();
-            $response = true;
-        }else{
-            $response = false;
-        }
     }
 
     public function addRoute():void
@@ -351,6 +395,35 @@ class DbInitData extends AbstractController
                     $route->setDescription($routeDescription[$i]);
                     $route->setCreatedAt(new \DatetimeImmutable());
                     $this->em->persist($route);
+                }
+            }
+            $this->em->flush();
+            $response = true;
+        }else{
+            $response = false;
+        }
+
+    }
+
+    public function addOperator():void
+    {
+        $existed_Operator  = $this->operatorRepository->findAll();
+        if (!$existed_Operator) {
+            $operatorNames = [ "MTN BENIN", "MOOV AFRICA BENIN"];
+            $operatorDescription = [
+                "Operateur MTN BENIN",
+                "Opérateur MOOV AFRICA BENIN",
+            ];
+            for ($i=0; $i < (count($operatorNames)); $i++) {
+                $operatorx = $this->operatorRepository->findOneByName($operatorNames[$i]);
+                if (!$operatorx) {
+                    $operator = new Operator();
+                    $operator->setUid($this->services->idgenerate(10));
+                    $operator->setName($operatorNames[$i]);
+                    $operator->setStatus($this->services->status(3));
+                    $operator->setDescription($operatorDescription[$i]);
+                    $operator->setCreatedAt(new \DatetimeImmutable());
+                    $this->em->persist($operator);
                 }
             }
             $this->em->flush();
