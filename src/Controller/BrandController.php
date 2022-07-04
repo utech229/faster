@@ -8,6 +8,7 @@ use App\Entity\Brand;
 use App\Service\BaseUrl;
 use App\Service\Services;
 use App\Entity\User;
+use App\Entity\Recharge;
 use App\Entity\Status;
 use App\Service\AddEntity;
 

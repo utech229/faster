@@ -156,22 +156,25 @@ class RechargeController extends AbstractController
 
     //Build Commission
     public function buildCom($amount, $user, bool $self = false){
-
         $admin               = $user->getBrand()->getManager();
         $user                = $user;
+        $priceU              = $user->getPrice()['BJ']['price'];
+
+        if(!isset($admin->getPrice()['BJ'])){$this->services->msg_error($this->intl->trans("Récupération du prix Admin échouée."), $this->intl->trans("Le prix de l'administrateur de l'utilisateur à recharger n'est pas défini. Contactez votre administrateur ou gestion de compte pour continuer."));}
+        $priceA              = $admin->getPrice()['BJ']['price'];
         $bBalanceAdmin       = $admin->getBalance();
+
         if(!$self){
             $nBalanceAdmin   = $bBalanceAdmin - $amount;
             $admin->setBalance($nBalanceAdmin);
             $this->uRepository->add($admin);
         }
+
         $aBalanceAdmin       = $admin->getBalance();
         $bBalanceUser        = $user->getBalance();
         $aBalanceUser        = $nBalanceUser = ($bBalanceUser + $amount);
         $user->setBalance($nBalanceUser);
         $this->uRepository->add($user);
-        $priceU              = $user->getPrice()['BJ']['price'];
-        $priceA              = $admin->getPrice()['BJ']['price'];
 
         //Si l'utilisateur rechargé est un gestionnaire ou administrateur ne peut pas calculer la commission
         $diffAmount          = ($amount / $priceA) - ($amount / $priceU);
@@ -181,15 +184,12 @@ class RechargeController extends AbstractController
         $user->getBrand()    ->setCommission($nCommission);
         $this->bRepository   ->add($user->getBrand());
 
-       return $data = [
-            // 'rechargeBy'     => $rechargeBy,
-            'bBalanceAdmin'  => $bBalanceAdmin,
-            'aBalanceAdmin'  => $aBalanceAdmin,
-            'bBalanceUser'   => $bBalanceUser,
-            'aBalanceUser'   => $aBalanceUser,
-            'beforeCommission'=> $beforeCommission,
-            'afterCommission'=> $afterCommission,
-            'commission'     => $commission
+        return $data = [
+            // 'rechargeBy'      => $rechargeBy,
+            'bBalanceAdmin'   => $bBalanceAdmin, 'aBalanceAdmin'      => $aBalanceAdmin,
+            'bBalanceUser'    => $bBalanceUser,  'aBalanceUser'       => $aBalanceUser,
+            'beforeCommission'=> $beforeCommission, 'afterCommission' => $afterCommission,
+            'commission'      => $commission
         ];
     }
     //We use this function to create a new recharge for user
@@ -432,14 +432,16 @@ class RechargeController extends AbstractController
         $data = [];
         if($allRecharges){
             foreach($allRecharges as $getRecharge){
-                $row              = array();
-                $row['ref']       = $getRecharge->getUid();
-                $row['amount']    = $getRecharge->getTransaction()->getAmount();
-                $row['emailS']    = $getRecharge->getUser()->getEmail();
-                $row['emailR']    = $getRecharge->getRechargeBy()->getEmail();
-                $row['status']    = $getRecharge->getStatus()->getCode();
-                $row['date']      = $getRecharge->getCreatedAt()->format("d-m-Y H:i");
-                $row['action' ]   = [
+                $row               = array();
+                $row['ref']        = $getRecharge->getUid();
+                $row['amount']     = $getRecharge->getTransaction()->getAmount();
+                $row['soldeBefore']= $getRecharge->getBeforeBalance();
+                $row['soldeAfter'] = $getRecharge->getAfterBalance();
+                $row['emailS']     = $getRecharge->getUser()->getEmail();
+                $row['emailR']     = $getRecharge->getRechargeBy()->getEmail();
+                $row['status']     = $getRecharge->getStatus()->getCode();
+                $row['date']       = $getRecharge->getCreatedAt()->format("d-m-Y H:i");
+                $row['action' ]    = [
                                         'uid'    =>  $getRecharge->getUid(),
                                         'status' => $getRecharge->getStatus()->getCode()
                 ];
