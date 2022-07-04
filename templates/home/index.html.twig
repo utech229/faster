@@ -69,13 +69,37 @@
                     <!--end::Lists Widget 19-->
                 </div>
                 <!--end::Col-->
+                
                 <!--begin::Col-->
                 <div class="col-xl-8 mb-5 mb-xl-10">
+
+                    <div class="notification">
+                     <!--begin::Alert-->
+                        <div class="alert alert-dismissible bg-light-danger border border-danger border-dashed  h-lg-100 d-flex flex-column flex-sm-row w-100 p-5 mb-10">
+                            <!--begin::Icon-->
+                            <!--begin::Svg Icon | path: icons/duotune/communication/com003.svg-->
+                            <span class="svg-icon svg-icon-2hx svg-icon-danger me-4 mb-5 mb-sm-0">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                    <path opacity="0.3" d="M2 4V16C2 16.6 2.4 17 3 17H13L16.6 20.6C17.1 21.1 18 20.8 18 20V17H21C21.6 17 22 16.6 22 16V4C22 3.4 21.6 3 21 3H3C2.4 3 2 3.4 2 4Z" fill="currentColor" />
+                                    <path d="M18 9H6C5.4 9 5 8.6 5 8C5 7.4 5.4 7 6 7H18C18.6 7 19 7.4 19 8C19 8.6 18.6 9 18 9ZM16 12C16 11.4 15.6 11 15 11H6C5.4 11 5 11.4 5 12C5 12.6 5.4 13 6 13H15C15.6 13 16 12.6 16 12Z" fill="currentColor" />
+                                </svg>
+                            </span>
+                            <!--end::Svg Icon-->
+                            <!--end::Icon-->
+                            <!--begin::Content-->
+                            <div class="d-flex flex-column pe-0 pe-sm-10">
+                                <h5 class="mb-1">{% trans %}Message{% endtrans %} </h5>
+                                <span>{% trans %}Nous disposons de 72H pour la validation vos identifiants d'envoi après leur création.{% endtrans %}</span>
+                            </div>
+                            <!--end::Content-->
+                        </div>
+                        <!--end::Alert-->
+                    </div>
+
                     <!--begin::Row-->
                     <div class="row g-5 g-xl-10">
                         <!--begin::Col-->
                         <div class="col-xl-12 mb-xl-10 card card-flush p-4">
-
                             <div id="kt_carousel_3_carousel" class="carousel carousel-custom slide" data-bs-ride="carousel" data-bs-interval="20000">
                                 <!--begin::Heading-->
                                 <div class="d-flex align-items-center justify-content-between flex-wrap">
@@ -115,40 +139,17 @@
                             </div>
                             <!--begin::Action-->
                             <div class="mb-1 mt-4 p-4">
-                                <a href="{{ path('campaign_sms')}}" class="btn btn-primary me-2">{% trans %}SMS{% endtrans %}</a>
+                                <a href="{{ path('campaign_sms')}}" class="btn btn-primary me-2">{% trans %}Envoyer un SMS{% endtrans %}</a>
                                 <a href="{{ path('campaign_sms')}}" style="background: #fc6" class="btn me-2">{% trans %}Créer une Campagne{% endtrans %}</a>
-                                <a href="{{ path('app_contact_index')}}" class="btn btn-light me-2">{% trans %}API SMS{% endtrans %}</a>
+                                <a href="{{ path('app_developer')}}" class="btn btn-light me-2">{% trans %}API SMS{% endtrans %}</a>
                                 <a href="{{ path('app_contact_index')}}" class="btn btn-success">{% trans %}Importer des contacts{% endtrans %}</a>
                             </div>
                             <!--end::Action-->
                         </div>
                         <!--end::Col-->
                     </div>
-                    <!--end::Row-->  
+                    <!--end::Row--> 
 
-                    {#<div class="car">
-                     <!--begin::Alert-->
-                        <div class="alert alert-dismissible bg-light-danger border border-danger border-dashed  h-lg-100 d-flex flex-column flex-sm-row w-100 p-5 mb-10">
-                            <!--begin::Icon-->
-                            <!--begin::Svg Icon | path: icons/duotune/communication/com003.svg-->
-                            <span class="svg-icon svg-icon-2hx svg-icon-danger me-4 mb-5 mb-sm-0">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                    <path opacity="0.3" d="M2 4V16C2 16.6 2.4 17 3 17H13L16.6 20.6C17.1 21.1 18 20.8 18 20V17H21C21.6 17 22 16.6 22 16V4C22 3.4 21.6 3 21 3H3C2.4 3 2 3.4 2 4Z" fill="currentColor" />
-                                    <path d="M18 9H6C5.4 9 5 8.6 5 8C5 7.4 5.4 7 6 7H18C18.6 7 19 7.4 19 8C19 8.6 18.6 9 18 9ZM16 12C16 11.4 15.6 11 15 11H6C5.4 11 5 11.4 5 12C5 12.6 5.4 13 6 13H15C15.6 13 16 12.6 16 12Z" fill="currentColor" />
-                                </svg>
-                            </span>
-                            <!--end::Svg Icon-->
-                            <!--end::Icon-->
-                            <!--begin::Content-->
-                            <div class="d-flex flex-column pe-0 pe-sm-10">
-                                <h5 class="mb-1">{% trans %}Message{% endtrans %} </h5>
-                                <span>{% trans %}Les SMS de gayman sont pas dedans{% endtrans %}</span>
-                            </div>
-                            <!--end::Content-->
-                        </div>
-                        <!--end::Alert-->
-                    </div>#}
-                    
                     <!--begin::Engage widget 4-->
                     <div class="card" style="background: {% if brand.name == "FASTERMESSAGE" %}  #003366  {% else %} #010246 {% endif %};">
                         <!--begin::Body-->
@@ -175,7 +176,7 @@
                             </div>
                             <!--begin::Action-->
                             <!--begin::Illustration-->
-                            <img src="{{ asset('app/media/dashboard/notification.png') }}" class="position-absolute  me-3 bottom-0 end-0 h-150px" alt="" />
+                            <img src="{{ asset('app/media/dashboard/sms-trait.png') }}" class="position-absolute  me-3 bottom-0 end-0 h-150px" alt="" />
                             <!--end::Illustration-->
                         </div>
                         <!--end::Body-->
