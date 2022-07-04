@@ -48,6 +48,7 @@ var KTGroupList = function() {
         },
         l = () => {
             const c = o.querySelectorAll('[type="checkbox"]');
+            const campaign = document.querySelector('[data-kt-contact-group-table-toolbar="campaign"]');
             t = document.querySelector('[data-kt-contact-group-table-toolbar="base"]'),
                 n = document.querySelector('[data-kt-contact-group-table-toolbar="selected"]'),
                 r = document.querySelector('[data-kt-contact-group-table-toolbar="selected_count"]');
@@ -109,6 +110,45 @@ var KTGroupList = function() {
                             }
 
                           
+                        }
+                        else{
+                            "cancel" === t.dismiss && $(document).trigger('onAjaxInfo');
+                        }
+                       
+                    }))
+                })),
+                campaign.addEventListener("click", (function() {
+                    Swal.fire({
+                        text: "Vous serez rédiriger vers la page de création de campagne",
+                        icon: "warning",
+                        showCancelButton: !0,
+                        buttonsStyling: !1,
+                        confirmButtonText: _Form_Ok_Swal_Button_Text_Notification,
+                        cancelButtonText: "Annuler",
+                        customClass: {
+                            confirmButton: "btn fw-bold btn-primary",
+                            cancelButton: "btn fw-bold btn-danger"
+                        }
+                    }).then((function(t) {
+                        if (t.value) {
+                            let user = document.querySelector('[data-kt-contact-group="user"]').value;
+                            let tabUid  =  [];
+                            c.forEach((t => {
+                                        if(t.checked && $(t).attr("data-value") != undefined){
+                                            tabUid.push($(t).attr("data-value"));
+                                        }
+                            }));
+                            user == "alls" ? 
+                            Swal.fire({
+                                text: "Veuillez sélectionner spécifiquement un utilisateur et non <<tous>> au niveau de la sélection des utilisateurs",
+                                icon: "info",
+                                buttonsStyling: !1,
+                                confirmButtonText: _Form_Ok_Swal_Button_Text_Notification,
+                                customClass: {
+                                    confirmButton: "btn fw-bold btn-primary"
+                                }
+                            })  :
+                            window.location.assign(url_campaign+'?grps='+tabUid+'&user='+user);
                         }
                         else{
                             "cancel" === t.dismiss && $(document).trigger('onAjaxInfo');
