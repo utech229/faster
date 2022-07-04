@@ -98,13 +98,13 @@
                                 </a>
                             </div>
                             <!--end::Menu-->
-                            {% if permission(["SMSC0", "SMSS0", "SEND0"], app.user, false) %}
+                            {% if permission(["SMSC0", "SMSS0", "SMSA0", "STAT0", "SEND0"], app.user, false) %}
                                 <div class="menu-item">
                                     <div class="menu-content pt-8 pb-2">
                                         <span class="menu-section text-muted text-uppercase fs-8 ls-1">{{ "Campagnes" | trans }}</span>
                                     </div>
                                 </div>
-                                {% if permission(["SMSC0", "SMSS0", "SEND0"], app.user, false) %}
+                                {% if permission(["SMSC0", "SMSS0", "SMSA0", "STAT0"], app.user, false) %}
                                     <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
         							    <span class="menu-link">
         									<span class="menu-icon">
@@ -149,7 +149,7 @@
             										</a>
             									</div>
                                             {% endif %}
-                                            {% if permission(["SMSS0"], app.user, false) %}
+                                            {% if permission(["STAT0"], app.user, false) %}
             									<div class="menu-item">
             										<a class="menu-link" href="{{path("message_sms_stats")}}">
             											<span class="menu-bullet">
@@ -180,19 +180,6 @@
                                     <span class="menu-section text-muted text-uppercase fs-8 ls-1">{{ 'Transactions' | trans }}</span>
                                 </div>
                             </div>
-                                {% if permission(["SEND0",], app.user) %}
-                            <div class="menu-item">
-                                <a class="menu-link " href="{{ path('sender') }}">
-                                    <span class="menu-icon">
-                                        <!--begin::Svg Icon | path: icons/stockholm/Design/PenAndRuller.svg-->
-                                        <i class="fas fa-paper-plane fs-3"></i>
-                                        <!--end::Svg Icon-->
-                                    </span>
-                                    <span class="menu-title">{{ 'Expéditeurs' | trans }} </span>
-                                </a>
-                            </div>
-                                {% endif %}
-                            {% endif %}
                             {% if permission(["REC0", "MET0", "PAY0",], app.user, false) %}
                             <div class="menu-item">
                                 <div class="menu-content pt-8 pb-2">
@@ -482,14 +469,14 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div data-kt-menu-trigger="click" data-kt-menu-placement="bottom-start" class="menu-item menu-lg-down-accordion me-lg-1"> 
+                                        <div data-kt-menu-trigger="click" data-kt-menu-placement="bottom-start" class="menu-item menu-lg-down-accordion me-lg-1">
                                             <span class="menu-link py-3"> {#app.user.price[app.user.country.code].price#}
-                                                <span class="menu-title"> {{"Crédit SMS"|upper}} : &ensp; 
-                                                <strong> 
-                                                {% if app.user.price != [] %} 
-                                                    {{ (app.user.balance / 12 )|round}}  
+                                                <span class="menu-title"> {{"Crédit SMS"|upper}} : &ensp;
+                                                <strong>
+                                                {% if app.user.price != [] %}
+                                                    {{ (app.user.balance / 12 )|round}}
                                                 {% else %}
-                                                    0 
+                                                    0
                                                 {% endif %} </strong> &ensp; SMS </span>
                                                 <span class="menu-arrow d-lg-none"></span>
                                             </span>
@@ -677,7 +664,7 @@
                                 </div>
                                 <!--end::Filter menu-->
                                 <!--begin::Primary button-->
-                                <a href="{{ path('campaign_sms') }}" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_create_campaign">{% trans %}Nouvel Campagne{% endtrans %}</a>
+                                <a href="{{ path('campaign_sms_view_created') }}" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_create_campaign">{% trans %}Nouvel Campagne{% endtrans %}</a>
                                 <!--end::Primary button-->
                             </div>
                             <!--end::Actions-->

@@ -10,7 +10,7 @@
     <!--begin::Post-->
     <div class="post d-flex flex-column-fluid" id="kt_post">
         <!--begin::Container-->
-        <div id="kt_content_container" class="container-xxl"> 
+        <div id="kt_content_container" class="container-xxl">
             <!--begin::Row-->
             <div class="row g-5 g-xl-10">
                 <!--begin::Col-->
@@ -69,7 +69,7 @@
                     <!--end::Lists Widget 19-->
                 </div>
                 <!--end::Col-->
-                
+
                 <!--begin::Col-->
                 <div class="col-xl-8 mb-5 mb-xl-10">
 
@@ -139,16 +139,16 @@
                             </div>
                             <!--begin::Action-->
                             <div class="mb-1 mt-4 p-4">
-                                <a href="{{ path('campaign_sms')}}" class="btn btn-primary me-2">{% trans %}Envoyer un SMS{% endtrans %}</a>
-                                <a href="{{ path('campaign_sms')}}" style="background: #fc6" class="btn me-2">{% trans %}Créer une Campagne{% endtrans %}</a>
-                                <a href="{{ path('app_developer')}}" class="btn btn-light me-2">{% trans %}API SMS{% endtrans %}</a>
-                                <a href="{{ path('app_contact_index')}}" class="btn btn-success">{% trans %}Importer des contacts{% endtrans %}</a>
+                                <a href="{{ path('message_sms')}}" class="btn btn-primary me-2 mb-2">{% trans %}Envoyer un SMS{% endtrans %}</a>
+                                <a href="{{ path('campaign_sms_view_created')}}" style="background: #fc6" class="btn me-2 mb-2">{% trans %}Créer une Campagne{% endtrans %}</a>
+                                <a href="{{ path('app_developer')}}" class="btn btn-light me-2 mb-2">{% trans %}API SMS{% endtrans %}</a>
+                                <a href="{{ path('app_contact_index')}}" class="btn btn-success me-2 mb-2">{% trans %}Importer des contacts{% endtrans %}</a>
                             </div>
                             <!--end::Action-->
                         </div>
                         <!--end::Col-->
                     </div>
-                    <!--end::Row--> 
+                    <!--end::Row-->
 
                     <!--begin::Engage widget 4-->
                     <div class="card" style="background: {% if brand.name == "FASTERMESSAGE" %}  #003366  {% else %} #010246 {% endif %};">

@@ -181,7 +181,7 @@ class SMSCampaignController extends AbstractController
 			$data[$key][] = $campaign->getName();
 			$data[$key][] = $campaign->getSender();
 			$data[$key][] = ($campaign->getSendingAt()->setTimezone(new \DateTimeZone($campaign->getTimezone())))->format("Y-m-d H:i:sP");
-			$data[$key][] = [0,0];//[$counting["persons"],$counting["pages"]];
+			$data[$key][] = [$counting["persons"],$counting["pages"]];
 			$data[$key][] = [
 				"name"=>$campaign->getStatus()->getName(),
 				"label"=>$campaign->getStatus()->getLabel(),
