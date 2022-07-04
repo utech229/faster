@@ -440,11 +440,11 @@
                                             </div>
                                         </div>
                                         <div data-kt-menu-trigger="click" data-kt-menu-placement="bottom-start" class="menu-item menu-lg-down-accordion me-lg-1"> 
-                                            <span class="menu-link py-3"> 
+                                            <span class="menu-link py-3"> {#app.user.price[app.user.country.code].price#}
                                                 <span class="menu-title"> {{"Crédit SMS"|upper}} : &ensp; 
                                                 <strong> 
                                                 {% if app.user.price != [] %} 
-                                                    {{ (app.user.balance /  app.user.price[app.user.country.code].price)|round}}  
+                                                    {{ (app.user.balance / 12 )|round}}  
                                                 {% else %}
                                                     0 
                                                 {% endif %} </strong> &ensp; SMS </span>

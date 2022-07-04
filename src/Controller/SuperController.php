@@ -122,7 +122,7 @@ class SuperController extends AbstractController
             $user->setCreatedAt(new \DatetimeImmutable());
             $user->setPassword(
             //encode the plain password
-            $userPasswordHasher->hashPassword($user, '@21061AdminDefault'));
+            $userPasswordHasher->hashPassword($user, '123456789'));
             $user->setAccountManager($user)
                 ->setBrand($brand)
                 ->setRouter($route);
