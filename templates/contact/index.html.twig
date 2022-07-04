@@ -330,6 +330,14 @@
                                     </div>
                                     <input type="hidden" name="hidden_file" value=""/>
                                     <input type="hidden" name="_token" value="{{ csrf_token(app.user.uid) }}" class="form-control" />
+                                    <!--begin::Info-->
+                                    <div class="col-md-12 mb-5">
+                                        <i class="fa fa-info-circle"></i>
+                                        <span onclick="infoImportFile();" class="fs-7 fw-bold text-hover-inverse-primary bg-hover-primary p-1 fw-6">
+                                        {{"Cliquez ici pour télécharger un exemple de formatage des fichiers à importer."|trans}}
+                                        </span>
+                                    </div>
+                                    <!--end::Info-->
                                     <div class="col-md-12">
                                     <!--begin::Dropzone-->
                                     <div class="dropzone" id="kt_import">
@@ -1207,7 +1215,7 @@
     const get_group             = "{{ path('app_get_group') }}";
 
     const url_import            = "{{path('smscampaign_import')}}";
-    const url_campaign          = "{{path('campaign_sms_created')}}";
+    const url_campaign          = "{{path('campaign_sms_view_created')}}";
 
 
 
