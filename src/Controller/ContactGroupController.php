@@ -151,11 +151,11 @@ class ContactGroupController extends AbstractController
         
         $groupName  =   trim($request->request->get('groupName'));
 
+        if($request->request->get('user_group')==null || $request->request->get('user_group')=="") return $this->services->msg_error($this->intl->trans("Echec d'ajout de groupe de contact, Utilisateur manquant") ,$this->intl->trans("Veuillez sélectionner l'utilisateur auquel vous souhaitez ajouter un groupe de contacts."));
         $user       =   $this->em->getRepository(User::class)->findOneByUid($request->request->get('user_group'));
-
-        if(!$user) return $this->services->msg_error($this->intl->trans("Echec d'ajout de groupe de contact, Utilisateur manquant") ,$this->intl->trans("Veuillez sélectionner l'utilisateur auquel vous souhaitez ajouter de groupe de contacts au niveau du tableau."));
          
         if ($groupName !="" ) {
+            $request->request->get('admin')? $admin =   $this->em->getRepository(User::class)->findOneByUid($request->request->get('admin')):$admin =   null;
 
             $contactGroup           =   new ContactGroup();
 
@@ -173,6 +173,7 @@ class ContactGroupController extends AbstractController
                 $contactGroup->setField4($set4);
                 $contactGroup->setField5($set5);
                 $contactGroup->setManager($user);
+                $contactGroup->setAdmin($admin);
                 $contactGroup->setUid(uniqid());
                 $contactGroup->setCreatedAt(new \DatetimeImmutable());
                 $contactGroupRepository->add($contactGroup,true);

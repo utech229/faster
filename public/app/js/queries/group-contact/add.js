@@ -33,9 +33,7 @@ var KTAddGroup = function() {
                 }));
                 const i = t.querySelector('[data-kt-contact-group-modal-action="submit"]');
                 i.addEventListener("click", (function(t) {
-                    if(document.querySelector('[data-kt-group-contact-user="user"]') !=null)
 
-                    $("#user_group").val(document.querySelector('[data-kt-contact-group="user"]').value);
                     t.preventDefault(), o && o.validate().then((function(t) 
                     {
                         console.log("validated!"), "Valid" == t ?  (i.setAttribute("data-kt-indicator", "on"), i.disabled = !0, 

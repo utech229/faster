@@ -154,6 +154,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'affiliateManager', targetEntity: self::class)]
     private $affiliates;
 
+    #[ORM\OneToMany(mappedBy: 'admin', targetEntity: ContactGroup::class)]
+    private $contactGroupsAdmin;
+
     public function __construct()
     {
         $this->accountManagers = new ArrayCollection();
@@ -174,6 +177,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->affiliates = new ArrayCollection();
         $this->payments = new ArrayCollection();
         $this->validatorPayments = new ArrayCollection();
+        $this->contactGroupsAdmin = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -1092,6 +1096,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($validatorPayment->getValidator() === $this) {
                 $validatorPayment->setValidator(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ContactGroup>
+     */
+    public function getContactGroupsAdmin(): Collection
+    {
+        return $this->contactGroupsAdmin;
+    }
+
+    public function addContactGroupsAdmin(ContactGroup $contactGroupsAdmin): self
+    {
+        if (!$this->contactGroupsAdmin->contains($contactGroupsAdmin)) {
+            $this->contactGroupsAdmin[] = $contactGroupsAdmin;
+            $contactGroupsAdmin->setAdmin($this);
+        }
+
+        return $this;
+    }
+
+    public function removeContactGroupsAdmin(ContactGroup $contactGroupsAdmin): self
+    {
+        if ($this->contactGroupsAdmin->removeElement($contactGroupsAdmin)) {
+            // set the owning side to null (unless already changed)
+            if ($contactGroupsAdmin->getAdmin() === $this) {
+                $contactGroupsAdmin->setAdmin(null);
             }
         }
 
