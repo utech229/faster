@@ -607,8 +607,8 @@ class Configuration extends \Doctrine\DBAL\Configuration
      *
      * @param string $name
      *
-     * @return string|null
-     * @psalm-return ?class-string
+     * @return string|callable|null
+     * @psalm-return class-string|callable|null
      */
     public function getCustomStringFunction($name)
     {
@@ -625,8 +625,7 @@ class Configuration extends \Doctrine\DBAL\Configuration
      *
      * Any previously added string functions are discarded.
      *
-     * @psalm-param array<string, class-string> $functions The map of custom
-     *                                                     DQL string functions.
+     * @psalm-param array<string, class-string|callable> $functions The map of custom DQL string functions.
      *
      * @return void
      */
@@ -659,8 +658,8 @@ class Configuration extends \Doctrine\DBAL\Configuration
      *
      * @param string $name
      *
-     * @return string|null
-     * @psalm-return ?class-string
+     * @return string|callable|null
+     * @psalm-return class-string|callable|null
      */
     public function getCustomNumericFunction($name)
     {
@@ -712,8 +711,8 @@ class Configuration extends \Doctrine\DBAL\Configuration
      *
      * @param string $name
      *
-     * @return string|null
-     * @psalm-return ?class-string $name
+     * @return string|callable|null
+     * @psalm-return class-string|callable|null $name
      */
     public function getCustomDatetimeFunction($name)
     {

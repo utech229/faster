@@ -14,14 +14,24 @@
             <!--begin::Row-->
             <div class="row g-5 g-xl-10">
                 <!--begin::Col-->
-                <div class="col-xl-4 mb-xl-10">
+                <div class="col-xl-4 mb-xl-10 shadow-md  rounded">
                     <!--begin::Lists Widget 19-->
                     <div class="card card-flush h-xl-100">
                         <!--begin::Heading-->
-                        <div class="card-header rounded bgi-no-repeat bgi-size-cover bgi-position-y-top bgi-position-x-center align-items-start h-250px" style="background-image:url({{ asset('app/media/svg/shapes/top-green.png') }})">
+                        <div class="card-header rounded bgi-no-repeat bgi-size-cover bgi-position-y-top bgi-position-x-center align-items-start h-250px" style="background-image:url({{ asset('app/media/dashboard/top-green.png') }})">
                             <!--begin::Title-->
                             <h3 class="card-title align-items-start flex-column text-white pt-15">
                                 <span class="fw-bolder fs-2x mb-3"> {% trans %}Salut{% endtrans %} , {{ app.user.usetting.firstName|upper}}</span>
+                                <div class="fs-4 text-white">
+                                    <span class="opacity-75">{% trans %}Bénéficiez de la{% endtrans %}</span>
+                                    <span class="position-relative d-inline-block">
+                                        <a href="javascript:;" style="color: #fc6" class="link-info opacity-75-hover fw-bolder d-block mb-1">{% trans %}puissance{% endtrans %}</a>
+                                        <!--begin::Separator-->
+                                        <span class="position-absolute opacity-50 bottom-0 start-0 border-2 border-white border-bottom w-100"></span>
+                                        <!--end::Separator-->
+                                    </span>
+                                    <span class="opacity-75">{% trans %}des{% endtrans %} SMS</span>
+                                </div>
                             </h3>
                             <!--end::Title-->
                         </div>
@@ -32,73 +42,26 @@
                             <div class="mt-n20 position-relative">
                                 <!--begin::Row-->
                                 <div class="row g-3 g-lg-6">
-                                    <!--begin::Col-->
-                                    <div class="col-12">
-                                        <!--begin::Items-->
-                                        <div class="bg-gray-100 bg-opacity-70 rounded-2 px-6 py-5">
-                                            <!--begin::Symbol-->
-                                            <div class="symbol symbol-30px me-5 mb-8">
-                                                <span class="symbol-label">
-                                                    <!--begin::Svg Icon | path: icons/duotune/medicine/med005.svg-->
-                                                    <span class="svg-icon svg-icon-1 svg-icon-primary">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                                            <path opacity="0.3" d="M17.9061 13H11.2061C11.2061 12.4 10.8061 12 10.2061 12C9.60605 12 9.20605 12.4 9.20605 13H6.50606L9.20605 8.40002V4C8.60605 4 8.20605 3.6 8.20605 3C8.20605 2.4 8.60605 2 9.20605 2H15.2061C15.8061 2 16.2061 2.4 16.2061 3C16.2061 3.6 15.8061 4 15.2061 4V8.40002L17.9061 13ZM13.2061 9C12.6061 9 12.2061 9.4 12.2061 10C12.2061 10.6 12.6061 11 13.2061 11C13.8061 11 14.2061 10.6 14.2061 10C14.2061 9.4 13.8061 9 13.2061 9Z" fill="currentColor" />
-                                                            <path d="M18.9061 22H5.40605C3.60605 22 2.40606 20 3.30606 18.4L6.40605 13H9.10605C9.10605 13.6 9.50605 14 10.106 14C10.706 14 11.106 13.6 11.106 13H17.8061L20.9061 18.4C21.9061 20 20.8061 22 18.9061 22ZM14.2061 15C13.1061 15 12.2061 15.9 12.2061 17C12.2061 18.1 13.1061 19 14.2061 19C15.3061 19 16.2061 18.1 16.2061 17C16.2061 15.9 15.3061 15 14.2061 15Z" fill="currentColor" />
-                                                        </svg>
-                                                    </span>
-                                                    <!--end::Svg Icon-->
-                                                </span>
-                                            </div>
-                                            <!--end::Symbol-->
-                                            <!--begin::Stats-->
-                                            <div class="m-0">
-                                                <!--begin::Number-->
-                                                <span class="text-gray-700 fw-boldest d-block fs-2qx lh-1 ls-n1 mb-1" id="stat_campaign">0</span>
-                                                <!--end::Number-->
-                                                <!--begin::Desc-->
-                                                <span class="text-gray-500 fw-bold fs-6">{% trans %}Campagnes{% endtrans %}</span>
-                                                <!--end::Desc-->
-                                            </div>
-                                            <!--end::Stats-->
-                                        </div>
-                                        <!--end::Items-->
-                                    </div>
-                                    <!--end::Col-->
-                                    <!--begin::Col-->
-                                    <div class="col-12">
-                                        <!--begin::Items-->
-                                        <div class="bg-gray-100 bg-opacity-70 rounded-2 px-6 py-5">
-                                            <!--begin::Symbol-->
-                                            <div class="symbol symbol-30px me-5 mb-8">
-                                                <span class="symbol-label">
-                                                    <!--begin::Svg Icon | path: icons/duotune/finance/fin001.svg-->
-                                                    <span class="svg-icon svg-icon-1 svg-icon-primary">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                                            <path d="M20 19.725V18.725C20 18.125 19.6 17.725 19 17.725H5C4.4 17.725 4 18.125 4 18.725V19.725H3C2.4 19.725 2 20.125 2 20.725V21.725H22V20.725C22 20.125 21.6 19.725 21 19.725H20Z" fill="currentColor" />
-                                                            <path opacity="0.3" d="M22 6.725V7.725C22 8.325 21.6 8.725 21 8.725H18C18.6 8.725 19 9.125 19 9.725C19 10.325 18.6 10.725 18 10.725V15.725C18.6 15.725 19 16.125 19 16.725V17.725H15V16.725C15 16.125 15.4 15.725 16 15.725V10.725C15.4 10.725 15 10.325 15 9.725C15 9.125 15.4 8.725 16 8.725H13C13.6 8.725 14 9.125 14 9.725C14 10.325 13.6 10.725 13 10.725V15.725C13.6 15.725 14 16.125 14 16.725V17.725H10V16.725C10 16.125 10.4 15.725 11 15.725V10.725C10.4 10.725 10 10.325 10 9.725C10 9.125 10.4 8.725 11 8.725H8C8.6 8.725 9 9.125 9 9.725C9 10.325 8.6 10.725 8 10.725V15.725C8.6 15.725 9 16.125 9 16.725V17.725H5V16.725C5 16.125 5.4 15.725 6 15.725V10.725C5.4 10.725 5 10.325 5 9.725C5 9.125 5.4 8.725 6 8.725H3C2.4 8.725 2 8.325 2 7.725V6.725L11 2.225C11.6 1.925 12.4 1.925 13.1 2.225L22 6.725ZM12 3.725C11.2 3.725 10.5 4.425 10.5 5.225C10.5 6.025 11.2 6.725 12 6.725C12.8 6.725 13.5 6.025 13.5 5.225C13.5 4.425 12.8 3.725 12 3.725Z" fill="currentColor" />
-                                                        </svg>
-                                                    </span>
-                                                    <!--end::Svg Icon-->
-                                                </span>
-                                            </div>
-                                            <!--end::Symbol-->
-                                            <!--begin::Stats-->
-                                            <div class="m-0">
-                                                <!--begin::Number-->
-                                                <span class="text-gray-700 fw-boldest d-block fs-2qx lh-1 ls-n1 mb-1" id="stat_message">0</span>
-                                                <!--end::Number-->
-                                                <!--begin::Desc-->
-                                                <span class="text-gray-500 fw-bold fs-6">{% trans %}SMS envoyés{% endtrans %}</span>
-                                                <!--end::Desc-->
-                                            </div>
-                                            <!--end::Stats-->
-                                        </div>
-                                        <!--end::Items-->
-                                    </div>
-                                    <!--end::Col-->
+                                     <!--begin::Illustration-->
+                                <div class="flex-grow-1 bgi-no-repeat bgi-size-contain bgi-position-x-center card-rounded-bottom h-200px mh-200px my-5 my-lg-12" style="background-image:url({{ asset('app/media/dashboard/sms.png') }}"></div>
+                                <!--end::Illustration-->
                                 </div>
                                 <!--end::Row-->
                             </div>
+                              <!--begin::Links-->
+                            <div class="text-center mb-1">
+                                <!--begin::Link-->
+                                {% if brand.name == "FASTERMESSAGE" %}
+                                    <a  href="{{ path('brand') }}" class="btn btn-sm btn-primary me-2">{% trans %}Devenir revendeur{% endtrans %}</a>
+                                {% else %}
+                                    <a  href="{{ path('campaign_sms') }}" class="btn btn-sm btn-primary me-2">{% trans %}Envoyer un SMS{% endtrans %}</a>
+                                {% endif %}
+                                <!--end::Link-->
+                                <!--begin::Link-->
+                                <a class="btn btn-sm btn-light" href="{{ path('app_developer') }}">{% trans %}API développeur{% endtrans %}</a>
+                                <!--end::Link-->
+                            </div>
+                            <!--end::Links-->
                             <!--end::Stats-->
                         </div>
                         <!--end::Body-->
@@ -106,231 +69,89 @@
                     <!--end::Lists Widget 19-->
                 </div>
                 <!--end::Col-->
+                
                 <!--begin::Col-->
                 <div class="col-xl-8 mb-5 mb-xl-10">
+
+                    <div class="notification">
+                     <!--begin::Alert-->
+                        <div class="alert alert-dismissible bg-light-danger border border-danger border-dashed  h-lg-100 d-flex flex-column flex-sm-row w-100 p-5 mb-10">
+                            <!--begin::Icon-->
+                            <!--begin::Svg Icon | path: icons/duotune/communication/com003.svg-->
+                            <span class="svg-icon svg-icon-2hx svg-icon-danger me-4 mb-5 mb-sm-0">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                    <path opacity="0.3" d="M2 4V16C2 16.6 2.4 17 3 17H13L16.6 20.6C17.1 21.1 18 20.8 18 20V17H21C21.6 17 22 16.6 22 16V4C22 3.4 21.6 3 21 3H3C2.4 3 2 3.4 2 4Z" fill="currentColor" />
+                                    <path d="M18 9H6C5.4 9 5 8.6 5 8C5 7.4 5.4 7 6 7H18C18.6 7 19 7.4 19 8C19 8.6 18.6 9 18 9ZM16 12C16 11.4 15.6 11 15 11H6C5.4 11 5 11.4 5 12C5 12.6 5.4 13 6 13H15C15.6 13 16 12.6 16 12Z" fill="currentColor" />
+                                </svg>
+                            </span>
+                            <!--end::Svg Icon-->
+                            <!--end::Icon-->
+                            <!--begin::Content-->
+                            <div class="d-flex flex-column pe-0 pe-sm-10">
+                                <h5 class="mb-1">{% trans %}Message{% endtrans %} </h5>
+                                <span>{% trans %}Nous disposons de 72H pour la validation vos identifiants d'envoi après leur création.{% endtrans %}</span>
+                            </div>
+                            <!--end::Content-->
+                        </div>
+                        <!--end::Alert-->
+                    </div>
+
                     <!--begin::Row-->
                     <div class="row g-5 g-xl-10">
                         <!--begin::Col-->
-                        <div class="col-xl-6 mb-xl-10">
-                            <!--begin::Slider Widget 1-->
-                            <div id="kt_sliders_widget_1_slider" class="card card-flush carousel carousel-custom carousel-stretch slide h-xl-100" data-bs-ride="carousel" data-bs-interval="5000">
-                                <!--begin::Header-->
-                                <div class="card-header pt-5">
-                                    <!--begin::Title-->
-                                    <h4 class="card-title d-flex align-items-start flex-column">
-                                        <span class="card-label fw-bolder text-gray-800">{% trans %}Campagne SMS{% endtrans %}</span>
-                                        <span class="text-gray-400 mt-1 fw-bolder fs-7">{% trans %}Créez un campagne en 1 min{% endtrans %}</span>
-                                    </h4>
-                                    <!--end::Title-->
-                                    <!--begin::Toolbar-->
-                                    <div class="card-toolbar">
-                                        <!--begin::Carousel Indicators-->
-                                        <ol class="p-0 m-0 carousel-indicators carousel-indicators-bullet carousel-indicators-active-primary">
-                                            <li data-bs-target="#kt_sliders_widget_1_slider" data-bs-slide-to="0" class="active ms-1"></li>
-                                        </ol>
-                                        <!--end::Carousel Indicators-->
-                                    </div>
-                                    <!--end::Toolbar-->
+                        <div class="col-xl-12 mb-xl-10 card card-flush p-4">
+                            <div id="kt_carousel_3_carousel" class="carousel carousel-custom slide" data-bs-ride="carousel" data-bs-interval="20000">
+                                <!--begin::Heading-->
+                                <div class="d-flex align-items-center justify-content-between flex-wrap">
+                                    <!--begin::Label-->
+                                    <span class="fs-2 fw-bolder p-4 pe-2">{% trans %}Services{% endtrans %}</span>
+                                    <!--end::Label-->
+
+                                    <!--begin::Carousel Indicators-->
+                                    <ol class="p-0 m-0 carousel-indicators carousel-indicators-bullet carousel-indicators-active-primary">
+                                        <li data-bs-target="#kt_carousel_3_carousel" data-bs-slide-to="0" class="ms-1 active"></li>
+                                        <li data-bs-target="#kt_carousel_3_carousel" data-bs-slide-to="1" class="ms-1"></li>
+                                        <li data-bs-target="#kt_carousel_3_carousel" data-bs-slide-to="2" class="ms-1"></li>
+                                    </ol>
+                                    <!--end::Carousel Indicators-->
                                 </div>
-                                <!--end::Header-->
-                                <!--begin::Body-->
-                                <div class="card-body pt-6">
-                                    <!--begin::Carousel-->
-                                    <div class="carousel-inner mt-n5">
-                                        <!--begin::Item-->
-                                        <div class="carousel-item active show">
-                                            <!--begin::Wrapper-->
-                                            <div class="d-flex align-items-center mb-5">
-                                                <!--begin::Chart-->
-                                                <div class="w-80px flex-shrink-0 me-2">
-                                                    <div class="min-h-auto ms-n3" id="kt_slider_widget_1_chart_1" style="height: 100px"></div>
-                                                </div>
-                                                <!--end::Chart-->
-                                                <!--begin::Info-->
-                                                <div class="m-0">
-                                                    <!--begin::Subtitle-->
-                                                    <h4 class="fw-bolder text-gray-800 mb-3">{% trans %}SMS{% endtrans %}</h4>
-                                                    <!--end::Subtitle-->
-                                                    <!--begin::Items-->
-                                                    <div class="d-flex d-grid gap-5">
-                                                        <!--begin::Item-->
-                                                        <div class="d-flex flex-column flex-shrink-0 me-4">
-                                                            <!--begin::Section-->
-                                                            <span class="d-flex align-items-center fs-7 fw-bolder text-gray-400 mb-2">
-                                                            <!--begin::Svg Icon | path: icons/duotune/general/gen057.svg-->
-                                                            <span class="svg-icon svg-icon-6 svg-icon-gray-600 me-2">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="currentColor" />
-                                                                    <path d="M11.9343 12.5657L9.53696 14.963C9.22669 15.2733 9.18488 15.7619 9.43792 16.1204C9.7616 16.5789 10.4211 16.6334 10.8156 16.2342L14.3054 12.7029C14.6903 12.3134 14.6903 11.6866 14.3054 11.2971L10.8156 7.76582C10.4211 7.3666 9.7616 7.42107 9.43792 7.87962C9.18488 8.23809 9.22669 8.72669 9.53696 9.03696L11.9343 11.4343C12.2467 11.7467 12.2467 12.2533 11.9343 12.5657Z" fill="currentColor" />
-                                                                </svg>
-                                                            </span>
-                                                            <!--end::Svg Icon-->{% trans %}Paramétré(s){% endtrans %}</span>
-                                                            <!--end::Section-->
-                                                            <!--begin::Section-->
-                                                            <span class="d-flex align-items-center text-gray-400 fw-bolder fs-7">
-                                                            <!--begin::Svg Icon | path: icons/duotune/general/gen057.svg-->
-                                                            <span class="svg-icon svg-icon-6 svg-icon-gray-600 me-2">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="currentColor" />
-                                                                    <path d="M11.9343 12.5657L9.53696 14.963C9.22669 15.2733 9.18488 15.7619 9.43792 16.1204C9.7616 16.5789 10.4211 16.6334 10.8156 16.2342L14.3054 12.7029C14.6903 12.3134 14.6903 11.6866 14.3054 11.2971L10.8156 7.76582C10.4211 7.3666 9.7616 7.42107 9.43792 7.87962C9.18488 8.23809 9.22669 8.72669 9.53696 9.03696L11.9343 11.4343C12.2467 11.7467 12.2467 12.2533 11.9343 12.5657Z" fill="currentColor" />
-                                                                </svg>
-                                                            </span>
-                                                            <!--end::Svg Icon-->{% trans %}Programmé(s){% endtrans %}</span>
-                                                            <!--end::Section-->
-                                                        </div>
-                                                        <!--end::Item-->
-                                                    </div>
-                                                    <!--end::Items-->
-                                                </div>
-                                                <!--end::Info-->
-                                            </div>
-                                            <!--end::Wrapper-->
-                                            <!--begin::Action-->
-                                            <div class="mb-1">
-                                                <a href="{{ path('campaign_sms')}}" class="btn btn-sm btn-secondary me-2">{% trans %}SMS{% endtrans %}</a>
-                                                <a href="{{ path('campaign_sms')}}" class="btn btn-sm btn-primary">{% trans %}Créer une Campagne{% endtrans %}</a>
-                                            </div>
-                                            <!--end::Action-->
-                                        </div>
-                                        <!--end::Item-->
+                                <!--end::Heading-->
+                                <!--begin::Carousel-->
+                                <div class="carousel-inner f-3 p-4 pt-4">
+                                    <!--begin::Item-->
+                                    <div class="carousel-item active">
+                                        {% trans %}Envoyez vos SMS professionnels partout dans le monde avec un meilleur délai de livraison, très pratique pour les notifications SMS, le SMS-banking, le SMS marketing, les développeurs ...{% endtrans %}
                                     </div>
-                                    <!--end::Carousel-->
+                                    <!--end::Item-->
+                                    <!--begin::Item-->
+                                    <div class="carousel-item">
+                                        {% trans %}Restez en contact avec vos clients et faites vos campagnes SMS. Importez votre base de contacts et faites des envois de SMS entièrement personnalisable et paramétrable{% endtrans %}
+                                    </div>
+                                    <!--end::Item-->
+
+                                    <!--begin::Item-->
+                                    <div class="carousel-item">
+                                        {% trans %}Accroitre votre visibilité auprès des prospects par le SMS marketing dans le but de les transformer en client puis de les fidéliser afin de créer un lien régulier{% endtrans %}
+                                    </div>
+                                    <!--end::Item-->
                                 </div>
-                                <!--end::Body-->
+                                <!--end::Carousel-->
                             </div>
-                            <!--end::Slider Widget 1-->
-                        </div>
-                        <!--end::Col-->
-                        <!--begin::Col-->
-                        <div class="col-xl-6 mb-5 mb-xl-10">
-                            <!--begin::Slider Widget 2-->
-                            <div id="kt_sliders_widget_2_slider" class="card card-flush carousel carousel-custom carousel-stretch slide h-xl-100" data-bs-ride="carousel" data-bs-interval="5500">
-                                <!--begin::Header-->
-                                <div class="card-header pt-5">
-                                    <!--begin::Title-->
-                                    <h4 class="card-title d-flex align-items-start flex-column">
-                                        <span class="card-label fw-bolder text-gray-800">{% trans %}Carnet d'adresse{% endtrans %}</span>
-                                        <span class="text-gray-400 mt-1 fw-bolder fs-7">{% trans %}Organisez vos contacts{% endtrans %}</span>
-                                    </h4>
-                                    <!--end::Title-->
-                                    <!--begin::Toolbar-->
-                                    <div class="card-toolbar">
-                                        <!--begin::Carousel Indicators-->
-                                        <ol class="p-0 m-0 carousel-indicators carousel-indicators-bullet carousel-indicators-active-success">
-                                            <li data-bs-target="#kt_sliders_widget_2_slider" data-bs-slide-to="0" class="active ms-1"></li>
-                                        </ol>
-                                        <!--end::Carousel Indicators-->
-                                    </div>
-                                    <!--end::Toolbar-->
-                                </div>
-                                <!--end::Header-->
-                                <!--begin::Body-->
-                                <div class="card-body pt-6">
-                                    <!--begin::Carousel-->
-                                    <div class="carousel-inner">
-                                        <!--begin::Item-->
-                                        <div class="carousel-item active show">
-                                            <!--begin::Wrapper-->
-                                            <div class="d-flex align-items-center mb-9">
-                                                <!--begin::Symbol-->
-                                                <div class="symbol symbol-70px symbol-circle me-5">
-                                                    <span class="symbol-label bg-light-success">
-                                                        <!--begin::Svg Icon | path: icons/duotune/abstract/abs025.svg-->
-                                                        <span class="svg-icon svg-icon-3x svg-icon-success">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                                                <path d="M16.925 3.90078V8.00077L12.025 10.8008V5.10078L15.525 3.10078C16.125 2.80078 16.925 3.20078 16.925 3.90078ZM2.525 13.5008L6.025 15.5008L10.925 12.7008L6.025 9.90078L2.525 11.9008C1.825 12.3008 1.825 13.2008 2.525 13.5008ZM18.025 19.7008V15.6008L13.125 12.8008V18.5008L16.625 20.5008C17.225 20.8008 18.025 20.4008 18.025 19.7008Z" fill="currentColor" />
-                                                                <path opacity="0.3" d="M8.52499 3.10078L12.025 5.10078V10.8008L7.125 8.00077V3.90078C7.125 3.20078 7.92499 2.80078 8.52499 3.10078ZM7.42499 20.5008L10.925 18.5008V12.8008L6.02499 15.6008V19.7008C6.02499 20.4008 6.82499 20.8008 7.42499 20.5008ZM21.525 11.9008L18.025 9.90078L13.125 12.7008L18.025 15.5008L21.525 13.5008C22.225 13.2008 22.225 12.3008 21.525 11.9008Z" fill="currentColor" />
-                                                            </svg>
-                                                        </span>
-                                                        <!--end::Svg Icon-->
-                                                    </span>
-                                                </div>
-                                                <!--end::Symbol-->
-                                                <!--begin::Info-->
-                                                <div class="m-0">
-                                                    <!--begin::Subtitle-->
-                                                    <h4 class="fw-bolder text-gray-800 mb-3">{% trans %}Importer contacts{% endtrans %}</h4>
-                                                    <!--end::Subtitle-->
-                                                    <!--begin::Items-->
-                                                    <div class="d-flex d-grid gap-5">
-                                                        <!--begin::Item-->
-                                                        <div class="d-flex flex-column flex-shrink-0 me-4">
-                                                            <!--begin::Section-->
-                                                            <span class="d-flex align-items-center fs-7 fw-bolder text-gray-400 mb-2">
-                                                            <!--begin::Svg Icon | path: icons/duotune/general/gen057.svg-->
-                                                            <span class="svg-icon svg-icon-6 svg-icon-gray-600 me-2">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="currentColor" />
-                                                                    <path d="M11.9343 12.5657L9.53696 14.963C9.22669 15.2733 9.18488 15.7619 9.43792 16.1204C9.7616 16.5789 10.4211 16.6334 10.8156 16.2342L14.3054 12.7029C14.6903 12.3134 14.6903 11.6866 14.3054 11.2971L10.8156 7.76582C10.4211 7.3666 9.7616 7.42107 9.43792 7.87962C9.18488 8.23809 9.22669 8.72669 9.53696 9.03696L11.9343 11.4343C12.2467 11.7467 12.2467 12.2533 11.9343 12.5657Z" fill="currentColor" />
-                                                                </svg>
-                                                            </span>
-                                                            <!--end::Svg Icon-->{% trans %}.xlxs{% endtrans %}</span>
-                                                            <!--end::Section-->
-                                                            <!--begin::Section-->
-                                                            <span class="d-flex align-items-center text-gray-400 fw-bolder fs-7">
-                                                            <!--begin::Svg Icon | path: icons/duotune/general/gen057.svg-->
-                                                            <span class="svg-icon svg-icon-6 svg-icon-gray-600 me-2">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="currentColor" />
-                                                                    <path d="M11.9343 12.5657L9.53696 14.963C9.22669 15.2733 9.18488 15.7619 9.43792 16.1204C9.7616 16.5789 10.4211 16.6334 10.8156 16.2342L14.3054 12.7029C14.6903 12.3134 14.6903 11.6866 14.3054 11.2971L10.8156 7.76582C10.4211 7.3666 9.7616 7.42107 9.43792 7.87962C9.18488 8.23809 9.22669 8.72669 9.53696 9.03696L11.9343 11.4343C12.2467 11.7467 12.2467 12.2533 11.9343 12.5657Z" fill="currentColor" />
-                                                                </svg>
-                                                            </span>
-                                                            <!--end::Svg Icon-->{% trans %}.csv{% endtrans %}</span>
-                                                            <!--end::Section-->
-                                                        </div>
-                                                        <!--end::Item-->
-                                                        <!--begin::Item-->
-                                                        <div class="d-flex flex-column flex-shrink-0">
-                                                            <!--begin::Section-->
-                                                            <span class="d-flex align-items-center fs-7 fw-bolder text-gray-400 mb-2">
-                                                            <!--begin::Svg Icon | path: icons/duotune/general/gen057.svg-->
-                                                            <span class="svg-icon svg-icon-6 svg-icon-gray-600 me-2">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="currentColor" />
-                                                                    <path d="M11.9343 12.5657L9.53696 14.963C9.22669 15.2733 9.18488 15.7619 9.43792 16.1204C9.7616 16.5789 10.4211 16.6334 10.8156 16.2342L14.3054 12.7029C14.6903 12.3134 14.6903 11.6866 14.3054 11.2971L10.8156 7.76582C10.4211 7.3666 9.7616 7.42107 9.43792 7.87962C9.18488 8.23809 9.22669 8.72669 9.53696 9.03696L11.9343 11.4343C12.2467 11.7467 12.2467 12.2533 11.9343 12.5657Z" fill="currentColor" />
-                                                                </svg>
-                                                            </span>
-                                                            <!--end::Svg Icon-->{% trans %}... 3s{% endtrans %}</span>
-                                                            <!--end::Section-->
-                                                            <!--begin::Section-->
-                                                            <span class="d-flex align-items-center text-gray-400 fw-bolder fs-7">
-                                                            <!--begin::Svg Icon | path: icons/duotune/general/gen057.svg-->
-                                                            <span class="svg-icon svg-icon-6 svg-icon-gray-600 me-2">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="currentColor" />
-                                                                    <path d="M11.9343 12.5657L9.53696 14.963C9.22669 15.2733 9.18488 15.7619 9.43792 16.1204C9.7616 16.5789 10.4211 16.6334 10.8156 16.2342L14.3054 12.7029C14.6903 12.3134 14.6903 11.6866 14.3054 11.2971L10.8156 7.76582C10.4211 7.3666 9.7616 7.42107 9.43792 7.87962C9.18488 8.23809 9.22669 8.72669 9.53696 9.03696L11.9343 11.4343C12.2467 11.7467 12.2467 12.2533 11.9343 12.5657Z" fill="currentColor" />
-                                                                </svg>
-                                                            </span>
-                                                            <!--end::Svg Icon-->{% trans %}.vcf{% endtrans %}</span>
-                                                            <!--end::Section-->
-                                                        </div>
-                                                        <!--end::Item-->
-                                                    </div>
-                                                    <!--end::Items-->
-                                                </div>
-                                                <!--end::Info-->
-                                            </div>
-                                            <!--end::Wrapper-->
-                                            <!--begin::Action-->
-                                            <div class="mb-1">
-                                                <a href="{{ path('app_contact_index')}}" class="btn btn-sm btn-light me-2">{% trans %}Contacts{% endtrans %}</a>
-                                                <a href="{{ path('app_contact_index')}}" class="btn btn-sm btn-success">{% trans %}Importer contacts{% endtrans %}</a>
-                                            </div>
-                                            <!--end::Action-->
-                                        </div>
-                                        <!--end::Item-->
-                                    </div>
-                                    <!--end::Carousel-->
-                                </div>
-                                <!--end::Body-->
+                            <!--begin::Action-->
+                            <div class="mb-1 mt-4 p-4">
+                                <a href="{{ path('campaign_sms')}}" class="btn btn-primary me-2">{% trans %}Envoyer un SMS{% endtrans %}</a>
+                                <a href="{{ path('campaign_sms')}}" style="background: #fc6" class="btn me-2">{% trans %}Créer une Campagne{% endtrans %}</a>
+                                <a href="{{ path('app_developer')}}" class="btn btn-light me-2">{% trans %}API SMS{% endtrans %}</a>
+                                <a href="{{ path('app_contact_index')}}" class="btn btn-success">{% trans %}Importer des contacts{% endtrans %}</a>
                             </div>
-                            <!--end::Slider Widget 2-->
+                            <!--end::Action-->
                         </div>
                         <!--end::Col-->
                     </div>
-                    <!--end::Row-->
+                    <!--end::Row--> 
+
                     <!--begin::Engage widget 4-->
-                    <div class="card" style="background: #1C3255;">
+                    <div class="card" style="background: {% if brand.name == "FASTERMESSAGE" %}  #003366  {% else %} #010246 {% endif %};">
                         <!--begin::Body-->
                         <div class="card-body d-flex ps-xl-15">
                             <!--begin::Action-->
@@ -338,24 +159,24 @@
                                 <!--begin::Title-->
                                 <div class="position-relative fs-2x z-index-2 fw-bolder text-white mb-7">
                                 <span class="me-2"> {% trans %}Vous avez besoin de {% endtrans %}
-                                <span class="position-relative d-inline-block text-success">
-                                    <a href="{{ path('app_recharge')}}" class="text-warning opacity-75-hover">{% trans %}crédit SMS {% endtrans %}</a>
+                                <span class="position-relative d-inline-block text-warning">
+                                    <a href="{{ path('app_recharge')}}" style="color: #fc6" class="opacity-75-hover">{% trans %}crédit SMS {% endtrans %} !</a>
                                     <!--begin::Separator-->
-                                    <span class="position-absolute opacity-50 bottom-0 start-0 border-4 border-danger border-bottom w-100"></span>
+                                    <span class="position-absolute opacity-50 bottom-0  start-0 border-4 border-bottom w-100" style="color: #fc9"></span>
                                     <!--end::Separator-->
-                                </span></span>{% trans %}Faites-le en quelques secondes{% endtrans %}</div>
+                                </span></span>{% trans %}Rechargez votre compte en quelques secondes{% endtrans %}</div>
                                 <!--end::Title-->
                                 <!--begin::Action-->
                                 <div class="mb-3">
-                                    <a href='{{ path('app_recharge')}}' class="btn btn-danger fw-bold me-2">
+                                    <a href='{{ path('app_recharge')}}' class="btn fw-bold me-2" style="background: #fc6">
                                     {% trans %}Recharger mon compte{% endtrans %}</a>
-                                    <a href="{{ path('sender')}}" class="btn btn-color-white bg-body bg-opacity-15 bg-hover-opacity-25 fw-bold">{% trans %}Créer un identifiant{% endtrans %}</a>
+                                    <a href="{{ path('sender')}}" style="background: #fff" class="btn fw-bold">{% trans %}Créer un identifiant{% endtrans %}</a>
                                 </div>
                                 <!--begin::Action-->
                             </div>
                             <!--begin::Action-->
                             <!--begin::Illustration-->
-                            <img src="{{ asset('app/media/illustrations/sigma-1/17-dark.png') }}" class="position-absolute me-3 bottom-0 end-0 h-200px" alt="" />
+                            <img src="{{ asset('app/media/dashboard/sms-trait.png') }}" class="position-absolute  me-3 bottom-0 end-0 h-150px" alt="" />
                             <!--end::Illustration-->
                         </div>
                         <!--end::Body-->

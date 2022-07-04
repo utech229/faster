@@ -1,6 +1,8 @@
 "use strict";
 var KTcontactOverview= {
     init:function() {
+        var isInit = false;
+    
         var initer = true;
         const contact_group_section         = $('#contact_group_section');
         const contact_group_stat_section    = $('#contact_group_stat_section');
@@ -23,7 +25,7 @@ var KTcontactOverview= {
             }, 100);
         });
         $(btn_two).click(function() {
-            loading(true)
+            loading(true);
             $(this).addClass('active');
             setTimeout(() => {
                 contact_group_stat_section.removeClass('d-none')
@@ -33,6 +35,12 @@ var KTcontactOverview= {
                 btn_one.removeClass('active');
                 loading()
             }, 100);
+            if(!isInit){ 
+                KTUtil.onDOMContentLoaded((function() {
+                    KTGroupList.init();
+                }));
+                isInit = true;
+            }
         });
 
     }

@@ -162,13 +162,7 @@ class UserController extends AbstractController
                     'code'      => $countryCode,
                     'name'      => $countryDatas['name']
                 ];
-
-                $priceDatas = [
-                    'dial_code' => $countryDatas['dial_code'],
-                    'code'      => $countryCode,
-                    'name'      => $countryDatas['name'],
-                    'price'     => $countryCode == 'BJ' ? 12 : 25
-                ];
+                $priceDatas = ['dial_code' => $countryDatas['dial_code'], 'code'=> $countryCode, 'name' => $countryDatas['name'], 'price'=> $countryCode == 'BJ' ? 12 : 25];
             }else
             return $this->services->msg_error(
                 $this->intl->trans("Insertion du tableau de données pays"),

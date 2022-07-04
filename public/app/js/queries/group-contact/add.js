@@ -34,8 +34,9 @@ var KTAddGroup = function() {
                 const i = t.querySelector('[data-kt-contact-group-modal-action="submit"]');
                 i.addEventListener("click", (function(t) {
 
-                    t.preventDefault(), o && o.validate().then((function(t) {
-                        console.log("validated!"), "Valid" == t ? (i.setAttribute("data-kt-indicator", "on"), i.disabled = !0, 
+                    t.preventDefault(), o && o.validate().then((function(t) 
+                    {
+                        console.log("validated!"), "Valid" == t ?  (i.setAttribute("data-kt-indicator", "on"), i.disabled = !0, 
                         $.ajax({
                             url: group_new,
                             type: 'post',
@@ -46,7 +47,6 @@ var KTAddGroup = function() {
                             cache: false,
                             success: function(response) {
 
-                                console.log(response);
                                 Swal.fire({
                                     text: response.message,
                                     icon: response.type,

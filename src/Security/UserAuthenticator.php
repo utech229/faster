@@ -13,7 +13,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
@@ -24,11 +23,12 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\CsrfTokenBadge;
-use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
+use Symfony\Component\Security\Http\Authenticator\AbstractLoginFormAuthenticator;
 use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
 use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordCredentials;
 
-class UserAuthenticator extends AbstractAuthenticator
+
+class UserAuthenticator extends AbstractAuthenticator //AbstractLoginFormAuthenticator
 {
     use TargetPathTrait;
 
@@ -37,36 +37,30 @@ class UserAuthenticator extends AbstractAuthenticator
     private UrlGeneratorInterface $urlGenerator;
 
     public function __construct(UrlGeneratorInterface $urlGenerator, BaseUrl $baseUrl, TranslatorInterface $intl, uBrand $brand,
-   EntityManagerInterface $entityManager, UserRepository $userRepository, StatusRepository $statusRepository,
-   RoleRepository $roleRepository, Services $services)
-    {
-        $this->urlGenerator = $urlGenerator;
-        $this->baseUrl       = $baseUrl->init();
-        $this->em	         = $entityManager;
-        $this->intl          = $intl;
-        $this->brand         = $brand;
-        $this->userRepository = $userRepository;
-        $this->roleRepository = $roleRepository;
-        $this->statusRepository = $statusRepository;
-        $this->services = $services;
-    }
+    EntityManagerInterface $entityManager, UserRepository $userRepository, StatusRepository $statusRepository,
+    RoleRepository $roleRepository, Services $services)
+     {
+         $this->urlGenerator = $urlGenerator;
+         $this->baseUrl       = $baseUrl->init();
+         $this->em	         = $entityManager;
+         $this->intl          = $intl;
+         $this->brand         = $brand;
+         $this->userRepository = $userRepository;
+         $this->roleRepository = $roleRepository;
+         $this->statusRepository = $statusRepository;
+         $this->services = $services;
+     }
 
     public function supports(Request $request): ?bool
     {
         return $request->attributes->get('_route') === 'app_login' && $request->isMethod('POST');
-        /*dd($request->headers);
-        dd($request->headers->has('X-AUTH-TOKEN'));
-        return $request->headers->has('X-AUTH-TOKEN');*/
-        
     }
 
     public function authenticate(Request $request): Passport
     {
-        
         $email = $request->request->get('email', '');
-        //verification for compte by status
+
         $user = $this->userRepository->findOneBy(['brand' => $this->brand->get()['brand'], 'email' => $email]);// find a user based on an "email" form field
-       
         if (!$user) {
             throw new CustomUserMessageAuthenticationException($this->intl->trans("Vos informations de connexion sont 
             inexistantes, veuillez vérifier et réessayer"));
@@ -110,32 +104,27 @@ class UserAuthenticator extends AbstractAuthenticator
         if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
             return new RedirectResponse($targetPath);
         }
-        $user = $this->userRepository->findOneByEmail($request->request->get('email'));
-        $user->setLastLoginAt(new \DatetimeImmutable());
-        $this->em->persist($user);
-        $this->em->flush();
-        $this->services->addLog($this->intl->trans("Connexion de l'utilisateur"));
-        // For example:
         return new RedirectResponse($this->urlGenerator->generate('app_home'));
-        //throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);
-    }
-
-    public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
-    {
-        $data = [
-            // you may want to customize or obfuscate the message first
-            'message' => strtr($exception->getMessageKey(), $exception->getMessageData())
-
-            // or to translate this message
-            // $this->translator->trans($exception->getMessageKey(), $exception->getMessageData())
-        ];
-        throw new CustomUserMessageAuthenticationException($data['message']);
-
-        //return new JsonResponse($data, Response::HTTP_UNAUTHORIZED);
     }
 
     protected function getLoginUrl(Request $request): string
     {
         return $this->urlGenerator->generate(self::LOGIN_ROUTE);
+    }
+
+    /**
+     * Called when authentication executed, but failed (e.g. wrong username password).
+     *
+     * This should return the Response sent back to the user, like a
+     * RedirectResponse to the login page or a 403 response.
+     *
+     * If you return null, the request will continue, but the user will
+     * not be authenticated. This is probably not what you want to do.
+     */
+    public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
+    {
+        $message = $exception ? $this->intl->trans('Identifiants de connexion incorrects')/*$exception->getMessage()*/ : $this->intl->trans('Missing credentials');
+        $request->getSession()->getFlashBag()->add('error', $message);
+        return new RedirectResponse($this->urlGenerator->generate('app_login'));
     }
 }

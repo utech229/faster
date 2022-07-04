@@ -16,7 +16,7 @@
 		<meta property="og:url" content="{{ baseUrl }}" />
 		<meta property="og:site_name" content="{{ brand.name }} |{{ brand.name }}" />
 		<!-- Favicons -->
-        <link href="{{ brand.favicon }}" rel="icon">
+        <link href="{{ asset('app/uploads/brands/logos/'~ brand.name|lower ~'.png') }}" rel="icon">
         <link href="{{ brand.apple_touch_icon }}" rel="apple-touch-icon">
 		<!--begin::Fonts-->
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" />
@@ -37,14 +37,14 @@
 			<!--begin::Authentication - Sign-in -->
 			<div class="d-flex flex-column flex-lg-row flex-column-fluid">
 				<!--begin::Aside-->
-				<div class="d-flex flex-column flex-lg-row-auto w-xl-50 positon-xl-relative" style="background-color: #000">
+				<div class="d-flex flex-column flex-lg-row-auto w-xl-50 positon-xl-relative" style="background-color: #003366">
 					<!--begin::Wrapper-->
-					<div class="d-flex flex-column position-xl-fixed top-0 bottom-0 w-xl-600px scroll-y">
+					<div class="d-flex flex-column position-xl-fixed top-0 bottom-0 w-xl-50 scroll-y">
 						<!--begin::Content-->
 						<div class="d-flex flex-row-fluid flex-column text-center p-10 pt-lg-20">
 							<!--begin::Logo-->
 							<a href="{{ path('app_login')}}" class="mb-12">
-								<img alt="{{ brand.name}}" style="-webkit-filter: saturate(100%);filter: saturate(100%);"  src="{{ asset('app/uploads/brands/logos/'~ brand.name|lower ~'.png') }}" class="h-50px" />
+								<img alt="{{ brand.name}}" style="-webkit-filter: saturate(100%);filter: saturate(100%);"  src="{{ asset('app/uploads/brands/logos/'~ brand.name|lower ~'.png') }}" class="h-60px" />
 							</a>
 							<!--end::Logo-->
 							<!--begin::Description-->
