@@ -14,7 +14,7 @@
             <!--begin::Row-->
             <div class="row g-5 g-xl-10">
                 <!--begin::Col-->
-                <div class="col-xl-4 mb-xl-10">
+                <div class="col-xl-4 mb-xl-10 shadow-md  rounded">
                     <!--begin::Lists Widget 19-->
                     <div class="card card-flush h-xl-100">
                         <!--begin::Heading-->
@@ -76,11 +76,11 @@
                         <!--begin::Col-->
                         <div class="col-xl-12 mb-xl-10 card card-flush p-4">
 
-                            <div id="kt_carousel_3_carousel" class="carousel carousel-custom slide" data-bs-ride="carousel" data-bs-interval="8000">
+                            <div id="kt_carousel_3_carousel" class="carousel carousel-custom slide" data-bs-ride="carousel" data-bs-interval="20000">
                                 <!--begin::Heading-->
                                 <div class="d-flex align-items-center justify-content-between flex-wrap">
                                     <!--begin::Label-->
-                                    <span class="fs-4 fw-bolder pe-2">Title</span>
+                                    <span class="fs-2 fw-bolder p-4 pe-2">{% trans %}Services{% endtrans %}</span>
                                     <!--end::Label-->
 
                                     <!--begin::Carousel Indicators-->
@@ -92,31 +92,29 @@
                                     <!--end::Carousel Indicators-->
                                 </div>
                                 <!--end::Heading-->
-
                                 <!--begin::Carousel-->
-                                <div class="carousel-inner pt-8">
+                                <div class="carousel-inner f-3 p-4 pt-4">
                                     <!--begin::Item-->
                                     <div class="carousel-item active">
-                                        ...
+                                        {% trans %}Envoyez vos SMS professionnels partout dans le monde avec un meilleur délai de livraison, très pratique pour les notifications SMS, le SMS-banking, le SMS marketing, les développeurs ...{% endtrans %}
+                                    </div>
+                                    <!--end::Item-->
+                                    <!--begin::Item-->
+                                    <div class="carousel-item">
+                                        {% trans %}Restez en contact avec vos clients et faites vos campagnes SMS. Importez votre base de contacts et faites des envois de SMS entièrement personnalisable et paramétrable{% endtrans %}
                                     </div>
                                     <!--end::Item-->
 
                                     <!--begin::Item-->
                                     <div class="carousel-item">
-                                        ...
-                                    </div>
-                                    <!--end::Item-->
-
-                                    <!--begin::Item-->
-                                    <div class="carousel-item">
-                                        ...
+                                        {% trans %}Accroitre votre visibilité auprès des prospects par le SMS marketing dans le but de les transformer en client puis de les fidéliser afin de créer un lien régulier{% endtrans %}
                                     </div>
                                     <!--end::Item-->
                                 </div>
                                 <!--end::Carousel-->
                             </div>
                             <!--begin::Action-->
-                            <div class="mb-1 mt-4">
+                            <div class="mb-1 mt-4 p-4">
                                 <a href="{{ path('campaign_sms')}}" class="btn btn-primary me-2">{% trans %}SMS{% endtrans %}</a>
                                 <a href="{{ path('campaign_sms')}}" style="background: #fc6" class="btn me-2">{% trans %}Créer une Campagne{% endtrans %}</a>
                                 <a href="{{ path('app_contact_index')}}" class="btn btn-light me-2">{% trans %}API SMS{% endtrans %}</a>
@@ -127,6 +125,29 @@
                         <!--end::Col-->
                     </div>
                     <!--end::Row-->  
+
+                    {#<div class="car">
+                     <!--begin::Alert-->
+                        <div class="alert alert-dismissible bg-light-danger border border-danger border-dashed  h-lg-100 d-flex flex-column flex-sm-row w-100 p-5 mb-10">
+                            <!--begin::Icon-->
+                            <!--begin::Svg Icon | path: icons/duotune/communication/com003.svg-->
+                            <span class="svg-icon svg-icon-2hx svg-icon-danger me-4 mb-5 mb-sm-0">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                    <path opacity="0.3" d="M2 4V16C2 16.6 2.4 17 3 17H13L16.6 20.6C17.1 21.1 18 20.8 18 20V17H21C21.6 17 22 16.6 22 16V4C22 3.4 21.6 3 21 3H3C2.4 3 2 3.4 2 4Z" fill="currentColor" />
+                                    <path d="M18 9H6C5.4 9 5 8.6 5 8C5 7.4 5.4 7 6 7H18C18.6 7 19 7.4 19 8C19 8.6 18.6 9 18 9ZM16 12C16 11.4 15.6 11 15 11H6C5.4 11 5 11.4 5 12C5 12.6 5.4 13 6 13H15C15.6 13 16 12.6 16 12Z" fill="currentColor" />
+                                </svg>
+                            </span>
+                            <!--end::Svg Icon-->
+                            <!--end::Icon-->
+                            <!--begin::Content-->
+                            <div class="d-flex flex-column pe-0 pe-sm-10">
+                                <h5 class="mb-1">{% trans %}Message{% endtrans %} </h5>
+                                <span>{% trans %}Les SMS de gayman sont pas dedans{% endtrans %}</span>
+                            </div>
+                            <!--end::Content-->
+                        </div>
+                        <!--end::Alert-->
+                    </div>#}
                     
                     <!--begin::Engage widget 4-->
                     <div class="card" style="background: {% if brand.name == "FASTERMESSAGE" %}  #003366  {% else %} #010246 {% endif %};">
@@ -148,7 +169,7 @@
                                 <div class="mb-3">
                                     <a href='{{ path('app_recharge')}}' class="btn fw-bold me-2" style="background: #fc6">
                                     {% trans %}Recharger mon compte{% endtrans %}</a>
-                                    <a href="{{ path('sender')}}" style="background: #fff" class="btn bg-hover-opacity-25 fw-bold">{% trans %}Créer un identifiant{% endtrans %}</a>
+                                    <a href="{{ path('sender')}}" style="background: #fff" class="btn fw-bold">{% trans %}Créer un identifiant{% endtrans %}</a>
                                 </div>
                                 <!--begin::Action-->
                             </div>

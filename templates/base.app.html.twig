@@ -439,10 +439,15 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div data-kt-menu-trigger="click" data-kt-menu-placement="bottom-start" class="menu-item menu-lg-down-accordion me-lg-1">
+                                        <div data-kt-menu-trigger="click" data-kt-menu-placement="bottom-start" class="menu-item menu-lg-down-accordion me-lg-1"> 
                                             <span class="menu-link py-3"> 
-                                                <span class="menu-title"> {{"Crédit SMS"|upper}} : <strong>{% if app.user.price != [] %} {{ app.user.balance /  app.user.price[0].price }} {% else %}
-                                                    0 {% endif %} SMS</strong> </span>
+                                                <span class="menu-title"> {{"Crédit SMS"|upper}} : &ensp; 
+                                                <strong> 
+                                                {% if app.user.price != [] %} 
+                                                    {{ (app.user.balance /  app.user.price[app.user.country.code].price)|round}}  
+                                                {% else %}
+                                                    0 
+                                                {% endif %} </strong> &ensp; SMS </span>
                                                 <span class="menu-arrow d-lg-none"></span>
                                             </span>
                                         </div>
@@ -625,7 +630,7 @@
                             <div class="d-flex align-items-center gap-2 gap-lg-3">
                                 <!--begin::Filter menu-->
                                 <div class="m-0">
-                                    <a href="javascript:history.back()" class="btn btn-sm btn-secondary px-6">{% trans %} Retour{% endtrans %}</a>
+                                    <a href="javascript:history.back()" class="btn btn-sm btn-danger px-6">{% trans %} Retour{% endtrans %}</a>
                                 </div>
                                 <!--end::Filter menu-->
                                 <!--begin::Primary button-->

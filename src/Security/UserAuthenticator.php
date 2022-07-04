@@ -24,6 +24,7 @@ use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\CsrfTokenBadge;
 use Symfony\Component\Security\Http\Authenticator\AbstractLoginFormAuthenticator;
+use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
 use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordCredentials;
 
 
@@ -122,7 +123,7 @@ class UserAuthenticator extends AbstractAuthenticator //AbstractLoginFormAuthent
      */
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
-        $message = $exception ? $this->translator->trans('Identifiants de connexion incorrects')/*$exception->getMessage()*/ : $this->translator->trans('Missing credentials');
+        $message = $exception ? $this->intl->trans('Identifiants de connexion incorrects')/*$exception->getMessage()*/ : $this->intl->trans('Missing credentials');
         $request->getSession()->getFlashBag()->add('error', $message);
         return new RedirectResponse($this->urlGenerator->generate('app_login'));
     }

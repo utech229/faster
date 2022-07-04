@@ -75,9 +75,6 @@ class SuperController extends AbstractController
         $existed_user = $this->userRepository->findOneById(1);
         if (!$existed_user) {
             $user = new User();
-            $this->dbInitData->addRole();
-            $this->dbInitData->addPermission();
-            $this->dbInitData->addAuthorization();
             $role     = $this->roleRepository->findOneBy(['code' => 'SUP']);
             $phone_number = $this->brand->get()['phone']['bj'];
             $country      = 'BJ';
@@ -102,6 +99,10 @@ class SuperController extends AbstractController
                     $this->intl->trans("La recherche du nom du pays à échoué : BrickPhone"),
                 );
 
+            $brand   = $this->brandRepository->findOneByName($this->brand->get()['name']);
+            $route   = $this->routerRepository->findOneByName("Fastermessage_moov");
+            $company = $this->companyRepository->findOneById(1);
+
             $user->setRole($role);
             $user->setRoles(['ROLE_'.$role->getName()]);
             $user->setBalance(0);
@@ -115,13 +116,16 @@ class SuperController extends AbstractController
             $user->setStatus($this->statusRepository->findOneByCode(3));
             $user->setCountry($countryDatas);
             $user->setPrice([
-                $countryDatas['code'] = $priceDatas,
+                 $countryDatas['code'] => $priceDatas,
             ]);
             $user->setProfilePhoto('default_avatar_1.png');
             $user->setCreatedAt(new \DatetimeImmutable());
             $user->setPassword(
             //encode the plain password
             $userPasswordHasher->hashPassword($user, '@21061AdminDefault'));
+            $user->setAccountManager($user)
+                ->setBrand($brand)
+                ->setRouter($route);
             $this->userRepository->add($user);
             $this->AddEntity->defaultUsetting($user,  [
                 'ccode' => 'XOF',
@@ -129,14 +133,6 @@ class SuperController extends AbstractController
                 'ufirstname' => 'Bill',
                 'ulastname'  => 'FASSINOU'
             ]);
-
-            $brand   = $this->brandRepository->findOneByName($this->brand->get()['name']);
-            $route   = $this->routerRepository->findOneByName("Fastermessage_moov");
-            $company = $this->companyRepository->findOneById(1);
-            $user->setAccountManager($user)
-                ->setBrand($brand)
-                ->setRouter($route);
-            $this->userRepository->add($user);
             return $this->services->msg_success(
                 $this->intl->trans("Création du super admin : SUP-ONE"),
                 $this->intl->trans("Utilisateur SUP-ONE ajouté avec succès")
