@@ -86,7 +86,7 @@ class SuperController extends AbstractController
                     'code'      => $country,
                     'name'      => $countryDatas['name']
                 ];
-                
+
                 $priceDatas = [
                     'dial_code' => $countryDatas['dial_code'],
                     'code'      => $country,
@@ -138,11 +138,11 @@ class SuperController extends AbstractController
                 $this->intl->trans("Utilisateur SUP-ONE ajouté avec succès")
             );
         }else {
-            
+
             $brand   = $this->brandRepository->findOneById(1);
             $sender  = $this->senderRepository->findOneById(1);
             $company = $this->companyRepository->findOneById(1);
-           
+
             $company->setManager($existed_user);
             $brand->setManager($existed_user);
             $brand->setCreator($existed_user);
@@ -151,7 +151,7 @@ class SuperController extends AbstractController
 
             $this->companyRepository->add($company, true);
             $this->brandRepository->add($brand, true);
-            
+
             $existed_user->setAccountManager($existed_user)->setBrand($brand);
             $this->userRepository->add($existed_user);
             return $this->services->msg_success(
@@ -169,8 +169,8 @@ class SuperController extends AbstractController
     #[Route('', name: 'update_initData', methods: ['POST', 'GET'])]
     public function initdata(Request $request, UserPasswordHasherInterface $userPasswordHasher): JsonResponse
     {
+		$this->dbInitData->addStatus();
         $this->dbInitData->addOperator();
-        $this->dbInitData->addStatus();
         $this->dbInitData->addRole();
         $this->dbInitData->addPermission();
         $this->dbInitData->addAuthorization();
