@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Service\Brand;
+use App\Service\uBrand;
 use App\Service\BaseUrl;
 use App\Service\Services;
 use App\Service\sLicence;
@@ -13,13 +13,10 @@ use App\Service\DbInitData;
 use App\Form\UserUploadType;
 use App\Repository\RoleRepository;
 use App\Repository\UserRepository;
-use App\Repository\LicenceRepository;
 use PhpOffice\PhpSpreadsheet\IOFactory;
-use App\Repository\ProfessionRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-use App\Repository\ActivityAreaRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\File\File;
@@ -41,8 +38,8 @@ class UsersUploadController extends AbstractController
 {
     public function __construct(BaseUrl $baseUrl, UrlGeneratorInterface $urlGenerator, Services $services, BrickPhone $brickPhone,  
     EntityManagerInterface $entityManager, TranslatorInterface $translator,
-    RoleRepository $roleRepository, UserRepository $userRepository, Brand $brand, LicenceRepository $licenceRepository, ValidatorInterface $validator,
-    DbInitData $dbInitData, AddEntity $addEntity, sLicence $sLicence, ActivityAreaRepository $activityAreaRepository, ProfessionRepository $professionRepository)
+    RoleRepository $roleRepository, UserRepository $userRepository, uBrand $brand, ValidatorInterface $validator,
+    DbInitData $dbInitData, AddEntity $addEntity)
     {
         $this->baseUrl         = $baseUrl;
         $this->urlGenerator    = $urlGenerator;
@@ -53,9 +50,6 @@ class UsersUploadController extends AbstractController
         $this->em	           = $entityManager;
         $this->userRepository    = $userRepository;
         $this->roleRepository    = $roleRepository;
-        $this->licenceRepository = $licenceRepository;
-        $this->activityAreaRepository = $activityAreaRepository;
-        $this->professionRepository = $professionRepository;
         $this->validator         = $validator;
         $this->DbInitData        = $dbInitData;
         $this->addEntity         = $addEntity;
@@ -152,16 +146,11 @@ class UsersUploadController extends AbstractController
                 $profil_view = $worksheet->getCellByColumnAndRow(33, $row)->getValue();
                 $register_date  = $worksheet->getCellByColumnAndRow(34, $row)->getValue();
                 //dd($licence);
-                if ($licence == 'basic-x')  $licence = 'standard';
+              
                 
-                $licence_x = $this->licenceRepository->findOneByName($licence);
                 $user->setRole($licence_x->getRole());
                 $user->setRoles(['ROLE_'.$licence_x->getRole()->getName()]);
-                
-                $user->setReferralCode($referral_code);
-                $user->setLicence($licence_x);
-                $user->setActivitySector($this->activityAreaRepository->findOneById(2));
-                $user->setProfession($this->professionRepository->findOneById(1));
+
                 $user->setPhone($phone);
                 $user->setFirstName($fname);
                 $user->setLastName($lname);
