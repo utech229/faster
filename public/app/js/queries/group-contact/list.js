@@ -148,7 +148,7 @@ var KTGroupList = function() {
                                     confirmButton: "btn fw-bold btn-primary"
                                 }
                             })  :
-                            window.location.assign(url_campaign+'?grps='+tabUid+'&user='+user);
+                            window.location.assign(url_campaign+'?grps='+tabUid+'&user=qcAe6S0qWfl02Is8YbZlAq6yURQBtD');
                         }
                         else{
                             "cancel" === t.dismiss && $(document).trigger('onAjaxInfo');
