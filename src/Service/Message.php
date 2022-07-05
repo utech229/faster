@@ -5,12 +5,18 @@ namespace App\Service;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use JMS\Serializer\SerializerBuilder;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class Message extends AbstractController
 {
 	private $maxPage1 = 160;
 	private $maxPage2 = 205;
 	private $maxPage3 = 350;
+
+	public function __construct(TranslatorInterface $intl)
+	{
+		$this->intl			= $intl;
+	}
 
 	public function trueLength($originMessage)
 	{
@@ -92,5 +98,24 @@ class Message extends AbstractController
 		);
 		$sms = preg_replace(array_keys($keyword), array_values($keyword), $message);
 		return $this->trueLength($sms);
+	}
+
+	public function phoneOperator($code, $phone, BrickPhone $brick)
+	{
+		switch (strtoupper($code)) {
+			case 'BJ':
+				list($isValid, $paysPrefixe, $pays, $gsmPrefixe, $gsm) = $brick->prefixBJ($phone);
+				return $isValid ? $gsm : $this->intl->trans("indéfini");
+				break;
+
+			default:
+				return $this->intl->trans("indéfini");
+				break;
+		}
+	}
+
+	public function addRecharge($user, $lastBalance, $inAmount, $outAmount)
+	{
+		return true;
 	}
 }

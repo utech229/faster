@@ -378,6 +378,24 @@ class DbInitData extends AbstractController
 					$status->setCreatedAt(new \DatetimeImmutable());
 					$this->em->persist($status);
 				}
+				else if($status && $status->getLabel() == null){
+					switch ($status->getCode()) {
+						case 0: $status->setLabel("primary"); break;
+						case 1: $status->setLabel("warning"); break;
+						case 2: $status->setLabel("warning"); break;
+						case 3: $status->setLabel("primary"); break;
+						case 4: $status->setLabel("danger"); break;
+						case 5: $status->setLabel("danger"); break;
+						case 6: $status->setLabel("success"); break;
+						case 7: $status->setLabel("danger"); break;
+						case 8: $status->setLabel("success"); break;
+						case 9: $status->setLabel("danger"); break;
+						case 10: $status->setLabel("dark"); break;
+						case 11: $status->setLabel("danger"); break;
+						default:  break;
+					}
+					$this->em->persist($status);
+				}
 			}
 	}
 
