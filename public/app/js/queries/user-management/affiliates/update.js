@@ -43,6 +43,7 @@ $(document).on('click', ".affiliateUpdater", function(e) {
                 $('#affiliate_firstname').val(r.data.affiliate.firstname);
                 $('#affiliate_lastname').val(r.data.affiliate.lastname);
                 $('#affiliate_email').val(r.data.email);
+                $('#affiliate_email').prop('disabled',true);
                 $('#affiliate_phone').val(phone.substring(4, 20));
                 $('#affiliate_is_dlr').val(r.data.isDlr).trigger('change');
                 $('#affiliate_post_pay').val(r.data.isPostPay).trigger('change');
@@ -69,6 +70,7 @@ $('#kt_modal_add_affiliate').on('hidden.bs.modal', function(e) {
     $('#affiliate_is_dlr').val('false').trigger('change');
     $('#affiliate_post_pay').val('false').trigger('change');
     $("#modalbrand").prop('disabled', false);
+    $('#affiliate_email').prop('disabled',false);
     $("#brand_input").show()
 });
 

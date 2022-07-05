@@ -140,7 +140,6 @@ var KTAffiliatesAddAffiliate = function() {
                                     if (response.type === 'success') {
                                         t.isConfirmed,e.reset(),tableReloadButton.click();
                                         (isAffiliateUpdating == true) ? n.hide() : null;
-                                        statisticsReload();
                                         $('#affiliate_is_dlr').val('0').trigger('change'), $('#affiliate_post_pay').val('0').trigger('change');
                                     }
                                 },
