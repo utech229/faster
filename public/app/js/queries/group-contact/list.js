@@ -108,11 +108,9 @@ var KTGroupList = function() {
                                     },
                                 })
                             }
-
-                          
                         }
                         else{
-                            "cancel" === t.dismiss && $(document).trigger('onAjaxInfo');
+                            "cancel" === t.dismiss;
                         }
                        
                     }))
@@ -151,7 +149,7 @@ var KTGroupList = function() {
                             window.location.assign(url_campaign+'?grps='+tabUid+'&user='+user);
                         }
                         else{
-                            "cancel" === t.dismiss && $(document).trigger('onAjaxInfo');
+                            "cancel" === t.dismiss ;
                         }
                        
                     }))
@@ -378,7 +376,7 @@ $(document).on('click', ".create-campaign", function(e)
 {
     var uid = $(this).data('id');
     Swal.fire({
-        text: _redirect,
+        html: _redirect,
         icon: "warning",
         showCancelButton: !0,
         buttonsStyling: !1,
@@ -394,8 +392,7 @@ $(document).on('click', ".create-campaign", function(e)
             
             user == "all" ? 
             Swal.fire({
-                text: _selectOneUser,
-                html:true,
+                html: _selectOneUser,
                 icon: "warning",
                 buttonsStyling: !1,
                 confirmButtonText: _Form_Ok_Swal_Button_Text_Notification,
@@ -406,7 +403,7 @@ $(document).on('click', ".create-campaign", function(e)
             window.location.assign(url_campaign+'?grps='+uid+'&user='+user);
         }
         else{
-            "cancel" === t.dismiss && $(document).trigger('onAjaxInfo');
+            "cancel" === t.dismiss ;
         }
        
     }))

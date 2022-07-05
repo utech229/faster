@@ -181,7 +181,11 @@ class ContactGroupController extends AbstractController
                 $contactGroup->setCreatedAt(new \DatetimeImmutable());
                 $contactGroupRepository->add($contactGroup,true);
 
-            return $this->services->msg_success($this->intl->trans("Ajout d'un groupe de contact"),$this->intl->trans("Votre groupe de contact a été ajouté avec succès"));
+                $data = [
+                           "uid" => $contactGroup->getUid(),
+                           "name"=> $contactGroup->getName()
+                ];
+            return $this->services->msg_success($this->intl->trans("Ajout d'un groupe de contact"),$this->intl->trans("Votre groupe de contact a été ajouté avec succès"),$data);
         }
         else 
         return $this->services->msg_error($this->intl->trans("Echec d'ajout de groupe de contact, nom manquant") ,$this->intl->trans("Veuillez renseigner le nom du groupe"));

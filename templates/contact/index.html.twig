@@ -1080,7 +1080,7 @@
     </div>
 <!--end::Modal - Update Group Contact App-->
 
-<!--begin::Modal - Adjust Balance-->
+<!--begin::Modal - Importation contacts-->
     <div class="modal fade" id="kt_modal_import_contacts" tabindex="-1" aria-hidden="true">
         <!--begin::Modal dialog-->
         <div class="modal-dialog modal-dialog-centered mw-650px">
@@ -1191,7 +1191,7 @@
         </div>
         <!--end::Modal dialog-->
     </div>
-<!--end::Modal - New Card-->
+<!--end::Modal - Importation contacts-->
 
 {% endblock %}
 
@@ -1219,6 +1219,7 @@
 
     const url_import            = "{{path('smscampaign_import')}}";
     const url_campaign          = "{{path('campaign_sms_view_created')}}";
+    {# const url_exemple_file      = " #}
 
     const _canceled             = "{{'Annuler'|trans}}";
     const _redirect             = '{{"Vous serez rédiriger vers la page de création de campagne"|trans}}';

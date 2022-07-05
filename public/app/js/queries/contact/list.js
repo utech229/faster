@@ -112,7 +112,7 @@ var KTContactList = function() {
                             }
                         }
                         else{
-                            "cancel" === t.dismiss && $(document).trigger('onAjaxInfo');
+                            "cancel" === t.dismiss ;
                         }
                     }))
                 }))
@@ -396,7 +396,6 @@ $(document).on('change',"#list_user_contact_id", function (e) {
                 let el2         = document.createElement("option");
                 let el3         = document.createElement("option");
 
-
                 el1.textContent = i[1];
                 el1.value = i[0];
                 el2.textContent = i[1];
@@ -407,8 +406,6 @@ $(document).on('change',"#list_user_contact_id", function (e) {
                 document.getElementById("group_id_add_contact").appendChild(el1);
                 document.getElementById("list_group_id").appendChild(el2);
                 document.getElementById("id_group_contact_import").appendChild(el3);
-
-
             }
             $('#kt_modal_add_contact_reload_button').click();
         },
@@ -422,7 +419,8 @@ $(document).on('change',"#list_user_contact_id", function (e) {
 
 
 function infoImportFile() {
-    window.location.href = 'http://127.0.0.1:8000/app/exemple/exemple.xlsx';
+    console.log();
+    window.location.href = _base_url+'/app/exemple/exemple.xlsx';
 }
 // Champ Importation
 var myDropzone = new Dropzone("#kt_import", {
