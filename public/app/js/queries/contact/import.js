@@ -1,8 +1,10 @@
 "use strict";
+var importContact = 0;
 var KTImportContact = function() {
     const t = document.getElementById("kt_modal_import_contacts"),
-        e = t.querySelector("#kt_modal_import_contacts_form"),
-        n = new bootstrap.Modal(t);
+    x = document.getElementById("kt_modal_create_contact_group"),
+    e = t.querySelector("#kt_modal_import_contacts_form");
+    var n = new bootstrap.Modal(t);
     return {
         init: function() {
             (() => {
@@ -26,11 +28,35 @@ var KTImportContact = function() {
                     }
                 });
                 t.querySelector('[data-kt-import-contact-modal-action="close"]').addEventListener("click", ($this) => {
-                    $this.preventDefault(); n.hide();e.reset();
+                    $this.preventDefault(); n.hide();e.reset();$('#id_group_contact_import').val(null).trigger('change');
+                });
+                $('#open_modal_import_contacts_id').click(function(e) 
+                {
+                    e.preventDefault();
+                    document.querySelector('[data-kt-contact-user="user"]').value == "" ?
+                    Swal.fire({
+                        text: "Veuillez sélectionner d'abord un utilisateur",
+                        icon: "warning",
+                        buttonsStyling: !1,
+                        confirmButtonText: _Form_Ok_Swal_Button_Text_Notification,
+                        customClass: {
+                            confirmButton: "btn fw-bold btn-primary"
+                        }
+                    }): n.show();
+                   
+                });
+                $('#add_group_id').click(function(e) 
+                {
+                    e.preventDefault();
+                    importContact = 1;
+                    $("[data-kt-import-contact-modal-action=close]").click();
+                    $("#kt_modal_create_contact_group").modal("show");
+
+                   
                 });
                 t.querySelector('[data-kt-import-contact-modal-action="cancel"]').addEventListener("click", ($this) => {
                     $this.preventDefault();
-                    e.reset();n.hide();
+                    e.reset();n.hide();$('#id_group_contact_import').val(null).trigger('change');
                 });
                 const i = t.querySelector('[data-kt-import-contact-modal-action="submit"]');
                 e.addEventListener("submit", (function(t) {

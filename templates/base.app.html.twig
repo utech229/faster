@@ -83,7 +83,7 @@
                                 </a>
                             </div>
                             <div class="menu-item">
-                                <div class="menu-content pt-8 pb-2">
+                                <div class="menu-content pt-4 pb-2">
                                     <span class="menu-section text-muted text-uppercase fs-8 ls-1">{{ "Carnet d'adresse" | trans }}</span>
                                 </div>
                             </div>
@@ -100,7 +100,7 @@
                             <!--end::Menu-->
                             {% if permission(["SMSC0", "SMSS0", "SMSA0", "STAT0", "SEND0"], app.user, false) %}
                                 <div class="menu-item">
-                                    <div class="menu-content pt-8 pb-2">
+                                    <div class="menu-content pt-4 pb-2">
                                         <span class="menu-section text-muted text-uppercase fs-8 ls-1">{{ "Campagnes" | trans }}</span>
                                     </div>
                                 </div>
@@ -176,13 +176,23 @@
                                 {% endif %}
                             {% endif %}
                             <div class="menu-item">
-                                <div class="menu-content pt-8 pb-2">
-                                    <span class="menu-section text-muted text-uppercase fs-8 ls-1">{{ 'Transactions' | trans }}</span>
+                                <div class="menu-content pt-4 pb-2">
+                                    <span class="menu-section text-muted text-uppercase fs-8 ls-1">{{ 'Marque de revente' | trans }}</span>
                                 </div>
+                            </div>
+                             <div class="menu-item">
+                                <a class="menu-link {{menu(uri, path('brand')) }}" href="{{ path('brand') }}">
+                                    <span class="menu-icon">
+                                        <!--begin::Svg Icon | path: icons/stockholm/Design/PenAndRuller.svg-->
+                                        <i class="fas fa-copyright fs-3"></i> 
+                                        <!--end::Svg Icon-->
+                                    </span>
+                                    <span class="menu-title">{{ 'Marque' | trans }} </span>
+                                </a>
                             </div>
                             {% if permission(["REC0", "MET0", "PAY0",], app.user, false) %}
                             <div class="menu-item">
-                                <div class="menu-content pt-8 pb-2">
+                                <div class="menu-content pt-4 pb-2">
                                     <span class="menu-section text-muted text-uppercase fs-8 ls-1">{{ 'Mon compte' | trans }}</span>
                                 </div>
                             </div>
@@ -218,7 +228,7 @@
                             {% endif %}
                             {% if permission(["ROL0", "UTI0", "AFFL0", "PER0"], app.user, false) %}
                             <div class="menu-item">
-                                <div class="menu-content pt-8 pb-2">
+                                <div class="menu-content pt-4 pb-2">
                                     <span class="menu-section text-muted text-uppercase fs-8 ls-1">{{ 'Gestion Utilisateurs' | trans }}</span>
                                 </div>
                             </div>
@@ -268,7 +278,7 @@
 
                             {% if permission(["CFIG0", "ROUT0", "ROL0"], app.user, false) %}
                             <div class="menu-item">
-                                <div class="menu-content pt-8 pb-2">
+                                <div class="menu-content pt-4 pb-2">
                                     <span class="menu-section text-muted text-uppercase fs-8 ls-1">{{ 'Congiguration' | trans }}</span>
                                 </div>
                             </div>
@@ -306,7 +316,7 @@
 
                             {% if permission(["TRAN0"], app.user) %}
                                 <div class="menu-item">
-                                    <div class="menu-content pt-8 pb-2">
+                                    <div class="menu-content pt-4 pb-2">
                                         <span class="menu-section text-muted text-uppercase fs-8 ls-1">{{ 'Comptabilité' | trans }}</span>
                                     </div>
                                 </div>
@@ -332,7 +342,7 @@
                             {% endif %}
                             {% if permission(["DEV0", "DEV1", "DEV2"], app.user, false) %}
                             <div class="menu-item">
-                                <div class="menu-content pt-8 pb-2">
+                                <div class="menu-content pt-4 pb-2">
                                     <span class="menu-section text-muted text-uppercase fs-8 ls-1">{{ 'Développeur & API' | trans }}</span>
                                 </div>
                             </div>
@@ -350,7 +360,7 @@
                             </div>
                             {% endif %}
                             <div class="menu-item">
-                                <div class="menu-content pt-8 pb-2">
+                                <div class="menu-content pt-4 pb-2">
                                     <span class="menu-section text-muted text-uppercase fs-8 ls-1">{{ 'Session' | trans }}</span>
                                 </div>
                             </div>
