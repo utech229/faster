@@ -111,13 +111,13 @@ class PaymentController extends AbstractController
             $user   = $this->getUser();
             $amount =  $form->get('amount')->getData();
 
-            if($user->getBalance() < $amount) 
+            if($user->getBrand()->getCommission() < $amount) 
             return $this->services->msg_info(
                 $this->intl->trans("Demande de retrait"),
                 $this->intl->trans("Vous ne disposez pas d'assez de fond pour retirer").' '.$amount.' '.$user->getUsetting()->getCurrency()['code'].' '.$this->intl->trans("de votre compte")
             );
 
-            if($user->getBalance() < 1000) 
+            if($user->getBrand()->getCommission() < 1000) 
             return $this->services->msg_info(
                 $this->intl->trans("Demande de retrait"),
                 $this->intl->trans("Vous devez avoir au moins ").' '.$amount.' '.$user->getUsetting()->getCurrency()['code'].' '.$this->intl->trans("avant de procéder à un retrait de fond")
@@ -131,15 +131,15 @@ class PaymentController extends AbstractController
             $payment->setStatus($this->services->status(2));
             $payment->setReceptionPhone($user->getPaymentAccount()[0]['Phone']);
             $payment->setMethod('Mobile Money');
-            $payment->setLastBalance($user->getBalance());
+            $payment->setLastBalance($user->getBrand()->getCommission());
             $payment->setCreatedAt(new \DatetimeImmutable());
             $this->paymentRepository->add($payment);
 
-            $user->setBalance($user->getBalance() - $amount);
-            $this->userRepository->add($user);
+            $brand = $user->getBrand()->setCommission($user->getBrand()->getCommission() - $amount);
+            $this->em->getRepository(Brand::class)->add($brand);
 
             return $this->services->msg_success(
-                $this->intl->trans("Création d'une demande de payment"),
+                $this->intl->trans("Création d'une demande de paiement"),
                 $this->intl->trans("Demande de paiement crée avec succès")
             );
         }

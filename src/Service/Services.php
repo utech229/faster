@@ -367,12 +367,12 @@ class Services extends AbstractController
 	{
 		$session = $user ? $user : $this->getUser();
 		if($pManager === null) $pManager = $this->checkPermission("MANGR", $session);
-		if($pBrand === null) $pBrand = $this->checkPermission("BRND1", $session);
+		if($pBrand === null) $pBrand = $this->checkPermission("RES5", $session);
 
 		if($pAllView) return [0, 0, ["master"=>true]]; // Super admin ou administrateur
         else if($pManager) return [1, $session->getId(), ["managerby"=>$session->getId()]]; // Gestionnaire de compte
         else if($pBrand && !$session->getAffiliateManager()) return [2, $session->getId(), ["reselby"=>$session->getId()]]; // Revendeur
-        else if($session->getAffiliateManager() && $this->checkPermission("BRND1", $session->getAffiliateManager())) return [3, $session->getAffiliateManager()->getId(), ["reselby"=>$session->getAffiliateManager()->getId()]]; // Affilié d'un Revendeur
+        else if($session->getAffiliateManager() && $this->checkPermission("RES5", $session->getAffiliateManager())) return [3, $session->getAffiliateManager()->getId(), ["reselby"=>$session->getAffiliateManager()->getId()]]; // Affilié d'un Revendeur
         else if(!$pBrand && !$session->getAffiliateManager()) return [4, $session->getId(), ["user"=>$session->getId()]]; // Utilisateur
         else if($session->getAffiliateManager()) return [5, $session->getAffiliateManager()->getId(), ["user"=>$session->getAffiliateManager()->getId()]]; // Affilié à un utilisateur
 	}

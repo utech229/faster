@@ -193,7 +193,7 @@ var KTAffiliatesList = function() {
                     }, {
                         targets: 1,
                         render: function(data, type, full, meta) {
-                           return '<img src="'+window.location.origin+'/app/media/flags/'+data+'.svg" class="rounded-circle me-2"  style="height:19px;" alt="'+data+'" />'+data
+                           return '<img src="'+country_flag_link.replace("_1_", data)+'" class="rounded-circle me-2"  style="height:19px;" alt="'+data+'" />'+data
                         },
 
                     },
@@ -246,7 +246,6 @@ var KTAffiliatesList = function() {
                         targets: 7,
                         render: function(data, type, full, meta) {
                             return viewTime(data);
-                            //return  dateFormat(moment(data, "YYYY-MM-DDTHH:mm:ssZZ").format());
                         }
                     },
                     {
@@ -254,7 +253,6 @@ var KTAffiliatesList = function() {
                         targets: 8,
                         render: function(data, type, full, meta) {
                             return viewTime(data);
-                            //return  dateFormat(moment(data, "YYYY-MM-DDTHH:mm:ssZZ").format());
                         }
                     },{
                         targets: 9,
@@ -305,16 +303,9 @@ var KTAffiliatesList = function() {
                                     <i id="deleteAffiliateOption`+data+`" class="text-danger fa fa-trash-alt"></i>
                             </button>
                             <!--end::Delete-->`;
-                            var priceIcon =  `<!--begin::Price-->
-                            <button class="btn btn-icon btn-active-light-primary w-30px h-30px pricer" 
-                                data-id=`+data+` data-kt-affiliates-table-filter="price_row">
-                                    <i id="priceOption`+data+`" class="text-info fas fa-money-bill"></i>
-                            </button>
-                            <!--end::Price-->`;
                             updaterIcon = (pEditAffiliate) ? updaterIcon : '' ;
-                            priceIcon   = (pEditAffiliate) ? priceIcon : '' ;
-                            deleterIcon = (pDeleteAffiliate) ? deleterIcon : '' ;
-                            return updaterIcon + deleterIcon + priceIcon;
+                            deleterIcon = (pDeleteAffiliate) ? deleterIcon : '';
+                            return updaterIcon + deleterIcon ;
                         }
                     }],
                     columns: [

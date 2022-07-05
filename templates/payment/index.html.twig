@@ -248,7 +248,7 @@
 
                             <!--begin::Add request-->
                             <button class="btn btn-primary"
-                            {% if app.user and app.user.balance <= 0 %}
+                            {% if app.user and app.user.brand.commission <= 0 %}
                                 disabled ="disabled"
                             {% endif %} 
                             {% if app.user.paymentAccount[0]['Status'] and app.user.paymentAccount[0]['Status'] != 'approved' %}
@@ -668,7 +668,7 @@
                                         <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="{{'Montant disponible dans votre compte'|trans}}"></i>
                                     </label>
                                     <!--end::Label-->
-                                    <input type="text" disabled class="form-control form-control-solid" value="{{app.user.balance}}" /> 
+                                    <input type="text" disabled class="form-control form-control-solid" value="{{app.user.brand.commission}}" /> 
                                 </div>
                                 <!--end::Input group-->
                                 <!--begin::Input group-->

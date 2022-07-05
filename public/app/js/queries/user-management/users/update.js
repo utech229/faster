@@ -1,7 +1,6 @@
 "use strict";
 var mdHTMLTitle      = $("#kt_modal_add_user_title")
 const userUidInput   = $('#user_uid');
-const avatarPath     = window.location.origin+'/app/uploads/avatars/';
 
 $('#modalbrand').select2({
     templateSelection: select2Format1,
@@ -51,7 +50,7 @@ $(document).on('click', ".userUpdater", function(e) {
                 $('#user_role').val(r.data.role.code).trigger('change');
                 $('#kt_user_add_select2_country').val(r.data.countryCode).trigger('change');
                 $('#user_status').val(r.data.status).trigger('change');
-                var cover = avatarPath + r.data.photo;
+                var cover =  user_avatar_link.replace("_1_", r.data.photo)
                 $("#avatar_input").css("background-image", "url(" + cover + ")");
                 formModalButton.click();
             },
@@ -87,23 +86,3 @@ if (!pViewUser) {
     $('#router_input').hide();
 }
 
-
-
-function statisticsReload(){
-    $.ajax({
-        url:  statistic_link,
-        type: "post",
-        data: {_token : csrfToken},
-        dataType: "json",
-        success: function(r) {
-            $('#stat_all').html(r.data.all);
-            $('#stat_pending').html(r.data.pending);
-            $('#stat_desactivated').html(r.data.desactivated);
-            $('#stat_active').html(r.data.active);
-            $('#stat_suspending').html(r.data.suspended);
-        },
-        error: function () { 
-            $(document).trigger('toastr.onAjaxError');
-        }
-    });
-};
