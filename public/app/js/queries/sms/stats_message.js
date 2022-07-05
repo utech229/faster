@@ -8,8 +8,6 @@ const SMSListMessageManager = function(){
 	sender = document.querySelector("#menu-filter #sender"),
 	status = document.querySelector("#menu-filter #status"),
 	periode = document.querySelector("#menu-filter #periode"),
-	lfrom = document.querySelector("#menu-filter #lfrom"),
-	lof = document.querySelector("#menu-filter #lof"),
 	el = document.querySelector("#message_table"), // el : selecteur de la table html
 	columns = [
 		{ // Téléphone
@@ -65,45 +63,6 @@ const SMSListMessageManager = function(){
 				return data;
 			},
 		},
-		{ // Actions
-			targets: 7,
-			orderable: !1,
-			responsivePriority: 3,
-			render : function (data, type, full, meta) {
-				if(!data) return "";
-
-				var action = "";
-
-				if(pEdit && full[3]['code'] == 0){
-					action += `<!--begin::disable-->
-						<button class="btn btn-icon btn-active-light-dark w-25px h-25px" data-id="`+data+`" title="`+titleSuspend+`" id="disable">
-							<span class="indicator-label"><i class="fa fa-power-off text-dark"></i></span>
-							<span class="indicator-progress"><span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
-						</button>
-					<!--end::disable-->`;
-				}
-
-				if(pEdit && full[3]['code'] == 5){
-					action += `<!--begin::Send-->
-						<button class="btn btn-icon btn-active-light-primary w-25px h-25px" data-id="`+data+`" title="`+titleSend+`" id="send">
-							<span class="indicator-label"><i class="fa fa-paper-plane text-primary"></i></span>
-							<span class="indicator-progress"><span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
-						</button>
-					<!--end::Send-->`;
-				}
-
-				if(pDelete && full[3]['code'] != 1 && full[3]['code'] != 2){
-					action += `<!--begin::Delete-->
-						<button class="btn btn-icon btn-active-light-danger w-25px h-25px" data-id="`+data+`" title="`+titleDelete+`" id="delete">
-							<span class="indicator-label"><i class="fa fa-trash-alt text-danger"></i></span>
-							<span class="indicator-progress"><span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
-						</button>
-					<!--end::Delete-->`;
-				}
-
-				return action;
-			}
-		}
 	];
 
 	return {
@@ -170,15 +129,10 @@ const SMSListMessageManager = function(){
 						sender: function(){ return $(sender).val(); },
 						status: function(){ return $(status).val(); },
 						periode: function(){ return $(periode).val(); },
-						lfrom: function(){ return $(lfrom).val(); },
-						lof: function(){ return $(lof).val(); },
 					},
 					dataSrc: function(response){
 						if(response.message) swalSimple(response.type, response.message);
 						if(response.type == "success"){
-							pEdit	= response.data.permission.pEdit;
-							pDelete	= response.data.permission.pDelete;
-							pList	= response.data.permission.pList;
 
 							return response.data.table;
 						}
@@ -235,12 +189,12 @@ const SMSListMessageManager = function(){
 					if(view.indexOf(i) != -1){
 						// console.log(data[i][2][1])
 						switch (data[i][3]['code']) {
-							case 0: countProgramming++; break;
-							case 1: countInProgress++; break;
-							case 2: countInProgress++; break;
-							case 9: countInvalid++; break;
-							case 5: countInvalid++; break;
-							case 8: countDelivered++; break;
+							case 0: countProgramming += data[i][4]; break;
+							case 1: countInProgress += data[i][4]; break;
+							case 2: countInProgress += data[i][4]; break;
+							case 9: countInvalid += data[i][4]; break;
+							case 5: countInvalid += data[i][4]; break;
+							case 8: countDelivered += data[i][4]; break;
 							default:
 						}
 					}
@@ -249,84 +203,6 @@ const SMSListMessageManager = function(){
 				$("#count_in_progress").html(countInProgress);
 				$("#count_invalid").html(countInvalid);
 				$("#count_delivered").html(countDelivered);
-
-				$(el).off("click", "#disable");
-				$(el).on("click", "#disable", ($this)=>{
-					$this.preventDefault();
-					const elem = $this.target.closest("#disable");
-					btnAnimation(elem, true);
-					const id = $(elem).attr("data-id");
-					swalConfirm("warning", disableConfirm, ()=>{
-						$.ajax({
-							url: url_disable,
-							type: 'post',
-							data: {_token, message:id},
-							dataType: 'json',
-							success: function (response) {
-								swalSimple(response.type, response.message);
-								if (response.status === 'success') datatableMessage.ajax.reload();
-								btnAnimation(elem);
-							},
-							error: function (response) {
-								swalSimple("error", _Form_Error_Swal);
-								btnAnimation(elem);
-								console.log(response);
-							}
-						});
-					}, ()=>{btnAnimation(elem);});
-				});
-
-				$(el).off("click", "#delete");
-				$(el).on("click", "#delete", ($this)=>{
-					$this.preventDefault();
-					const elem = $this.target.closest("#delete");
-					btnAnimation(elem, true);
-					const id = $(elem).attr("data-id");
-					swalConfirm("error", deleteConfirm, ()=>{
-						$.ajax({
-							url: url_delete,
-							type: 'post',
-							data: {_token, message:id},
-							dataType: 'json',
-							success: function (response) {
-								swalSimple(response.type, response.message);
-								if (response.status === 'success') datatableMessage.ajax.reload();
-								btnAnimation(elem);
-							},
-							error: function (response) {
-								swalSimple("error", _Form_Error_Swal);
-								btnAnimation(elem);
-								console.log(response);
-							}
-						});
-					}, ()=>{btnAnimation(elem);});
-				});
-
-				$(el).off("click", "#send");
-				$(el).on("click", "#send", ($this)=>{
-					$this.preventDefault();
-					const elem = $this.target.closest("#send");
-					btnAnimation(elem, true);
-					const id = $(elem).attr("data-id");
-					swalConfirm("warning", sendConfirm, ()=>{
-						$.ajax({
-							url: url_enable,
-							type: 'post',
-							data: {_token, message:id},
-							dataType: 'json',
-							success: function (response) {
-								swalSimple(response.type, response.message);
-								if (response.status === 'success') datatableMessage.ajax.reload();
-								btnAnimation(elem);
-							},
-							error: function (response) {
-								swalSimple("error", _Form_Error_Swal);
-								btnAnimation(elem);
-								console.log(response);
-							}
-						});
-					}, ()=>{btnAnimation(elem);});
-				});
 				loading();
 			});
 		}

@@ -339,7 +339,12 @@ class Services extends AbstractController
 
     public function status($code)
     {
-       return $this->statusRepository->findOneByCode($code);
+		$status = $this->statusRepository->findOneByCode($code);
+		if($status){
+			$name = $this->intl->trans($status->getName());
+			$status->setName($name);
+		}
+    	return $status;
     }
 
     public function connectedUser()

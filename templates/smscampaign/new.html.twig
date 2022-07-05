@@ -71,7 +71,7 @@
 							<select id="brand" name="brand" data-allow-clear="false" data-control="select2" class="form-select form-select-solid fw-bolder" data-placeholder="{{"Sélectionnez la marque de l'expéditeur" | trans}}">
 								<option value=""></option>
 								{% for brand in brands %}
-									<option value="{{ brand.uid }}" data-select2-avatar="{{brand.logo}}" data-select2-alt="{{brand.name}}">{{ brand.name }}</option>
+									<option value="{{ brand.uid }}" data-select2-avatar="{{asset('app/uploads/brands/logos/' ~ brand.logo)}}" data-select2-alt="{{brand.name}}">{{ brand.name }}</option>
 								{% endfor %}
 							</select>
 							<!--end::Input-->
@@ -367,7 +367,7 @@
 		<!--end::Card-->
 	</div>
 	<!--end::Container-->
-	
+
 	<!--begin::Modal - Sender-->
 	<div class="modal fade" id="modal_edit" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
 		<!--begin::Modal dialog-->

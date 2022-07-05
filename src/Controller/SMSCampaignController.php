@@ -33,8 +33,14 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 #[Route('/{_locale}/sms/campaign')]
 class SMSCampaignController extends AbstractController
 {
-	private $pathRacine	= "campaign/";
-	private $pathImport	= "campaign/import/temp/";
+	private $pathRacine		= "campaign/";
+	private $pathImport		= "campaign/import/temp/";
+	private $initDataPhone	= [
+		"dial_code"=>"null",
+		"code"=>"null",
+		"name"=>"null",
+		"operator"=>"null",
+	];
 
 	public function __construct(TranslatorInterface $intl, uBrand $brand, Services $src, UrlGeneratorInterface $ug, EntityManagerInterface $em, Message $sMessage, BrickPhone $brickPhone)
 	{
@@ -333,7 +339,7 @@ class SMSCampaignController extends AbstractController
 
 			$this->em->persist($manager);
 
-			$this->addRecharge($manager, $myBalance, $amount, 0);
+			$this->sMessage->addRecharge($manager, $myBalance, $amount, 0);
 		}
 
 		$file = $this->em->getRepository(SMSMessageFile::class)->findOneByCampaign($campaign);
@@ -350,7 +356,6 @@ class SMSCampaignController extends AbstractController
 		return $this->src->msg_success(
 			$this->intl->trans("Suppression de campagne %1%.", ["%1%"=>$campaign->getUid()]),
 			$this->intl->trans("La campagne vient d'être supprimée avec succès."),
-			[]
 		);
 	}
 
@@ -358,7 +363,7 @@ class SMSCampaignController extends AbstractController
 	public function enableCampaign(Request $request)
 	{
 		if(!$this->pEdit) return $this->src->no_access(
-			$this->intl->trans("Acces refusé à la suspension de la campagne."),
+			$this->intl->trans("Acces refusé à l'activation de la campagne."),
 		);
 
 		if (!$this->isCsrfTokenValid('campaign', $request->request->get('_token'))) return $this->src->msg_warning(
@@ -746,7 +751,7 @@ class SMSCampaignController extends AbstractController
 		$lastMessage["messageAmount"]   = $dataAmount[1];
 		$lastMessage["status"]          = count($errors) == 0 ? $this->programming->getCode() : $this->suspend->getCode();
 		$lastMessage["phone"]           = str_replace("+","",$phoneNumber);
-		$lastMessage["phoneCountry"]    = $phone_data;
+		$lastMessage["phoneCountry"]    = $phone_data?$phone_data:$this->initDataPhone;
 		$lastMessage["error"]           = implode("; ", $errors);
 		$lastMessage["contact"]         = $contact;
 
@@ -851,6 +856,7 @@ class SMSCampaignController extends AbstractController
 		);
 
 		$phones		= [];
+		$allMessages= [];
 		$counting	= [
 			"persons"=>0,
 			"pages"=>0
@@ -1011,47 +1017,46 @@ class SMSCampaignController extends AbstractController
 				if(!$dataAmount[0]) $errors[] = $dataAmount[2];
 			}
 
-			if(count($errors) == 0) $amountFull += $dataAmount[1];
-
-			if($phone_data) $phone_data["operator"] = $this->phoneOperator($phone_data["code"], $phone["number"]);
+			if($phone_data) $phone_data["operator"] = $this->sMessage->phoneOperator($phone_data["code"], $phone["number"], $this->brickPhone);
 
 			$data[] = [
-				"sendingAt"         => $sendingAt->format("Y-d-m H:i:s P"),
-				"createdAt"         => (new \DateTimeImmutable())->format("Y-d-m H:i:s P"),
-				"updatedAt"         => null,
-				"message"           => $dataMessage[1],
-				"messageAmount"     => $dataAmount[1],
-				"smsType"           => $type,
-				"isParameterized"   => $isParam,
-				"timezone"          => $timezone,
-				"manager"           => $user->getId(),
-				"campaign"          => $campaign->getId(),
-				"status"            => count($errors) == 0 ? $this->programming->getCode() : $this->suspend->getCode(),
-				"sender"            => $sender->getName(),
-				"phone"             => str_replace("+","",$phone["number"]),
-				"phoneCountry"      => $phone_data,
-				"uid"               => $this->src->getUniqid(),
-				"originMessage"     => $message,
-				"createBy"          => $this->getUser()->getId(),
-				"error"             => implode("; ", $errors),
-				"contact"           => $phone
+				"sendingAt"			=> $sendingAt->format("Y-d-m H:i:s P"),
+				"createdAt"			=> (new \DateTimeImmutable())->format("Y-d-m H:i:s P"),
+				"updatedAt"			=> null,
+				"message"			=> $dataMessage[1],
+				"messageAmount"		=> $dataAmount[1],
+				"smsType"			=> $type,
+				"isParameterized"	=> $isParam,
+				"timezone"			=> $timezone,
+				"manager"			=> $user->getId(),
+				"campaign"			=> $campaign->getId(),
+				"status"			=> count($errors) == 0 ? $this->programming->getCode() : $this->suspend->getCode(),
+				"sender"			=> $sender->getName(),
+				"phone"				=> str_replace("+","",$phone["number"]),
+				"phoneCountry"		=> $phone_data?$phone_data:$this->initDataPhone,
+				"uid"				=> $this->src->getUniqid(),
+				"originMessage"		=> $message,
+				"createBy"			=> $this->getUser()->getId(),
+				"errors"			=> implode("; ", $errors),
+				"contact"			=> $phone,
+				"pages"				=> $dataMessage[3]
 			];
 
 			$counting["persons"]++;
 			$counting["pages"]	+= $dataMessage[3];
 
-			if(count($errors) > 0)
-			{
+			if(count($errors) > 0){
 				$dataError[] = [
 					count($data),
 					$phone["number"],
 					implode("; ", $errors),
-					[$phone,$phone_data],
+					[$phone,$phone_data?$phone_data:$this->initDataPhone],
 					$dataMessage[1],
 					[$position, count($data)-1, $campaign->getUid()],
 				];
 				$position++;
 			}
+			else $amountFull += $dataAmount[1];
 		}
 
 		if(!$campaignFile){
@@ -1170,8 +1175,7 @@ class SMSCampaignController extends AbstractController
 
 		$A1 = isset($rows[0][0]) ? $rows[0][0] : "";
 		$A2 = isset($rows[1][0]) ? $rows[1][0] : "";
-		if(is_numeric($A1)) $start = 0;
-		else if(is_numeric($A2)) $start = 1;
+		if(is_numeric($A1)) $start = 0; else if(is_numeric($A2)) $start = 1;
 
 		if($start == -1){
 			unlink($fileUrl);
@@ -1254,7 +1258,7 @@ class SMSCampaignController extends AbstractController
 			->setUpdatedAt(new \DateTimeImmutable());
 		$this->em->persist($campaign);
 
-		$this->addRecharge($user, $lastBalance, 0, $amount);
+		$this->sMessage->addRecharge($user, $lastBalance, 0, $amount);
 
 		return $this->src->msg_success(
 			$this->intl->trans("La campagne '%1%' passe en %2%.", ["%1%"=>$campaign->getUid(), "%2%"=>$status->getName()]),
@@ -1275,7 +1279,7 @@ class SMSCampaignController extends AbstractController
 			->setUpdatedAt(new \DateTimeImmutable());
 		$this->em->persist($campaign);
 
-		$this->addRecharge($user, $lastBalance, $amount, 0);
+		$this->sMessage->addRecharge($user, $lastBalance, $amount, 0);
 
 		return $this->src->msg_success(
 			$this->intl->trans("La campagne '%1%' passe en %2%.", ["%1%"=>$campaign->getUid(), "%2%"=>$status->getName()]),
@@ -1283,35 +1287,44 @@ class SMSCampaignController extends AbstractController
 		);
 	}
 
-	private function addRecharge($user, $lastBalance, $inAmount, $outAmount)
-	{
-		return true;
-	}
-
 	private function saveAsContacts($contacts, $user)
 	{
-		// $group = new ContactGroup();
-		// $group->setManager($user)->setName((new \DateTime())->format("YmdHis"));
-		// $this->em->persist($group);
-		// $this->em->flush();
-		//
-		// foreach ($contacts as $key => $contact) {
-		//
-		// }
-		return true;
-	}
+		$group = new ContactGroup();
+		$group->setManager($user)
+			->setName((new \DateTime())->format("YmdHis"))
+			->setUid($this->src->getUniqid())
+			->setCreatedAt(new \DateTimeImmutable())
+			->setUpdatedAt(null)
+			->setField1("champ1")
+			->setField2("champ2")
+			->setField3("champ3")
+			->setField4("champ4")
+			->setField5("champ5")
+			->setAdmin($this->getUser())
+			;
+		$this->em->persist($group);
+		$this->em->flush();
 
-	private function phoneOperator($code, $phone)
-	{
-		switch (strtoupper($code)) {
-			case 'BJ':
-				list($isValid, $paysPrefixe, $pays, $gsmPrefixe, $gsm) = $this->brickPhone->prefixBJ($phone);
-				return $isValid ? $gsm : $this->intl->trans("indéfini");
-				break;
-
-			default:
-				return $this->intl->trans("indéfini");
-				break;
+		foreach ($contacts as $contact) {
+			$dataPhone = $this->brickPhone->getInfosCountryFromCode($contact["number"]);
+			$phone = new Contact();
+			$phone->setUid($this->src->getUniqid())
+				->setPhone($contact["number"])
+				->setIsImported(true)
+				->setPhoneCountry($dataPhone?$dataPhone:$this->initDataPhone)
+				->setCreatedAt(new \DateTimeImmutable())
+				->setUpdatedAt(null)
+				->setField1($contact["param1"])
+				->setField2($contact["param2"])
+				->setField3($contact["param3"])
+				->setField4($contact["param4"])
+				->setField5($contact["param5"])
+				->setContactGroup($group)
+			;
+			$this->em->persist($phone);
 		}
+		$this->em->flush();
+
+		return $group;
 	}
 }

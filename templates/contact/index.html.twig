@@ -222,7 +222,7 @@
                     <!--end::Menu 1-->
                     <!--end::Filter-->
                    <!--begin::Export-->
-                    <button type="button" class="btn btn-light-primary me-3" data-bs-toggle="modal" data-bs-target="#kt_modal_import_contacts">
+                    <button type="button" class="btn btn-light-primary me-3" id="open_modal_import_contacts_id">
                     <!--begin::Svg Icon | path: icons/duotune/arrows/arr078.svg-->
                     <span class="svg-icon svg-icon-2">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -234,7 +234,7 @@
                     <!--end::Svg Icon-->{{"Importer"| trans}}</button>
                     <!--end::Export-->
 
-                    <button type="button" data-bs-toggle="modal" data-bs-target="#kt_modal_create_contact" class="btn btn-light-primary">
+                    <button type="button" data-bs-toggle="modal" data-bs-target="#kt_modal_create_contact"  class="btn btn-light-primary">
                         <!--begin::Svg Icon | path: icons/duotune/general/gen035.svg-->
                         <span class="svg-icon svg-icon-3">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -267,423 +267,6 @@
                     <button type="button" class="btn btn-danger" data-kt-contact-table-toolbar="delete_selected">{{"Supprimé(s)"| trans}}</button>
                 </div>
             <!--end::Group actions-->
-
-            <!--begin::Modal - Adjust Balance-->
-            <div class="modal fade" id="kt_modal_import_contacts" tabindex="-1" aria-hidden="true">
-                <!--begin::Modal dialog-->
-                <div class="modal-dialog modal-dialog-centered mw-650px">
-                    <!--begin::Modal content-->
-                    <div class="modal-content">
-                        <!--begin::Modal header-->
-                        <div class="modal-header">
-                            <!--begin::Modal title-->
-                            <h2 class="fw-bolder">{{"Importation de contacts"| trans}}</h2>
-                            <!--end::Modal title-->
-                            <!--begin::Close-->
-                            <div class="btn btn-icon btn-sm btn-active-icon-primary" data-kt-import-contact-modal-action="close">
-                                <!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
-                                <span class="svg-icon svg-icon-1">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                        <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor" />
-                                        <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor" />
-                                    </svg>
-                                </span>
-                                <!--end::Svg Icon-->
-                            </div>
-                            <!--end::Close-->
-                        </div>
-                        <!--end::Modal header-->
-                        <!--begin::Modal body-->
-                        <div class="modal-body scroll-y mx-5 mx-xl-15 mt-0 my-7">
-                            <!--begin::Form-->
-                            <form id="kt_modal_import_contacts_form" class="form" action="#">
-                                <div class="row">
-                                    <div class="fv mb-10 col-md-7 text-center">
-                                        {% if users|length == 0 %}
-                                                    <select name="group" id="id_group_contact_import" data-allow-clear="true" data-control="select2" data-dropdown-parent="#kt_modal_import_contacts" class="form-select form-select-solid fw-bolder" data-placeholder="{{'Selectionnez un groupe'| trans}}"/>
-                                                            <option value="">Sélectionnez un groupe</option>
-                                                            
-                                                    </select>
-                                        {% else %}
-                                                    <label class="form-label fs-6 fw-bold">{% trans %}Groupe de contacts{% endtrans %}</label>
-                                                    <select name="group" id="id_group_contact_import" data-allow-clear="true" data-control="select2" data-dropdown-parent="#kt_modal_import_contacts" class="form-select form-select-solid fw-bolder " data-placeholder="{{'Selectionnez un groupe'| trans}}"/>
-                                                            <option value="">Sélectionnez un groupe</option>
-                                                            {% for group in groups %}
-                                                            <option value="{{ group.uid }}" >{{ group.name }}</option>
-                                                            {% endfor %}
-                                                    </select>
-                                        {% endif %}
-                                    </div>
-                                    <div class="col-md-5">
-                                        <button type="button" id="add_group_id" class="btn btn-light-primary w-100">
-                                            <!--begin::Svg Icon | path: icons/duotune/general/gen035.svg-->
-                                            <span class="svg-icon svg-icon-3">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="black" />
-                                                    <rect x="10.8891" y="17.8033" width="12" height="2" rx="1" transform="rotate(-90 10.8891 17.8033)" fill="black" />
-                                                    <rect x="6.01041" y="10.9247" width="12" height="2" rx="1" fill="black" />
-                                                </svg>
-                                            </span>
-                                            <!--end::Svg Icon-->
-                                            {% trans %}Nouveau Groupe{% endtrans %}
-                                        </button>
-                                    </div>
-                                    <input type="hidden" name="hidden_file" value=""/>
-                                    <input type="hidden" name="_token" value="{{ csrf_token(app.user.uid) }}" class="form-control" />
-                                    <!--begin::Info-->
-                                    <div class="col-md-12 mb-5">
-                                        <i class="fa fa-info-circle"></i>
-                                        <span onclick="infoImportFile();" class="fs-7 fw-bold text-hover-inverse-primary bg-hover-primary p-1 fw-6">
-                                        {{"Cliquez ici pour télécharger un exemple de formatage des fichiers à importer."|trans}}
-                                        </span>
-                                    </div>
-                                    <!--end::Info-->
-                                    <div class="col-md-12">
-                                    <!--begin::Dropzone-->
-                                    <div class="dropzone" id="kt_import">
-                                        <!--begin::Message-->
-                                        <div class="dz-message needsclick">
-                                            <!--begin::Icon-->
-                                            <i class="bi bi-file-earmark-arrow-up text-primary fs-3x"></i>
-                                            <!--end::Icon-->
-                                            <!--begin::Info-->
-                                            <div class="ms-4">
-                                                <h3 class="fs-5 fw-bolder text-gray-900 mb-1">
-                                                    <button type="button" class="btn btn-sm btn-success">{{"Ajouter le fichier"|trans}}</button>
-                                                </h3>
-                                                <span class="fs-7 fw-bold text-gray-400">{{"Glissez et déposez le fichier ici."|trans}}</span>
-                                            </div>
-                                            <!--end::Info-->
-                                        </div>
-                                        <!--end::Message-->
-                                    </div>
-                                    <!--end::Dropzone-->
-                                    </div>
-                                </div>
-                                <!--begin::Actions-->
-                                <div class="text-center mt-10">
-                                    <button type="reset" class="btn btn-light me-3" data-kt-import-contact-modal-action="cancel">Fermer</button>
-                                    <button type="submit" class="btn btn-primary" data-kt-import-contact-modal-action="submit">
-                                        <span class="indicator-label">{{"Enregistrer"| trans}}</span>
-                                        <span class="indicator-progress">{{"Veuillez patienter..."| trans}}
-                                        <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
-                                    </button>
-                                </div>
-                                <!--end::Actions-->
-                            </form>
-                            <!--end::Form-->
-                        </div>
-                        <!--end::Modal body-->
-                    </div>
-                    <!--end::Modal content-->
-                </div>
-                <!--end::Modal dialog-->
-            </div>
-            <!--end::Modal - New Card-->
-
-            <!--begin::Modal - Create Contact App-->
-                <div class="modal fade" id="kt_modal_create_contact" tabindex="-1" aria-hidden="true">
-                    <!--begin::Modal dialog-->
-                    <div class="modal-dialog modal-dialog-centered mw-900px">
-                        <!--begin::Modal content-->
-                        <form class="form" id="kt_modal_contact_form">
-                            <div class="modal-content">
-                                <!--begin::Modal header-->
-                                    <div class="modal-header">
-                                        <!--begin::Modal title-->
-                                        <h2>{{"Ajout de Contacts"| trans }}</h2>
-                                        <!--end::Modal title-->
-                                        <!--begin::Close-->
-                                        <div class="btn btn-sm btn-icon btn-active-color-primary" data-kt-contact-modal-action="cancel" >
-                                            <!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
-                                            <span class="svg-icon svg-icon-1">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                                    <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor" />
-                                                    <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor" />
-                                                </svg>
-                                            </span>
-                                            <!--end::Svg Icon-->
-                                        </div>
-                                        <!--end::Close-->
-                                    </div>
-                                <!--end::Modal header-->
-                                <!--begin::Modal body-->
-                                    <div class="modal-body py-lg-10 px-lg-10">
-                                    
-                                        <!--begin::Repeater-->
-                                            <div id="kt_docs_repeater_basic">
-                                                <!--begin::Form group-->
-                                                <div class="form-group">
-                                                    <div data-repeater-list="kt_docs_repeater_basic">
-                                                                    <div class="separator separator-dotted separator-content border-dark my-2 mb-15">
-                                                                        <div class="row fv">
-                                                                                    <label class="form-label fs-6 fw-bold">{% trans %}Groupe de contacts{% endtrans %}</label>
-                                                                                    <select name="groupe" id="group_id_add_contact" data-allow-clear="true" data-control="select2" data-dropdown-parent="#kt_modal_create_contact" class="form-select form-select-solid fw-bolder min-w-300px mw-300px" data-placeholder="{{'Selectionnez un groupe'| trans}}"/>
-                                                                                            <option value="">Sélectionnez un groupe</option>
-                                                                                           
-                                                                                    </select>
-                                                                        </div>
-                                                                    </div>
-                                                        <div data-repeater-item>
-                                                            <div class="form-group row">
-                                                                
-                                                                <div class="row">
-                                                                    <div class="col-xl-4">
-                                                                        <!--begin::Input group-->
-                                                                        <div class="fv input-group mb-8">
-                                                                            <input type="tel" name="phone" data-index="0" data-name="phone" class="form-control tel" placeholder="97979797" />
-                                                                        </div>
-                                                                        <!--end::Input group-->
-                                                                    </div>
-                                                                    <div class="col-xl-4">
-                                                                        <!--begin::Input group-->
-                                                                        <div class="fv input-group mb-5">
-                                                                            <input type="text" name="set1" class="form-control" placeholder="{{'Champ1'| trans}}" aria-label="{{'Champ1'| trans}}" aria-describedby="basic-addon2"/>
-                                                                            <span class="input-group-text" id="basic-addon2">
-                                                                                <i class="las la-tools fs-4"></i>
-                                                                            </span>
-                                                                        </div>
-                                                                        <!--end::Input group-->
-                                                                    </div>
-                                                                    <div class="col-xl-4">
-                                                                        <!--begin::Input group-->
-                                                                        <div class="fv input-group mb-5">
-                                                                            <input type="text" name="set2" class="form-control" placeholder="{{'Champ2'| trans}}" aria-label="{{'Champ2'| trans}}" aria-describedby="basic-addon2"/>
-                                                                            <span class="input-group-text" id="basic-addon2">
-                                                                                <i class="las la-tools fs-4"></i>
-                                                                            </span>
-                                                                        </div>
-                                                                        <!--end::Input group-->
-                                                                    </div>
-                                                                    
-                                                                </div>
-                                                        
-                                                                <div class="row">
-                                                                    
-                                                                    <div class="col-xl-4">
-                                                                        <!--begin::Input group-->
-                                                                        <div class="fv input-group mb-5">
-                                                                            <input type="text" name="set3" class="form-control" placeholder="{{'Champ3'| trans}}" aria-label="{{'Champ3'| trans}}" aria-describedby="basic-addon2"/>
-                                                                            <span class="input-group-text" id="basic-addon2">
-                                                                                <i class="las la-tools fs-4"></i>
-                                                                            </span>
-                                                                        </div>
-                                                                        <!--end::Input group-->
-                                                                    </div>
-                                                                    <div class="col-xl-4">
-                                                                        <!--begin::Input group-->
-                                                                        <div class="fv input-group mb-5">
-                                                                            <input type="text" name="set4" class="form-control" placeholder="{{'Champ4'| trans}}" aria-label="{{'Champ4'| trans}}" aria-describedby="basic-addon2"/>
-                                                                            <span class="input-group-text" id="basic-addon2">
-                                                                                <i class="las la-tools fs-4"></i>
-                                                                            </span>
-                                                                        </div>
-                                                                        <!--end::Input group-->
-                                                                    </div>
-                                                                    <div class="col-xl-4">
-                                                                        <!--begin::Input group-->
-                                                                        <div class="fv input-group mb-5">
-                                                                            <input type="text" name="set5" class="form-control" placeholder="{{'Champ5'| trans}}" aria-label="{{'Champ5'| trans}}" aria-describedby="basic-addon2"/>
-                                                                            <span class="input-group-text" id="basic-addon2">
-                                                                                <i class="las la-tools fs-4"></i>
-                                                                            </span>
-                                                                        </div>
-                                                                        <!--end::Input group-->
-                                                                    </div>
-                                                                    
-                                                                </div>
-
-                                                                <div class="row">
-
-                                                                    <div class="offset-xl-10 col-xl-2">
-                                                                        <!--begin::Input group-->
-                                                                        <div class="input-group mb-0">
-                                                                            <button type="button" data-repeater-delete  class="btn btn-light-danger">
-                                                                                <i class="la la-trash-o"></i>Delete
-                                                                            </button>
-                                                                            {# <a href="javascript:;" data-repeater-delete class="btn btn-sm btn-light-danger ">
-                                                                                <i class="la la-trash-o"></i>Delete
-                                                                            </a> #}
-                                                                        </div>
-                                                                        <!--end::Input group-->
-                                                                    </div>
-                                                                    
-                                                                </div>
-                                                                <div class="separator separator-dotted separator-content border-dark my-2 mb-5">
-                                                                    <i class="bi bi-telephone"></i>
-                                                                </div>
-
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <!--end::Form group-->
-
-                                                <!--begin::Form group-->
-                                                <div class="form-group mt-5">
-                                                    <a href="javascript:;" data-repeater-create class="btn btn-light-primary">
-                                                        <i class="la la-plus"></i>Plus
-                                                    </a>
-                                                </div>
-                                                <!--end::Form group-->
-                                            </div>
-                                        <!--end::Repeater-->
-                                        
-                                    </div>
-                                <!--end::Modal body-->
-
-                                <!--begin::Actions-->
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-light" data-kt-contact-modal-action="close">Fermer</button>
-                                        <button type="submit" class="btn btn-primary" data-kt-contact-modal-action="submit">Enregistrer</button>
-                                    </div>
-                                <!--end::Actions-->
-                                <input type="hidden" name="_token" value="{{ csrf_token(app.user.uid) }}" class="form-control" />
-                            </div>
-                        </form>
-                        <!--end::Modal content-->
-                    </div>
-                    <!--end::Modal dialog-->
-                </div>
-            <!--end::Modal - Create Contact App-->
-
-            <!--begin::Modal - Update Contact App-->
-            <div class="modal fade" id="kt_modal_update_contact" tabindex="-1" aria-hidden="true">
-                <!--begin::Modal dialog-->
-                <div class="modal-dialog modal-dialog-centered mw-900px">
-                    <!--begin::Modal content-->
-                    <form class="form" id="kt_modal_update_contact_form">
-                        <div class="modal-content">
-                            <!--begin::Modal header-->
-                                <div class="modal-header">
-                                    <!--begin::Modal title-->
-                                    <h2>{{"Modification du Contact"| trans }}</h2>
-                                    <!--end::Modal title-->
-                                    <!--begin::Close-->
-                                    <div class="btn btn-sm btn-icon btn-active-color-primary" data-kt-update-contact-modal-action="cancel" >
-                                        <!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
-                                        <span class="svg-icon svg-icon-1">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                                <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor" />
-                                                <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor" />
-                                            </svg>
-                                        </span>
-                                        <!--end::Svg Icon-->
-                                    </div>
-                                    <!--end::Close-->
-                                </div>
-                            <!--end::Modal header-->
-
-                            <!--begin::Modal Update body-->
-                            <div class="modal-body py-lg-10 px-lg-10">
-                            
-                                <!--begin::Form group-->
-                                        <div class="form-group">
-                                            <div class="separator separator-dotted separator-content border-dark my-2 mb-15">
-                                                    <div class="row fv">
-                                                                <label class="form-label fs-6 fw-bold">{% trans %}Groupe de contacts{% endtrans %}</label>
-                                                                <select name="groupe" id="id_group_contact" data-allow-clear="true" data-control="select2" data-dropdown-parent="#kt_modal_update_contact" class="form-select form-select-solid fw-bolder min-w-300px mw-300px" data-placeholder="{{'Selectionnez un groupe'| trans}}"/>
-                                                                        <option value="">Sélectionnez un groupe</option>
-                                                                        {% for group in groups %}
-                                                                        <option value="{{ group.uid }}" >{{ group.name }}</option>
-                                                                        {% endfor %}
-                                                                </select>
-                                                    </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                
-                                                <div class="row">
-                                                    <div class="col-xl-4">
-                                                        <!--begin::Input group-->
-                                                        <div class="fv input-group mb-8">
-                                                            <input type="tel" name="phone" id="phone_id" class="form-control tel" placeholder="97979797" />
-                                                        </div>
-                                                        <!--end::Input group-->
-                                                    </div>
-                                                    <div class="col-xl-4">
-                                                        <!--begin::Input group-->
-                                                        <div class="fv input-group mb-5">
-                                                            <input type="hidden" name="_uid" id="contact_id"/>
-                                                            <input type="text" name="set1" id="contact_set1" class="form-control" placeholder="{{'Champ1'| trans}}" aria-label="{{'Champ1'| trans}}" aria-describedby="basic-addon2"/>
-                                                            <span class="input-group-text" id="basic-addon2">
-                                                                <i class="las la-tools fs-4"></i>
-                                                            </span>
-                                                        </div>
-                                                        <!--end::Input group-->
-                                                    </div>
-                                                    <div class="col-xl-4">
-                                                        <!--begin::Input group-->
-                                                        <div class="fv input-group mb-5">
-                                                            <input type="text" name="set2" id="contact_set2" class="form-control" placeholder="{{'Champ2'| trans}}" aria-label="{{'Champ2'| trans}}" aria-describedby="basic-addon2"/>
-                                                            <span class="input-group-text" id="basic-addon2">
-                                                                <i class="las la-tools fs-4"></i>
-                                                            </span>
-                                                        </div>
-                                                        <!--end::Input group-->
-                                                    </div>
-                                                    
-                                                </div>
-                                        
-                                                <div class="row">
-                                                    
-                                                    <div class="col-xl-4">
-                                                        <!--begin::Input group-->
-                                                        <div class="fv input-group mb-5">
-                                                            <input type="text" name="set3" id="contact_set3" class="form-control" placeholder="{{'Champ3'| trans}}" aria-label="{{'Champ3'| trans}}" aria-describedby="basic-addon2"/>
-                                                            <span class="input-group-text" id="basic-addon2">
-                                                                <i class="las la-tools fs-4"></i>
-                                                            </span>
-                                                        </div>
-                                                        <!--end::Input group-->
-                                                    </div>
-                                                    <div class="col-xl-4">
-                                                        <!--begin::Input group-->
-                                                        <div class="fv input-group mb-5">
-                                                            <input type="text" name="set4" id="contact_set4" class="form-control" placeholder="{{'Champ4'| trans}}" aria-label="{{'Champ4'| trans}}" aria-describedby="basic-addon2"/>
-                                                            <span class="input-group-text" id="basic-addon2">
-                                                                <i class="las la-tools fs-4"></i>
-                                                            </span>
-                                                        </div>
-                                                        <!--end::Input group-->
-                                                    </div>
-                                                    <div class="col-xl-4">
-                                                        <!--begin::Input group-->
-                                                        <div class="fv input-group mb-5">
-                                                            <input type="text" name="set5" id="contact_set5" class="form-control" placeholder="{{'Champ5'| trans}}" aria-label="{{'Champ5'| trans}}" aria-describedby="basic-addon2"/>
-                                                            <span class="input-group-text" id="basic-addon2">
-                                                                <i class="las la-tools fs-4"></i>
-                                                            </span>
-                                                        </div>
-                                                        <!--end::Input group-->
-                                                    </div>
-                                                    
-                                                </div>
-
-                                                <div class="separator separator-dotted separator-content border-dark my-2 mb-5">
-                                                    <i class="bi bi-telephone"></i>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                        <!--end::Form group-->
-
-                            </div>
-                            <!--end::Modal Update body-->
-
-                            <!--begin::Actions-->
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-light" data-kt-update-contact-modal-action="close">Fermer</button>
-                                    <button type="submit" class="btn btn-primary" data-kt-update-contact-modal-action="submit">Enregistrer</button>
-                                </div>
-                            <!--end::Actions-->
-                            <input type="hidden" name="_token" value="{{ csrf_token(app.user.uid) }}" class="form-control" />
-                        </div>
-                    </form>
-                    <!--end::Modal content-->
-                </div>
-                <!--end::Modal dialog-->
-            </div>
-            <!--end::Modal - Update Contact App-->
 
         </div>
         <!--end::Card toolbar-->
@@ -823,7 +406,7 @@
                     <!--end::Filter-->
                     <!--end::Export-->
 
-                    <button type="button" data-bs-toggle="modal" data-bs-target="#kt_modal_create_contact_group" id="test" class="btn btn-light-primary">
+                    <button type="button" data-bs-toggle="modal" data-bs-target="#kt_modal_create_contact_group"  class="btn btn-light-primary">
                         <!--begin::Svg Icon | path: icons/duotune/general/gen035.svg-->
                         <span class="svg-icon svg-icon-3">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -858,289 +441,7 @@
                 </div>
             <!--end::Group actions-->
 
-            <!--begin::Modal - Create Contact Group App-->
-                <div class="modal fade" id="kt_modal_create_contact_group" tabindex="-1" aria-hidden="true">
-                    <!--begin::Modal dialog-->
-                    <div class="modal-dialog modal-dialog-centered mw-900px">
-                        <!--begin::Modal content-->
-                        <form class="form" id="kt_modal_contact_group_form">
-                            <div class="modal-content">
-                                <!--begin::Modal header-->
-                                    <div class="modal-header">
-                                        <!--begin::Modal title-->
-                                        <h2>{{"Ajout de Groupe de Contacts"| trans }}</h2>
-                                        <!--end::Modal title-->
-                                        <!--begin::Close-->
-                                        <div class="btn btn-sm btn-icon btn-active-color-primary" data-kt-contact-group-modal-action="cancel" >
-                                            <!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
-                                            <span class="svg-icon svg-icon-1">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                                    <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor" />
-                                                    <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor" />
-                                                </svg>
-                                            </span>
-                                            <!--end::Svg Icon-->
-                                        </div>
-                                        <!--end::Close-->
-                                    </div>
-                                <!--end::Modal header-->
-                                <!--begin::Modal body-->
-
-                                    <div class="modal-body py-lg-10 px-lg-10">
-
-                                        <!--begin::Alert-->
-                                        <div class="alert alert-dismissible bg-light-primary border border-primary mb-10 border-dashed  h-lg-100 d-flex flex-column flex-sm-row w-100 p-5">
-                                            <!--begin::Icon-->
-                                            <!--begin::Svg Icon | path: icons/duotune/communication/com003.svg-->
-                                            <span class="svg-icon svg-icon-2hx svg-icon-primary me-4 mb-1 mb-sm-0">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                                    <path opacity="0.3" d="M12 22C13.6569 22 15 20.6569 15 19C15 17.3431 13.6569 16 12 16C10.3431 16 9 17.3431 9 19C9 20.6569 10.3431 22 12 22Z" fill="currentColor" />
-                                                    <path d="M19 15V18C19 18.6 18.6 19 18 19H6C5.4 19 5 18.6 5 18V15C6.1 15 7 14.1 7 13V10C7 7.6 8.7 5.6 11 5.1V3C11 2.4 11.4 2 12 2C12.6 2 13 2.4 13 3V5.1C15.3 5.6 17 7.6 17 10V13C17 14.1 17.9 15 19 15ZM11 10C11 9.4 11.4 9 12 9C12.6 9 13 8.6 13 8C13 7.4 12.6 7 12 7C10.3 7 9 8.3 9 10C9 10.6 9.4 11 10 11C10.6 11 11 10.6 11 10Z" fill="currentColor" />
-                                                </svg>
-                                            </span>
-                                            <!--end::Svg Icon-->
-                                            <!--end::Icon-->
-                                            <!--begin::Content-->
-                                            <div class="d-flex flex-column pe-0 pe-sm-10">
-                                                <h4 class="text-gray-900 fw-bolder">{% trans %}Infos{% endtrans %}</h4>
-                                                <div class="fs-6 text-gray-700"> Les champs de saisies intitulés « Champ1, Champ2, 
-                                                Champ3, Champ4, Champ5 »représentent des paramètres que vous pouvez définir
-                                                 afin de les renseigner lors de l'ajout d'un ou des contacts.
-                                                </div>
-                                            </div>
-                                            <!--end::Content-->
-                                        </div>
-                                        <!--end::Alert-->
-                                        <!--begin::Form group-->
-                                        <div class="form-group">
-                                            {# <div class="separator separator-dotted separator-content border-dark my-2 mb-15">
-                                            <i class="fa fa-address-book fs-2x text-info"></i>
-                                            </div> #}
-                                            <div class="form-group row">
-                                                    
-                                                <div class="col-xl-12">
-                                                    <!--begin::Input group-->
-                                                    <div class="fv input-group mb-8">
-                                                        {% if users|length == 0 %}
-                                                        <select  data-allow-clear="true" name="user_group" id="list_user_add_group_id" data-control="select2" class="form-select form-select-solid fw-bolder" data-placeholder="{{'Selectionnez un utilisateur'| trans}}"/>
-                                                                <option value="">Sélectionnez un utilisateur</option>
-                                                                {% for user in users %}
-                                                                <option value="{{ user.uid }}" >{{ user.email }}</option>
-                                                                {% endfor %}
-                                                        </select>
-                                                        <input type="hidden" name="admin" value="{{ app.user.uid }}" />
-                                                        {% else %}
-                                                            <input type="hidden" name="user_group" value="{{ app.user.uid }}" />
-                                                        {% endif %}
-                                                    </div> 
-                                                </div>
-                                                <div class="col-xl-4">
-                                                    <!--begin::Input group-->
-                                                    <div class="fv input-group mb-8">
-                                                        <input type="text" name="groupName"  class="form-control required " placeholder="Nom du groupe" />
-                                                    </div>
-                                                    <!--end::Input group-->
-                                                </div>
-                                                <div class="col-xl-4">
-                                                    <!--begin::Input group-->
-                                                    <div class="fv input-group mb-5">
-                                                        <input type="text" name="set1" class="form-control" placeholder="{{'Champ1'| trans}}" aria-label="{{'Champ1'| trans}}" aria-describedby="basic-addon2"/>
-                                                        <span class="input-group-text" id="basic-addon2">
-                                                            <i class="las la-tools fs-4"></i>
-                                                        </span>
-                                                    </div>
-                                                    <!--end::Input group-->
-                                                </div>
-                                                <div class="col-xl-4">
-                                                    <!--begin::Input group-->
-                                                    <div class="fv input-group mb-5">
-                                                        <input type="text" name="set2" class="form-control" placeholder="{{'Champ2'| trans}}" aria-label="{{'Champ2'| trans}}" aria-describedby="basic-addon2"/>
-                                                        <span class="input-group-text" id="basic-addon2">
-                                                            <i class="las la-tools fs-4"></i>
-                                                        </span>
-                                                    </div>
-                                                    <!--end::Input group-->
-                                                </div>
-                                                
-                                                <div class="col-xl-4">
-                                                    <!--begin::Input group-->
-                                                    <div class="fv input-group mb-5">
-                                                        <input type="text" name="Champ3" class="form-control" placeholder="{{'Champ3'| trans}}" aria-label="{{'Champ3'| trans}}" aria-describedby="basic-addon2"/>
-                                                        <span class="input-group-text" id="basic-addon2">
-                                                            <i class="las la-tools fs-4"></i>
-                                                        </span>
-                                                    </div>
-                                                    <!--end::Input group-->
-                                                </div>
-                                                <div class="col-xl-4">
-                                                    <!--begin::Input group-->
-                                                    <div class="fv input-group mb-5">
-                                                        <input type="text" name="set4" class="form-control" placeholder="{{'Champ4'| trans}}" aria-label="{{'Champ4'| trans}}" aria-describedby="basic-addon2"/>
-                                                        <span class="input-group-text" id="basic-addon2">
-                                                            <i class="las la-tools fs-4"></i>
-                                                        </span>
-                                                    </div>
-                                                    <!--end::Input group-->
-                                                </div>
-                                                <div class="col-xl-4">
-                                                    <!--begin::Input group-->
-                                                    <div class="fv input-group mb-5">
-                                                        <input type="text" name="set5" class="form-control" placeholder="{{'Champ5'| trans}}" aria-label="{{'Champ5'| trans}}" aria-describedby="basic-addon2"/>
-                                                        <span class="input-group-text" id="basic-addon2">
-                                                            <i class="las la-tools fs-4"></i>
-                                                        </span>
-                                                    </div>
-                                                    <!--end::Input group-->
-                                                </div>
-                                                    
-                                            </div>
-                                                            
-                                        </div>
-                                        <!--end::Form group-->
-
-                                    </div>
-                                <!--end::Modal body-->
-                                <!--begin::Actions-->
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-light" data-kt-contact-group-modal-action="close">Fermer</button>
-                                        <button type="button" class="btn btn-primary" data-kt-contact-group-modal-action="submit">Enregistrer</button>
-                                    </div>
-                                <!--end::Actions-->
-                                <input type="hidden" name="_token" value="{{ csrf_token(app.user.uid) }}" class="form-control" />
-                            </div>
-                        </form>
-                        <!--end::Modal content-->
-                    </div>
-                    <!--end::Modal dialog-->
-                </div>
-            <!--end::Modal - Create Contact Group App-->
-
-            <!--begin::Modal - Update Contact Group App-->
-                <div class="modal fade" id="kt_modal_update_contact_group" tabindex="-1" aria-hidden="true">
-                    <!--begin::Modal dialog-->
-                    <div class="modal-dialog modal-dialog-centered mw-900px">
-                        <!--begin::Modal content-->
-                        <form class="form" id="kt_modal_update_contact_group_form">
-                            <div class="modal-content">
-                                <!--begin::Modal header-->
-                                    <div class="modal-header">
-                                        <!--begin::Modal title-->
-                                        <h2>{{"Modification du Groupe de Contacts"| trans }}</h2>
-                                        <!--end::Modal title-->
-                                        <!--begin::Close-->
-                                        <div class="btn btn-sm btn-icon btn-active-color-primary" data-kt-update-contact-group-modal-action="cancel" >
-                                            <!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
-                                            <span class="svg-icon svg-icon-1">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                                    <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor" />
-                                                    <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor" />
-                                                </svg>
-                                            </span>
-                                            <!--end::Svg Icon-->
-                                        </div>
-                                        <!--end::Close-->
-                                    </div>
-                                <!--end::Modal header-->
-                                <!--begin::Modal body-->
-
-                                    <div class="modal-body py-lg-10 px-lg-10">
-                                    
-                                        <!--begin::Form group-->
-                                        <div class="form-group">
-                                            <div class="separator separator-dotted separator-content border-dark my-2 mb-15">
-                                            <i class="fa fa-address-book fs-2x text-info"></i>
-                                            </div>
-                                            
-                                            <div class="form-group row">
-                                                
-                                                <div class="row">
-                                                    <div class="col-xl-4">
-                                                        <!--begin::Input group-->
-                                                        <div class="fv input-group mb-8">
-                                                            <input type="text" name="groupName" id="group_name" class="form-control required " placeholder="Nom du groupe" />
-                                                        </div>
-                                                        <!--end::Input group-->
-                                                    </div>
-                                                    <div class="col-xl-4">
-                                                        <!--begin::Input group-->
-                                                        <div class="fv input-group mb-5">
-                                                            <input type="text" name="set1" id="group_set1" class="form-control" aria-label="{{'Champ1'| trans}}" aria-describedby="basic-addon2"/>
-                                                            <input type="hidden" name="_uid" id="group_uid"/>
-                                                            <span class="input-group-text" id="basic-addon2">
-                                                                <i class="las la-tools fs-4"></i>
-                                                            </span>
-                                                        </div>
-                                                        <!--end::Input group-->
-                                                    </div>
-                                                    <div class="col-xl-4">
-                                                        <!--begin::Input group-->
-                                                        <div class="fv input-group mb-5">
-                                                            <input type="text" name="set2" id="group_set2" class="form-control" placeholder="{{'Champ2'| trans}}" aria-label="{{'Champ2'| trans}}" aria-describedby="basic-addon2"/>
-                                                            <span class="input-group-text" id="basic-addon2">
-                                                                <i class="las la-tools fs-4"></i>
-                                                            </span>
-                                                        </div>
-                                                        <!--end::Input group-->
-                                                    </div>
-                                                    
-                                                </div>
-                                        
-                                                <div class="row">
-                                                    
-                                                    <div class="col-xl-4">
-                                                        <!--begin::Input group-->
-                                                        <div class="fv input-group mb-5">
-                                                            <input type="text" name="set3" id="group_set3" class="form-control" placeholder="{{'Champ3'| trans}}" aria-label="{{'Champ3'| trans}}" aria-describedby="basic-addon2"/>
-                                                            <span class="input-group-text" id="basic-addon2">
-                                                                <i class="las la-tools fs-4"></i>
-                                                            </span>
-                                                        </div>
-                                                        <!--end::Input group-->
-                                                    </div>
-                                                    <div class="col-xl-4">
-                                                        <!--begin::Input group-->
-                                                        <div class="fv input-group mb-5">
-                                                            <input type="text" name="set4" id="group_set4" class="form-control" placeholder="{{'Champ4'| trans}}" aria-label="{{'Champ4'| trans}}" aria-describedby="basic-addon2"/>
-                                                            <span class="input-group-text" id="basic-addon2">
-                                                                <i class="las la-tools fs-4"></i>
-                                                            </span>
-                                                        </div>
-                                                        <!--end::Input group-->
-                                                    </div>
-                                                    <div class="col-xl-4">
-                                                        <!--begin::Input group-->
-                                                        <div class="fv input-group mb-5">
-                                                            <input type="text" name="set5" id="group_set5" class="form-control" placeholder="{{'Champ5'| trans}}" aria-label="{{'Champ5'| trans}}" aria-describedby="basic-addon2"/>
-                                                            <span class="input-group-text" id="basic-addon2">
-                                                                <i class="las la-tools fs-4"></i>
-                                                            </span>
-                                                        </div>
-                                                        <!--end::Input group-->
-                                                    </div>
-                                                    
-                                                </div>
-                                                
-                                            </div>
-                                                            
-                                        </div>
-                                        <!--end::Form group-->
-
-                                    </div>
-                                <!--end::Modal body-->
-                                <!--begin::Actions-->
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-light" data-kt-update-contact-group-modal-action="close">Fermer</button>
-                                        <button type="button" class="btn btn-primary" data-kt-update-contact-group-modal-action="submit">Enregistrer</button>
-                                    </div>
-                                <!--end::Actions-->
-                                <input type="hidden" name="_token" value="{{ csrf_token(app.user.uid) }}" class="form-control" />
-                            </div>
-                        </form>
-                        <!--end::Modal content-->
-                    </div>
-                    <!--end::Modal dialog-->
-                </div>
-            <!--end::Modal - Update Group Contact App-->
+           
         </div>
         <!--end::Card toolbar-->
     </div>
@@ -1190,6 +491,708 @@
 </div>
 <!--end::Post-->
 
+ <!--begin::Modal - Create Contact App-->
+    <div class="modal fade" id="kt_modal_create_contact" tabindex="-1" aria-hidden="true">
+        <!--begin::Modal dialog-->
+        <div class="modal-dialog modal-dialog-centered mw-900px">
+            <!--begin::Modal content-->
+            <form class="form" id="kt_modal_contact_form">
+                <div class="modal-content">
+                    <!--begin::Modal header-->
+                        <div class="modal-header">
+                            <!--begin::Modal title-->
+                            <h2>{{"Ajout de Contacts"| trans }}</h2>
+                            <!--end::Modal title-->
+                            <!--begin::Close-->
+                            <div class="btn btn-sm btn-icon btn-active-color-primary" data-kt-contact-modal-action="cancel" >
+                                <!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
+                                <span class="svg-icon svg-icon-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                        <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor" />
+                                        <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor" />
+                                    </svg>
+                                </span>
+                                <!--end::Svg Icon-->
+                            </div>
+                            <!--end::Close-->
+                        </div>
+                    <!--end::Modal header-->
+                    <!--begin::Modal body-->
+                        <div class="modal-body py-lg-10 px-lg-10">
+                        
+                            <!--begin::Repeater-->
+                                <div id="kt_docs_repeater_basic">
+                                    <!--begin::Form group-->
+                                    <div class="form-group">
+                                        <div data-repeater-list="kt_docs_repeater_basic">
+                                                        <div class="separator separator-dotted separator-content border-dark my-2 mb-15">
+                                                            <div class="row fv">
+                                                                        <label class="form-label fs-6 fw-bold">{% trans %}Groupe de contacts{% endtrans %}</label>
+                                                                        <select name="groupe" id="group_id_add_contact" data-allow-clear="true" data-control="select2" data-dropdown-parent="#kt_modal_create_contact" class="form-select form-select-solid fw-bolder min-w-300px mw-300px" data-placeholder="{{'Selectionnez un groupe'| trans}}"/>
+                                                                                <option value="">Sélectionnez un groupe</option>
+                                                                                
+                                                                        </select>
+                                                            </div>
+                                                        </div>
+                                            <div data-repeater-item>
+                                                <div class="form-group row">
+                                                    
+                                                    <div class="row">
+                                                        <div class="col-xl-4">
+                                                            <!--begin::Input group-->
+                                                            <div class="fv input-group mb-8">
+                                                                <input type="tel" name="phone" data-index="0" data-name="phone" class="form-control tel" placeholder="97979797" />
+                                                            </div>
+                                                            <!--end::Input group-->
+                                                        </div>
+                                                        <div class="col-xl-4">
+                                                            <!--begin::Input group-->
+                                                            <div class="fv input-group mb-5">
+                                                                <input type="text" name="set1" class="form-control" placeholder="{{'Champ1'| trans}}" aria-label="{{'Champ1'| trans}}" aria-describedby="basic-addon2"/>
+                                                                <span class="input-group-text" id="basic-addon2">
+                                                                    <i class="las la-tools fs-4"></i>
+                                                                </span>
+                                                            </div>
+                                                            <!--end::Input group-->
+                                                        </div>
+                                                        <div class="col-xl-4">
+                                                            <!--begin::Input group-->
+                                                            <div class="fv input-group mb-5">
+                                                                <input type="text" name="set2" class="form-control" placeholder="{{'Champ2'| trans}}" aria-label="{{'Champ2'| trans}}" aria-describedby="basic-addon2"/>
+                                                                <span class="input-group-text" id="basic-addon2">
+                                                                    <i class="las la-tools fs-4"></i>
+                                                                </span>
+                                                            </div>
+                                                            <!--end::Input group-->
+                                                        </div>
+                                                        
+                                                    </div>
+                                            
+                                                    <div class="row">
+                                                        
+                                                        <div class="col-xl-4">
+                                                            <!--begin::Input group-->
+                                                            <div class="fv input-group mb-5">
+                                                                <input type="text" name="set3" class="form-control" placeholder="{{'Champ3'| trans}}" aria-label="{{'Champ3'| trans}}" aria-describedby="basic-addon2"/>
+                                                                <span class="input-group-text" id="basic-addon2">
+                                                                    <i class="las la-tools fs-4"></i>
+                                                                </span>
+                                                            </div>
+                                                            <!--end::Input group-->
+                                                        </div>
+                                                        <div class="col-xl-4">
+                                                            <!--begin::Input group-->
+                                                            <div class="fv input-group mb-5">
+                                                                <input type="text" name="set4" class="form-control" placeholder="{{'Champ4'| trans}}" aria-label="{{'Champ4'| trans}}" aria-describedby="basic-addon2"/>
+                                                                <span class="input-group-text" id="basic-addon2">
+                                                                    <i class="las la-tools fs-4"></i>
+                                                                </span>
+                                                            </div>
+                                                            <!--end::Input group-->
+                                                        </div>
+                                                        <div class="col-xl-4">
+                                                            <!--begin::Input group-->
+                                                            <div class="fv input-group mb-5">
+                                                                <input type="text" name="set5" class="form-control" placeholder="{{'Champ5'| trans}}" aria-label="{{'Champ5'| trans}}" aria-describedby="basic-addon2"/>
+                                                                <span class="input-group-text" id="basic-addon2">
+                                                                    <i class="las la-tools fs-4"></i>
+                                                                </span>
+                                                            </div>
+                                                            <!--end::Input group-->
+                                                        </div>
+                                                        
+                                                    </div>
+
+                                                    <div class="row">
+
+                                                        <div class="offset-xl-10 col-xl-2">
+                                                            <!--begin::Input group-->
+                                                            <div class="input-group mb-0">
+                                                                <button type="button" data-repeater-delete  class="btn btn-light-danger">
+                                                                    <i class="la la-trash-o"></i>Delete
+                                                                </button>
+                                                                {# <a href="javascript:;" data-repeater-delete class="btn btn-sm btn-light-danger ">
+                                                                    <i class="la la-trash-o"></i>Delete
+                                                                </a> #}
+                                                            </div>
+                                                            <!--end::Input group-->
+                                                        </div>
+                                                        
+                                                    </div>
+                                                    <div class="separator separator-dotted separator-content border-dark my-2 mb-5">
+                                                        <i class="bi bi-telephone"></i>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--end::Form group-->
+
+                                    <!--begin::Form group-->
+                                    <div class="form-group mt-5">
+                                        <a href="javascript:;" data-repeater-create class="btn btn-light-primary">
+                                            <i class="la la-plus"></i>Plus
+                                        </a>
+                                    </div>
+                                    <!--end::Form group-->
+                                </div>
+                            <!--end::Repeater-->
+                            
+                        </div>
+                    <!--end::Modal body-->
+
+                    <!--begin::Actions-->
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-light" data-kt-contact-modal-action="close">Fermer</button>
+                            <button type="submit" class="btn btn-primary" data-kt-contact-modal-action="submit">Enregistrer</button>
+                        </div>
+                    <!--end::Actions-->
+                    <input type="hidden" name="_token" value="{{ csrf_token(app.user.uid) }}" class="form-control" />
+                </div>
+            </form>
+            <!--end::Modal content-->
+        </div>
+        <!--end::Modal dialog-->
+    </div>
+<!--end::Modal - Create Contact App-->
+
+<!--begin::Modal - Update Contact App-->
+    <div class="modal fade" id="kt_modal_update_contact" tabindex="-1" aria-hidden="true">
+        <!--begin::Modal dialog-->
+        <div class="modal-dialog modal-dialog-centered mw-900px">
+            <!--begin::Modal content-->
+            <form class="form" id="kt_modal_update_contact_form">
+                <div class="modal-content">
+                    <!--begin::Modal header-->
+                        <div class="modal-header">
+                            <!--begin::Modal title-->
+                            <h2>{{"Modification du Contact"| trans }}</h2>
+                            <!--end::Modal title-->
+                            <!--begin::Close-->
+                            <div class="btn btn-sm btn-icon btn-active-color-primary" data-kt-update-contact-modal-action="cancel" >
+                                <!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
+                                <span class="svg-icon svg-icon-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                        <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor" />
+                                        <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor" />
+                                    </svg>
+                                </span>
+                                <!--end::Svg Icon-->
+                            </div>
+                            <!--end::Close-->
+                        </div>
+                    <!--end::Modal header-->
+
+                    <!--begin::Modal Update body-->
+                    <div class="modal-body py-lg-10 px-lg-10">
+                    
+                        <!--begin::Form group-->
+                                <div class="form-group">
+                                    <div class="separator separator-dotted separator-content border-dark my-2 mb-15">
+                                            <div class="row fv">
+                                                        <label class="form-label fs-6 fw-bold">{% trans %}Groupe de contacts{% endtrans %}</label>
+                                                        <select name="groupe" id="id_group_contact" data-allow-clear="true" data-control="select2" data-dropdown-parent="#kt_modal_update_contact" class="form-select form-select-solid fw-bolder min-w-300px mw-300px" data-placeholder="{{'Selectionnez un groupe'| trans}}"/>
+                                                                <option value="">Sélectionnez un groupe</option>
+                                                                {% for group in groups %}
+                                                                <option value="{{ group.uid }}" >{{ group.name }}</option>
+                                                                {% endfor %}
+                                                        </select>
+                                            </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        
+                                        <div class="row">
+                                            <div class="col-xl-4">
+                                                <!--begin::Input group-->
+                                                <div class="fv input-group mb-8">
+                                                    <input type="tel" name="phone" id="phone_id" class="form-control tel" placeholder="97979797" />
+                                                </div>
+                                                <!--end::Input group-->
+                                            </div>
+                                            <div class="col-xl-4">
+                                                <!--begin::Input group-->
+                                                <div class="fv input-group mb-5">
+                                                    <input type="hidden" name="_uid" id="contact_id"/>
+                                                    <input type="text" name="set1" id="contact_set1" class="form-control" placeholder="{{'Champ1'| trans}}" aria-label="{{'Champ1'| trans}}" aria-describedby="basic-addon2"/>
+                                                    <span class="input-group-text" id="basic-addon2">
+                                                        <i class="las la-tools fs-4"></i>
+                                                    </span>
+                                                </div>
+                                                <!--end::Input group-->
+                                            </div>
+                                            <div class="col-xl-4">
+                                                <!--begin::Input group-->
+                                                <div class="fv input-group mb-5">
+                                                    <input type="text" name="set2" id="contact_set2" class="form-control" placeholder="{{'Champ2'| trans}}" aria-label="{{'Champ2'| trans}}" aria-describedby="basic-addon2"/>
+                                                    <span class="input-group-text" id="basic-addon2">
+                                                        <i class="las la-tools fs-4"></i>
+                                                    </span>
+                                                </div>
+                                                <!--end::Input group-->
+                                            </div>
+                                            
+                                        </div>
+                                
+                                        <div class="row">
+                                            
+                                            <div class="col-xl-4">
+                                                <!--begin::Input group-->
+                                                <div class="fv input-group mb-5">
+                                                    <input type="text" name="set3" id="contact_set3" class="form-control" placeholder="{{'Champ3'| trans}}" aria-label="{{'Champ3'| trans}}" aria-describedby="basic-addon2"/>
+                                                    <span class="input-group-text" id="basic-addon2">
+                                                        <i class="las la-tools fs-4"></i>
+                                                    </span>
+                                                </div>
+                                                <!--end::Input group-->
+                                            </div>
+                                            <div class="col-xl-4">
+                                                <!--begin::Input group-->
+                                                <div class="fv input-group mb-5">
+                                                    <input type="text" name="set4" id="contact_set4" class="form-control" placeholder="{{'Champ4'| trans}}" aria-label="{{'Champ4'| trans}}" aria-describedby="basic-addon2"/>
+                                                    <span class="input-group-text" id="basic-addon2">
+                                                        <i class="las la-tools fs-4"></i>
+                                                    </span>
+                                                </div>
+                                                <!--end::Input group-->
+                                            </div>
+                                            <div class="col-xl-4">
+                                                <!--begin::Input group-->
+                                                <div class="fv input-group mb-5">
+                                                    <input type="text" name="set5" id="contact_set5" class="form-control" placeholder="{{'Champ5'| trans}}" aria-label="{{'Champ5'| trans}}" aria-describedby="basic-addon2"/>
+                                                    <span class="input-group-text" id="basic-addon2">
+                                                        <i class="las la-tools fs-4"></i>
+                                                    </span>
+                                                </div>
+                                                <!--end::Input group-->
+                                            </div>
+                                            
+                                        </div>
+
+                                        <div class="separator separator-dotted separator-content border-dark my-2 mb-5">
+                                            <i class="bi bi-telephone"></i>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <!--end::Form group-->
+
+                    </div>
+                    <!--end::Modal Update body-->
+
+                    <!--begin::Actions-->
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-light" data-kt-update-contact-modal-action="close">Fermer</button>
+                            <button type="submit" class="btn btn-primary" data-kt-update-contact-modal-action="submit">Enregistrer</button>
+                        </div>
+                    <!--end::Actions-->
+                    <input type="hidden" name="_token" value="{{ csrf_token(app.user.uid) }}" class="form-control" />
+                </div>
+            </form>
+            <!--end::Modal content-->
+        </div>
+        <!--end::Modal dialog-->
+    </div>
+<!--end::Modal - Update Contact App-->
+
+<!--begin::Modal - Create Contact Group App-->
+    <div class="modal fade" id="kt_modal_create_contact_group" tabindex="-1" aria-hidden="true">
+        <!--begin::Modal dialog-->
+        <div class="modal-dialog modal-dialog-centered mw-900px">
+            <!--begin::Modal content-->
+            <form class="form" id="kt_modal_contact_group_form">
+                <div class="modal-content">
+                    <!--begin::Modal header-->
+                        <div class="modal-header">
+                            <!--begin::Modal title-->
+                            <h2>{{"Ajout de Groupe de Contacts"| trans }}</h2>
+                            <!--end::Modal title-->
+                            <!--begin::Close-->
+                            <div class="btn btn-sm btn-icon btn-active-color-primary" id="hgfds" data-kt-contact-group-modal-action="cancel" >
+                                <!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
+                                <span class="svg-icon svg-icon-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                        <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor" />
+                                        <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor" />
+                                    </svg>
+                                </span>
+                                <!--end::Svg Icon-->
+                            </div>
+                            <!--end::Close-->
+                        </div>
+                    <!--end::Modal header-->
+                    <!--begin::Modal body-->
+
+                        <div class="modal-body py-lg-10 px-lg-10">
+
+                            <!--begin::Alert-->
+                            <div class="alert alert-dismissible bg-light-primary border border-primary mb-10 border-dashed  h-lg-100 d-flex flex-column flex-sm-row w-100 p-5">
+                                <!--begin::Icon-->
+                                <!--begin::Svg Icon | path: icons/duotune/communication/com003.svg-->
+                                <span class="svg-icon svg-icon-2hx svg-icon-primary me-4 mb-1 mb-sm-0">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                        <path opacity="0.3" d="M12 22C13.6569 22 15 20.6569 15 19C15 17.3431 13.6569 16 12 16C10.3431 16 9 17.3431 9 19C9 20.6569 10.3431 22 12 22Z" fill="currentColor" />
+                                        <path d="M19 15V18C19 18.6 18.6 19 18 19H6C5.4 19 5 18.6 5 18V15C6.1 15 7 14.1 7 13V10C7 7.6 8.7 5.6 11 5.1V3C11 2.4 11.4 2 12 2C12.6 2 13 2.4 13 3V5.1C15.3 5.6 17 7.6 17 10V13C17 14.1 17.9 15 19 15ZM11 10C11 9.4 11.4 9 12 9C12.6 9 13 8.6 13 8C13 7.4 12.6 7 12 7C10.3 7 9 8.3 9 10C9 10.6 9.4 11 10 11C10.6 11 11 10.6 11 10Z" fill="currentColor" />
+                                    </svg>
+                                </span>
+                                <!--end::Svg Icon-->
+                                <!--end::Icon-->
+                                <!--begin::Content-->
+                                <div class="d-flex flex-column pe-0 pe-sm-10">
+                                    <h4 class="text-gray-900 fw-bolder">{% trans %}Infos{% endtrans %}</h4>
+                                    <div class="fs-6 text-gray-700"> Les champs de saisies intitulés « Champ1, Champ2, 
+                                    Champ3, Champ4, Champ5 »représentent des paramètres que vous pouvez définir
+                                        afin de les renseigner lors de l'ajout d'un ou des contacts.
+                                    </div>
+                                </div>
+                                <!--end::Content-->
+                            </div>
+                            <!--end::Alert-->
+                            <!--begin::Form group-->
+                            <div class="form-group">
+                                {# <div class="separator separator-dotted separator-content border-dark my-2 mb-15">
+                                <i class="fa fa-address-book fs-2x text-info"></i>
+                                </div> #}
+                                <div class="form-group row">
+                                        
+                                    <div class="col-xl-12">
+                                        <!--begin::Input group-->
+                                        <div class="fv input-group mb-8">
+                                            {% if users|length == 0 %}
+                                            <select  data-allow-clear="true" name="user_group" data-dropdown-parent="#kt_modal_create_contact_group" id="list_user_add_group_id" data-control="select2" class="form-select form-select-solid fw-bolder" data-placeholder="{{'Selectionnez un utilisateurs'| trans}}"/>
+                                                    <option value="">Sélectionnez un utilisateur</option>
+                                                    <option value="qcAe6S0qWfl02Is8YbZlAq6yURQBtD">Admin test</option>
+                                                    {% for user in users %}
+                                                    <option value="{{ user.uid }}" >{{ user.email }}</option>
+                                                    {% endfor %}
+                                            </select>
+                                            <input type="hidden" name="admin" value="{{ app.user.uid }}" />
+                                            {% else %}
+                                                <input type="hidden" name="user_group" value="{{ app.user.uid }}" />
+                                            {% endif %}
+                                        </div> 
+                                    </div>
+                                    <div class="col-xl-4">
+                                        <!--begin::Input group-->
+                                        <div class="fv input-group mb-8">
+                                            <input type="text" name="groupName"  class="form-control required " placeholder="Nom du groupe" />
+                                        </div>
+                                        <!--end::Input group-->
+                                    </div>
+                                    <div class="col-xl-4">
+                                        <!--begin::Input group-->
+                                        <div class="fv input-group mb-5">
+                                            <input type="text" name="set1" class="form-control" placeholder="{{'Champ1'| trans}}" aria-label="{{'Champ1'| trans}}" aria-describedby="basic-addon2"/>
+                                            <span class="input-group-text" id="basic-addon2">
+                                                <i class="las la-tools fs-4"></i>
+                                            </span>
+                                        </div>
+                                        <!--end::Input group-->
+                                    </div>
+                                    <div class="col-xl-4">
+                                        <!--begin::Input group-->
+                                        <div class="fv input-group mb-5">
+                                            <input type="text" name="set2" class="form-control" placeholder="{{'Champ2'| trans}}" aria-label="{{'Champ2'| trans}}" aria-describedby="basic-addon2"/>
+                                            <span class="input-group-text" id="basic-addon2">
+                                                <i class="las la-tools fs-4"></i>
+                                            </span>
+                                        </div>
+                                        <!--end::Input group-->
+                                    </div>
+                                    
+                                    <div class="col-xl-4">
+                                        <!--begin::Input group-->
+                                        <div class="fv input-group mb-5">
+                                            <input type="text" name="Champ3" class="form-control" placeholder="{{'Champ3'| trans}}" aria-label="{{'Champ3'| trans}}" aria-describedby="basic-addon2"/>
+                                            <span class="input-group-text" id="basic-addon2">
+                                                <i class="las la-tools fs-4"></i>
+                                            </span>
+                                        </div>
+                                        <!--end::Input group-->
+                                    </div>
+                                    <div class="col-xl-4">
+                                        <!--begin::Input group-->
+                                        <div class="fv input-group mb-5">
+                                            <input type="text" name="set4" class="form-control" placeholder="{{'Champ4'| trans}}" aria-label="{{'Champ4'| trans}}" aria-describedby="basic-addon2"/>
+                                            <span class="input-group-text" id="basic-addon2">
+                                                <i class="las la-tools fs-4"></i>
+                                            </span>
+                                        </div>
+                                        <!--end::Input group-->
+                                    </div>
+                                    <div class="col-xl-4">
+                                        <!--begin::Input group-->
+                                        <div class="fv input-group mb-5">
+                                            <input type="text" name="set5" class="form-control" placeholder="{{'Champ5'| trans}}" aria-label="{{'Champ5'| trans}}" aria-describedby="basic-addon2"/>
+                                            <span class="input-group-text" id="basic-addon2">
+                                                <i class="las la-tools fs-4"></i>
+                                            </span>
+                                        </div>
+                                        <!--end::Input group-->
+                                    </div>
+                                        
+                                </div>
+                                                
+                            </div>
+                            <!--end::Form group-->
+
+                        </div>
+                    <!--end::Modal body-->
+                    <!--begin::Actions-->
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-light" data-kt-contact-group-modal-action="close">Fermer</button>
+                            <button type="button" class="btn btn-primary" data-kt-contact-group-modal-action="submit">Enregistrer</button>
+                        </div>
+                    <!--end::Actions-->
+                    <input type="hidden" name="_token" value="{{ csrf_token(app.user.uid) }}" class="form-control" />
+                </div>
+            </form>
+            <!--end::Modal content-->
+        </div>
+        <!--end::Modal dialog-->
+    </div>
+<!--end::Modal - Create Contact Group App-->
+
+<!--begin::Modal - Update Contact Group App-->
+    <div class="modal fade" id="kt_modal_update_contact_group" tabindex="-1" aria-hidden="true">
+        <!--begin::Modal dialog-->
+        <div class="modal-dialog modal-dialog-centered mw-900px">
+            <!--begin::Modal content-->
+            <form class="form" id="kt_modal_update_contact_group_form">
+                <div class="modal-content">
+                    <!--begin::Modal header-->
+                        <div class="modal-header">
+                            <!--begin::Modal title-->
+                            <h2>{{"Modification du Groupe de Contacts"| trans }}</h2>
+                            <!--end::Modal title-->
+                            <!--begin::Close-->
+                            <div class="btn btn-sm btn-icon btn-active-color-primary" data-kt-update-contact-group-modal-action="cancel" >
+                                <!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
+                                <span class="svg-icon svg-icon-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                        <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor" />
+                                        <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor" />
+                                    </svg>
+                                </span>
+                                <!--end::Svg Icon-->
+                            </div>
+                            <!--end::Close-->
+                        </div>
+                    <!--end::Modal header-->
+                    <!--begin::Modal body-->
+
+                        <div class="modal-body py-lg-10 px-lg-10">
+                        
+                            <!--begin::Form group-->
+                            <div class="form-group">
+                                <div class="separator separator-dotted separator-content border-dark my-2 mb-15">
+                                <i class="fa fa-address-book fs-2x text-info"></i>
+                                </div>
+                                
+                                <div class="form-group row">
+                                    
+                                    <div class="row">
+                                        <div class="col-xl-4">
+                                            <!--begin::Input group-->
+                                            <div class="fv input-group mb-8">
+                                                <input type="text" name="groupName" id="group_name" class="form-control required " placeholder="Nom du groupe" />
+                                            </div>
+                                            <!--end::Input group-->
+                                        </div>
+                                        <div class="col-xl-4">
+                                            <!--begin::Input group-->
+                                            <div class="fv input-group mb-5">
+                                                <input type="text" name="set1" id="group_set1" class="form-control" aria-label="{{'Champ1'| trans}}" aria-describedby="basic-addon2"/>
+                                                <input type="hidden" name="_uid" id="group_uid"/>
+                                                <span class="input-group-text" id="basic-addon2">
+                                                    <i class="las la-tools fs-4"></i>
+                                                </span>
+                                            </div>
+                                            <!--end::Input group-->
+                                        </div>
+                                        <div class="col-xl-4">
+                                            <!--begin::Input group-->
+                                            <div class="fv input-group mb-5">
+                                                <input type="text" name="set2" id="group_set2" class="form-control" placeholder="{{'Champ2'| trans}}" aria-label="{{'Champ2'| trans}}" aria-describedby="basic-addon2"/>
+                                                <span class="input-group-text" id="basic-addon2">
+                                                    <i class="las la-tools fs-4"></i>
+                                                </span>
+                                            </div>
+                                            <!--end::Input group-->
+                                        </div>
+                                        
+                                    </div>
+                            
+                                    <div class="row">
+                                        
+                                        <div class="col-xl-4">
+                                            <!--begin::Input group-->
+                                            <div class="fv input-group mb-5">
+                                                <input type="text" name="set3" id="group_set3" class="form-control" placeholder="{{'Champ3'| trans}}" aria-label="{{'Champ3'| trans}}" aria-describedby="basic-addon2"/>
+                                                <span class="input-group-text" id="basic-addon2">
+                                                    <i class="las la-tools fs-4"></i>
+                                                </span>
+                                            </div>
+                                            <!--end::Input group-->
+                                        </div>
+                                        <div class="col-xl-4">
+                                            <!--begin::Input group-->
+                                            <div class="fv input-group mb-5">
+                                                <input type="text" name="set4" id="group_set4" class="form-control" placeholder="{{'Champ4'| trans}}" aria-label="{{'Champ4'| trans}}" aria-describedby="basic-addon2"/>
+                                                <span class="input-group-text" id="basic-addon2">
+                                                    <i class="las la-tools fs-4"></i>
+                                                </span>
+                                            </div>
+                                            <!--end::Input group-->
+                                        </div>
+                                        <div class="col-xl-4">
+                                            <!--begin::Input group-->
+                                            <div class="fv input-group mb-5">
+                                                <input type="text" name="set5" id="group_set5" class="form-control" placeholder="{{'Champ5'| trans}}" aria-label="{{'Champ5'| trans}}" aria-describedby="basic-addon2"/>
+                                                <span class="input-group-text" id="basic-addon2">
+                                                    <i class="las la-tools fs-4"></i>
+                                                </span>
+                                            </div>
+                                            <!--end::Input group-->
+                                        </div>
+                                        
+                                    </div>
+                                    
+                                </div>
+                                                
+                            </div>
+                            <!--end::Form group-->
+
+                        </div>
+                    <!--end::Modal body-->
+                    <!--begin::Actions-->
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-light" data-kt-update-contact-group-modal-action="close">Fermer</button>
+                            <button type="button" class="btn btn-primary" data-kt-update-contact-group-modal-action="submit">Enregistrer</button>
+                        </div>
+                    <!--end::Actions-->
+                    <input type="hidden" name="_token" value="{{ csrf_token(app.user.uid) }}" class="form-control" />
+                </div>
+            </form>
+            <!--end::Modal content-->
+        </div>
+        <!--end::Modal dialog-->
+    </div>
+<!--end::Modal - Update Group Contact App-->
+
+<!--begin::Modal - Adjust Balance-->
+    <div class="modal fade" id="kt_modal_import_contacts" tabindex="-1" aria-hidden="true">
+        <!--begin::Modal dialog-->
+        <div class="modal-dialog modal-dialog-centered mw-650px">
+            <!--begin::Modal content-->
+            <div class="modal-content">
+                <!--begin::Modal header-->
+                <div class="modal-header">
+                    <!--begin::Modal title-->
+                    <h2 class="fw-bolder">{{"Importation de contacts"| trans}}</h2>
+                    <!--end::Modal title-->
+                    <!--begin::Close-->
+                    <div class="btn btn-icon btn-sm btn-active-icon-primary" data-kt-import-contact-modal-action="close">
+                        <!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
+                        <span class="svg-icon svg-icon-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor" />
+                                <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor" />
+                            </svg>
+                        </span>
+                        <!--end::Svg Icon-->
+                    </div>
+                    <!--end::Close-->
+                </div>
+                <!--end::Modal header-->
+                <!--begin::Modal body-->
+                <div class="modal-body scroll-y mx-5 mx-xl-15 mt-0 my-7">
+                    <!--begin::Form-->
+                    <form id="kt_modal_import_contacts_form" class="form" action="#">
+                        <div class="row">
+                            <div class="fv mb-10 col-md-7 text-center">
+                                {% if users|length == 0 %}
+                                            <select name="group" id="id_group_contact_import" data-allow-clear="true" data-control="select2" data-dropdown-parent="#kt_modal_import_contacts" class="form-select form-select-solid fw-bolder" data-placeholder="{{'Selectionnez un groupe'| trans}}"/>
+                                                    <option value="">Sélectionnez un groupe</option>
+                                                    
+                                            </select>
+                                {% else %}
+                                            <label class="form-label fs-6 fw-bold">{% trans %}Groupe de contacts{% endtrans %}</label>
+                                            <select name="group" id="id_group_contact_import" data-allow-clear="true" data-control="select2" data-dropdown-parent="#kt_modal_import_contacts" class="form-select form-select-solid fw-bolder " data-placeholder="{{'Selectionnez un groupe'| trans}}"/>
+                                                    <option value="">Sélectionnez un groupe</option>
+                                                    {% for group in groups %}
+                                                    <option value="{{ group.uid }}" >{{ group.name }}</option>
+                                                    {% endfor %}
+                                            </select>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-5">
+                                <button type="button" id="add_group_id" class="btn btn-light-primary w-100" >
+                                    <!--begin::Svg Icon | path: icons/duotune/general/gen035.svg-->
+                                    <span class="svg-icon svg-icon-3">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                            <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="black" />
+                                            <rect x="10.8891" y="17.8033" width="12" height="2" rx="1" transform="rotate(-90 10.8891 17.8033)" fill="black" />
+                                            <rect x="6.01041" y="10.9247" width="12" height="2" rx="1" fill="black" />
+                                        </svg>
+                                    </span>
+                                    <!--end::Svg Icon-->
+                                    {% trans %}Nouveau Groupe{% endtrans %}
+                                </button>
+                            </div>
+                            <input type="hidden" name="hidden_file" value=""/>
+                            <input type="hidden" name="_token" value="{{ csrf_token(app.user.uid) }}" class="form-control" />
+                            <!--begin::Info-->
+                            <div class="col-md-12 mb-5">
+                                <i class="fa fa-info-circle"></i>
+                                <span onclick="infoImportFile();" class="fs-7 fw-bold text-hover-inverse-primary bg-hover-primary p-1 fw-6">
+                                {{"Cliquez ici pour télécharger un exemple de formatage du fichier à importer."|trans}}
+                                </span>
+                            </div>
+                            <!--end::Info-->
+                            <div class="col-md-12">
+                            <!--begin::Dropzone-->
+                            <div class="dropzone" id="kt_import">
+                                <!--begin::Message-->
+                                <div class="dz-message needsclick">
+                                    <!--begin::Icon-->
+                                    <i class="bi bi-file-earmark-arrow-up text-primary fs-3x"></i>
+                                    <!--end::Icon-->
+                                    <!--begin::Info-->
+                                    <div class="ms-4">
+                                        <h3 class="fs-5 fw-bolder text-gray-900 mb-1">
+                                            <button type="button" class="btn btn-sm btn-success">{{"Ajouter le fichier"|trans}}</button>
+                                        </h3>
+                                        <span class="fs-7 fw-bold text-gray-400">{{"Glissez et déposez le fichier ici."|trans}}</span>
+                                    </div>
+                                    <!--end::Info-->
+                                </div>
+                                <!--end::Message-->
+                            </div>
+                            <!--end::Dropzone-->
+                            </div>
+                        </div>
+                        <!--begin::Actions-->
+                        <div class="text-center mt-10">
+                            <button type="reset" class="btn btn-light me-3" data-kt-import-contact-modal-action="cancel">Fermer</button>
+                            <button type="submit" class="btn btn-primary" data-kt-import-contact-modal-action="submit">
+                                <span class="indicator-label">{{"Enregistrer"| trans}}</span>
+                                <span class="indicator-progress">{{"Veuillez patienter..."| trans}}
+                                <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                            </button>
+                        </div>
+                        <!--end::Actions-->
+                    </form>
+                    <!--end::Form-->
+                </div>
+                <!--end::Modal body-->
+            </div>
+            <!--end::Modal content-->
+        </div>
+        <!--end::Modal dialog-->
+    </div>
+<!--end::Modal - New Card-->
+
 {% endblock %}
 
 
@@ -1217,6 +1220,9 @@
     const url_import            = "{{path('smscampaign_import')}}";
     const url_campaign          = "{{path('campaign_sms_view_created')}}";
 
+    const _canceled             = "{{'Annuler'|trans}}";
+    const _redirect             = '{{"Vous serez rédiriger vers la page de création de campagne"|trans}}';
+    const _selectOneUser        = '{{"Veuillez sélectionner spécifiquement un utilisateur et non <<tous>> au niveau de la sélection des utilisateurs"|trans}}'
 
 
 </script>
