@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 
+#[Route('/{_locale}/mailer')]
 class MailerController extends AbstractController
 {
     #[Route('/email', name: 'm_send_mail20', methods: ['POST', 'GET'])]
