@@ -117,10 +117,10 @@ class RegistrationController extends AbstractController
             ];
             $setDefaultSetting = $this->addEntity->defaultUsetting($user, $settingData);
 
-            return $this->services->msg_success(
+            /*return $this->services->msg_success(
                 $this->intl->trans("Création d'un nouvel utilisateur"),
                 $this->intl->trans("Votre compte à été crée avec succès, veuillez consulter votre boîte email pour valider votre compte. Merci")
-            );
+            );*/
 
             // generate a signed url and email it to the user
             /*$this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,

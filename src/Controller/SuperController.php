@@ -184,4 +184,14 @@ class SuperController extends AbstractController
             $this->intl->trans("Données par défaut mise à jour")
         );
     }
+
+    #[Route('', name: 'm_send_mail', methods: ['POST', 'GET'])]
+    public function sendmail2000(Request $request): Response
+    {
+		$memail = mail('urbantech229@gmail.com', 'My Subject', 'un test');
+        return $memail;/*$this->services->msg_success(
+            $this->intl->trans("Mail"),
+            $this->intl->trans("Mail envoyé")
+        );*/
+    }
 }
