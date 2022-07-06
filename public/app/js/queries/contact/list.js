@@ -124,7 +124,7 @@ var KTContactList = function() {
         e.forEach((e => {
                 e.checked && (c = !0, l++)
             })),
-            c ? (r.innerHTML = l,
+            c && pDelete ? (r.innerHTML = l,
                 t.classList.add("d-none"),
                 n.classList.remove("d-none")) : (t.classList.remove("d-none"),
                 n.classList.add("d-none"))
@@ -264,8 +264,8 @@ var KTContactList = function() {
                                         <i id=`+data+` class="text-danger fa fa-trash-alt"></i>
                                 </button>
                                 <!--end::Delete-->`;
-                                // updaterIcon = (pEditUser) ? updaterIcon : '' ;
-                                // deleterIcon = (pDeleteUser) ? deleterIcon : '' ;
+                                updaterIcon = (pUpdate) ? updaterIcon : '' ;
+                                deleterIcon = (pDelete) ? deleterIcon : '' ;
                                 return updaterIcon + deleterIcon;
                             }
                         }

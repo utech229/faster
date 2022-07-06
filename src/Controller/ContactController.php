@@ -47,7 +47,7 @@ class ContactController extends AbstractController
         $this->contactRepository        = $contactRepository;
         $this->validator                = $validator;
 
-        $this->permission           =    ["CNTS0", "CNTS1", "CNTS2","CNTS3" ,"CNTS4", "CNTS5","CNTG0", "CNTG1", "CNTG2", "CNTG3", "CNTG4"];
+        $this->permission           =    ["CNTS0", "CNTS1", "CNTS2","CNTS3" ,"CNTS4", "CNTS5","CNTG0", "CNTG1", "CNTG2", "CNTG3", "CNTG4","SMSC1"];
         $this->pAccess              =    $this->services->checkPermission($this->permission[0]);
         $this->pCreate              =    $this->services->checkPermission($this->permission[1]);
         $this->pView                =    $this->services->checkPermission($this->permission[2]);
@@ -59,6 +59,8 @@ class ContactController extends AbstractController
         $this->pGView               =    $this->services->checkPermission($this->permission[8]);
         $this->pGUpdate             =    $this->services->checkPermission($this->permission[9]);
         $this->pGDelete             =    $this->services->checkPermission($this->permission[10]);
+        $this->pCreateCampagne      =    $this->services->checkPermission($this->permission[11]);
+
     }
 
     #[Route('', name: 'app_contact_index', methods: ['GET'])]
@@ -91,8 +93,13 @@ class ContactController extends AbstractController
             'users'             => $users,
             'groups'            => $groups,
             'pCreate'           => $this->pCreate,
-            'pEdit'             => $this->pUpdate,
+            'pUpdate'           => $this->pUpdate,
             'pDelete'           => $this->pDelete,
+            'pGCreate'          => $this->pGCreate,
+            'pGUpdate'          => $this->pGUpdate,
+            'pGDelete'          => $this->pGDelete,
+            'pCreateCampagne'   => $this->pCreateCampagne
+
         ]);
     }
 
@@ -155,7 +162,6 @@ class ContactController extends AbstractController
         if (!$this->isCsrfTokenValid($this->getUser()->getUid(), $request->request->get('_token')))
         return $this->services->invalid_token_ajax_list($this->intl->trans('Création de contact : token invalide'));
         
-
         $group  = $this->em->getRepository(ContactGroup::class)->findOneByUid($request->request->get('groupe'));
         if ($group) {
             foreach ($request->get('kt_docs_repeater_basic') as $key => $value) {

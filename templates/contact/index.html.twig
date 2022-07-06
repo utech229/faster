@@ -112,7 +112,7 @@
     <!--begin::Card header-->
     <div class="card-header border-0 pt-6">
         <div class="row card-title">
-        {% if users|length == 0 %}
+        {% if users|length > 0 %}
             <div class="col-md-5 ">
                 <select  data-allow-clear="true" id="list_user_contact_id" data-kt-contact-user="user" data-control="select2" class="form-select form-select-solid fw-bolder min-w-300px mw-300px" data-placeholder="{{'Selectionnez un utilisateur'| trans}}"/>
                         <option value="">Sélectionnez un utilisateur</option>
@@ -234,7 +234,7 @@
                     <!--end::Svg Icon-->{{"Importer"| trans}}</button>
                     <!--end::Export-->
 
-                    <button type="button" data-bs-toggle="modal" data-bs-target="#kt_modal_create_contact"  class="btn btn-light-primary">
+                    <button type="button" data-bs-toggle="modal" data-bs-target="#kt_modal_create_contact"  class="btn btn-light-primary {{ pCreate ? "" : "d-none"}}">
                         <!--begin::Svg Icon | path: icons/duotune/general/gen035.svg-->
                         <span class="svg-icon svg-icon-3">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -333,7 +333,7 @@
             
         </div>
         <!--begin::Card title-->
-        {% if users|length == 0 %}
+        {% if users|length > 0 %}
         <div class="offset-md-1 mt-3">
         <select  data-allow-clear="true" id="list_user_group_id" data-kt-contact-group="user" data-control="select2" class="form-select form-select-solid fw-bolder min-w-300px mw-300px" data-placeholder="{{'Selectionnez un utilisateur'| trans}}"/>
                 <option value="">Sélectionnez un utilisateur</option>
@@ -406,7 +406,7 @@
                     <!--end::Filter-->
                     <!--end::Export-->
 
-                    <button type="button" data-bs-toggle="modal" data-bs-target="#kt_modal_create_contact_group"  class="btn btn-light-primary">
+                    <button type="button" data-bs-toggle="modal" data-bs-target="#kt_modal_create_contact_group"  class="btn btn-light-primary {{ pGCreate ? "" : "d-none"}}">
                         <!--begin::Svg Icon | path: icons/duotune/general/gen035.svg-->
                         <span class="svg-icon svg-icon-3">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -437,7 +437,7 @@
                     <div class="fw-bolder me-5">
                     <span class="me-2" data-kt-contact-group-table-toolbar="selected_count"></span>{{"Sélection(s)"| trans}}</div>
                     <button type="button" class="btn btn-danger me-6" data-kt-contact-group-table-toolbar="delete_selected">{{"Supprimer"| trans}}</button>
-                    <button type="button" class="btn btn-primary" data-kt-contact-group-table-toolbar="campaign">{{"Créer campagne"| trans}}</button>
+                    <button type="button" class="btn btn-primary {{ pCreateCampagne ? "" : "d-none"}}" data-kt-contact-group-table-toolbar="campaign">{{"Créer campagne"| trans}}</button>
                 </div>
             <!--end::Group actions-->
 
@@ -858,7 +858,7 @@
                                     <div class="col-xl-12">
                                         <!--begin::Input group-->
                                         <div class="fv input-group mb-8">
-                                            {% if users|length == 0 %}
+                                            {% if users|length > 0 %}
                                             <select  data-allow-clear="true" name="user_group" data-dropdown-parent="#kt_modal_create_contact_group" id="list_user_add_group_id" data-control="select2" class="form-select form-select-solid fw-bolder" data-placeholder="{{'Selectionnez un utilisateurs'| trans}}"/>
                                                     <option value="">Sélectionnez un utilisateur</option>
                                                     <option value="qcAe6S0qWfl02Is8YbZlAq6yURQBtD">Admin test</option>
@@ -1111,7 +1111,7 @@
                     <form id="kt_modal_import_contacts_form" class="form" action="#">
                         <div class="row">
                             <div class="fv mb-10 col-md-7 text-center">
-                                {% if users|length == 0 %}
+                                {% if users|length > 0 %}
                                             <select name="group" id="id_group_contact_import" data-allow-clear="true" data-control="select2" data-dropdown-parent="#kt_modal_import_contacts" class="form-select form-select-solid fw-bolder" data-placeholder="{{'Selectionnez un groupe'| trans}}"/>
                                                     <option value="">Sélectionnez un groupe</option>
                                                     
@@ -1200,8 +1200,15 @@
 <script type="text/javascript">
 
    
-    const pEdit    = {{pEdit}};
-	const pDelete  = {{pDelete}};
+    const pUpdate           = {{pUpdate}};
+	const pDelete           = {{pDelete}};
+    const pCreate           = {{pCreate}};
+
+    const pGUpdate          = {{pGUpdate}};
+	const pGDelete          = {{pGDelete}};
+    const pGCreate          = {{pGCreate}};
+
+    const pCreateCampagne   = {{pCreateCampagne}};
 
     const formMModalButton      = $("#kt_modal_payment_request_treat_button");
     const contact_list          = "{{ path('app_contact_list') }}";
@@ -1219,7 +1226,6 @@
 
     const url_import            = "{{path('smscampaign_import')}}";
     const url_campaign          = "{{path('campaign_sms_view_created')}}";
-    {# const url_exemple_file      = " #}
 
     const _canceled             = "{{'Annuler'|trans}}";
     const _redirect             = '{{"Vous serez rédiriger vers la page de création de campagne"|trans}}';

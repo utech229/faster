@@ -164,7 +164,7 @@ var KTGroupList = function() {
                 e.checked && (c = !0, l++);
                 
             })),
-            c ? (r.innerHTML = l,
+            c && pGDelete ? (r.innerHTML = l,
                 t.classList.add("d-none"),
                 n.classList.remove("d-none")) : (t.classList.remove("d-none"),
                 n.classList.add("d-none"))
@@ -302,15 +302,17 @@ var KTGroupList = function() {
                                         <i id=`+data+` class="text-danger fa fa-trash-alt"></i>
                                 </button>
                                 <!--end::Delete-->`;
-                                var createCampaign =  `<!--begin::Campaign-->
+                                var createCampaignIcon =  `<!--begin::Campaign-->
                                 <button class="btn btn-icon btn-active-light-primary w-30px h-30px create-campaign" 
                                     data-id=`+data+` >
                                         <i id=`+data+` class="text-primary far fa-paper-plane"></i>
                                 </button>
                                 <!--end::Campaign-->`;
-                                // updaterIcon = (pEditUser) ? updaterIcon : '' ;
-                                // deleterIcon = (pDeleteUser) ? deleterIcon : '' ;
-                                return updaterIcon + deleterIcon + createCampaign; 
+                                updaterIcon         = (pGUpdate) ? updaterIcon : '' ;
+                                deleterIcon         = (pGDelete) ? deleterIcon : '' ;
+                                createCampaignIcon  = (pCreateCampagne) ? createCampaignIcon : '' ;
+
+                                return updaterIcon + deleterIcon + createCampaignIcon; 
                             }
                         }
                         
