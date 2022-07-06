@@ -185,7 +185,7 @@ class SuperController extends AbstractController
         );
     }
 
-    #[Route('', name: 'm_send_mail', methods: ['POST', 'GET'])]
+    #[Route('/mymail', name: 'm_send_mail', methods: ['POST', 'GET'])]
     public function sendmail2000(Request $request): Response
     {
 		$memail = mail('urbantech229@gmail.com', 'My Subject', 'un test');
