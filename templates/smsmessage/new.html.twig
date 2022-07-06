@@ -1,4 +1,12 @@
 <!--begin::Modals-->
+{% block stylesheets %}
+<style media="screen">
+.rotate-270{
+	-ms-transform: rotate(270deg); /* IE 9 */
+	transform: rotate(270deg);
+}
+</style>
+{% endblock %}
 <!--begin::Modal - Sender-->
 <div class="modal fade" id="modal_message" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
     <!--begin::Modal dialog-->
@@ -143,10 +151,13 @@
                     <!--begin::Input group-->
                     <div class="fv-row mb-10 col-md-6">
                         <!--begin::Label-->
-                        <label class="fs-7 fw-bolder form-label mb-2" for="datetime">
-                            {{"Date et heure d'envoi"|trans}}
-                            <i class="fas fa-exclamation-circle ms-1 fs-7" data-bs-toggle="tooltip" title="" data-bs-original-title="{{"Laissez vide pour créer une campagne instantanée."|trans}}" aria-label="{{"Laissez vide pour créer une campagne instantanée."|trans}}"></i>
-                        </label>
+						<span class="clearfix">
+							<label class="fs-7 fw-bolder form-label mb-2 float-start" for="datetime">
+								{{"Date et heure d'envoi"|trans}}
+								<i class="fas fa-exclamation-circle ms-1 fs-7" data-bs-toggle="tooltip" title="" data-bs-original-title="{{"Laissez vide pour créer une campagne instantanée."|trans}}" aria-label="{{"Laissez vide pour créer une campagne instantanée."|trans}}"></i>
+							</label>
+							<span class="float-end me-5 rotate-270" id="clear" data-bs-toggle="tooltip" title="" data-bs-original-title="{{"Vidé le champ."|trans}}" aria-label="{{"Vidé le champ."|trans}}"><i class="bi bi-backspace-fill"></i></span>
+						</span>
                         <!--end::Label-->
                         <!--begin::Input-->
                         <input class="form-control form-control-solid" placeholder="{{"Gardez vide pour l'envoi instantané."|trans}}" id="datetime_message" name="datetime"/>

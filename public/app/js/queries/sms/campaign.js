@@ -203,7 +203,8 @@ const SMSCampaignManager = function(){
 				checkActiveTab("write", $this)
 			});
 
-			$("#clear").on("click", ()=>{$("#datetime").val("")})
+			// $("#clear").on("click", ()=>{$("#datetime").val("")})
+			$("#form #clear").on("click", ()=>{$("#form #datetime").val("")})
 
 			$("#brouillon").on("click", ()=>{
 				$("[name=saveMode]").val("offlive");
