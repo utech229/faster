@@ -10,6 +10,15 @@ $(document).on('click', '.cursor-mobile-carte', function(e){
     $('.phone-required').show();
 });
 
+$(document).on('click', '.download', function(e){
+    console.log('Un test');
+    // var id   = $(this).data('id');
+    alert("Bonjour");
+        //var link = baseUrl.replace('home', '');
+        var url  = 'https://fastermessage.com/app/fr/'+"facture/" + id ;
+        window.open(url, '_blank');
+});
+
 $(document).on('click', '#self_recharge', function(e){
 
     $('#kt_modal_recharge_self').modal('show');
@@ -282,7 +291,7 @@ var KTUsersLoadRecharge = function() {
 
                     { data: 'emailR' , responsivePriority: 0},
 
-                    { data: 'status'},
+                    { data: 'status', responsivePriority: -8},
 
                     { data: 'date'},
 
@@ -294,7 +303,11 @@ var KTUsersLoadRecharge = function() {
             }),
             $(document).on('submit', '#formFilter', function(e){
                 e.preventDefault();
-                t.ajax.url(uriLoad+'?'+$(this).serialize()).load(function(){});
+                t.ajax.url(uriLoad+'?'+$(this).serialize()).load(function(e){
+                    $('.all_recharge').text(e.amountA);
+                    $('.recharges_pending').text(e.amountP);
+                    $('.recharge_rejected').text(e.amountR);
+                });
             }),
             document.querySelector('[data-kt-recharge-table-filter="search"]').addEventListener("keyup", (function(e) {
                 t.search(e.target.value).draw()

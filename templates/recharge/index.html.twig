@@ -12,6 +12,96 @@
         <!--begin::Container-->
         <div id="kt_content_container" class="container-xxl">
             <!--begin::Card-->
+            <div class="row g-5 g-xl-8">
+                <div class="col-xl-4">
+                    <!--begin::Statistics Widget 4-->
+                    <div class="card card-xl-stretch mb-xl-8">
+                    <!--begin::Body-->
+                    <div class="card-body p-0">
+                        <div class="d-flex flex-stack card-p flex-grow-1">
+                        <span class="symbol symbol-50px symbol-light-info me-2">
+                            <span class="symbol-label">
+                            <!--begin::Icon-->
+                                <div class="m-0">
+                                    <i class="fa fa-users fs-2x text-success"></i>
+                                </div>
+                                <!--end::Icon-->
+                            <span class="pulse-ring"></span>
+                            </span>
+                        </span>
+                        <div class="d-flex flex-column text-end">
+                            <span class="text-dark fw-bolder fs-2" id="stat_all">
+                                <span class="all_recharge">0</span> XOF
+                            </span>
+                            <span class="text-muted fw-bold mt-1">{{ 'Recharges validées' | trans }}</span>
+                        </div>
+                        </div>
+                        <!--<div class="statistics-widget-allregisteredusers-chart card-rounded-bottom" data-kt-chart-color="info" style="height: 150px"></div>-->
+                    </div>
+                    <!--end::Body-->
+                    </div>
+                    <!--end::Statistics Widget 4-->
+                </div>
+                <div class="col-xl-4">
+                    <!--begin::Statistics Widget 4-->
+                    <div class="card card-xl-stretch mb-xl-8">
+                    <!--begin::Body-->
+                    <div class="card-body p-0">
+                        <div class="d-flex flex-stack card-p flex-grow-1">
+                        <span class="symbol symbol-50px symbol-light-info me-2">
+                            <span class="symbol-label">
+                            <!--begin::Icon-->
+                                <div class="m-0">
+                                    <i class="fa fa-users fs-2x text-warning"></i>
+                                </div>
+                                <!--end::Icon-->
+                            <span class="pulse-ring"></span>
+                            <!--end::Svg Icon-->
+                            </span>
+                        </span>
+                        <div class="d-flex flex-column text-end">
+                            <span class="text-dark fw-bolder fs-2" id="stat_actif">
+                            <span class="recharges_pending">0</span> XOF
+                            </span>
+                            <span class="text-muted fw-bold mt-1">Recharges en attentes</span>
+                        </div>
+                        </div>
+                        <!--<div class="statistics-widget-allactivatedusers-chart card-rounded-bottom" data-kt-chart-color="success" style="height: 150px"></div>-->
+                    </div>
+                    <!--end::Body-->
+                    </div>
+                    <!--end::Statistics Widget 4-->
+                </div>
+                <div class="col-xl-4">
+                    <!--begin::Statistics Widget 4-->
+                    <div class="card card-xl-stretch mb-5 mb-xl-8">
+                    <!--begin::Body-->
+                    <div class="card-body p-0">
+                        <div class="d-flex flex-stack card-p flex-grow-1">
+                        <span class="symbol symbol-50px symbol-light-primary me-2">
+                            <span class="symbol-label">
+                            <!--begin::Icon-->
+                                    <div class="m-0">
+                                        <i class="fa fa-users fs-2x text-danger"></i>
+                                    </div>
+                                    <!--end::Icon-->
+                            <span class="pulse-ring"></span>
+                            </span>
+                        </span>
+                        <div class="d-flex flex-column text-end">
+                            <span class="text-dark fw-bolder fs-2">
+                            <span class="recharge_rejected">0</span> XOF
+                            </span>
+                            <span class="text-muted fw-bold mt-1">{{"Recharges annulées"|trans}}</span>
+                        </div>
+                        </div>
+                        <!--<div class="statistics-widget-allmonthusers-chart card-rounded-bottom" data-kt-chart-color="primary" style="height: 150px"></div>-->
+                    </div>
+                    <!--end::Body-->
+                    </div>
+                    <!--end::Statistics Widget 4-->
+                </div>
+            </div>
             <div class="card card-flush">
                 <!--begin::Card header-->
                 <div class="card-header mt-6">
