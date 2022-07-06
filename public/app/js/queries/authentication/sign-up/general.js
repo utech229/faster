@@ -228,7 +228,7 @@ var KTSignupGeneral = function() {
 
     // Password input validation
     var validatePassword = function() {
-        return (passwordMeter.getScore() >= 50);
+        return (passwordMeter.getScore() == 100);
     }
 
     // Public functions

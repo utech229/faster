@@ -21,11 +21,9 @@
                         <div class="card-header rounded bgi-no-repeat bgi-size-cover bgi-position-y-top bgi-position-x-center align-items-start h-250px" style="background-image:url({{ asset('app/media/dashboard/top-green.png') }})">
                             <!--begin::Title-->
                             <h3 class="card-title align-items-start flex-column text-white pt-15">
-                                <span class="fw-bolder fs-2x mb-3"> {% trans %}Salut{% endtrans %} , 
+                                <span class="fw-bolder fs-2x mb-3"> {% trans %}Bienvenu{% endtrans %} 
                                 {% if app.user.usetting.firstName %}
-                                    {{ app.user.usetting.firstName|upper}} 
-                                {% else %}
-                                    {{ app.user.phone|upper}}
+                                     , {{ app.user.usetting.firstName|upper}} 
                                 {% endif %} 
                                 </span>
                                 <div class="fs-4 text-white">
