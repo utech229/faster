@@ -31,7 +31,7 @@ class MailerController extends AbstractController
     #[Route('/email', name: 'm_send_mail20', methods: ['POST', 'GET'])]
     public function sendEmail20(MailerInterface $mailer): JsonResponse
     {
-        $memail = $this->mailer->sendNative();
+        $memail = $this->mailer->nativeSend();
         return  new JsonResponse(["data" =>  $memail]);
         /*$email = (new Email())
             ->from('hello@example.com')
