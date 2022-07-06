@@ -84,7 +84,8 @@ class sMailer extends AbstractController
      $headers[] = 'Bcc: anniversaire_verif@example.com';
 
      // Envoi
-     mail($to, $subject, $message, implode("\r\n", $headers));
+     $send = mail($to, $subject, $message, implode("\r\n", $headers));
+     return $send;
     }
 
     
