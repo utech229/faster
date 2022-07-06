@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Service\uBrand;
+use App\Service\sMailer;
 use App\Service\Services;
 use Symfony\Component\Mime\Email;
 use Doctrine\ORM\EntityManagerInterface;
