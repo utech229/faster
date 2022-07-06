@@ -10,7 +10,7 @@
     <!--begin::Post-->
     <div class="post d-flex flex-column-fluid" id="kt_post">
         <!--begin::Container-->
-        <div id="kt_content_container" class="container-xxl"> 
+        <div id="kt_content_container" class="container-xxl">
             <!--begin::Row-->
             <div class="row g-5 g-xl-10">
                 <!--begin::Col-->
@@ -52,13 +52,13 @@
                             <div class="text-center mb-1">
                                 <!--begin::Link-->
                                 {% if brand.name == "FASTERMESSAGE" %}
-                                    <a  href="{{ path('brand') }}" class="btn btn-sm btn-primary me-2">{% trans %}Devenir revendeur{% endtrans %}</a>
+                                    <a  href="{{ path('brand') }}" class="btn btn-sm btn-primary mt-2 me-2">{% trans %}Devenir revendeur{% endtrans %}</a>
                                 {% else %}
-                                    <a  href="{{ path('campaign_sms') }}" class="btn btn-sm btn-primary me-2">{% trans %}Envoyer un SMS{% endtrans %}</a>
+                                    <a  href="{{ path('campaign_sms') }}" class="btn btn-sm mt-2 btn-primary me-2">{% trans %}Envoyer un SMS{% endtrans %}</a>
                                 {% endif %}
                                 <!--end::Link-->
                                 <!--begin::Link-->
-                                <a class="btn btn-sm btn-light" href="{{ path('app_developer') }}">{% trans %}API développeur{% endtrans %}</a>
+                                <a class="btn btn-sm btn-light mt-2" href="{{ path('app_developer') }}">{% trans %}API développeur{% endtrans %}</a>
                                 <!--end::Link-->
                             </div>
                             <!--end::Links-->
@@ -69,7 +69,7 @@
                     <!--end::Lists Widget 19-->
                 </div>
                 <!--end::Col-->
-                
+
                 <!--begin::Col-->
                 <div class="col-xl-8 mb-5 mb-xl-10">
 
@@ -119,7 +119,7 @@
                                 <!--begin::Carousel-->
                                 <div class="carousel-inner f-3 p-4 pt-4">
                                     <!--begin::Item-->
-                                    <div class="carousel-item active">
+                                    <div class="carousel-item  active">
                                         {% trans %}Envoyez vos SMS professionnels partout dans le monde avec un meilleur délai de livraison, très pratique pour les notifications SMS, le SMS-banking, le SMS marketing, les développeurs ...{% endtrans %}
                                     </div>
                                     <!--end::Item-->
@@ -141,14 +141,13 @@
                             <div class="mb-1 mt-4 p-4">
                                 <a href="{{ path('campaign_sms')}}" class="btn btn-primary me-2">{% trans %}Envoyer un SMS{% endtrans %}</a>
                                 <a href="{{ path('campaign_sms')}}" style="background: #fc6" class="btn me-2">{% trans %}Créer une Campagne{% endtrans %}</a>
-                                <a href="{{ path('app_developer')}}" class="btn btn-light me-2">{% trans %}API SMS{% endtrans %}</a>
                                 <a href="{{ path('app_contact_index')}}" class="btn btn-success">{% trans %}Importer des contacts{% endtrans %}</a>
                             </div>
                             <!--end::Action-->
                         </div>
                         <!--end::Col-->
                     </div>
-                    <!--end::Row--> 
+                    <!--end::Row-->
 
                     <!--begin::Engage widget 4-->
                     <div class="card" style="background: {% if brand.name == "FASTERMESSAGE" %}  #003366  {% else %} #010246 {% endif %};">
@@ -164,7 +163,7 @@
                                     <!--begin::Separator-->
                                     <span class="position-absolute opacity-50 bottom-0  start-0 border-4 border-bottom w-100" style="color: #fc9"></span>
                                     <!--end::Separator-->
-                                </span></span>{% trans %}Rechargez votre compte en quelques secondes{% endtrans %}</div>
+                                </span></span> <br> {% trans %}Rechargez votre compte en quelques secondes{% endtrans %}</div>
                                 <!--end::Title-->
                                 <!--begin::Action-->
                                 <div class="mb-3">
@@ -176,7 +175,7 @@
                             </div>
                             <!--begin::Action-->
                             <!--begin::Illustration-->
-                            <img src="{{ asset('app/media/dashboard/sms-trait.png') }}" class="position-absolute  me-3 bottom-0 end-0 h-150px" alt="" />
+                            <img src="{{ asset('app/media/dashboard/bell.png') }}" class="position-absolute  me-3 bottom-0 end-0 mb-4 mr-4 w-100px h-100px" alt="" />
                             <!--end::Illustration-->
                         </div>
                         <!--end::Body-->

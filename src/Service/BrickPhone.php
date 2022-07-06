@@ -215,41 +215,6 @@ class BrickPhone
         }
     }
 
-    public function numberPrefixe($phone)
-    {
-        $prefixe = $this->getCountryCode($phone);
-        $prefixes   = array('97','96','61','62','66','67','61','62','90','91','51','69','52','53','54');
-        $gsmPrefixe0 = substr($phone, 3, 2);
-        $gsmPrefixe = substr($phone, 4, 2);
-        switch ($prefixe)
-        {
-
-            case '229':
-                if(in_array($gsmPrefixe, $prefixes))
-                {
-                    $phoneData['GSM']      = "mtn";
-                    $phoneData['PAYS']     = "bj";
-                    $phoneData['PREFIXE']  = $gsmPrefixe;
-                }elseif (in_array($gsmPrefixe0, $prefixes)) {
-                    $phoneData['GSM']      = "mtn";
-                    $phoneData['PAYS']     = "bj";
-                    $phoneData['PREFIXE']  = $gsmPrefixe;
-                }
-                else
-                {
-                    $phoneData['GSM']      = "moov";
-                    $phoneData['PAYS']     = "bj";
-                    $phoneData['PREFIXE']  = $gsmPrefixe;
-                }
-                break;
-            default:
-
-                break;
-        }
-
-        return $phoneData;
-    }
-
     public function getNationalNumber($phone)
     {
         try {
@@ -334,7 +299,7 @@ class BrickPhone
 
             default: return [
                 "moov"=>['40', '42', '44', '55', '60', '63', '64', '65', '68', '87', '89', '92', '93', '94', '95', '98', '99'],
-                "mtn"=>['51', '52', '53', '54', '56', '57', '61', '62', '66', '67', '69', '90', '91', '96', '97'],
+                "mtn"=>['51', '52', '53', '54', '56', '57', '59', '61', '62', '66', '67', '69', '90', '91', '96', '97'],
             ];
         }
     }

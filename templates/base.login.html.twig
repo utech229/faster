@@ -54,7 +54,7 @@
 						</div>
 						<!--end::Content-->
 						<!--begin::Illustration-->
-						<div class="d-flex flex-row-auto bgi-no-repeat bgi-position-x-center bgi-size-contain bgi-position-y-bottom min-h-100px min-h-lg-350px" style="background-image: url({{ asset('app/media/illustrations/sketchy-1/17-dark.png') }}"></div>
+						<div class="d-flex flex-row-auto bgi-no-repeat bgi-position-x-center bgi-size-contain bgi-position-y-bottom min-h-100px min-h-lg-450px" style="background-image: url({{ asset('app/media/login/faster-img.png') }}"></div>
 						<!--end::Illustration-->
 					</div>
 					<!--end::Wrapper-->
@@ -96,6 +96,7 @@
 		<!--end::Javascript-->
         {% include 'translations/global.html.twig' %}
 		{% include 'section/intl.input.html.twig' %}
+    	{% include 'section/toastr.flash.html.twig' %}
         {% block javascripts %} {% endblock %}
 		<!--end::Javascript-->
 	</body>

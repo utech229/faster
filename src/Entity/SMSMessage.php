@@ -65,6 +65,18 @@ class SMSMessage
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
     private $createBy;
 
+    #[ORM\Column(type: 'string', length: 15, nullable: true)]
+    private $createFrom;
+
+    #[ORM\Column(type: 'integer')]
+    private $pages;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $errors;
+
+    #[ORM\Column(type: 'array')]
+    private $contact = [];
+
     public function getId(): ?int
     {
         return $this->id;
@@ -270,6 +282,54 @@ class SMSMessage
     public function setCreateBy(?string $createBy): self
     {
         $this->createBy = $createBy;
+
+        return $this;
+    }
+
+    public function getCreateFrom(): ?string
+    {
+        return $this->createFrom;
+    }
+
+    public function setCreateFrom(?string $createFrom): self
+    {
+        $this->createFrom = $createFrom;
+
+        return $this;
+    }
+
+    public function getPages(): ?int
+    {
+        return $this->pages;
+    }
+
+    public function setPages(int $pages): self
+    {
+        $this->pages = $pages;
+
+        return $this;
+    }
+
+    public function getErrors(): ?string
+    {
+        return $this->errors;
+    }
+
+    public function setErrors(?string $errors): self
+    {
+        $this->errors = $errors;
+
+        return $this;
+    }
+
+    public function getContact(): ?array
+    {
+        return $this->contact;
+    }
+
+    public function setContact(array $contact): self
+    {
+        $this->contact = $contact;
 
         return $this;
     }

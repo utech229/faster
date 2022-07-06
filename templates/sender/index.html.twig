@@ -1,275 +1,287 @@
 {% extends 'base.app.html.twig' %}
 
-{% block stylesheets %}
-<link href="{{ asset('app/plugins/custom/datatables/datatables.bundle.css') }}" rel="stylesheet" type="text/css" />
-{% endblock %}
-
 {% block body %}
 <!--begin::Post-->
 <div class="post d-flex flex-column-fluid" id="kt_post">
-    <!--begin::Container-->
-    <div id="kt_content_container" class="container-xxl">
-        <!--begin::Card-->
-        <div class="card card-flush">
-            <!--begin::Card header-->
-            <div class="card-header mt-6">
-                <!--begin::Card title-->
-                <div class="card-title">
-                    <!--begin::Search-->
-                    <div class="d-flex align-items-center position-relative my-1 me-5">
-                        <!--begin::Svg Icon | path: icons/duotune/general/gen021.svg-->
-                        <span class="svg-icon svg-icon-1 position-absolute ms-6">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                <rect opacity="0.5" x="17.0365" y="15.1223" width="8.15546" height="2" rx="1" transform="rotate(45 17.0365 15.1223)" fill="currentColor" />
-                                <path d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z" fill="currentColor" />
-                            </svg>
-                        </span>
-                        <!--end::Svg Icon-->
-                        <input type="text" id="search" class="form-control form-control-solid w-250px ps-15" placeholder="{{'Rechercher'| trans}}" />
-                    </div>
-                    <!--end::Search-->
-                    <!--begin::Filter-->
-                    <button type="button" class="btn btn-light-primary me-3" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
-                    <!--begin::Svg Icon | path: icons/duotune/general/gen031.svg-->
-                    <span class="svg-icon svg-icon-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                            <path d="M19.0759 3H4.72777C3.95892 3 3.47768 3.83148 3.86067 4.49814L8.56967 12.6949C9.17923 13.7559 9.5 14.9582 9.5 16.1819V19.5072C9.5 20.2189 10.2223 20.7028 10.8805 20.432L13.8805 19.1977C14.2553 19.0435 14.5 18.6783 14.5 18.273V13.8372C14.5 12.8089 14.8171 11.8056 15.408 10.964L19.8943 4.57465C20.3596 3.912 19.8856 3 19.0759 3Z" fill="currentColor" />
-                        </svg>
-                    </span>
-                    <!--end::Svg Icon-->{{ 'Filtre' | trans }}</button>
-                    <!--begin::Menu 1-->
-                    <div class="menu menu-sub menu-sub-dropdown w-300px w-md-325px" data-kt-menu="true" id="menu-filter">
-                        <!--begin::Header-->
-                        <div class="px-7 py-5">
-                            <div class="fs-5 text-dark fw-bolder">{{ 'Options de filtre' | trans }}</div>
-                        </div>
-                        <!--end::Header-->
-                        <!--begin::Separator-->
-                        <div class="separator border-gray-200"></div>
-                        <!--end::Separator-->
-                        <!--begin::Content-->
-                        <div class="px-7 py-5" data-kt-user-table-filter="form">
-                            <!--begin::Input group-->
-                            <div class="mb-5">
-                                <label class="form-label fs-6 fw-bold">{{ 'Marque' | trans }} :</label>
-                                <select class="form-select form-select-solid fw-bolder" data-kt-select2="true" data-placeholder="{{"Choisissez la marque"}}" data-allow-clear="true" id="brand">
-                                    <option value="">{{"Toutes"|trans}}</option>
-                                    {% for brand in brands %}
-                                        <option value="{{ brand.uid }}" data-select2-avatar="{{brand.logo}}" data-select2-alt="{{brand.name}}">{{ brand.name }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                            <!--end::Input group-->
-                            <!--begin::Input group-->
-                            <div class="mb-5">
-                                <label class="form-label fs-6 fw-bold">{{ 'Utilisateur' | trans }} :</label>
-                                <select class="form-select form-select-solid fw-bolder" data-kt-select2="true" data-placeholder="{{"Choisissez l'utilisateur"}}" data-allow-clear="true" id="user">
-                                    <option value="">{{"Tous"|trans}}</option>
-                                </select>
-                            </div>
-                            <!--end::Input group-->
-                            <!--begin::Input group-->
-                            <div class="mb-5">
-                                <label class="form-label fs-6 fw-bold">{% trans %}Statut{% endtrans %} :</label>
-                                <select id="status" data-allow-clear="true" data-control="select2" class="form-select form-select-solid fw-bolder" data-placeholder="{{'Statut des identifiants' | trans}}">
-                                    <option value="">{{"Tous"|trans}}</option>
-                                    {% for oneStatus in status %}
-                                        <option value="{{ oneStatus.uid }}">{{ oneStatus.name }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                            <!--end::Input group-->
-                            <!--begin::Actions-->
-                            <div class="d-flex justify-content-end">
-                                <button type="button" class="btn btn-light btn-active-light-primary fw-bold me-2 px-6" data-kt-menu-dismiss="true" id="reset">{{"Remise à zéro"|trans}}</button>
-                                <button type="submit" class="btn btn-primary fw-bold px-6" data-kt-menu-dismiss="true" id="submit">{{"Appliquer"|trans}}</button>
-                            </div>
-                            <!--end::Actions-->
-                        </div>
-                        <!--end::Content-->
-                    </div>
-                    <!--end::Menu 1-->
-                    <!--end::Filter-->
-                </div>
-                <!--end::Card title-->
-                <!--begin::Card toolbar-->
-                <div class="card-toolbar">
-                    <!--begin::Button-->
-                    {% if pCreate %}
-                        <button type="button" id="add_sender" class="btn btn-light-primary">
-                            <!--begin::Svg Icon | path: icons/duotune/general/gen035.svg-->
-                            <span class="svg-icon svg-icon-3">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="currentColor" />
-                                    <rect x="10.8891" y="17.8033" width="12" height="2" rx="1" transform="rotate(-90 10.8891 17.8033)" fill="currentColor" />
-                                    <rect x="6.01041" y="10.9247" width="12" height="2" rx="1" fill="currentColor" />
-                                </svg>
-                            </span>
-                            <!--end::Svg Icon-->
-                            {% trans %}Nouvel{% endtrans %}
-                        </button>
-                    {% endif %}
+	<!--begin::Container-->
+	<div id="kt_content_container" class="container-xxl">
+		<!--begin::Card-->
+		<div class="card card-flush">
+			<!--begin::Card header-->
+			<div class="card-header mt-6">
+				<!--begin::Card title-->
+				<div class="card-title">
+					<!--begin::Search-->
+					<div class="d-flex align-items-center position-relative my-1 me-5">
+						<!--begin::Svg Icon | path: icons/duotune/general/gen021.svg-->
+						<span class="svg-icon svg-icon-1 position-absolute ms-6">
+							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+								<rect opacity="0.5" x="17.0365" y="15.1223" width="8.15546" height="2" rx="1" transform="rotate(45 17.0365 15.1223)" fill="currentColor" />
+								<path d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z" fill="currentColor" />
+							</svg>
+						</span>
+						<!--end::Svg Icon-->
+						<input type="text" id="search" class="form-control form-control-solid w-250px ps-15" placeholder="{{'Rechercher'| trans}}" />
+					</div>
+					<!--end::Search-->
+					<!--begin::Filter-->
+					<button type="button" class="btn btn-light-primary me-3" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
+					<!--begin::Svg Icon | path: icons/duotune/general/gen031.svg-->
+					<span class="svg-icon svg-icon-2">
+						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+							<path d="M19.0759 3H4.72777C3.95892 3 3.47768 3.83148 3.86067 4.49814L8.56967 12.6949C9.17923 13.7559 9.5 14.9582 9.5 16.1819V19.5072C9.5 20.2189 10.2223 20.7028 10.8805 20.432L13.8805 19.1977C14.2553 19.0435 14.5 18.6783 14.5 18.273V13.8372C14.5 12.8089 14.8171 11.8056 15.408 10.964L19.8943 4.57465C20.3596 3.912 19.8856 3 19.0759 3Z" fill="currentColor" />
+						</svg>
+					</span>
+					<!--end::Svg Icon-->{{ 'Filtre' | trans }}</button>
+					<!--begin::Menu 1-->
+					<div class="menu menu-sub menu-sub-dropdown w-300px w-md-325px" data-kt-menu="true" id="menu-filter">
+						<!--begin::Header-->
+						<div class="px-7 py-5">
+							<div class="fs-5 text-dark fw-bolder">{{ 'Options de filtre' | trans }}</div>
+						</div>
+						<!--end::Header-->
+						<!--begin::Separator-->
+						<div class="separator border-gray-200"></div>
+						<!--end::Separator-->
+						<!--begin::Content-->
+						<div class="px-7 py-5" data-kt-user-table-filter="form">
+							<!--begin::Input group-->
+							<div class="mb-5 {% if userType > 3 %}sr-only{% endif %}">
+								<label class="form-label fs-6 fw-bold">{{ 'Marque' | trans }} :</label>
+								<select class="form-select form-select-solid fw-bolder" data-kt-select2="true" data-placeholder="{{"Choisissez la marque"| trans}}" data-allow-clear="true" id="brand">
+									<option value="">{{"Toutes"|trans}}</option>
+									{% for brand in brands %}
+										<option value="{{ brand.uid }}" data-select2-avatar="{{asset('app/uploads/brands/logos/' ~ brand.logo)}}" data-select2-alt="{{brand.name}}">{{ brand.name }}</option>
+									{% endfor %}
+								</select>
+							</div>
+							<!--end::Input group-->
+							<!--begin::Input group-->
+							<div class="mb-5 {% if userType > 3 %}sr-only{% endif %}">
+								<label class="form-label fs-6 fw-bold">{{ 'Utilisateur' | trans }} :</label>
+								<select class="form-select form-select-solid fw-bolder" data-kt-select2="true" data-placeholder="{{"Choisissez l'utilisateur"| trans}}" data-allow-clear="true" id="user">
+									<option value="">{{"Tous"|trans}}</option>
+								</select>
+							</div>
+							<!--end::Input group-->
+							<!--begin::Input group-->
+							<div class="mb-5">
+								<label class="form-label fs-6 fw-bold">{% trans %}Statut{% endtrans %} :</label>
+								<select id="status" data-hide-search="true" data-allow-clear="true" data-control="select2" class="form-select form-select-solid fw-bolder" data-placeholder="{{'Statut des identifiants' | trans}}">
+									<option value="">{{"Tous"|trans}}</option>
+									{% for oneStatus in status %}
+										<option value="{{ oneStatus.uid }}">{{ oneStatus.name }}</option>
+									{% endfor %}
+								</select>
+							</div>
+							<!--end::Input group-->
+							<!--begin::Actions-->
+							<div class="d-flex justify-content-end">
+								<button type="button" class="btn btn-light btn-active-light-primary fw-bold me-2 px-6" data-kt-menu-dismiss="true" id="reset">{{"Remise à zéro"|trans}}</button>
+								<button type="submit" class="btn btn-primary fw-bold px-6" data-kt-menu-dismiss="true" id="submit">{{"Appliquer"|trans}}</button>
+							</div>
+							<!--end::Actions-->
+						</div>
+						<!--end::Content-->
+					</div>
+					<!--end::Menu 1-->
+					<!--end::Filter-->
+				</div>
+				<!--end::Card title-->
+				<!--begin::Card toolbar-->
+				<div class="card-toolbar">
+					<!--begin::Button-->
+					{% if pCreate %}
+						<button type="button" id="add_sender" class="btn btn-light-primary">
+							<!--begin::Svg Icon | path: icons/duotune/general/gen035.svg-->
+							<span class="svg-icon svg-icon-3">
+								<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+									<rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="currentColor" />
+									<rect x="10.8891" y="17.8033" width="12" height="2" rx="1" transform="rotate(-90 10.8891 17.8033)" fill="currentColor" />
+									<rect x="6.01041" y="10.9247" width="12" height="2" rx="1" fill="currentColor" />
+								</svg>
+							</span>
+							<!--end::Svg Icon-->
+							{% trans %}Nouvel{% endtrans %}
+						</button>
+					{% endif %}
 
-                    <button type="button" id="export" class="btn btn-secondary ms-2">
-                        {% trans %}Exportation{% endtrans %}
-                    </button>
-                    <!--end::Button-->
-                </div>
-                <!--end::Card toolbar-->
-            </div>
-            <!--end::Card header-->
-            <!--begin::Card body-->
-            <div class="card-body pt-0">
-                <!--begin::Table-->
-                <table class="table align-middle table-row-dashed fs-6 gy-5 mb-0 w-100%" id="tb_sender">
-                    <!--begin::Table head-->
-                    <thead>
-                        <!--begin::Table row-->
-                        <tr class="text-center text-gray-400 fw-bolder fs-7 text-uppercase gs-0">
-                            <th class="mw-50px"></th>
-                            <th class="min-w-125px">{% trans %}Nom{% endtrans %}</th>
-                            <th class="min-w-100px">{% trans %}Statut{% endtrans %}</th>
-                            <th class="min-w-100px">{% trans %}Créé le{% endtrans %}</th>
-                            <th class="min-w-100px">{% trans %}Utilisateur{% endtrans %}</th>
-                            <th class="min-w-100px">{% trans %}Modifié le{% endtrans %}</th>
-                            <th class="min-w-100px">{% trans %}Observation{% endtrans %}</th>
-                            <th class="min-w-100px">{% trans %}Actions{% endtrans %}</th>
-                        </tr>
-                        <!--end::Table row-->
-                    </thead>
-                    <!--end::Table head-->
-                    <!--begin::Table body-->
-                    <tbody class="fw-bold text-gray-600">
-                    </tbody>
-                    <!--end::Table body-->
-                </table>
-                <!--end::Table-->
-            </div>
-            <!--end::Card body-->
-        </div>
-        <!--end::Card-->
-        <!--begin::Modals-->
-        <!--begin::Modal - Sender-->
-        <div class="modal fade" id="modal_sender" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
-            <!--begin::Modal dialog-->
-            <div class="modal-dialog modal-dialog-centered mw-650px">
-                <!--begin::Modal content-->
-                <div class="modal-content">
-                    <!--begin::Modal header-->
-                    <div class="modal-header">
-                        <!--begin::Modal title-->
-                        <h2 class="fw-bolder" id="title">{% trans %}Nouvel status{% endtrans %}</h2>
-                        <!--end::Modal title-->
-                        <!--begin::Close-->
-                        <div class="btn btn-icon btn-sm btn-active-icon-primary" id="close">
-                            <!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
-                            <span class="svg-icon svg-icon-1">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                    <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor" />
-                                    <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor" />
-                                </svg>
-                            </span>
-                            <!--end::Svg Icon-->
-                        </div>
-                        <!--end::Close-->
-                    </div>
-                    <!--end::Modal header-->
-                    <!--begin::Modal body-->
-                    <div class="modal-body scroll-y mx-5 mx-xl-15 my-7">
-                        <!--begin::Form-->
-                        {{ form_start(form, {'attr':{'id':'form', 'action':'', 'class':'row'}}) }}
-                            <!--begin::Input group-->
-                            <div class="fv-row mb-10 col-12">
-                                <!--begin::Label-->
-                                <label class="fs-5 fw-bolder form-label mb-2">
-                                    <span class="">{{ form_label(form.manager, 'Utilisateur'|trans, {'label_attr': {'class': 'foo'}}) }}</span>
-                                </label>
-                                <!--end::Label-->
-                                <!--begin::Input-->
-                                {{ form_widget(form.manager, {'attr': {'class': 'form-control form-control-solid w-100'}}) }}
-                                <!--end::Input-->
-                            </div>
-                            <!--end::Input group-->
-                            <!--begin::Input group-->
-                            <div class="fv-row mb-10 col-lg-6">
-                                <!--begin::Label-->
-                                <label class="fs-5 fw-bolder form-label mb-2">
-                                    <span class="">{{ form_label(form.name, 'Identifiant'|trans, {'label_attr': {'class': 'foo'}}) }}</span>
-                                </label>
-                                <!--end::Label-->
-                                <!--begin::Input-->
-                                {{ form_widget(form.name, {'attr': {'class': 'form-control form-control-solid','maxlength': 50,
-                                'placeholder': "Entrer l'identifiant d'envoi"|trans }}) }}
-                                <!--end::Input-->
-                            </div>
-                            <!--end::Input group-->
-                            <!--begin::Input-->
-                            <div class="fv-row mb-10 col-lg-6">
-                                <!--begin::Label-->
-                                <label class="fs-5 fw-bolder form-label mb-2">
-                                    <span class="">{{ form_label(form.status, 'Statut'|trans, {'label_attr': {'class': 'foo'}}) }}</span>
-                                </label>
-                                <!--end::Label-->
-                                <!--begin::Input-->
-                                {{ form_widget(form.status, {'attr': {'class': 'form-control form-control-solid'}}) }}
-                                <!--end::Input-->
-                            </div>
-                            <!--end::Input-->
-                            <!--begin::Input-->
-                            <div class="fv-row mb-10 col-12">
-                                <!--begin::Label-->
-                                <label class="fs-5 fw-bolder form-label mb-2">
-                                    <span class="">{{ form_label(form.observation, 'Observation'|trans, {'label_attr': {'class': ''}}) }}</span>
-                                </label>
-                                <!--end::Label-->
-                                <!--begin::Input-->
-                                {{ form_widget(form.observation, {'attr': {'class': 'form-control form-control-solid'}}) }}
-                                <!--end::Input-->
-                            </div>
-                            <!--end::Input-->
-                            <!--begin::Actions-->
-                            <div class="text-center col-12">
-                                <button type="button" class="btn btn-light me-3" id="cancel">{{'Annuler'| trans}}</button>
-                                <button type="submit" class="btn btn-primary" id="submit">
-                                    <span class="indicator-label">{{'Soumettre'| trans}}</span>
-                                    <span class="indicator-progress">{{'Veuillez patienter'| trans}}...
-                                    <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
-                                </button>
-                            </div>
-                            <!--end::Actions-->
-                        {{ form_end(form) }}
-                        <!--end::Form-->
-                    </div>
-                    <!--end::Modal body-->
-                </div>
-                <!--end::Modal content-->
-            </div>
-            <!--end::Modal dialog-->
-        </div>
-        <!--end::Modal - sender-->
-        <!--end::Modals-->
-    </div>
-    <!--end::Container-->
+					<button type="button" id="export" class="btn btn-secondary ms-2">
+						{% trans %}Exportation{% endtrans %}
+					</button>
+					<!--end::Button-->
+				</div>
+				<!--end::Card toolbar-->
+			</div>
+			<!--end::Card header-->
+			<!--begin::Card body-->
+			<div class="card-body pt-0">
+				<!--begin::Table-->
+				<table class="table align-middle table-row-dashed fs-6 gy-5 mb-0 w-100%" id="tb_sender">
+					<!--begin::Table head-->
+					<thead>
+						<!--begin::Table row-->
+						<tr class="text-center text-gray-400 fw-bolder fs-7 text-uppercase gs-0">
+							<th class="min-w-125px">{% trans %}Nom{% endtrans %}</th>
+							<th class="min-w-100px">{% trans %}Statut{% endtrans %}</th>
+							<th class="min-w-100px">{% trans %}Créé le{% endtrans %}</th>
+							<th class="min-w-100px">{% trans %}Marque{% endtrans %}</th>
+							<th class="min-w-100px">{% trans %}Utilisateur{% endtrans %}</th>
+							<th class="min-w-100px">{% trans %}Modifié le{% endtrans %}</th>
+							<th class="min-w-100px">{% trans %}Observation{% endtrans %}</th>
+							<th class="min-w-100px">{% trans %}Actions{% endtrans %}</th>
+						</tr>
+						<!--end::Table row-->
+					</thead>
+					<!--end::Table head-->
+					<!--begin::Table body-->
+					<tbody class="fw-bold text-gray-600">
+					</tbody>
+					<!--end::Table body-->
+				</table>
+				<!--end::Table-->
+			</div>
+			<!--end::Card body-->
+		</div>
+		<!--end::Card-->
+		<!--begin::Modals-->
+		<!--begin::Modal - Sender-->
+		<div class="modal fade" id="modal_sender" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+			<!--begin::Modal dialog-->
+			<div class="modal-dialog modal-dialog-centered mw-650px">
+				<!--begin::Modal content-->
+				<div class="modal-content">
+					<!--begin::Modal header-->
+					<div class="modal-header">
+						<!--begin::Modal title-->
+						<h2 class="fw-bolder" id="title">{% trans %}Nouvel status{% endtrans %}</h2>
+						<!--end::Modal title-->
+						<!--begin::Close-->
+						<div class="btn btn-icon btn-sm btn-active-icon-primary" id="close">
+							<!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
+							<span class="svg-icon svg-icon-1">
+								<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+									<rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor" />
+									<rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor" />
+								</svg>
+							</span>
+							<!--end::Svg Icon-->
+						</div>
+						<!--end::Close-->
+					</div>
+					<!--end::Modal header-->
+					<!--begin::Modal body-->
+					<div class="modal-body scroll-y mx-5 my-5">
+						<!--begin::Form-->
+						{{ form_start(form, {'attr':{'id':'form_sender', 'action':path('sender_new'), 'class':'row'}}) }}
+							<!--begin::Input group-->
+							<div class="fv-row mb-10 col-lg-6 {% if userType > 3 %}sr-only{% endif %}">
+								<!--begin::Label-->
+								<label class="fs-5 fw-bolder form-label mb-2 required">
+									<span class="">{{'Marque'|trans}}</span>
+								</label>
+								<!--end::Label-->
+								<!--begin::Input-->
+								<select class="form-select form-select-solid fw-bolder" data-kt-select2="true" data-control="select2" data-dropdown-parent="#modal_sender" data-placeholder="{{"Choisissez la marque"| trans}}" data-allow-clear="true" name="brand" id="sender_brand">
+									<option value="">{{"Toutes"|trans}}</option>
+									{% for brand in brands %}
+										<option value="{{ brand.uid }}" data-select2-avatar="{{asset('app/uploads/brands/logos/' ~ brand.logo)}}" data-select2-alt="{{brand.name}}">{{ brand.name }}</option>
+									{% endfor %}
+								</select>
+								<!--end::Input-->
+							</div>
+							<!--end::Input group--><!--begin::Input group-->
+							<div class="fv-row mb-10 col-lg-6 {% if userType > 3 %}sr-only{% endif %}">
+								<!--begin::Label-->
+								<label class="fs-5 fw-bolder form-label mb-2">
+									<span class="">{{ form_label(form.manager, 'Utilisateur'|trans, {'label_attr': {'class': 'foo'}}) }}</span>
+								</label>
+								<!--end::Label-->
+								<!--begin::Input-->
+								{{ form_widget(form.manager, {'attr': {'class': 'form-control form-control-solid', 'data-kt-select2':"true", 'data-allow-clear':"true", 'data-placeholder':"Selectionnez l'utilisateur"|trans, 'data-control':"select2", 'data-dropdown-parent':'#modal_sender' }}) }}
+								<!--end::Input-->
+							</div>
+							<!--end::Input group-->
+							<!--begin::Input group-->
+							<div class="fv-row mb-10 col-lg-6">
+								<!--begin::Label-->
+								<label class="fs-5 fw-bolder form-label mb-2">
+									<span class="">{{ form_label(form.name, 'Expéditeur'|trans, {'label_attr': {'class': 'foo'}}) }}</span>
+								</label>
+								<!--end::Label-->
+								<!--begin::Input-->
+								{{ form_widget(form.name, {'attr': {'class':'form-control form-control-solid', 'maxlength': 50, 'placeholder':"Entrer l'expéditeur"|trans }}) }}
+								<!--end::Input-->
+							</div>
+							<!--end::Input group-->
+							{# <!--begin::Input-->
+							<div class="fv-row mb-10 col-lg-6">
+								<!--begin::Label-->
+								<label class="fs-5 fw-bolder form-label mb-2">
+									<span class="">{{ form_label(form.status, 'Statut'|trans, {'label_attr': {'class': 'foo'}}) }}</span>
+								</label>
+								<!--end::Label-->
+								<!--begin::Input-->
+								{{ form_widget(form.status, {'attr': {'class': 'form-control form-control-solid', 'data-placeholder':"Choisissez le statut"|trans, 'data-allow-clear':"true", 'data-hide-search':"true" }}) }}
+								<!--end::Input-->
+							</div>
+							<!--end::Input--> #}
+							<!--begin::Input-->
+							<div class="fv-row mb-10 col-12">
+								<!--begin::Label-->
+								<label class="fs-5 fw-bolder form-label mb-2">
+									<span class="">{{ form_label(form.observation, 'Observation'|trans, {'label_attr': {'class': ''}}) }}</span>
+								</label>
+								<!--end::Label-->
+								<!--begin::Input-->
+								{{ form_widget(form.observation, {'attr': {'class': 'form-control form-control-solid'}}) }}
+								<!--end::Input-->
+							</div>
+							<!--end::Input-->
+							<!--begin::Actions-->
+							<div class="text-center col-12">
+								<button type="button" class="btn btn-light me-3" id="cancel">{{'Annuler'| trans}}</button>
+								<button type="submit" class="btn btn-primary" id="submit">
+									<span class="indicator-label">{{'Soumettre'| trans}}</span>
+									<span class="indicator-progress">{{'Veuillez patienter'| trans}}...
+									<span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+								</button>
+							</div>
+							<!--end::Actions-->
+						{{ form_end(form) }}
+						<!--end::Form-->
+					</div>
+					<!--end::Modal body-->
+				</div>
+				<!--end::Modal content-->
+			</div>
+			<!--end::Modal dialog-->
+		</div>
+		<!--end::Modal - sender-->
+		<!--end::Modals-->
+	</div>
+	<!--end::Container-->
 </div>
 <!--end::Post-->
 {% endblock %}
 
 {% block javascripts %}
 <script type="text/javascript">
-    const url_get  = "{{ path('sender_all') }}";
-    const url_new  = "{{ path('sender_new') }}";
-    const url_edit = "{{ path('sender_edit', {'uid':'_1_'}) }}";
-    const url_action = "{{ path('sender_action', {'uid':'_1_'}) }}";
-    const url_show = "{{ path('sender_show', {'uid':'_1_'}) }}";
-    const url_user = "{{ path('filter_user') }}";
-    const _token   = "{{ csrf_token("sender") }}";
-    const filter_token   = "{{ csrf_token("") }}";
-    const pList = {{pList|default(0)}};
-    const clnUser = {{clnUser|default(0)}};
-    const pEdit = {{pEdit|default(0)}};
-    const pDelete = {{pDelete|default(0)}};
-    const pStatus = {{pStatus|default(0)}};
+	const url_get	= "{{ path('sender_all') }}",
+	url_new			= "{{ path('sender_new') }}",
+	url_edit		= "{{ path('sender_edit', {'uid':'_1_'}) }}",
+	url_action		= "{{ path('sender_action', {'uid':'_1_'}) }}",
+	url_show		= "{{ path('sender_show', {'uid':'_1_'}) }}",
+	url_user		= "{{ path('filter_user') }}";
+	url_sender		= "{{ path('filter_sender') }}";
+
+	const _token	= "{{ csrf_token("sender") }}",
+	filter_token	= "{{ csrf_token("") }}",
+	userType		= {{userType}};
+
+	const brandInit = {% if brands|length == 1 %} "{{brands[0].uid}}" {% else %} false {% endif %},
+	userInit = {% if users|length == 1 %} "{{users[0].uid}}" {% else %} false {% endif %};
 </script>
-<script type="text/javascript" src="{{ asset('app/plugins/custom/datatables/datatables.bundle.js') }}"></script>
+{# {{ include('smsmessage/new.html.twig', {'brands':brands}) }} #}
 <script type="text/javascript" src="{{ asset('app/js/queries/sender/sender.js')}}"></script>
 {% endblock %}

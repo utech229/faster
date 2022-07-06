@@ -47,7 +47,7 @@ $(document).on('click', ".contactDeleter", function() {
 			});	
 		} else if (result.dismiss === 'cancel') {
 			$(document).trigger('entityUpStop', ['#', uid, 'fa-trash-alt']);
-			$(document).trigger('onAjaxInfo');
+			
 		}
 	});
 	

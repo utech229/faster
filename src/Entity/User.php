@@ -157,6 +157,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'admin', targetEntity: ContactGroup::class)]
     private $contactGroupsAdmin;
 
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Accounting::class, orphanRemoval: true)]
+    private $accountings;
+
     public function __construct()
     {
         $this->accountManagers = new ArrayCollection();
@@ -178,6 +181,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->payments = new ArrayCollection();
         $this->validatorPayments = new ArrayCollection();
         $this->contactGroupsAdmin = new ArrayCollection();
+        $this->accountings = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -1126,6 +1130,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($contactGroupsAdmin->getAdmin() === $this) {
                 $contactGroupsAdmin->setAdmin(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Accounting>
+     */
+    public function getAccountings(): Collection
+    {
+        return $this->accountings;
+    }
+
+    public function addAccounting(Accounting $accounting): self
+    {
+        if (!$this->accountings->contains($accounting)) {
+            $this->accountings[] = $accounting;
+            $accounting->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAccounting(Accounting $accounting): self
+    {
+        if ($this->accountings->removeElement($accounting)) {
+            // set the owning side to null (unless already changed)
+            if ($accounting->getUser() === $this) {
+                $accounting->setUser(null);
             }
         }
 

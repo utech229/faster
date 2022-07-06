@@ -36,7 +36,7 @@ class ContactGroupController extends AbstractController
         $this->statusRepository     = $statusRepository;
         $this->userRepository       = $userRepository;
 
-        $this->permission           =    ["CNTS0", "CNTS1", "CNTS2", "CNTS3", "CNTS4","CNTS5","CNTG0", "CNTG1", "CNTG2", "CNTG3", "CNTG4"];
+        $this->permission           =    ["CNTS0", "CNTS1", "CNTS2", "CNTS3", "CNTS4","CNTS5","CNTG0", "CNTG1", "CNTG2", "CNTG3", "CNTG4","CNTG5"];
         $this->pAccess              =    $this->services->checkPermission($this->permission[0]);
         $this->pCreate              =    $this->services->checkPermission($this->permission[1]);
         $this->pView                =    $this->services->checkPermission($this->permission[2]);
@@ -48,6 +48,8 @@ class ContactGroupController extends AbstractController
         $this->pGView               =    $this->services->checkPermission($this->permission[8]);
         $this->pGUpdate             =    $this->services->checkPermission($this->permission[9]);
         $this->pGDelete             =    $this->services->checkPermission($this->permission[10]);
+        $this->pGAllView            =    $this->services->checkPermission($this->permission[11]);
+    
     }
     
     #[Route('/', name: 'app_contact_group_index', methods: ['GET'])]
@@ -69,7 +71,7 @@ class ContactGroupController extends AbstractController
         $data           =   [];
         $tabGroup       =   [];
 
-        if (!$this->pView) {
+        if (!$this->pGView) {
             
             $data = [
                 "data"              =>   $tabGroup
@@ -77,12 +79,13 @@ class ContactGroupController extends AbstractController
             return new JsonResponse($data);
         }
 
-        list($typeUser,$Id) =   $this->services->checkThisUser($this->pAllView);
+        list($typeUser,$Id) =   $this->services->checkThisUser($this->pGAllView);
 
         switch ($request->request->get('_uid')) {
             case 'all':
                 if ($typeUser == 0) {
                     $groups   =    $this->em->getRepository(ContactGroup::class)->findAll();
+                
                 }
                 else
                 {
@@ -178,7 +181,11 @@ class ContactGroupController extends AbstractController
                 $contactGroup->setCreatedAt(new \DatetimeImmutable());
                 $contactGroupRepository->add($contactGroup,true);
 
-            return $this->services->msg_success($this->intl->trans("Ajout d'un groupe de contact"),$this->intl->trans("Votre groupe de contact a été ajouté avec succès"));
+                $data = [
+                           "uid" => $contactGroup->getUid(),
+                           "name"=> $contactGroup->getName()
+                ];
+            return $this->services->msg_success($this->intl->trans("Ajout d'un groupe de contact"),$this->intl->trans("Votre groupe de contact a été ajouté avec succès"),$data);
         }
         else 
         return $this->services->msg_error($this->intl->trans("Echec d'ajout de groupe de contact, nom manquant") ,$this->intl->trans("Veuillez renseigner le nom du groupe"));
@@ -253,13 +260,13 @@ class ContactGroupController extends AbstractController
                                 "data"  =>   $tabGroup
                         ];
 
-        if (!$this->pView) {
+        if (!$this->pGView) {
             
             
             return new JsonResponse($data);
         }
 
-        list($typeUser,$Id) =   $this->services->checkThisUser($this->pAllView);
+        list($typeUser,$Id) =   $this->services->checkThisUser($this->pGAllView);
         switch ($request->request->get('_uid')) {
             case 'all':
                 if ($typeUser == 0) {

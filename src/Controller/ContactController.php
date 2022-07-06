@@ -186,12 +186,12 @@ class ContactController extends AbstractController
     #[Route('/contact/import', name: 'app_contact_import', methods: ['GET', 'POST'])]
     public function import(Request $request): Response
     {
-        if (!$this->isCsrfTokenValid($this->getUser()->getUid(), $request->request->get('_token')))
-        return $this->services->invalid_token_ajax_list($this->intl->trans('importation de contacts : token invalide'));
+        if (!$this->isCsrfTokenValid($this->getUser()->getUid(), $request->request->get('_token'))) return $this->services->invalid_token_ajax_list($this->intl->trans('importation de contacts : token invalide'));
         
         $group  =   $this->em->getRepository(ContactGroup::class)->findOneByUid($request->request->get('group'));
         
         if(!$group) return $this->services->msg_info($this->intl->trans("Echec d'importation de contacts: Groupe manquant."),$this->intl->trans("Veuillez sélectionner un groupe de contact."));
+        
         if($request->request->get('hidden_file') == "") return $this->services->msg_info($this->intl->trans("Echec d'importation de contacts: Fichier manquant."),$this->intl->trans("Veuillez ajouter votre fichier avant de soumettre."));
         
         try {
@@ -202,52 +202,40 @@ class ContactController extends AbstractController
             die('Error loading file: '.$e->getMessage());
         }
 
-       //File content getting in variable
-        $worksheet = $spreadsheet->getActiveSheet();
+        //File content getting in variable
+        $worksheet = $spreadsheet->getActiveSheet()->toArray();
+        $start = -1;
 
-        $highestRow    = $worksheet->getHighestRow();
-        $highestColumn = $worksheet->getHighestColumn(); // e.g 'F'
-        $highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn);
-        //getting of cellulle C1 value type
-        $row1Column1 = $worksheet->getCellByColumnAndRow(1, 2)->getValue();
-        //Verify the type for setting the start row
-        (is_numeric($row1Column1)) ? $startRow = 2 : $startRow = 3;
-        
-        //Verify First Phone number
-        $firstPhone = $worksheet->getCellByColumnAndRow(1, $startRow)->getValue();
+		$A1 = isset($worksheet[0][0]) ? $worksheet[0][0] : "";
+		$A2 = isset($worksheet[1][0]) ? $worksheet[1][0] : "";
+		if(is_numeric($A1)) $start = 0; else if(is_numeric($A2)) $start = 1;
 
-        if ($firstPhone == NULL OR $firstPhone == '' OR !is_numeric($firstPhone)) 
-        return $this->services->msg_error($this->intl->trans("Echec d'importation de contact:Mauvais formatage de fichier."),$this->intl->trans("Votre fichier a été mal conçu pour l'importation.Veuillez revoir le contenu du fichier et réessayez."));
+        if($start == -1)    return $this->services->msg_error($this->intl->trans("Echec d'importation de contact:Mauvais formatage de fichier."),$this->intl->trans("Votre fichier a été mal conçu pour l'importation.Veuillez revoir le contenu du fichier et réessayez."));
         
-        for($row = $startRow; $row <= $highestRow; $row++)
+        $tabCheck =   [];
+
+        for($row = $start; $row < count($worksheet); $row++)
         {
-            $contact    = new Contact;
-            $phone      = $worksheet->getCellByColumnAndRow(1, $row)->getValue();
+            $check = trim($worksheet[$row][0]).trim($worksheet[$row][1]).trim($worksheet[$row][2]).trim($worksheet[$row][3]).trim($worksheet[$row][4]).trim($worksheet[$row][5]);
+            if (!in_array($check,$tabCheck)) {
 
-            if($this->brickPhone->isValidNumber($phone) != true )
-
-            return $this->services->msg_error($this->intl->trans("Echec d'importation de contact:Mauvais formatage de fichier. ".$phone." Format du numéro non respecté"),$this->intl->trans("Votre fichier a été mal conçu pour l'importation. ".$phone." Format du numéro non respecté. Veuillez revoir le contenu du fichier et réessayez."));
+                $contact    = new Contact;
             
-            $fielder1  = $worksheet->getCellByColumnAndRow(2, $row)->getValue() != "" ? $worksheet->getCellByColumnAndRow(2, $row)->getValue() : "";
-            $fielder2  = $worksheet->getCellByColumnAndRow(3, $row)->getValue() != "" ? $worksheet->getCellByColumnAndRow(3, $row)->getValue() : "";
-            $fielder3  = $worksheet->getCellByColumnAndRow(4, $row)->getValue() != "" ? $worksheet->getCellByColumnAndRow(4, $row)->getValue() : "";
-            $fielder4  = $worksheet->getCellByColumnAndRow(5, $row)->getValue() != "" ? $worksheet->getCellByColumnAndRow(5, $row)->getValue() : "";
-            $fielder5  = $worksheet->getCellByColumnAndRow(6, $row)->getValue() != "" ? $worksheet->getCellByColumnAndRow(6, $row)->getValue() : "";
-
-            $contact->setUid(uniqid())
-                ->setContactGroup($group)
-                ->setPhone($phone)
-                ->setField1($fielder1)
-                ->setField2($fielder2)
-                ->setField3($fielder3)
-                ->setField4($fielder4)
-                ->setField5($fielder5)
-                ->setIsImported(0)
-                ->setPhoneCountry($this->brickPhone->getInfosCountryFromCode($phone))
-                ->setCreatedAt(new \DateTimeImmutable());
-                $this->contactRepository->add($contact);
+                $contact->setUid(uniqid())
+                    ->setContactGroup($group)
+                    ->setPhone("+".str_replace("+","",$worksheet[$row][0]))
+                    ->setField1($worksheet[$row][1])
+                    ->setField2($worksheet[$row][2])
+                    ->setField3($worksheet[$row][3])
+                    ->setField4($worksheet[$row][4])
+                    ->setField5($worksheet[$row][5])
+                    ->setIsImported(1)
+                    ->setCreatedAt(new \DateTimeImmutable());
+                    $this->contactRepository->add($contact);
+            }
+            $tabCheck[] = $check;
         } 
-        
+
         return $this->services->msg_success($this->intl->trans("Importation de contacts effectué avec succès"),$this->intl->trans("Importation de contacts effectué avec succès"));
     }
 

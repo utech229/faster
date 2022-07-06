@@ -27,9 +27,9 @@ var KTAddGroup = function() {
                 });
                 t.querySelector('[data-kt-contact-group-modal-action="close"]').addEventListener("click", (t => {
                     t.preventDefault(), 
-                        t.value , n.hide()
+                        t.value ,e.reset(), $('#list_user_add_group_id').val(null).trigger("change"), n.hide()
                 })), t.querySelector('[data-kt-contact-group-modal-action="cancel"]').addEventListener("click", (t => {
-                    t.preventDefault(), (e.reset(), n.hide())
+                    t.preventDefault(), (e.reset(), $('#list_user_add_group_id').val(null).trigger("change"), n.hide())
                 }));
                 const i = t.querySelector('[data-kt-contact-group-modal-action="submit"]');
                 i.addEventListener("click", (function(t) {
@@ -60,9 +60,18 @@ var KTAddGroup = function() {
 
                                 if (response.type === 'success') {
 
-                                    t.isConfirmed, e.reset(), 
+                                    t.isConfirmed, e.reset(), $('#list_user_add_group_id').val(null).trigger("change")
                                     $('#kt_modal_add_contact_group_reload_button').click();
-                                     n.hide();
+                                    n.hide();
+                                    if(importContact == 1 ){
+                                        importContact =0;
+                                        let user = $('#list_user_contact_id').val(), uid = response.data.uid;
+                                        $('#list_user_contact_id').val(user).trigger("change");
+                                        setTimeout(() => {
+                                        $('#id_group_contact_import').val(uid).change();
+                                        $("#kt_modal_import_contacts").modal("show");
+                                        }, 1000);
+                                    }
                                 }
                             },
                             error: function () { 

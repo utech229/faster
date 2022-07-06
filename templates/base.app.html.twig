@@ -19,11 +19,11 @@
 		{#<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" />#}
 		<!--end::Fonts-->
         <!--begin::Page Vendor Stylesheets(used by this page)-->
-		<link href="{{ asset('app/plugins/custom/datatables/datatables.bundle.css') }}" rel="stylesheet" type="text/css" />
 		<link href="{{ asset('app/plugins/custom/vis-timeline/vis-timeline.bundle.css') }}" rel="stylesheet" type="text/css" />
 		<!--end::Page Vendor Stylesheets-->
 		<!--begin::Global Stylesheets Bundle(used by all pages)-->
 		<link href="{{ asset('app/plugins/global/plugins.bundle.css') }}" rel="stylesheet" type="text/css" />
+		<link href="{{ asset('app/plugins/custom/datatables/datatables.bundle.css') }}" rel="stylesheet" type="text/css" />
 		<link href="{{ asset('app/css/poppins.css?family=Poppins:300,400,500,600,700') }}" rel="stylesheet" type="text/css" />
 		<link href="{{ asset('app/css/style.bundle.css') }}" rel="stylesheet" type="text/css" />
 		<!--end::Global Stylesheets Bundle-->
@@ -82,25 +82,8 @@
                                     <span class="menu-title">{{ 'Tableau de bord' | trans }}</span>
                                 </a>
                             </div>
-                            {% if permission(["MET0"], app.user, false) %}
                             <div class="menu-item">
-                                <div class="menu-content pt-8 pb-2">
-                                    <span class="menu-section text-muted text-uppercase fs-8 ls-1">{{ 'Retrait de fonds' | trans }}</span>
-                                </div>
-                            </div>
-                            <div class="menu-item">
-                                <a class="menu-link {{menu(uri, path('app_payment_index')) }}" href="{{ path('app_payment_index') }}">
-                                    <span class="menu-icon">
-                                        <!--begin::Svg Icon | path: icons/stockholm/Design/PenAndRuller.svg-->
-                                        <i class="bi bi-coin fs-3"></i>
-                                        <!--end::Svg Icon-->
-                                    </span>
-                                    <span class="menu-title">{{ 'Paiement' | trans }} </span>
-                                </a>
-                            </div>
-                            {% endif %}
-                            <div class="menu-item">
-                                <div class="menu-content pt-8 pb-2">
+                                <div class="menu-content pt-4 pb-2">
                                     <span class="menu-section text-muted text-uppercase fs-8 ls-1">{{ "Carnet d'adresse" | trans }}</span>
                                 </div>
                             </div>
@@ -115,62 +98,108 @@
                                 </a>
                             </div>
                             <!--end::Menu-->
-                            <div class="menu-item">
-                                <div class="menu-content pt-8 pb-2">
-                                    <span class="menu-section text-muted text-uppercase fs-8 ls-1">{{ "Campagnes" | trans }}</span>
-                                </div>
-                            </div>
-                            <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-									<span class="menu-link">
-										<span class="menu-icon">
-											<!--begin::Svg Icon | path: icons/duotune/electronics/elc002.svg-->
-											<span class="svg-icon svg-icon-2">
-												<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-													<path d="M6 21C6 21.6 6.4 22 7 22H17C17.6 22 18 21.6 18 21V20H6V21Z" fill="currentColor" />
-													<path opacity="0.3" d="M17 2H7C6.4 2 6 2.4 6 3V20H18V3C18 2.4 17.6 2 17 2Z" fill="currentColor" />
-													<path d="M12 4C11.4 4 11 3.6 11 3V2H13V3C13 3.6 12.6 4 12 4Z" fill="currentColor" />
-												</svg>
-											</span>
-											<!--end::Svg Icon-->
-										</span>
-										<span class="menu-title">{{ "SMS" | trans }}</span>
-										<span class="menu-arrow"></span>
-									</span>
-									<div class="menu-sub menu-sub-accordion">
-										<div class="menu-item">
-											<a class="menu-link" href="{{path("campaign_sms")}}">
-												<span class="menu-bullet">
-													<span class="bullet bullet-dot"></span>
-												</span>
-												<span class="menu-title">{{ "Campagnes" | trans }}</span>
-											</a>
-										</div>
-										<div class="menu-item">
-											<a class="menu-link" href="../../demo1/dist/apps/contacts/view-contact.html">
-												<span class="menu-bullet">
-													<span class="bullet bullet-dot"></span>
-												</span>
-												<span class="menu-title">{{ "Messages API/Unitaires" | trans }}</span>
-											</a>
-										</div>
-									</div>
-								</div>
-
+                            {% if permission(["SMSC0", "SMSS0", "SMSA0", "STAT0", "SEND0"], app.user, false) %}
                                 <div class="menu-item">
-                                    <a class="menu-link " href="{{ path('sender') }}">
-                                        <span class="menu-icon">
-                                            <!--begin::Svg Icon | path: icons/stockholm/Design/PenAndRuller.svg-->
-                                            <i class="fas fa-paper-plane fs-3"></i>
-                                            <!--end::Svg Icon-->
-                                        </span>
-                                        <span class="menu-title">{{ 'Expéditeurs' | trans }} </span>
-                                    </a>
+                                    <div class="menu-content pt-4 pb-2">
+                                        <span class="menu-section text-muted text-uppercase fs-8 ls-1">{{ "Campagnes" | trans }}</span>
+                                    </div>
                                 </div>
+                                {% if permission(["SMSC0", "SMSS0", "SMSA0", "STAT0"], app.user, false) %}
+                                    <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
+        							    <span class="menu-link">
+        									<span class="menu-icon">
+                                                <!--begin::Svg Icon | path: assets/media/icons/duotune/communication/com010.svg-->
+                                                <span class="svg-icon svg-icon-1"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                <path d="M6 8.725C6 8.125 6.4 7.725 7 7.725H14L18 11.725V12.925L22 9.725L12.6 2.225C12.2 1.925 11.7 1.925 11.4 2.225L2 9.725L6 12.925V8.725Z" fill="currentColor"/>
+                                                <path opacity="0.3" d="M22 9.72498V20.725C22 21.325 21.6 21.725 21 21.725H3C2.4 21.725 2 21.325 2 20.725V9.72498L11.4 17.225C11.8 17.525 12.3 17.525 12.6 17.225L22 9.72498ZM15 11.725H18L14 7.72498V10.725C14 11.325 14.4 11.725 15 11.725Z" fill="currentColor"/>
+                                                </svg></span>
+                                                <!--end::Svg Icon-->
+        									</span>
+        									<span class="menu-title">{{ "SMS" | trans }}</span>
+        									<span class="menu-arrow"></span>
+        								</span>
+        								<div class="menu-sub menu-sub-accordion">
+                                            {% if permission(["SMSC0"], app.user, false) %}
+            									<div class="menu-item">
+            										<a class="menu-link" href="{{path("campaign_sms")}}">
+            											<span class="menu-bullet">
+            												<span class="bullet bullet-dot"></span>
+            											</span>
+            											<span class="menu-title">{{ "Campagnes" | trans }}</span>
+            										</a>
+            									</div>
+                                            {% endif %}
+                                            {% if permission(["SMSA0"], app.user, false) %}
+            									<div class="menu-item">
+            										<a class="menu-link" href="{{path("message_sms", {"from":"api"})}}">
+            											<span class="menu-bullet">
+            												<span class="bullet bullet-dot"></span>
+            											</span>
+            											<span class="menu-title">{{ "Messages API" | trans }}</span>
+            										</a>
+            									</div>
+                                            {% endif %}
+                                            {% if permission(["SMSS0"], app.user, false) %}
+            									<div class="menu-item">
+            										<a class="menu-link" href="{{path("message_sms")}}">
+            											<span class="menu-bullet">
+            												<span class="bullet bullet-dot"></span>
+            											</span>
+            											<span class="menu-title">{{ "Messages directs" | trans }}</span>
+            										</a>
+            									</div>
+                                            {% endif %}
+                                            {% if permission(["STAT0"], app.user, false) %}
+            									<div class="menu-item">
+            										<a class="menu-link" href="{{path("message_sms_stats")}}">
+            											<span class="menu-bullet">
+            												<span class="bullet bullet-dot"></span>
+            											</span>
+            											<span class="menu-title">{{ "Statistiques" | trans }}</span>
+            										</a>
+            									</div>
+                                            {% endif %}
+        								</div>
+        							</div>
+                                {% endif %}
+                                {% if permission(["SEND0"], app.user, false) %}
+                                    <div class="menu-item">
+                                        <a class="menu-link " href="{{ path('sender') }}">
+                                            <span class="menu-icon">
+                                                <!--begin::Svg Icon | path: icons/stockholm/Design/PenAndRuller.svg-->
+                                                <i class="fas fa-paper-plane fs-3"></i>
+                                                <!--end::Svg Icon-->
+                                            </span>
+                                            <span class="menu-title">{{ 'Expéditeurs' | trans }} </span>
+                                        </a>
+                                    </div>
+                                {% endif %}
+                            {% endif %}
+                            {% if permission(["BRND0"], app.user) %}
                             <div class="menu-item">
-                                <div class="menu-content pt-8 pb-2">
-                                    <span class="menu-section text-muted text-uppercase fs-8 ls-1">{{ 'Transactions' | trans }}</span>
+                                <div class="menu-content pt-4 pb-2">
+                                    <span class="menu-section text-muted text-uppercase fs-8 ls-1">{{ 'Marque de revente' | trans }}</span>
                                 </div>
                             </div>
+                             <div class="menu-item">
+                                <a class="menu-link {{menu(uri, path('brand')) }}" href="{{ path('brand') }}">
+                                    <span class="menu-icon">
+                                        <!--begin::Svg Icon | path: icons/stockholm/Design/PenAndRuller.svg-->
+                                        <i class="fas fa-copyright fs-3"></i>
+                                        <!--end::Svg Icon-->
+                                    </span>
+                                    <span class="menu-title">{{ 'Marque' | trans }} </span>
+                                </a>
+                            </div>
+                            {% endif %}
+                            {% if permission(["REC0", "MET0", "PAY0",], app.user, false) %}
+                            <div class="menu-item">
+                                <div class="menu-content pt-4 pb-2">
+                                    <span class="menu-section text-muted text-uppercase fs-8 ls-1">{{ 'Mon compte' | trans }}</span>
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% if permission(["REC0"], app.user) %}
                             <div class="menu-item">
                                 <a class="menu-link" href="{{path('app_transaction_index') }}" title="{{'Historique des recharge'|trans}}" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right">
                                     <span class="menu-icon">
@@ -186,47 +215,22 @@
                                     <span class="menu-title">{% trans %}Recharge{% endtrans %}</span>
                                 </a>
                             </div>
-
-                            {% if permission(["CFIG0", "ROUT0", "ROL0"], app.user, false) %}
-                            <div class="menu-item">
-                                <div class="menu-content pt-8 pb-2">
-                                    <span class="menu-section text-muted text-uppercase fs-8 ls-1">{{ 'Congiguration' | trans }}</span>
-                                </div>
-                            </div>
                             {% endif %}
-                            {% if permission(["ROUT0"], app.user) %}
-                            <div class="menu-item">
-                                <a class="menu-link {{ menu(uri, path('app_router_index')) }}" href="{{ path('app_router_index') }}">
-                                    <span class="menu-icon">
-                                       <i class="bi bi-hdd-network fs-3"></i>
-                                    </span>
-                                    <span class="menu-title">{{ "Routes" | trans }}</span>
-                                </a>
-                            </div>
-                            {% endif %}
-                            {% if permission(["STUT0"], app.user) %}
+                            {% if permission(["MET0", "PAY0"], app.user, false) %}
                              <div class="menu-item">
-                                <a class="menu-link {{ menu(uri, path('app_status_index')) }}" href="{{ path('app_status_index') }}">
+                                <a class="menu-link {{menu(uri, path('app_payment_index')) }}" href="{{ path('app_payment_index') }}">
                                     <span class="menu-icon">
-                                        <i class="bi bi-arrow-repeat fs-3"></i>
+                                        <!--begin::Svg Icon | path: icons/stockholm/Design/PenAndRuller.svg-->
+                                        <i class="bi bi-coin fs-3"></i>
+                                        <!--end::Svg Icon-->
                                     </span>
-                                    <span class="menu-title">{{ "Statuts" | trans }}</span>
+                                    <span class="menu-title">{{ 'Paiements' | trans }} </span>
                                 </a>
                             </div>
                             {% endif %}
-                            {% if permission(["OPRT0"], app.user) %}
-                             <div class="menu-item">
-                                <a class="menu-link {{ menu(uri, path('app_operator_index')) }}" href="{{ path('app_operator_index') }}">
-                                    <span class="menu-icon">
-                                        <i class="bi bi-phone-fill fs-3"></i>
-                                    </span>
-                                    <span class="menu-title">{{ "Opérateur GSM" | trans }}</span>
-                                </a>
-                            </div>
-                            {% endif %}
-                             {% if permission(["ROL0", "UTI0", "AFFL0", "PER0"], app.user, false) %}
+                            {% if permission(["ROL0", "UTI0", "AFFL0", "PER0"], app.user, false) %}
                             <div class="menu-item">
-                                <div class="menu-content pt-8 pb-2">
+                                <div class="menu-content pt-4 pb-2">
                                     <span class="menu-section text-muted text-uppercase fs-8 ls-1">{{ 'Gestion Utilisateurs' | trans }}</span>
                                 </div>
                             </div>
@@ -274,9 +278,47 @@
                             </div>
                             {% endif %}
 
+                            {% if permission(["CFIG0", "ROUT0", "ROL0"], app.user, false) %}
+                            <div class="menu-item">
+                                <div class="menu-content pt-4 pb-2">
+                                    <span class="menu-section text-muted text-uppercase fs-8 ls-1">{{ 'Congiguration' | trans }}</span>
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% if permission(["ROUT0"], app.user) %}
+                            <div class="menu-item">
+                                <a class="menu-link {{ menu(uri, path('app_router_index')) }}" href="{{ path('app_router_index') }}">
+                                    <span class="menu-icon">
+                                       <i class="bi bi-hdd-network fs-3"></i>
+                                    </span>
+                                    <span class="menu-title">{{ "Routes" | trans }}</span>
+                                </a>
+                            </div>
+                            {% endif %}
+                            {% if permission(["STUT0"], app.user) %}
+                             <div class="menu-item">
+                                <a class="menu-link {{ menu(uri, path('app_status_index')) }}" href="{{ path('app_status_index') }}">
+                                    <span class="menu-icon">
+                                        <i class="bi bi-arrow-repeat fs-3"></i>
+                                    </span>
+                                    <span class="menu-title">{{ "Statuts" | trans }}</span>
+                                </a>
+                            </div>
+                            {% endif %}
+                            {% if permission(["OPRT0"], app.user) %}
+                             <div class="menu-item">
+                                <a class="menu-link {{ menu(uri, path('app_operator_index')) }}" href="{{ path('app_operator_index') }}">
+                                    <span class="menu-icon">
+                                        <i class="bi bi-phone-fill fs-3"></i>
+                                    </span>
+                                    <span class="menu-title">{{ "Opérateur GSM" | trans }}</span>
+                                </a>
+                            </div>
+                            {% endif %}
+
                             {% if permission(["TRAN0"], app.user) %}
                                 <div class="menu-item">
-                                    <div class="menu-content pt-8 pb-2">
+                                    <div class="menu-content pt-4 pb-2">
                                         <span class="menu-section text-muted text-uppercase fs-8 ls-1">{{ 'Comptabilité' | trans }}</span>
                                     </div>
                                 </div>
@@ -289,6 +331,7 @@
                                     </a>
                                 </div>
                             {% endif %}
+
                             {% if permission(["COMM0"], app.user) %}
                                 <div class="menu-item">
                                     <a class="menu-link {{ menu(uri, path('app_commission_index')) }}" href="{{ path('app_commission_index') }}">
@@ -301,7 +344,7 @@
                             {% endif %}
                             {% if permission(["DEV0", "DEV1", "DEV2"], app.user, false) %}
                             <div class="menu-item">
-                                <div class="menu-content pt-8 pb-2">
+                                <div class="menu-content pt-4 pb-2">
                                     <span class="menu-section text-muted text-uppercase fs-8 ls-1">{{ 'Développeur & API' | trans }}</span>
                                 </div>
                             </div>
@@ -319,7 +362,7 @@
                             </div>
                             {% endif %}
                             <div class="menu-item">
-                                <div class="menu-content pt-8 pb-2">
+                                <div class="menu-content pt-4 pb-2">
                                     <span class="menu-section text-muted text-uppercase fs-8 ls-1">{{ 'Session' | trans }}</span>
                                 </div>
                             </div>
@@ -360,7 +403,6 @@
                 </div>
                 {% endif %}
                 <!--end::Footer-->
-
             </div>
             <!--end::Aside-->
             <!--begin::Wrapper-->
@@ -439,14 +481,14 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div data-kt-menu-trigger="click" data-kt-menu-placement="bottom-start" class="menu-item menu-lg-down-accordion me-lg-1"> 
+                                        <div data-kt-menu-trigger="click" data-kt-menu-placement="bottom-start" class="menu-item menu-lg-down-accordion me-lg-1">
                                             <span class="menu-link py-3"> {#app.user.price[app.user.country.code].price#}
-                                                <span class="menu-title"> {{"Crédit SMS"|upper}} : &ensp; 
-                                                <strong> 
-                                                {% if app.user.price != [] %} 
-                                                    {{ (app.user.balance / 12 )|round}}  
+                                                <span class="menu-title"> {{"Crédit SMS"|upper}} : &ensp;
+                                                <strong>
+                                                {% if app.user.price != [] %}
+                                                    {{ (app.user.balance / 12 )|round}}
                                                 {% else %}
-                                                    0 
+                                                    0
                                                 {% endif %} </strong> &ensp; SMS </span>
                                                 <span class="menu-arrow d-lg-none"></span>
                                             </span>
@@ -634,7 +676,7 @@
                                 </div>
                                 <!--end::Filter menu-->
                                 <!--begin::Primary button-->
-                                <a href="{{ path('campaign_sms') }}" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_create_campaign">{% trans %}Nouvel Campagne{% endtrans %}</a>
+                                <a href="{{ path('campaign_sms_view_created') }}" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_create_campaign">{% trans %}Nouvel Campagne{% endtrans %}</a>
                                 <!--end::Primary button-->
                             </div>
                             <!--end::Actions-->
@@ -714,6 +756,7 @@
     <!--end::Modals-->
     <!--begin::Global Javascript Bundle(used by all pages)-->
     <script src="{{ asset('app/plugins/global/plugins.bundle.js') }}"></script>
+	<script type="text/javascript" src="{{ asset('app/plugins/custom/datatables/datatables.bundle.js') }}"></script>
     <script src="{{ asset('app/js/scripts.bundle.js') }}"></script>
     <script src="{{ asset('librairies/intl/build/js/intlTelInput.min.js') }}"></script>
     <!-- begin::moment -->
@@ -723,8 +766,9 @@
     <script src="{{ asset('app/js/queries/app-theme-mode.js') }}"></script>
     <script src="{{ asset('app/js/queries/general.js') }}"></script>
     <script>
-        const user_avatar_link  = "{{ asset('app/uploads/avatars/_1_') }}";
+        const user_avatar_link      = "{{ asset('app/uploads/avatars/_1_') }}";
         const user_brand_logo_link  = "{{ asset('app/uploads/brands/logos/_1_') }}";
+        const country_flag_link     = "{{ asset('app/media/flags/_1_.svg') }}";
     </script>
     <!--end::Global Javascript Bundle-->
     {% include 'translations/global.html.twig' %}

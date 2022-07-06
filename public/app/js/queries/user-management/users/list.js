@@ -201,7 +201,7 @@ var KTUsersList = function() {
                     }, {
                         targets: 1,
                         render: function(data, type, full, meta) {
-                           return '<img src="'+window.location.origin+'/app/media/flags/'+data+'.svg" class="rounded-circle me-2"  style="height:19px;" alt="'+data+'" />'+data
+                           return '<img src="'+country_flag_link.replace("_1_", data)+'" class="rounded-circle me-2"  style="height:19px;" alt="'+data+'" />'+data
                         },
 
                     },
