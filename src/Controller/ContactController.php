@@ -211,22 +211,29 @@ class ContactController extends AbstractController
 		if(is_numeric($A1)) $start = 0; else if(is_numeric($A2)) $start = 1;
 
         if($start == -1)    return $this->services->msg_error($this->intl->trans("Echec d'importation de contact:Mauvais formatage de fichier."),$this->intl->trans("Votre fichier a été mal conçu pour l'importation.Veuillez revoir le contenu du fichier et réessayez."));
+        
+        $tabCheck =   [];
 
         for($row = $start; $row < count($worksheet); $row++)
         {
-            $contact    = new Contact;
+            $check = trim($worksheet[$row][0]).trim($worksheet[$row][1]).trim($worksheet[$row][2]).trim($worksheet[$row][3]).trim($worksheet[$row][4]).trim($worksheet[$row][5]);
+            if (!in_array($check,$tabCheck)) {
+
+                $contact    = new Contact;
             
-            $contact->setUid(uniqid())
-                ->setContactGroup($group)
-                ->setPhone("+".str_replace("+","",$worksheet[$row][0]))
-                ->setField1($worksheet[$row][1])
-                ->setField2($worksheet[$row][2])
-                ->setField3($worksheet[$row][3])
-                ->setField4($worksheet[$row][4])
-                ->setField5($worksheet[$row][5])
-                ->setIsImported(1)
-                ->setCreatedAt(new \DateTimeImmutable());
-                $this->contactRepository->add($contact);
+                $contact->setUid(uniqid())
+                    ->setContactGroup($group)
+                    ->setPhone("+".str_replace("+","",$worksheet[$row][0]))
+                    ->setField1($worksheet[$row][1])
+                    ->setField2($worksheet[$row][2])
+                    ->setField3($worksheet[$row][3])
+                    ->setField4($worksheet[$row][4])
+                    ->setField5($worksheet[$row][5])
+                    ->setIsImported(1)
+                    ->setCreatedAt(new \DateTimeImmutable());
+                    $this->contactRepository->add($contact);
+            }
+            $tabCheck[] = $check;
         } 
 
         return $this->services->msg_success($this->intl->trans("Importation de contacts effectué avec succès"),$this->intl->trans("Importation de contacts effectué avec succès"));
