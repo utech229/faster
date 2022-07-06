@@ -101,6 +101,10 @@ class RegistrationController extends AbstractController
             $user->setUid(time().uniqid());
             $user->setPostPay(0);
             $user->setIsDlr(0);
+            $user->setCountry($countryDatas);
+            $user->setPrice([
+                $countryDatas['code'] => $priceDatas,
+            ]);
             $user->setRole($entityManager->getRepository(Role::Class)->findOneById(1));
             $user->setProfilePhoto("default_avatar_1.png");
             $user->setRoles(['ROLE_USER']);
