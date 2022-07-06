@@ -35,7 +35,7 @@ class CommissionController extends AbstractController
         $this->baseUrl         = $baseUrl;
         $this->em	           = $entityManager;
 
-        $this->permission      =    ["COMM0", "COMM1", "COMM2","BRND1"];
+        $this->permission      =    ["COMM0", "COMM1", "COMM2","RES5"];
         $this->pAccess         =    $this->services->checkPermission($this->permission[0]); //Accéder au menu commission par branche
         $this->pView           =    $this->services->checkPermission($this->permission[1]); //Voir sa commission par branche
         $this->pAllView        =    $this->services->checkPermission($this->permission[2]); //Voir toutes commissions par branche
