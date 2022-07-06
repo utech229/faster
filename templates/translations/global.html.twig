@@ -5,6 +5,7 @@
 		const _locale              	  = "{{ app.request.locale|default('fr') }}";
 		const _route              	  = "{{ app.request.attributes.get('_route') }}";
 		const _uri              	  = "{{ app.request.requestUri }}";
+		const _base_url               = "{{ app.request.schemeAndHttpHost }}";
 		{#const ajaxBaseUrl			  = "{{app.request.schemeAndHttpHost ~ "/" ~ app.request.locale|default('fr') }}";#}
 
 		// Ajax Error

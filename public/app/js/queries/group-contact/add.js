@@ -65,9 +65,13 @@ var KTAddGroup = function() {
                                     n.hide();
                                     if(importContact == 1 ){
                                         importContact =0;
+                                        let user = $('#list_user_contact_id').val(), uid = response.data.uid;
+                                        $('#list_user_contact_id').val(user).trigger("change");
+                                        setTimeout(() => {
+                                        $('#id_group_contact_import').val(uid).change();
                                         $("#kt_modal_import_contacts").modal("show");
+                                        }, 1000);
                                     }
-
                                 }
                             },
                             error: function () { 

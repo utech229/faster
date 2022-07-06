@@ -175,6 +175,7 @@
                                     </div>
                                 {% endif %}
                             {% endif %}
+                            {% if permission(["BRND0"], app.user) %}
                             <div class="menu-item">
                                 <div class="menu-content pt-4 pb-2">
                                     <span class="menu-section text-muted text-uppercase fs-8 ls-1">{{ 'Marque de revente' | trans }}</span>
@@ -190,6 +191,7 @@
                                     <span class="menu-title">{{ 'Marque' | trans }} </span>
                                 </a>
                             </div>
+                            {% endif %}
                             {% if permission(["REC0", "MET0", "PAY0",], app.user, false) %}
                             <div class="menu-item">
                                 <div class="menu-content pt-4 pb-2">
@@ -764,8 +766,9 @@
     <script src="{{ asset('app/js/queries/app-theme-mode.js') }}"></script>
     <script src="{{ asset('app/js/queries/general.js') }}"></script>
     <script>
-        const user_avatar_link  = "{{ asset('app/uploads/avatars/_1_') }}";
+        const user_avatar_link      = "{{ asset('app/uploads/avatars/_1_') }}";
         const user_brand_logo_link  = "{{ asset('app/uploads/brands/logos/_1_') }}";
+        const country_flag_link     = "{{ asset('app/media/flags/_1_.svg') }}";
     </script>
     <!--end::Global Javascript Bundle-->
     {% include 'translations/global.html.twig' %}

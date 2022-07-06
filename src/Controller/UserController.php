@@ -16,6 +16,7 @@ use App\Repository\RoleRepository;
 use App\Repository\UserRepository;
 use App\Repository\BrandRepository;
 use App\Repository\StatusRepository;
+use App\Repository\UsettingRepository;
 use App\Repository\PermissionRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\AuthorizationRepository;
@@ -39,7 +40,7 @@ class UserController extends AbstractController
     public function __construct(BaseUrl $baseUrl, UrlGeneratorInterface $urlGenerator, Services $services, BrickPhone $brickPhone,  
     EntityManagerInterface $entityManager, TranslatorInterface $translator,
     RoleRepository $roleRepository, UserRepository $userRepository, PermissionRepository $permissionRepository,
-    AuthorizationRepository $authorizationRepository, uBrand $brand,ValidatorInterface $validator,
+    AuthorizationRepository $authorizationRepository, uBrand $brand,ValidatorInterface $validator, UsettingRepository $usettingRepository,
     DbInitData $dbInitData, AddEntity $addEntity, StatusRepository $statusRepository, BrandRepository $brandRepository)
     {
         $this->baseUrl         = $baseUrl;
@@ -51,6 +52,7 @@ class UserController extends AbstractController
         $this->em	           = $entityManager;
         $this->addEntity	   = $addEntity;
         $this->userRepository  = $userRepository;
+        $this->usettingRepository  = $usettingRepository;
         $this->roleRepository    = $roleRepository;
         $this->statusRepository  = $statusRepository;
         $this->brandRepository  = $brandRepository;
@@ -170,7 +172,6 @@ class UserController extends AbstractController
             );
             
             $currentUser   = $this->getUser(); //connected user
-
             //user data setting
             $user->setBrand($brand);
             $user->setBalance(100);
@@ -200,7 +201,6 @@ class UserController extends AbstractController
         }
         else 
         {
-            //return $this->services->invalidForm($form, $this->intl);
             return $this->services->formErrorsNotification($this->validator, $this->intl, $user);
         }
         return $this->services->failedcrud($this->intl->trans("Création d'un nouvel utilisateur : "  .$user->getEmail()));
@@ -350,8 +350,9 @@ class UserController extends AbstractController
             $this->intl->trans("Vous ne pouvez pas supprimer cet utilisateur car il s'agit de l'administrateur de la marque active"),
         );
 
-        //$user->setStatus($this->services->status(3));
+      
         $this->userRepository->remove($user);
+        $this->usettingRepository->remove($user->getUsetting());
         return $this->services->msg_success(
             $this->intl->trans("Suppression de l'utilisateur ").$user->getEmail(),
             $this->intl->trans("Utilisateur supprimé avec succès").' : '.$user->getEmail(),

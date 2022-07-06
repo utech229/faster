@@ -108,23 +108,21 @@ var KTGroupList = function() {
                                     },
                                 })
                             }
-
-                          
                         }
                         else{
-                            "cancel" === t.dismiss && $(document).trigger('onAjaxInfo');
+                            "cancel" === t.dismiss;
                         }
                        
                     }))
                 })),
                 campaign.addEventListener("click", (function() {
                     Swal.fire({
-                        text: "Vous serez rédiriger vers la page de création de campagne",
+                        text: _redirect,
                         icon: "warning",
                         showCancelButton: !0,
                         buttonsStyling: !1,
                         confirmButtonText: _Form_Ok_Swal_Button_Text_Notification,
-                        cancelButtonText: "Annuler",
+                        cancelButtonText: _canceled,
                         customClass: {
                             confirmButton: "btn fw-bold btn-primary",
                             cancelButton: "btn fw-bold btn-danger"
@@ -138,9 +136,9 @@ var KTGroupList = function() {
                                             tabUid.push($(t).attr("data-value"));
                                         }
                             }));
-                            user == "alls" ? 
+                            user == "all" ? 
                             Swal.fire({
-                                text: "Veuillez sélectionner spécifiquement un utilisateur et non <<tous>> au niveau de la sélection des utilisateurs",
+                                text: _selectOneUser,
                                 icon: "info",
                                 buttonsStyling: !1,
                                 confirmButtonText: _Form_Ok_Swal_Button_Text_Notification,
@@ -151,7 +149,7 @@ var KTGroupList = function() {
                             window.location.assign(url_campaign+'?grps='+tabUid+'&user='+user);
                         }
                         else{
-                            "cancel" === t.dismiss && $(document).trigger('onAjaxInfo');
+                            "cancel" === t.dismiss ;
                         }
                        
                     }))
@@ -304,9 +302,15 @@ var KTGroupList = function() {
                                         <i id=`+data+` class="text-danger fa fa-trash-alt"></i>
                                 </button>
                                 <!--end::Delete-->`;
+                                var createCampaign =  `<!--begin::Campaign-->
+                                <button class="btn btn-icon btn-active-light-primary w-30px h-30px create-campaign" 
+                                    data-id=`+data+` >
+                                        <i id=`+data+` class="text-primary far fa-paper-plane"></i>
+                                </button>
+                                <!--end::Campaign-->`;
                                 // updaterIcon = (pEditUser) ? updaterIcon : '' ;
                                 // deleterIcon = (pDeleteUser) ? deleterIcon : '' ;
-                                return updaterIcon + deleterIcon;
+                                return updaterIcon + deleterIcon + createCampaign; 
                             }
                         }
                         
@@ -365,5 +369,44 @@ $(document).on('click', ".groupUpdater", function(e)
     $("#group_set5").val(tabUpdateGroup[uid][6]);
 
     $('#kt_modal_update_contact_group').modal('show');
+
+});
+
+$(document).on('click', ".create-campaign", function(e) 
+{
+    var uid = $(this).data('id');
+    Swal.fire({
+        html: _redirect,
+        icon: "warning",
+        showCancelButton: !0,
+        buttonsStyling: !1,
+        confirmButtonText: _Form_Ok_Swal_Button_Text_Notification,
+        cancelButtonText: _canceled,
+        customClass: {
+            confirmButton: "btn fw-bold btn-primary",
+            cancelButton: "btn fw-bold btn-danger"
+        }
+    }).then((function(t) {
+        if (t.value) {
+            let user = document.querySelector('[data-kt-contact-group="user"]').value;
+            
+            user == "all" ? 
+            Swal.fire({
+                html: _selectOneUser,
+                icon: "warning",
+                buttonsStyling: !1,
+                confirmButtonText: _Form_Ok_Swal_Button_Text_Notification,
+                customClass: {
+                    confirmButton: "btn fw-bold btn-primary"
+                }
+            })  :
+            window.location.assign(url_campaign+'?grps='+uid+'&user='+user);
+        }
+        else{
+            "cancel" === t.dismiss ;
+        }
+       
+    }))
+
 
 });

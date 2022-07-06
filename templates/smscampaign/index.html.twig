@@ -181,9 +181,11 @@
 									<select id="status" class="form-select form-select-solid fw-bolder" data-placeholder="{{'Statut des identifiants' | trans}}">
 										{# data-allow-clear="true" data-control="select2"  #}
 										<option value="">{{"Tous"|trans}}</option>
-										{% for oneStatus in status %}
-											<option value="{{ oneStatus.uid }}">{{ oneStatus.name }}</option>
-										{% endfor %}
+										{% if status is not defined %}
+											{% for oneStatus in status %}
+												<option value="{{ oneStatus.uid }}">{{ oneStatus.name }}</option>
+											{% endfor %}
+										{% endif %}
 									</select>
 								</div>
 								<div class="col-6">

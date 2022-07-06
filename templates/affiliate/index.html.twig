@@ -36,6 +36,7 @@
                     <div class="card-toolbar">
                         <!--begin::Toolbar-->
                         <div class="d-flex justify-content-end" data-kt-affiliate-table-toolbar="base">
+                            {% if app.user.affiliateManager is null %}
                             <!--begin::Filter-->
                             <button type="button" class="btn btn-light-primary me-3" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
                             <!--begin::Svg Icon | path: icons/duotune/general/gen031.svg-->
@@ -79,6 +80,7 @@
                             </div>
                             <!--end::Menu 1-->
                             <!--end::Filter-->
+                            {% endif %}
                             <!--begin::Export-->
                             <button type="button" id="export" class="btn btn-light-primary me-3">
                             <!--begin::Svg Icon | path: icons/duotune/arrows/arr078.svg-->

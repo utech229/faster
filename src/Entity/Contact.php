@@ -24,7 +24,7 @@ class Contact
     #[ORM\Column(type: 'boolean')]
     private $isImported;
 
-    #[ORM\Column(type: 'array')]
+    #[ORM\Column(type: 'array',nullable: true)]
     private $phoneCountry = [];
 
     #[ORM\Column(type: 'datetime_immutable')]

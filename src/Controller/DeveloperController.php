@@ -80,14 +80,16 @@ class DeveloperController extends AbstractController
                 return $this->services->no_access($this->intl->trans("Régénération de la clé api"));
 
             $newapikey   =  bin2hex(random_bytes(32));  
+
             if ($user->getAffiliateManager()) {
+                
                 $aff_manager = $user->getAffiliateManager();
 
                 $aff_manager->setApiKey($newapikey);
                 $aff_manager->setUpdatedAt(new \DatetimeImmutable());
                 $this->userRepository->add($aff_manager);
 
-                $affiliates  = $this->userRepository->findBy(['affiliateManager' => $user]);
+                $affiliates  = $this->userRepository->findBy(['affiliateManager' => $aff_manager]);
                 foreach ($affiliates as $affiliate) {
                     $affiliate->setApiKey($newapikey);
                     $affiliate->setUpdatedAt(new \DatetimeImmutable());
