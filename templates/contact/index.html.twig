@@ -1117,7 +1117,6 @@
                                                     
                                             </select>
                                 {% else %}
-                                            <label class="form-label fs-6 fw-bold">{% trans %}Groupe de contacts{% endtrans %}</label>
                                             <select name="group" id="id_group_contact_import" data-allow-clear="true" data-control="select2" data-dropdown-parent="#kt_modal_import_contacts" class="form-select form-select-solid fw-bolder " data-placeholder="{{'Selectionnez un groupe'| trans}}"/>
                                                     <option value="">Sélectionnez un groupe</option>
                                                     {% for group in groups %}
