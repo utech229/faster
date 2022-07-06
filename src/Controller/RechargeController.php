@@ -429,7 +429,7 @@ class RechargeController extends AbstractController
         }
         // dd($this->pAllAccess, $userSelect, $this->getUser());
         // dd($allRecharges);
-        $data = [];
+        $data = []; $amountPending = $amountApproved = $amountRejected = 0;
         if($allRecharges){
             foreach($allRecharges as $getRecharge){
                 $row               = array();
@@ -445,11 +445,17 @@ class RechargeController extends AbstractController
                                         'uid'    =>  $getRecharge->getUid(),
                                         'status' => $getRecharge->getStatus()->getCode()
                 ];
+                switch($getRecharge->getStatus()->getCode()){
+                    case 2: $amountPending  += $getRecharge->getTransaction()->getAmount();break;
+                    case 6: $amountApproved += $getRecharge->getTransaction()->getAmount(); break;
+                    default: $amountRejected+= $getRecharge->getTransaction()->getAmount(); break;
+                }
                 $data[]           = $row;
             }
+            // dd($amountPending, $data);
         }
         $this->services->addLog($this->intl->trans('Lecture de la liste des recharges'));
-        $output = array("data" => $data);
+        $output = array("data" => $data, "amountP"=>$amountPending, "amountA"=>$amountApproved, "amountR"=>$amountRejected);
         return new JsonResponse($output);
 
     }

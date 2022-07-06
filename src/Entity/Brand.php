@@ -72,6 +72,9 @@ class Brand
     #[ORM\OneToOne(targetEntity: Sender::class, cascade: ['persist', 'remove'])]
     private $defaultSender;
 
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $observations;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
@@ -312,6 +315,18 @@ class Brand
     public function setDefaultSender(?Sender $defaultSender): self
     {
         $this->defaultSender = $defaultSender;
+
+        return $this;
+    }
+
+    public function getObservations(): ?string
+    {
+        return $this->observations;
+    }
+
+    public function setObservations(?string $observations): self
+    {
+        $this->observations = $observations;
 
         return $this;
     }

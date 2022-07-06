@@ -5,6 +5,7 @@ const SenderManager = function(){
 	elSenderModal = document.querySelector("#modal_sender"),
 	senderModal = new bootstrap.Modal(elSenderModal),
 	senderForm = elSenderModal.querySelector("#form_sender"),
+	titleSenderModal = elSenderModal.querySelector("#title"),
 	cancelSenderForm = senderForm.querySelector("#cancel"),
 	submitSenderForm = senderForm.querySelector("#submit"),
 	filter = document.querySelector("#menu-filter"), // filter : selecteur du div contenant les champs du filtre
@@ -155,6 +156,7 @@ const SenderManager = function(){
 				$(el).off("click", "#update");
 				$(el).on("click", "#update", ($this)=>{
 					$this.preventDefault();
+					$(titleSenderModal).html(updateTitle)
 					resetSenderForm();
 					fillingSenderForm($this.target);
 					senderModal.show();
@@ -235,6 +237,7 @@ const SenderManager = function(){
 
 			$("#add_sender").on("click", ($this)=>{
 				$this.preventDefault();
+				$(titleSenderModal).html(addTitle)
 				$(senderForm).attr("action",url_new);
 				resetSenderForm()
 				senderModal.show()

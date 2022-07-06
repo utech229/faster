@@ -26,6 +26,9 @@ class FilterController extends AbstractController
        $this->intl          = $intl;
        $this->src           = $src;
        $this->em            = $em;
+	   $this->status		= [
+		   $src->status(3)
+	   ];
     }
 
     #[Route('/user/get', name: 'filter_user', methods: ['POST'])]
@@ -77,7 +80,7 @@ class FilterController extends AbstractController
 
         if(!$user) return new JsonResponse($data);
 
-        $senders = $this->em->getRepository(Sender::class)->findByManager($user);
+        $senders = $this->em->getRepository(Sender::class)->findBy(["manager"=>$user, "status"=>$this->status]);
 
         foreach ($senders as $key => $sender) {
             $data["results"][] = [
@@ -106,7 +109,7 @@ class FilterController extends AbstractController
 
         if(!$user) return new JsonResponse($data);
 
-        $senders = $this->em->getRepository(Sender::class)->findByManager($user);
+        $senders = $this->em->getRepository(Sender::class)->findBy(["manager"=>$user, "status"=>$this->status]);
 
         foreach ($senders as $key => $sender) {
             $data["results"][] = [

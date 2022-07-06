@@ -1,5 +1,7 @@
 {% extends 'base.app.html.twig' %}
 
+{% block title %}{{"Mes expéditeurs"|trans}} - {{brand.name}}{% endblock %}
+
 {% block body %}
 <!--begin::Post-->
 <div class="post d-flex flex-column-fluid" id="kt_post">
@@ -154,7 +156,7 @@
 					<!--begin::Modal header-->
 					<div class="modal-header">
 						<!--begin::Modal title-->
-						<h2 class="fw-bolder" id="title">{% trans %}Nouvel status{% endtrans %}</h2>
+						<h2 class="fw-bolder" id="title"></h2>
 						<!--end::Modal title-->
 						<!--begin::Close-->
 						<div class="btn btn-icon btn-sm btn-active-icon-primary" id="close">
@@ -278,6 +280,9 @@
 	const _token	= "{{ csrf_token("sender") }}",
 	filter_token	= "{{ csrf_token("") }}",
 	userType		= {{userType}};
+
+	const addTitle	= "{{"Créer un expéditeur"|trans}}",
+	updateTitle		= "{{"Modifier un expéditeur"|trans}}";
 
 	const brandInit = {% if brands|length == 1 %} "{{brands[0].uid}}" {% else %} false {% endif %},
 	userInit = {% if users|length == 1 %} "{{users[0].uid}}" {% else %} false {% endif %};

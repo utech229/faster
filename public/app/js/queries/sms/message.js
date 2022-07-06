@@ -98,6 +98,8 @@ const SMSMewMessageManager = function(){
 				$(true_message).val(countMessageCaracts(message, "#countThree"))
 			})
 
+			$("#message_form #clear").on("click", ()=>{$("#message_form #datetime_message").val("")})
+
 			$(document).on("submit", "#message_form", ($this)=>{
 				$this.preventDefault();
 				btnAnimation(btnSubmit, true);
