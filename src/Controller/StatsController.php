@@ -98,7 +98,8 @@ class StatsController extends AbstractController
 	#[Route('/get', name: 'message_sms_stats_get', methods: ['GET', 'POST'])]
 	public function listen(Request $request)
 	{
-		$session = $this->getUser();
+		$session		= $this->getUser();
+		$allMessages	= [];
 
 		if(!$this->pAccess) return $this->src->no_access($this->intl->trans("Acces refusé à la récupération du statistique des messages"));
 
@@ -113,88 +114,6 @@ class StatsController extends AbstractController
 		$uidStatus  = $request->request->get("status");
 		$periode    = $request->request->get("periode");
 
-		$status     = $this->em->getRepository(Status::class)->findOneByUid($uidStatus);
-
-		list($userType, $masterId, $userRequest) = $this->src->checkThisUser($this->pList);
-
-		if($from == "campaign")
-		{
-			$campaign = $this->em->getRepository(SMSCampaign::class)->findOneByUid($of);
-
-			if(
-				!$campaign
-				|| ($userType == 1 && $masterId != $campaign->getManager()->getAccountManager()->getId())
-				|| (($userType == 2 || $userType == 3) && $masterId != $campaign->getManager()->getBrand()->getManager()->getId())
-				|| (($userType == 4 || $userType == 5) && $masterId != $campaign->getManager()->getId())
-			) return $this->src->msg_error(
-				$this->intl->trans("Récupération des messages de la campagne %1%. Erreur dans la requête.", ["%1%"=>$from]),
-				$this->intl->trans("Aucune données trouvées."),
-				[]
-			);
-
-			$campaignFile = $this->em->getRepository(SMSMessageFile::class)->findOneByCampaign($campaign);
-
-			if(!$campaignFile) return $this->src->msg_error(
-				$this->intl->trans("Fichier de la campagne %1% n'existe pas dans la base de données.", ["%1%"=>$campaign->getUid()]),
-				$this->intl->trans("Cette campagne n'est plus utilisable. Veuillez créer une autre."),
-				[],
-			);
-
-			if(!is_file($campaignFile->getUrl())) return $this->src->msg_error(
-				$this->intl->trans("Fichier de la campagne %1% introuvable.", ["%1%"=>$campaign->getUid()]),
-				$this->intl->trans("Cette campagne n'est plus utilisable. Veuillez créer une autre."),
-				[],
-			);
-
-			$messages = json_decode(file_get_contents($campaignFile->getUrl()), true);
-
-			$currency = ($campaign->getManager()->getUsetting()->getCurrency())["code"];
-
-			$data = [];
-			$key = 0;
-			foreach ($messages as $message) {
-				$myStatus = $this->status[(string)$message["status"]];
-				//$sendingAt = (new \DateTime($message["sendingAt"]))->setTimezone(new \DateTimeZone($message["timezone"]));
-				if(!$status || $status == $myStatus)
-				{
-					$data[$key][] = $message["phone"];
-					$data[$key][] = $message["sender"];
-					$data[$key][] = $message["sendingAt"];
-					$data[$key][] = [
-						"code"=>$myStatus->getCode(),
-						"label"=>$myStatus->getLabel(),
-						"name"=>$myStatus->getName(),
-						"uid"=>$myStatus->getUid(),
-					];
-					$data[$key][] = $message["pages"];
-					$data[$key][] = $message["phoneCountry"];
-					$data[$key][] = $message["message"];
-					$data[$key][] = null;
-
-					$key++;
-				}
-			}
-
-			return $this->src->msg_success(
-				$this->intl->trans("Récupération des messages de la campagne %1%.", ["%1%"=>$from]),
-				"",
-				[
-					"table"=>$data,
-					"permission"=>[
-						"pAccess"=>$this->pAccess,
-						"pCreate"=>$this->pCreate,
-						"pList"=>$this->pList,
-						"pEdit"=>$this->pEdit,
-						"pDelete"=>$this->pDelete,
-					]
-				],
-			);
-		}
-
-		$messages = [];
-		$request_messages = [];
-
-		// $today = new \DateTime();
 		switch ($periode) {
 			case '1m': $lastday = new \DateTime('-1 month'); break;
 			case '3m': $lastday = new \DateTime('-3 month'); break;
@@ -202,26 +121,71 @@ class StatsController extends AbstractController
 			default: $lastday = new \DateTime('-1 week'); break;
 		}
 
+		$request_campaigns = [];
+
 		$brand = ($uidBrand !== "") ? $this->em->getRepository(Brand::class)->findOneByUid($uidBrand) : null;
-		if($brand) $request_messages["brand"] = $brand->getId();
+		if($brand) $request_campaigns["brand"] = $brand->getId();
 
 		$user_manage = ($uidManager !== "") ? $this->em->getRepository(User::class)->findOneByUid($uidManager) : null;
-		if($user_manage) $request_messages["manager"] = $user_manage->getId();
+		if($user_manage) $request_campaigns["manager"] = $user_manage->getId();
 
-		if($status) $request_messages["status"] = $status->getId();
+		$status = ($uidStatus !== "") ? $this->em->getRepository(Status::class)->findOneByUid($uidStatus) : null;
+		if($status)
+		{
+			$status2 = $this->em->getRepository(Status::class)->findOneByCode(2);
+			if($status->getCode() == 1) $request_campaigns["status"] = [$status->getId(), $status2->getId()];
+			else $request_campaigns["status"] = $status->getId();
+		}
 
-		$campaign = ($of !== "") ? $this->em->getRepository(SMSCampaign::class)->findOneByUid($of) : null;
-		if($campaign) $request_messages["campaign"] = $campaign->getId();
+		if($sender !== "") $request_campaigns["sender"] = $sender;
 
-		if($sender !== "") $request_messages["sender"] = $sender;
+		$request_campaigns["lastday"] = $lastday->format("Y-m-d H:i:sP");
 
-		$request_messages["from"] = ($from == "campaign" || $from == "api") ? $from : null;
+		list($userType, $masterId, $userRequest) = $this->src->checkThisUser($this->pList);
 
-		// $request_messages["today"] = $today->format("Y-m-d H:i:sP");
+		$merge = array_merge($request_campaigns, $userRequest);
 
-		$request_messages["lastday"] = $lastday->format("Y-m-d H:i:sP");
+		$campaigns = $this->em->getRepository(SMSCampaign::class)->userTypeFindBy($userType, $merge);
 
-		$merge = array_merge($request_messages, $userRequest);
+		$data = [];
+
+		foreach ($campaigns as $key => $campaign) {
+			$campaignFile = $this->em->getRepository(SMSMessageFile::class)->findOneByCampaign($campaign);
+
+			if($campaignFile){
+				if(is_file($campaignFile->getUrl())){
+					$messages = json_decode(file_get_contents($campaignFile->getUrl()), true);
+
+					$data = [];
+					$key = 0;
+					foreach ($messages as $message) {
+						$myStatus = $this->status[(string)$message["status"]];
+						if(!$status || $status == $myStatus)
+						{
+							$data[$key][] = $message["phone"];
+							$data[$key][] = $message["sender"];
+							$data[$key][] = $message["sendingAt"];
+							$data[$key][] = [
+								"code"=>$myStatus->getCode(),
+								"label"=>$myStatus->getLabel(),
+								"name"=>$myStatus->getName(),
+								"uid"=>$myStatus->getUid(),
+							];
+							$data[$key][] = $message["pages"];
+							$data[$key][] = $message["phoneCountry"];
+							$data[$key][] = $message["message"];
+
+							$key++;
+						}
+					}
+
+					$merge			= array_merge($allMessages, $data);
+					$allMessages	= $merge;
+				}
+			}
+		}
+
+		$merge = array_merge($request_campaigns, $userRequest);
 
 		$messages = $this->em->getRepository(SMSMessage::class)->userTypeFindBy($userType, $merge);
 
@@ -242,14 +206,16 @@ class StatsController extends AbstractController
 			$data[$key][] = $message->getPages();
 			$data[$key][] = $message->getPhoneCountry();
 			$data[$key][] = $message->getMessage();
-			$data[$key][] = $message->getUid();
 		}
 
+		$merge			= array_merge($allMessages, $data);
+		$allMessages	= $merge;
+
 		return $this->src->msg_success(
-			$this->intl->trans("Récupération des messages %1%.", ["%1%"=>$from]),
+			$this->intl->trans("Récupération des messages pour les statistiques."),
 			"",
 			[
-				"table"=>$data,
+				"table"=>$allMessages,
 				"permission"=>[
 					"pAccess"=>$this->pAccess,
 					"pCreate"=>$this->pCreate,

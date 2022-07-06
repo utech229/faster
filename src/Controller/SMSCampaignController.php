@@ -339,14 +339,14 @@ class SMSCampaignController extends AbstractController
 
 			$this->em->persist($manager);
 
-			$this->sMessage->addRecharge($manager, $myBalance, $amount, 0);
+			$this->src->addBalanceChange($manager, $myBalance, $amount, "Suppression de campagne SMS", $campaign->getUid());
 		}
 
 		$file = $this->em->getRepository(SMSMessageFile::class)->findOneByCampaign($campaign);
 
 		if($file)
 		{
-			unlink($file->getUrl());
+			if(is_file($file->getUrl())) unlink($file->getUrl());
 
 			$this->em->remove($file);
 		}
@@ -1114,7 +1114,7 @@ class SMSCampaignController extends AbstractController
 
 		$this->em->flush();
 
-		return $this->applyEnableCampaign($campaign, $amount);
+		return $this->applyEnableCampaign($campaign, $amountFull);
 	}
 
 	private function campaignByGroupContacts($groups)
@@ -1178,7 +1178,7 @@ class SMSCampaignController extends AbstractController
 		if(is_numeric($A1)) $start = 0; else if(is_numeric($A2)) $start = 1;
 
 		if($start == -1){
-			unlink($fileUrl);
+			if(is_file($fileUrl)) unlink($fileUrl);
 
 			return [];
 		}
@@ -1203,7 +1203,7 @@ class SMSCampaignController extends AbstractController
 		}
 
 		//$spreadsheet->getCell('A1')->getValue();
-		unlink($fileUrl);
+		if(is_file($fileUrl)) unlink($fileUrl);
 
 		return $phonesData;
 	}
@@ -1258,7 +1258,7 @@ class SMSCampaignController extends AbstractController
 			->setUpdatedAt(new \DateTimeImmutable());
 		$this->em->persist($campaign);
 
-		$this->sMessage->addRecharge($user, $lastBalance, 0, $amount);
+		$this->src->addBalanceChange($user, $lastBalance, -$amount, "Lancement de campagne SMS", $campaign->getUid());
 
 		return $this->src->msg_success(
 			$this->intl->trans("La campagne '%1%' passe en %2%.", ["%1%"=>$campaign->getUid(), "%2%"=>$status->getName()]),
@@ -1279,7 +1279,7 @@ class SMSCampaignController extends AbstractController
 			->setUpdatedAt(new \DateTimeImmutable());
 		$this->em->persist($campaign);
 
-		$this->sMessage->addRecharge($user, $lastBalance, $amount, 0);
+		$this->src->addBalanceChange($user, $lastBalance, $amount, ucfirst($status->getName())+" de campagne SMS", $campaign->getUid());
 
 		return $this->src->msg_success(
 			$this->intl->trans("La campagne '%1%' passe en %2%.", ["%1%"=>$campaign->getUid(), "%2%"=>$status->getName()]),

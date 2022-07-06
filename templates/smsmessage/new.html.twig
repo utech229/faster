@@ -37,7 +37,7 @@
                         </label>
                         <!--end::Label-->
                         <!--begin::Input-->
-                        <select name="brand" class="form-select form-select-solid fw-bolder" data-kt-select2="true" data-placeholder="{{"Choisissez la marque"}}" data-allow-clear="true" id="brand_message">
+                        <select name="brand" class="form-select form-select-solid fw-bolder" data-kt-select2="true" data-placeholder="{{"Choisissez la marque"}}" data-allow-clear="true" data-control="select2" data-dropdown-parent='#modal_message' id="brand_message">
                             <option value="">{{"Toutes"|trans}}</option>
                             {% for brand in brands %}
                                 <option value="{{ brand.uid }}" data-select2-avatar="{{asset('app/uploads/brands/logos/' ~ brand.logo)}}" data-select2-alt="{{brand.name}}">{{ brand.name }}</option>
@@ -54,7 +54,7 @@
                         </label>
                         <!--end::Label-->
                         <!--begin::Input-->
-                        <select name="user" class="form-select form-select-solid fw-bolder" data-kt-select2="true" data-placeholder="{{"Choisissez l'utilisateur"}}" data-allow-clear="true" id="user_message">
+                        <select name="user" class="form-select form-select-solid fw-bolder" data-kt-select2="true" data-placeholder="{{"Choisissez l'utilisateur"}}" data-control="select2" data-dropdown-parent='#modal_message' data-allow-clear="true" id="user_message">
                         </select>
                         <!--end::Input-->
                     </div>
@@ -67,7 +67,7 @@
                         </label>
                         <!--end::Label-->
                         <!--begin::Input-->
-                        <select name="sender" class="form-select form-select-solid fw-bolder" data-kt-select2="true" data-placeholder="{{"Choisissez l'expéditeur"}}" data-allow-clear="true" id="sender_message">
+                        <select name="sender" class="form-select form-select-solid fw-bolder" data-kt-select2="true" data-placeholder="{{"Choisissez l'expéditeur"}}" data-control="select2" data-dropdown-parent='#modal_message' data-allow-clear="true" id="sender_message">
                         </select>
                         <!--end::Input-->
                     </div>
@@ -80,7 +80,7 @@
                         </label>
                         <!--end::Label-->
                         <!--begin::Input-->
-                        <select id="type_message" name="type" class="form-select form-select-solid fw-bolder" data-placeholder="{{"Sélectionnez le type du SMS" | trans}}" required>
+                        <select id="type_message" name="type" class="form-select form-select-solid fw-bolder" data-placeholder="{{"Sélectionnez le type du SMS" | trans}}" data-control="select2" data-dropdown-parent='#modal_message' data-hide-search='true' required>
                             <option value="1">{{ "SMS Classique"|trans }}</option>
                             <option value="0">{{ "SMS Flash"|trans }}</option>
                         </select>
@@ -95,7 +95,7 @@
                         </label>
                         <!--end::Label-->
                         <!--begin::Input-->
-                        <select id="timezone_message" name="timezone" data-allow-clear="false" data-control="select2" class="form-select form-select-solid fw-bolder" data-placeholder="{{"Sélectionnez le Fuseau horaire" | trans}}">
+                        <select id="timezone_message" name="timezone" data-allow-clear="false" data-control="select2" class="form-select form-select-solid fw-bolder" data-placeholder="{{"Sélectionnez le Fuseau horaire" | trans}}" data-control="select2" data-dropdown-parent='#modal_message'>
                             <option value="-12:00">(GMT -12:00)</option>
                             <option value="-11:00">(GMT -11:00)</option>
                             <option value="-10:00">(GMT -10:00)</option>

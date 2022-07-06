@@ -6,6 +6,7 @@ use App\Entity\Log;
 use App\Entity\User;
 use App\Entity\Permission;
 use App\Entity\Authorization;
+use App\Entity\Accounting;
 
 use App\Repository\StatusRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -406,5 +407,23 @@ class Services extends AbstractController
 
         } else
         return $image;
+	}
+
+	public function addBalanceChange($user, $lastBalance, $amount, $info = null, $idTrace = null)
+	{
+		$accounting = new Accounting();
+		$accounting->setBeforeBalance($lastBalance)
+			->setAmount($amount)
+			->setAfterBalance($lastBalance + $amount)
+			->setStatus($this->status(3))
+			->setCreatedAt(new \DateTimeImmutable())
+			->setUpdatedAt(null)
+			->setDescription($info)
+			->setIdTrace($idTrace)
+			->setUser($user)
+		;
+		$this->em->persist($accounting);
+		$this->em->flush();
+		return true;
 	}
 }

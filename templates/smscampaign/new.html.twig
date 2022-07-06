@@ -1,7 +1,6 @@
 {% extends 'base.app.html.twig' %}
 
 {% block stylesheets %}
-<link href="{{ asset('app/plugins/custom/datatables/datatables.bundle.css') }}" rel="stylesheet" type="text/css" />
 <style media="screen">
 .rotate-270{
 	-ms-transform: rotate(270deg); /* IE 9 */
@@ -61,7 +60,7 @@
 					<input type="hidden" name="messageText" value=""/>
 					<div class="row g-9">
 						<!--begin::Input group-->
-						<div class="fv-row col-md-6 {% if userType > 3 or statusCode == 0 or statusCode == 5 %}sr-only{% endif %}">
+					<div class="fv-row col-md-6 {% if campaign or userType > 3 or statusCode == 0 or statusCode == 5 %}sr-only{% endif %}">
 							<!--begin::Label-->
 							<label class="fs-7 fw-bolder form-label mb-2 required" for="brand">
 								{{"Marque blanche"|trans}}
@@ -78,7 +77,7 @@
 						</div>
 						<!--end::Input group-->
 						<!--begin::Input group-->
-						<div class="fv-row col-md-6 {% if userType > 3 or statusCode == 0 or statusCode == 5 %}sr-only{% endif %}">
+						<div class="fv-row col-md-6 {% if campaign or userType > 3 or statusCode == 0 or statusCode == 5 %}sr-only{% endif %}">
 							<!--begin::Label-->
 							<label class="fs-7 fw-bolder form-label mb-2 required" for="user">
 								{{"Utilisateur de la marque"|trans}}
@@ -526,7 +525,6 @@
 
 	const statusCode	= {{statusCode}};
 </script>
-<script type="text/javascript" src="{{ asset('app/plugins/custom/datatables/datatables.bundle.js') }}"></script>
 {{ include('smsmessage/new.html.twig', {'brands':brands}) }}
 <script type="text/javascript" src="{{ asset('app/js/queries/sms/messageError.js')}}"></script>
 <script type="text/javascript" src="{{ asset('app/js/queries/sms/campaign.js')}}"></script>

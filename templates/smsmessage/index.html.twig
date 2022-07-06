@@ -1,9 +1,5 @@
 {% extends 'base.app.html.twig' %}
 
-{% block stylesheets %}
-<link href="{{ asset('app/plugins/custom/datatables/datatables.bundle.css') }}" rel="stylesheet" type="text/css" />
-{% endblock %}
-
 {% block body %}
 <!--begin::Post-->
 <div class="post d-flex flex-column-fluid" id="kt_post">
@@ -280,7 +276,6 @@
 {% endblock %}
 
 {% block javascripts %}
-<script type="text/javascript" src="{{ asset('app/plugins/custom/datatables/datatables.bundle.js') }}"></script>
 <script type="text/javascript">
 	const url_user		= "{{path('filter_user')}}",
 	url_sender_names	= "{{path('filter_sender_names')}}",

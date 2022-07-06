@@ -426,7 +426,7 @@ class SMSMessageController extends AbstractController
 		$this->em->persist($smsMessage);
 		$this->em->flush();
 
-		return $this->applyEnableCampaign($message);
+		return $this->applyEnableMessage($message);
 	}
 
 	#[Route('/disable', name: 'message_sms_disable', methods: ['GET','POST'])]
@@ -481,7 +481,7 @@ class SMSMessageController extends AbstractController
 				break;
 		}
 
-		return $this->applyDisableCampaign($message, $this->suspend);
+		return $this->applyDisableMessage($message, $this->suspend);
 	}
 
 	#[Route('/delete', name: 'message_sms_delete', methods: ['GET','POST'])]
@@ -548,7 +548,7 @@ class SMSMessageController extends AbstractController
 
 			$this->em->persist($manager);
 
-			$this->sMessage->addRecharge($manager, $myBalance, $amount, 0);
+			$this->src->addBalanceChange($manager, $myBalance, $amount, "Suppression de message SMS", $message->getUid());
 		}
 
 		$this->em->remove($message);
@@ -614,10 +614,10 @@ class SMSMessageController extends AbstractController
 				break;
 		}
 
-		return $this->applyEnableCampaign($message);
+		return $this->applyEnableMessage($message);
 	}
 
-	private function applyEnableCampaign($message)
+	private function applyEnableMessage($message)
 	{
 		$user	= $message->getManager();
 		$amount	= $message->getMessageAmount();
@@ -644,7 +644,7 @@ class SMSMessageController extends AbstractController
 			->setUpdatedAt(new \DateTimeImmutable());
 		$this->em->persist($message);
 
-		$this->sMessage->addRecharge($user, $lastBalance, 0, $amount);
+		$this->src->addBalanceChange($user, $lastBalance, -$amount, "Lancement de message SMS", $message->getUid());
 
 		return $this->src->msg_success(
 			$this->intl->trans("Le message '%1%' passe en %2%.", ["%1%"=>$message->getUid(), "%2%"=>$status->getName()]),
@@ -652,7 +652,7 @@ class SMSMessageController extends AbstractController
 		);
 	}
 
-	private function applyDisableCampaign($message, $status)
+	private function applyDisableMessage($message, $status)
 	{
 		$user	= $message->getManager();
 		$amount	= $message->getMessageAmount();
@@ -665,7 +665,7 @@ class SMSMessageController extends AbstractController
 			->setUpdatedAt(new \DateTimeImmutable());
 		$this->em->persist($message);
 
-		$this->sMessage->addRecharge($user, $lastBalance, $amount, 0);
+		$this->src->addBalanceChange($user, $lastBalance, $amount, "Suppression de message SMS", $message->getUid());
 
 		return $this->src->msg_success(
 			$this->intl->trans("Le message '%1%' passe en %2%.", ["%1%"=>$message->getUid(), "%2%"=>$status->getName()]),

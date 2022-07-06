@@ -113,9 +113,4 @@ class Message extends AbstractController
 				break;
 		}
 	}
-
-	public function addRecharge($user, $lastBalance, $inAmount, $outAmount)
-	{
-		return true;
-	}
 }
