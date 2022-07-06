@@ -2,21 +2,35 @@
 
 namespace App\Controller;
 
+use App\Service\uBrand;
+use App\Service\Services;
 use Symfony\Component\Mime\Email;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 
 #[Route('/{_locale}/mailer')]
 class MailerController extends AbstractController
 {
+    public function __construct(TranslatorInterface $intl, uBrand $brand, Services $services, EntityManagerInterface $em, sMailer $mailer)
+	{
+		$this->intl			= $intl;
+		$this->brand		= $brand;
+		$this->services			= $services;
+		$this->mailer			= $mailer;
+		$this->em			= $em;
+    }
+
+
     #[Route('/email', name: 'm_send_mail20', methods: ['POST', 'GET'])]
     public function sendEmail20(MailerInterface $mailer): JsonResponse
     {
-        $memail = mail('enockiatk@gmail.com', 'Mon Sujet', '$message');
+        $memail = $this->mailer->sendNative();
         return  new JsonResponse(["data" =>  $memail]);
         /*$email = (new Email())
             ->from('hello@example.com')
