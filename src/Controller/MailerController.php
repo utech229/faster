@@ -27,11 +27,8 @@ class MailerController extends AbstractController
             //->html('<p>See Twig integration for better HTML integration!</p>');
 
         $memail =  $mailer->send($email);
-        return $this->services->msg_success(
-            $this->intl->trans("Mail"),
-            $memail
-        );
-
+        return  new JsonResponse(["data" =>  $memail]);
+    
         // ...
     }
 }
