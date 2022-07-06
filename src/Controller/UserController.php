@@ -315,9 +315,9 @@ class UserController extends AbstractController
             $country             = $user->getCountry();
             $brand               = $user->getBrand();
             $row['orderId']      = $user->getUid();
-            $row['user']         =  [   'name'  => ($usetting->getFirstname()) ? $usetting->getFirstname().' '.$usetting->getLastname() : $this->intl->trans('Non défini'),
-                                        'firstname' => ($usetting->getFirstname()) ? $usetting->getFirstname() : '',
-                                        'lastname'  => ($usetting->getFirstname()) ? $usetting->getLastname() : '', 
+            $row['user']         =  [   'name'  => ($usetting->getFirstname() != null) ? $usetting->getFirstname().' '.$usetting->getLastname() : $this->intl->trans('Non défini'),
+                                        'firstname' => ($usetting->getFirstname()  != null) ? $usetting->getFirstname() : '',
+                                        'lastname'  => ($usetting->getFirstname()  != null) ? $usetting->getLastname() : '', 
                                         'email' => $user->getEmail(), 
                                         'photo' => $user->getProfilePhoto()];
             $row['phone']        = $user->getPhone();
