@@ -83,7 +83,7 @@ var KTSignupGeneral = function() {
                             callback: {
                                 message: _Password_Valid,
                                 callback: function(input) {
-                                    if (input.value.length > 0) {
+                                    if (input.value.length > 1) {
                                         return validatePassword();
                                     }
                                 }
