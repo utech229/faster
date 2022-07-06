@@ -19,11 +19,11 @@
 		{#<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" />#}
 		<!--end::Fonts-->
         <!--begin::Page Vendor Stylesheets(used by this page)-->
-		<link href="{{ asset('app/plugins/custom/datatables/datatables.bundle.css') }}" rel="stylesheet" type="text/css" />
 		<link href="{{ asset('app/plugins/custom/vis-timeline/vis-timeline.bundle.css') }}" rel="stylesheet" type="text/css" />
 		<!--end::Page Vendor Stylesheets-->
 		<!--begin::Global Stylesheets Bundle(used by all pages)-->
 		<link href="{{ asset('app/plugins/global/plugins.bundle.css') }}" rel="stylesheet" type="text/css" />
+		<link href="{{ asset('app/plugins/custom/datatables/datatables.bundle.css') }}" rel="stylesheet" type="text/css" />
 		<link href="{{ asset('app/css/poppins.css?family=Poppins:300,400,500,600,700') }}" rel="stylesheet" type="text/css" />
 		<link href="{{ asset('app/css/style.bundle.css') }}" rel="stylesheet" type="text/css" />
 		<!--end::Global Stylesheets Bundle-->
@@ -185,7 +185,7 @@
                                 <a class="menu-link {{menu(uri, path('brand')) }}" href="{{ path('brand') }}">
                                     <span class="menu-icon">
                                         <!--begin::Svg Icon | path: icons/stockholm/Design/PenAndRuller.svg-->
-                                        <i class="fas fa-copyright fs-3"></i> 
+                                        <i class="fas fa-copyright fs-3"></i>
                                         <!--end::Svg Icon-->
                                     </span>
                                     <span class="menu-title">{{ 'Marque' | trans }} </span>
@@ -756,6 +756,7 @@
     <!--end::Modals-->
     <!--begin::Global Javascript Bundle(used by all pages)-->
     <script src="{{ asset('app/plugins/global/plugins.bundle.js') }}"></script>
+	<script type="text/javascript" src="{{ asset('app/plugins/custom/datatables/datatables.bundle.js') }}"></script>
     <script src="{{ asset('app/js/scripts.bundle.js') }}"></script>
     <script src="{{ asset('librairies/intl/build/js/intlTelInput.min.js') }}"></script>
     <!-- begin::moment -->

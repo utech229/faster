@@ -1,7 +1,8 @@
 {% extends 'base.app.html.twig' %}
 
+{% block title %}{{"Campagne SMS"|trans}} - {{brand.name}}{% endblock %}
+
 {% block stylesheets %}
-<link href="{{ asset('app/plugins/custom/datatables/datatables.bundle.css') }}" rel="stylesheet" type="text/css" />
 <style media="screen">
 .rotate-270{
 	-ms-transform: rotate(270deg); /* IE 9 */
@@ -61,7 +62,7 @@
 					<input type="hidden" name="messageText" value=""/>
 					<div class="row g-9">
 						<!--begin::Input group-->
-						<div class="fv-row col-md-6 {% if userType > 3 or statusCode == 0 or statusCode == 5 %}sr-only{% endif %}">
+					<div class="fv-row col-md-6 {% if campaign or userType > 3 or statusCode == 0 or statusCode == 5 %}sr-only{% endif %}">
 							<!--begin::Label-->
 							<label class="fs-7 fw-bolder form-label mb-2 required" for="brand">
 								{{"Marque blanche"|trans}}
@@ -78,7 +79,7 @@
 						</div>
 						<!--end::Input group-->
 						<!--begin::Input group-->
-						<div class="fv-row col-md-6 {% if userType > 3 or statusCode == 0 or statusCode == 5 %}sr-only{% endif %}">
+						<div class="fv-row col-md-6 {% if campaign or userType > 3 or statusCode == 0 or statusCode == 5 %}sr-only{% endif %}">
 							<!--begin::Label-->
 							<label class="fs-7 fw-bolder form-label mb-2 required" for="user">
 								{{"Utilisateur de la marque"|trans}}
@@ -208,6 +209,14 @@
 						</div>
 						<!--end::Input group-->
 						{% if statusCode != 0 and statusCode != 5 %}
+							<div class="separator separator-dashed separator-content border-primary mt-10 mb-2">
+								<!--begin::Svg Icon | path: assets/media/icons/duotune/communication/com005.svg-->
+								<span class="svg-icon svg-icon-primary svg-icon-2hx"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+								<path d="M20 14H18V10H20C20.6 10 21 10.4 21 11V13C21 13.6 20.6 14 20 14ZM21 19V17C21 16.4 20.6 16 20 16H18V20H20C20.6 20 21 19.6 21 19ZM21 7V5C21 4.4 20.6 4 20 4H18V8H20C20.6 8 21 7.6 21 7Z" fill="currentColor"/>
+								<path opacity="0.3" d="M17 22H3C2.4 22 2 21.6 2 21V3C2 2.4 2.4 2 3 2H17C17.6 2 18 2.4 18 3V21C18 21.6 17.6 22 17 22ZM10 7C8.9 7 8 7.9 8 9C8 10.1 8.9 11 10 11C11.1 11 12 10.1 12 9C12 7.9 11.1 7 10 7ZM13.3 16C14 16 14.5 15.3 14.3 14.7C13.7 13.2 12 12 10.1 12C8.10001 12 6.49999 13.1 5.89999 14.7C5.59999 15.3 6.19999 16 7.39999 16H13.3Z" fill="currentColor"/>
+								</svg></span>
+								<!--end::Svg Icon-->
+							</div>
 							<!--begin::Input group-->
 							<div class="fv-row mt-4 col-12">
 								<!--begin::Navs-->
@@ -277,6 +286,15 @@
 								<!--end::Input-->
 							</div>
 							<!--end::Input group-->
+							<div class="separator separator-dashed separator-content border-primary mt-10 mb-2">
+								<!--begin::Svg Icon | path: assets/media/icons/duotune/communication/com012.svg-->
+								<span class="svg-icon svg-icon-primary svg-icon-2hx"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+								<path opacity="0.3" d="M20 3H4C2.89543 3 2 3.89543 2 5V16C2 17.1046 2.89543 18 4 18H4.5C5.05228 18 5.5 18.4477 5.5 19V21.5052C5.5 22.1441 6.21212 22.5253 6.74376 22.1708L11.4885 19.0077C12.4741 18.3506 13.6321 18 14.8167 18H20C21.1046 18 22 17.1046 22 16V5C22 3.89543 21.1046 3 20 3Z" fill="currentColor"/>
+								<rect x="6" y="12" width="7" height="2" rx="1" fill="currentColor"/>
+								<rect x="6" y="7" width="12" height="2" rx="1" fill="currentColor"/>
+								</svg></span>
+								<!--end::Svg Icon-->
+							</div>
 							<!--begin::Input group-->
 							<div class="fv-row mt-4 col-12">
 								<!--begin::Label-->
@@ -290,6 +308,18 @@
 								<!--end::Input-->
 							</div>
 							<!--end::Input group-->
+						{% endif %}
+						<!--end::Input group-->
+						{% if statusCode == 0 or statusCode == 5 %}
+							<div class="separator separator-dashed separator-content border-primary mt-10 mb-2">
+								<!--begin::Svg Icon | path: assets/media/icons/duotune/communication/com012.svg-->
+								<span class="svg-icon svg-icon-primary svg-icon-2hx"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+								<path opacity="0.3" d="M20 3H4C2.89543 3 2 3.89543 2 5V16C2 17.1046 2.89543 18 4 18H4.5C5.05228 18 5.5 18.4477 5.5 19V21.5052C5.5 22.1441 6.21212 22.5253 6.74376 22.1708L11.4885 19.0077C12.4741 18.3506 13.6321 18 14.8167 18H20C21.1046 18 22 17.1046 22 16V5C22 3.89543 21.1046 3 20 3Z" fill="currentColor"/>
+								<rect x="6" y="12" width="7" height="2" rx="1" fill="currentColor"/>
+								<rect x="6" y="7" width="12" height="2" rx="1" fill="currentColor"/>
+								</svg></span>
+								<!--end::Svg Icon-->
+							</div>
 						{% endif %}
 						<!--begin::Input group-->
 						<div class="fv-row mt-4 col-md-6 {% if statusCode == 0 or statusCode == 5 %}sr-only{% endif %}">
@@ -336,7 +366,9 @@
 				</form>
 				{% if statusCode != 0 and statusCode != 5 %}
 					<div class="w-100 mt-10">
-						<h3 class="fw-bolder fs-6 my-2 text-warning">{{"Ligne de contact à revoir"|trans}}</h3>
+						<div class="separator separator-dashed separator-content border-primary mt-10 mb-2">
+							<h3 class="fw-bolder fs-6 my-2 text-warning">{{"Ligne de contact à revoir"|trans}}</h3>
+						</div>
 						<!--begin::Table-->
 						<table class="table align-middle table-row-dashed fs-6 gy-5 mb-0 w-100%" id="tb_error">
 							<!--begin::Table head-->
@@ -526,7 +558,6 @@
 
 	const statusCode	= {{statusCode}};
 </script>
-<script type="text/javascript" src="{{ asset('app/plugins/custom/datatables/datatables.bundle.js') }}"></script>
 {{ include('smsmessage/new.html.twig', {'brands':brands}) }}
 <script type="text/javascript" src="{{ asset('app/js/queries/sms/messageError.js')}}"></script>
 <script type="text/javascript" src="{{ asset('app/js/queries/sms/campaign.js')}}"></script>

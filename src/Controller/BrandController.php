@@ -25,6 +25,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+use Dompdf\Dompdf;
+use Dompdf\Options;
+
 #[IsGranted("IS_AUTHENTICATED_FULLY")]
 #[IsGranted("ROLE_USER")]
 class BrandController extends AbstractController
@@ -277,7 +280,7 @@ class BrandController extends AbstractController
                                             'uid'       => $getBrand->getUid(),
                                             'status'    => $getBrand->getStatus()->getCode(),
                                             'pvalidate' => $this->pAllAccess,
-                                            'link'      => 'https://'.$getBrand->getSiteUrl(),
+                                            'link'      => 'https:'.$getBrand->getSiteUrl(),
                                             'name'      => $getBrand->getName()
                 ];
                 $data[]                = $row;
@@ -287,4 +290,50 @@ class BrandController extends AbstractController
         $this->services->addLog($this->intl->trans('Récupération de la liste des marques créées.'));
         return new JsonResponse($output);
     }
+
+    //This function is used to download pe
+    #[Route('{_locale}/download', name: 'download')]
+    public function download(Request $request):Response{
+        $options = new Options();
+        $options ->get('defaultFont', 'Roboto');
+        $dompdf  = new Dompdf($options);
+
+        $img     = $this->serializeImg($path);
+        $urban   = "https://www.fastermessage.com/app/public/assets/admin/images/logo/urban.png";
+        $data    = [
+                    'brand'       => $brand,
+                    'adress'      => $adress,
+                    'gerant'      => $gerant,
+                    'montant'     => $EventExist->getMontant(),
+                    'ImgLink'     => $img,
+                    'devise'      =>$factureData->getDevise(),
+                    'ImgAdmin'    => $this->serializeImg($urban),
+                    'message'     => $translator->trans('Recharge de compte sur ').$brand,
+                    'name'        => $name,
+                    'phoneAdmin'  => $phone,
+                    'RCCM'        => $rccm,
+                    'IFU'         => $ifu,
+                    'reference'   => $EventExist->getReference(),
+                    'phoneClient' => $factureData->getPhone(),
+                    'AdressClient'=> $factureData->getAdress(),
+                    'emailSender' => $email,
+                    'phoneTeam'   => $phoneTeam,
+                    'UrlSite'     => $siteWeb,
+                    'datepay'     => $EventExist->getHoroDate(),
+                    'ImgPaid'     => $this->serializeImg("https://www.fastermessage.com/app/public/assets/admin/images/logo/paid.jpg")
+        ];
+
+        $html           = $this->renderView('pdf/pdf.html.twig', [
+            'headline'  => $brand.$translator->trans(" - FACTURE"), 'compte'=>$user, 'data'=>$data
+        ]);
+        $dompdf         ->loadHtml($html, 'UTF-8');
+        $dompdf         ->setPaper('A4', 'portrait');
+        $dompdf         ->render();
+        $fichier        = $dompdf->stream($brand.$translator->trans("-FACTURE-CLIENT-").$factureData->getUid(),
+                        [
+                            "Attachment"=> true
+                        ]);
+        return $this->json(array('message' => $fichier, 'status' =>'success', 200));
+    }
+
 }
