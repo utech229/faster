@@ -9,13 +9,15 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-#[Route('/{_locale}/mailer')]
+
 class MailerController extends AbstractController
 {
     #[Route('/email', name: 'm_send_mail20', methods: ['POST', 'GET'])]
     public function sendEmail20(MailerInterface $mailer): JsonResponse
     {
-        $email = (new Email())
+        //$memail = mail('enockiatk@gmail.com', 'Mon Sujet', '$message');
+        return  new JsonResponse(["data" =>  '$memail']);
+        /*$email = (new Email())
             ->from('hello@example.com')
             ->to('urbantech229@gmail.com')
             //->cc('cc@example.com')
@@ -29,6 +31,6 @@ class MailerController extends AbstractController
         $memail =  $mailer->send($email);
         return  new JsonResponse(["data" =>  $memail]);
     
-        // ...
+        // ...*/
     }
 }
