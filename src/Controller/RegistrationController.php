@@ -205,7 +205,8 @@ class RegistrationController extends AbstractController
                         'brand'           => $brand,
                         'data'            => [
                             'url'  => $url,
-                            'user' => $user
+                            'user'     => $user,
+                            'base_url' => $this->baseUrl
                         ]
                     ]);
                     $this->sMailer->nativeSend( $this->brand->get()['emails']['support'], 
