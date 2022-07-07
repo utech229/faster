@@ -69,7 +69,7 @@ class LinkSettingController extends AbstractController
             $this->userRepository->add($user);
             $this->addFlash('info', $this->intl->trans("Veuillez saisir votre nouveau mot de passe"));
             return $this->render('registration/'.$this->brand->get()['regisform'], [
-                'title'           => $this->intl->trans('Mot de passe').' - '.$this->brand->get['name'],
+                'title'           => $this->intl->trans('Mot de passe').' - '.$this->brand->get()['name'],
                 'menu_text'       => $this->intl->trans('Mot de passe'),
                 'brand'           => $brand,
                 'baseUrl'         => $this->baseUrl,
