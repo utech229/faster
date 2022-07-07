@@ -108,6 +108,25 @@ class LinkSettingController extends AbstractController
         }
     }
 
+    #[Route('/account_activation/{uid}/{code}', name: 'app_account_activation')]
+    public function account_activation(Request $request,Services $services,  $uid = null, $code = null): Response
+    {
+        $user = $this->userRepository->findOneBy(["uid" => $uid]);
+        if($user->getActiveCode() == $code) {
+            $user->setActiveCode(null);
+            $user->setUpdatedAt(new \DatetimeImmutable());
+            $user->setStatus($this->services->status(3));
+            $this->userRepository->add($user);
+
+            $this->addFlash('success', $this->intl->trans("Compte activé avec succès"));
+            return $this->redirectToRoute('app_login');
+        }
+        else {
+            $this->addFlash('warning', $this->intl->trans("Votre lien d'activation de compte est expiré"));
+            return $this->redirectToRoute("app_login");
+        }
+    }
+
     
     
 

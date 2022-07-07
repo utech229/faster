@@ -118,7 +118,7 @@ class RegistrationController extends AbstractController
             $user->setRoles(['ROLE_USER']);
             $user->setRouter($entityManager->getRepository(Router::Class)->findOneById(1));
             $user->setBrand($this->brand->get()['brand']);
-            $user->setStatus($this->services->status(3));
+            $user->setStatus($this->services->status(2));
             $this->userRepository->add($user);
 
             $settingData = [
@@ -129,21 +129,29 @@ class RegistrationController extends AbstractController
             ];
             $setDefaultSetting = $this->addEntity->defaultUsetting($user, $settingData);
 
+            //code
+            $code = $this->services->idgenerate(10);
+            // Lien d'activation'
+            $url = $this->baseUrl.$this->urlGenerator->generate('app_account_activation', ["uid" => $user->getUid(), 'code' => $code]);
+            //email
+            $message = $this->render('email/new-user-account.html.twig', [
+                'title'           => $this->intl->trans('Activation de compte').' - '. $brand['name'],
+                'brand'           => $brand,
+                'data'            => [
+                    'url'      => $url,
+                    'user'     => $user,
+                    'password' => $form->get('plainPassword')->getData(),
+                    'base_url' => $this->baseUrl
+                ]
+            ]);
+
+            $this->sMailer->nativeSend( $this->brand->get()['emails']['support'], 
+                $email ,  $this->intl->trans('Activation de compte'),  $message);
+
             return $this->services->msg_success(
                 $this->intl->trans("Création d'un nouvel utilisateur"),
                 $this->intl->trans("Votre compte à été crée avec succès, veuillez consulter votre boîte email pour valider votre compte. Merci")
             );
-
-            // generate a signed url and email it to the user
-            /*$this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
-                (new TemplatedEmail())
-                    ->from(new Address('support@upayapi.app', 'Support technic'))
-                    ->to($user->getEmail())
-                    ->subject('Please Confirm your Email')
-                    ->htmlTemplate('registration/confirmation_email.html.twig')
-            );*/
-            // do anything else you need here, like send an email
-            //return $this->redirectToRoute('app_home');
         }
         $brand = $this->brand->get();
         return $this->render('registration/'.$this->brand->get()['regisform'], [
