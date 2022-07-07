@@ -1,7 +1,9 @@
+
+
 "use strict";
 
 // Class definition
-var KTSignupGeneral = function() {
+var KTDefinePasswordGeneral = function() {
     // Elements
     var form;
     var submitButton;
@@ -11,7 +13,7 @@ var KTSignupGeneral = function() {
     const isValidPhone = function() {
         return {
             validate: function(input) {
-                const full = intl['registration_form_phone'].getNumber();
+                const full = intl['password_setting_form_phone'].getNumber();
                 if (full.length == 12 && full.substr(0, 6) == "+22952") {
                     return {
                         valid: true,
@@ -33,49 +35,7 @@ var KTSignupGeneral = function() {
         validator = FormValidation.formValidation(
             form, {
                 fields: {
-                    'registration_form[firstName]': {
-                        validators: {
-                            notEmpty: {
-                                message: _FirstName_Required
-                            },
-                            different: {
-                                field: 'registration_form[plainPassword]',
-                                message: _Different_FirstName_Password,	
-                            }
-                        }
-                    },
-                    'registration_form[lastName]': {
-                        validators: {
-                            notEmpty: {
-                                message: _LastName_Required
-                            }
-                        }
-                    },
-                    'registration_form[email]': {
-                        validators: {
-                            notEmpty: {
-                                message: _Email_NotEmpty_Connexion
-                            },
-                            emailAddress: {
-                                message: _Email_EmailAddress
-                            }
-                        }
-                    },
-                    'registration_form[phone]': {
-                        validators: {
-                            notEmpty: {
-                                message: _Phone_Required
-                            },
-                            regexp: {
-                                regexp: /^[0-9]+$/,
-                                message: _Phone_Numeric
-                            },
-                            validePhone: {
-                                message: _Phone_Not_Valid,
-                            }
-                        }
-                    },
-                    'registration_form[plainPassword]': {
+                    'password_setting_form[plainPassword]': {
                         validators: {
                             notEmpty: {
                                 message: _Password_Required
@@ -90,26 +50,19 @@ var KTSignupGeneral = function() {
                             }
                         }
                     },
-                    'cpassword': {
+                    'password_setting_form[confirm_password]': {
                         validators: {
                             notEmpty: {
                                 message: _Password_Confirm
                             },
                             identical: {
                                 compare: function() {
-                                    return form.querySelector('[name="registration_form[plainPassword]"]').value;
+                                    return form.querySelector('[name="password_setting_form[plainPassword]"]').value;
                                 },
                                 message: _Password_Confirm
                             }
                         }
                     },
-                    'toc': {
-                        validators: {
-                            notEmpty: {
-                                message: _Condition_Confirm
-                            }
-                        }
-                    }
                 },
                 plugins: {
                     trigger: new FormValidation.plugins.Trigger({
@@ -129,7 +82,7 @@ var KTSignupGeneral = function() {
         // Handle form submit
         submitButton.addEventListener('click', function(e) {
             e.preventDefault();
-            validator.revalidateField('registration_form[plainPassword]');
+            validator.revalidateField('password_setting_form[plainPassword]');
             validator.validate().then(function(status) {
                 if (status == 'Valid') {
                     // Show loading indication
@@ -137,13 +90,9 @@ var KTSignupGeneral = function() {
                     // Disable button to avoid multiple click 
                     submitButton.disabled = true;
                     // Simulate ajax request
-                    console.log(intl)
-                    var data = $('#kt_sign_up_form').serializeArray();
-                    data.push({ name: 'full_number', value: intl['registration_form_phone'].getNumber() })
-                    data.push({ name: 'country', value: intl['registration_form_phone'].getSelectedCountryData()['iso2'] })
-                    $('#user_currency_name').val($("#user_currency option:selected" ).text())
+                    var data = $('#kt_password_define_form').serializeArray();
                     $.ajax({
-                        url: register_url,
+                        url: password_resetting_new,
                         type: 'post',
                         data: data,
                         dataType: 'json',
@@ -173,17 +122,7 @@ var KTSignupGeneral = function() {
                                 
 
                             } else {
-                                // Show error popup. For more info check the plugin's official documentation: https://sweetalert2.github.io/
-                                Swal.fire({
-                                    title: response.title,
-                                    text: response.message,
-                                    icon: response.status,
-                                    buttonsStyling: false,
-                                    confirmButtonText: _Form_Ok_Swal_Button_Text_Notification,
-                                    customClass: {
-                                        confirmButton: "btn btn-primary"
-                                    }
-                                });
+                                swalSimple(response.type, response.message)
                                 // Hide loading indication
                                 submitButton.removeAttribute('data-kt-indicator');
                                 // Enable button
@@ -199,7 +138,7 @@ var KTSignupGeneral = function() {
                         }
                     });
                 } else {
-                    swalSimple('error', _Form_Error_Swal_Notification)
+                    swalSimple('error', _Form_Error_Swal_Notification);
                     // Hide loading indication
                     submitButton.removeAttribute('data-kt-indicator');
 
@@ -210,9 +149,9 @@ var KTSignupGeneral = function() {
         });
 
         // Handle password input
-        form.querySelector('input[name="registration_form[plainPassword]"]').addEventListener('input', function() {
+        form.querySelector('input[name="password_setting_form[plainPassword]"]').addEventListener('input', function() {
             if (this.value.length > 0) {
-                validator.updateFieldStatus('registration_form[plainPassword]', 'NotValidated');
+                validator.updateFieldStatus('password_setting_form[plainPassword]', 'NotValidated');
             }
         });
     }
@@ -227,8 +166,8 @@ var KTSignupGeneral = function() {
         // Initialization
         init: function() {
             // Elements
-            form = document.querySelector('#kt_sign_up_form');
-            submitButton = document.querySelector('#kt_sign_up_submit');
+            form = document.querySelector('#kt_password_define_form');
+            submitButton = document.querySelector('#kt_password_define_submit');
             passwordMeter = KTPasswordMeter.getInstance(form.querySelector('[data-kt-password-meter="true"]'));
 
             handleForm();
@@ -238,5 +177,5 @@ var KTSignupGeneral = function() {
 
 // On document ready
 KTUtil.onDOMContentLoaded(function() {
-    KTSignupGeneral.init();
+    KTDefinePasswordGeneral.init();
 });

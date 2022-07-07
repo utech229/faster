@@ -32,23 +32,6 @@ class PasswordFormType extends AbstractType
     {
         $builder
             ->add('email', EmailType::class,array('label' => false,'mapped' => false))
-            ->add('plainPassword', PasswordType::class, [
-                // instead of being set onto the object directly,
-                // this is read and encoded in the controller
-                'label' => false,
-                'mapped' => false,
-                'attr' => ['autocomplete' => 'new-password'],
-                'constraints' => [
-                    new NotBlank([
-                        'message' => $this->intl->trans('Veullez saisir un mot de passe'),
-                    ]),
-                    new Length([
-                        'min' => 6,
-                        'minMessage' => $this->intl->trans('Your password should be at least {{ limit }} characters'),
-                        'max' => 4096,
-                    ]),
-                ],
-            ])
         ;
     }
 
