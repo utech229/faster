@@ -71,7 +71,7 @@ var KTDefinePasswordGeneral = function() {
                     console.log(intl)
                     var data = $('#kt_password_define_form').serializeArray();
                     $.ajax({
-                        url: register_url,
+                        url:  password_resetting_new,
                         type: 'post',
                         data: data,
                         dataType: 'json',

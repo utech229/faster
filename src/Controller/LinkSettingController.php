@@ -57,6 +57,7 @@ class LinkSettingController extends AbstractController
         }
     }
 
+    #[Route('/pass_resetting', name: 'app_password_resetting_new')]
     #[Route('/pass_resetting/{uid}/{code}', name: 'app_password_resetting')]
     public function password_resetting(Request $request, Services $services, $uid = null, $code = null): Response
     {
@@ -67,6 +68,24 @@ class LinkSettingController extends AbstractController
             //$user->setActiveCode(null);
             $user->setUpdatedAt(new \DatetimeImmutable());
             $this->userRepository->add($user);
+
+            if ($request->request->count() > 0)
+            {
+                if ($form->isSubmitted() && $form->isValid()) {
+                    //emil verify 
+                    $user->setPassword($userPasswordHasher->hashPassword($user, $form->get('plainPassword')->getData()));
+                    $this->userRepository->add($user);
+    
+                    $message = $this->intl->trans("Votre mot de passe à été modifié avec succès. Vous pouvez vous connecter à présent.");
+                    $this->addFlash('info', $message);
+                    return $this->services->msg_success(
+                        $this->intl->trans("Réinitialisation du mot de passe"),
+                        $message
+                    );
+    
+                }
+            }
+
             $this->addFlash('info', $this->intl->trans("Veuillez saisir votre nouveau mot de passe"));
             return $this->render('registration/'.$this->brand->get()['regisform'], [
                 'title'           => $this->intl->trans('Mot de passe').' - '.$this->brand->get()['name'],
