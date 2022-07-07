@@ -66,9 +66,10 @@ class LinkSettingController extends AbstractController
 
         if ($request->request->count() > 0 && $code == null)
         {
-            dd('de');
+            
             $uid  = $request->request->get('user');
             $user = $this->userRepository->findOneBy(["uid" => $uid]);
+            dd($user);
             if ($form->isSubmitted() && $form->isValid()) {
                 //email verify 
                 $user->setPassword($userPasswordHasher->hashPassword($user, $form->get('plainPassword')->getData()));
