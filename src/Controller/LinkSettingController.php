@@ -58,7 +58,7 @@ class LinkSettingController extends AbstractController
     }
 
     #[Route('/pass_resetting/{uid}/{code}', name: 'app_password_resetting')]
-    public function password_resetting(Request $request, Services $services, $uid, $code): Response
+    public function password_resetting(Request $request, Services $services, $uid = null, $code = null): Response
     {
         $user = new User();
         $form = $this->createForm(PasswordSettingFormType::class, $user);
@@ -69,7 +69,7 @@ class LinkSettingController extends AbstractController
             $this->userRepository->add($user);
             $this->addFlash('info', $this->intl->trans("Veuillez saisir votre nouveau mot de passe"));
             return $this->render('registration/'.$this->brand->get()['regisform'], [
-                'title'           => $this->intl->trans('Mot de passe').' - '. $brand['name'],
+                'title'           => $this->intl->trans('Mot de passe').' - '.$this->brand->get['name'],
                 'menu_text'       => $this->intl->trans('Mot de passe'),
                 'brand'           => $brand,
                 'baseUrl'         => $this->baseUrl,

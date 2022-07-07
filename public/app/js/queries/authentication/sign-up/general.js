@@ -199,16 +199,7 @@ var KTSignupGeneral = function() {
                         }
                     });
                 } else {
-                    // Show error popup. For more info check the plugin's official documentation: https://sweetalert2.github.io/
-                    Swal.fire({
-                        text: _Form_Error_Swal_Notification,
-                        icon: "error",
-                        buttonsStyling: false,
-                        confirmButtonText: _Form_Ok_Swal_Button_Text_Notification,
-                        customClass: {
-                            confirmButton: "btn btn-primary"
-                        }
-                    });
+                    swalSimple('error', _Form_Error_Swal_Notification)
                     // Hide loading indication
                     submitButton.removeAttribute('data-kt-indicator');
 

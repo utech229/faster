@@ -60,6 +60,8 @@
 		<script src="{{ asset('app/js/queries/authentication/sign-up/general.js') }}"></script>
         {% elseif route == 'app_init_reset' %}
 		<script src="{{ asset('app/js/queries/authentication/password/general.js') }}"></script>
+		{% elseif route == 'app_password_resetting' %}
+		<script src="{{ asset('app/js/queries/authentication/password/definer.js') }}"></script>
 		{% elseif route == 'app_login' %}
 		<script src="{{ asset('app/js/queries/authentication/sign-in/general.js') }}"></script>
 		{% endif %}

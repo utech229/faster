@@ -1,32 +1,66 @@
 "use strict";
 
 // Class definition
-var KTSettingPasswordGeneral = function() {
+var KTDefinePasswordGeneral = function() {
     // Elements
     var form;
     var submitButton;
     var validator;
     var passwordMeter;
 
+    const isValidPhone = function() {
+        return {
+            validate: function(input) {
+                const full = intl['registration_form_phone'].getNumber();
+                if (full.length == 12 && full.substr(0, 6) == "+22952") {
+                    return {
+                        valid: true,
+                    }
+                }
+                return {
+                    valid: intl.isValidNumber(),
+                }
+            }
+
+        };
+    };
 
 
     // Handle form
     var handleForm = function(e) {
-       
+        // Init form validation rules. For more info check the FormValidation plugin's official documentation:https://formvalidation.io/
+        FormValidation.validators.validePhone = isValidPhone;
         validator = FormValidation.formValidation(
             form, {
                 fields: {
-                    
-                    'form[email]': {
+                    'registration_form[plainPassword]': {
                         validators: {
                             notEmpty: {
-                                message: _Email_NotEmpty_Connexion
+                                message: _Password_Required
                             },
-                            emailAddress: {
-                                message: _Email_EmailAddress
+                            callback: {
+                                message: _Password_Valid,
+                                callback: function(input) {
+                                    if (input.value.length > 1) {
+                                        return validatePassword();
+                                    }
+                                }
                             }
                         }
-                    }
+                    },
+                    'cpassword': {
+                        validators: {
+                            notEmpty: {
+                                message: _Password_Confirm
+                            },
+                            identical: {
+                                compare: function() {
+                                    return form.querySelector('[name="registration_form[plainPassword]"]').value;
+                                },
+                                message: _Password_Confirm
+                            }
+                        }
+                    },
                 },
                 plugins: {
                     trigger: new FormValidation.plugins.Trigger({
@@ -46,6 +80,7 @@ var KTSettingPasswordGeneral = function() {
         // Handle form submit
         submitButton.addEventListener('click', function(e) {
             e.preventDefault();
+            validator.revalidateField('registration_form[plainPassword]');
             validator.validate().then(function(status) {
                 if (status == 'Valid') {
                     // Show loading indication
@@ -53,11 +88,12 @@ var KTSettingPasswordGeneral = function() {
                     // Disable button to avoid multiple click 
                     submitButton.disabled = true;
                     // Simulate ajax request
-                    var data = $('#kt_password_resetting_form').serializeArray();
+                    console.log(intl)
+                    var data = $('#kt_password_define_form').serializeArray();
                     $.ajax({
-                        url:  password_reset_url,
+                        url: register_url,
                         type: 'post',
-                        data:   data,
+                        data: data,
                         dataType: 'json',
                         success: function(response) {
                                 // Hide loading indication
@@ -75,14 +111,12 @@ var KTSettingPasswordGeneral = function() {
                                         confirmButton: "btn btn-primary"
                                     }
                                 }).then(function(result) {
-                                    if (result.isConfirmed && response.type == 'success') { 
-                                        form.reset();            
+                                    if (result.isConfirmed && response.status === 'success') {
+                                        form.reset(); // reset form                    
+                                        passwordMeter.reset(); // reset password meter
                                         window.location.href = login_url;
                                     }
                                 });
-                                /*setTimeout(() => {
-                                    window.location.href = login_url;
-                                }, 5000);*/
                         },
                         error: function(response) {
                             $(document).trigger('ajaxError');
@@ -93,14 +127,28 @@ var KTSettingPasswordGeneral = function() {
                         }
                     });
                 } else {
+                    // Show error popup. For more info check the plugin's official documentation: https://sweetalert2.github.io/
                     swalSimple('error', _Form_Error_Swal_Notification)
                     // Hide loading indication
                     submitButton.removeAttribute('data-kt-indicator');
+
                     // Enable button
                     submitButton.disabled = false;
                 }
             });
         });
+
+        // Handle password input
+        form.querySelector('input[name="registration_form[plainPassword]"]').addEventListener('input', function() {
+            if (this.value.length > 0) {
+                validator.updateFieldStatus('registration_form[plainPassword]', 'NotValidated');
+            }
+        });
+    }
+
+    // Password input validation
+    var validatePassword = function() {
+        return (passwordMeter.getScore() == 100);
     }
 
     // Public functions
@@ -108,8 +156,8 @@ var KTSettingPasswordGeneral = function() {
         // Initialization
         init: function() {
             // Elements
-            form = document.querySelector('#kt_password_resetting_form');
-            submitButton = document.querySelector('#kt_password_resetting_submit');
+            form = document.querySelector('#kt_password_define_form');
+            submitButton = document.querySelector('#kt_password_define_submit');
             passwordMeter = KTPasswordMeter.getInstance(form.querySelector('[data-kt-password-meter="true"]'));
 
             handleForm();
@@ -119,5 +167,5 @@ var KTSettingPasswordGeneral = function() {
 
 // On document ready
 KTUtil.onDOMContentLoaded(function() {
-    KTSettingPasswordGeneral.init();
+    KTDefinePasswordGeneral.init();
 });
