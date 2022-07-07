@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 #[Route('/{_locale}/linker')]
 class LinkSettingController extends AbstractController
@@ -59,7 +60,7 @@ class LinkSettingController extends AbstractController
 
     #[Route('/pass_resetting', name: 'app_password_resetting_new')]
     #[Route('/pass_resetting/{uid}/{code}', name: 'app_password_resetting')]
-    public function password_resetting(Request $request, Services $services,  $uid = null, $code = null): Response
+    public function password_resetting(Request $request, UserPasswordHasherInterface $userPasswordHasher, Services $services,  $uid = null, $code = null): Response
     {
         $user = new User();
         $form = $this->createForm(PasswordSettingFormType::class, $user);
