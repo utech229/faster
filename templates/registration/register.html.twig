@@ -48,6 +48,8 @@
                                 {% include 'registration/form.html.twig' %}
                             {% elseif route == 'app_init_reset' %}
                                 {% include 'password/form.html.twig' %}
+                            {% elseif route == 'app_password_resetting' %}
+                                {% include "password/form.set.password.html.twig" %}
                             {% elseif route == 'app_login' %}
                                 {% include 'security/form.html.twig' %}
                             {% endif %}
