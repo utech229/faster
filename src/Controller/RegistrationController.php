@@ -200,9 +200,12 @@ class RegistrationController extends AbstractController
                         $email , 
                         $this->intl->trans('Réinialisation de mot de passe'),
                         $url);
+
+                    $message = $this->intl->trans("Veuillez vérifier votre boite de reception email pour réinitialiser votre nouveau mot de passe");
+                    $this->addFlash('info', $message);
                     return $this->services->msg_success(
                         $this->intl->trans("Récupération de mot de passe"),
-                        $this->intl->trans("Veuillez vérifier votre boite de reception email pour réinitialiser votre nouveau mot de passe"),
+                        $message,
                         $url,
                     );
                 }else {
