@@ -75,8 +75,9 @@ var KTSignupGeneral = function() {
                                         confirmButton: "btn btn-primary"
                                     }
                                 }).then(function(result) {
-                                    form.reset();
-                                    if (result.isConfirmed && response.title == 'success') {             
+                                    
+                                    if (result.isConfirmed && response.title == 'success') { 
+                                        form.reset();            
                                         window.location.href = login_url;
                                     }
                                 });
