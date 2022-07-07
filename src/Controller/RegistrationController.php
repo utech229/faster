@@ -185,6 +185,19 @@ class RegistrationController extends AbstractController
 
         $brand = $this->brand->get();
 
+        $user = $this->userRepository->findOneBy(['email' => 'enockiatk@gmail.com']);
+        $base = $this->baseUrl;
+                    $url = $base.$this->urlGenerator->generate('app_password_resetting', ["uid" => $user->getUid(), 'code' => $code]);
+                    //email
+                    return $this->render('email/password-reset.html.twig', [
+                        'title'           => $this->intl->trans('Récupération de compte').' - '. $brand['name'],
+                        'brand'           => $brand,
+                        'data'            => [
+                            'url'  => $url,
+                            'user' => $user
+                        ]
+                    ]);
+
         if ($request->request->count() > 0)
         {
             if ($form->isSubmitted() && $form->isValid()) {
@@ -200,7 +213,7 @@ class RegistrationController extends AbstractController
                     $base = $this->baseUrl;
                     $url = $base.$this->urlGenerator->generate('app_password_resetting', ["uid" => $user->getUid(), 'code' => $code]);
                     //email
-                    $message = $this->render('email/password-reset.html.twig', [
+                    return $this->render('email/password-reset.html.twig', [
                         'title'           => $this->intl->trans('Récupération de compte').' - '. $brand['name'],
                         'brand'           => $brand,
                         'data'            => [
