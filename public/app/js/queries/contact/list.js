@@ -273,7 +273,10 @@ var KTContactList = function() {
                     pageLength: 10,
                     lengthChange: true,
                     "info": true,
-                    lengthMenu: [10, 25, 100, 250, 500, 1000],                   
+                    lengthMenu: [10, 25, 100, 250, 500, 1000],
+                    language: {
+                        url: _language_datatables,
+                    },                 
                 }),
                 $('#kt_modal_add_contact_reload_button').on('click', function() {
                     e.ajax.reload(null, false);
@@ -373,12 +376,12 @@ $(document).on('click', ".contactUpdater", function(e)
     
 });
 
-$(document).on('change',"#list_user_contact_id", function (e) {
-    let uid = $(this).val();
+function rechargeGroups(uid_user) {
+    
     $.ajax({
         url:get_group,
         type:"post",
-        data:{  _uid:   uid,
+        data:{  _uid:   uid_user,
                 _token: function() { return csrfToken; }
             },
         dataType:"json",
@@ -414,6 +417,11 @@ $(document).on('change',"#list_user_contact_id", function (e) {
         }
 
     });
+}
+
+$(document).on('change',"#list_user_contact_id", function (e) {
+    let uid_user = $(this).val();
+    rechargeGroups(uid_user);
 });
 
 

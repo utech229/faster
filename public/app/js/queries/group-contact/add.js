@@ -65,8 +65,8 @@ var KTAddGroup = function() {
                                     n.hide();
                                     if(importContact == 1 ){
                                         importContact =0;
-                                        let user = $('#list_user_contact_id').val(), uid = response.data.uid;
-                                        $('#list_user_contact_id').val(user).trigger("change");
+                                        let uid_user = document.querySelector('[data-kt-contact-user="user"]').value, uid = response.data.uid;
+                                        rechargeGroups(uid_user);
                                         setTimeout(() => {
                                         $('#id_group_contact_import').val(uid).change();
                                         $("#kt_modal_import_contacts").modal("show");
