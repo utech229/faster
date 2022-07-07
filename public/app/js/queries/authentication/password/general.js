@@ -77,7 +77,7 @@ var KTSettingPasswordGeneral = function() {
                                 }).then(function(result) {
                                     if (result.isConfirmed && response.type == 'success') { 
                                         form.reset();            
-                                        window.location.href = login_url;
+                                        //window.location.href = login_url;
                                     }
                                 });
                                 /*setTimeout(() => {
