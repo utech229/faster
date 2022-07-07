@@ -8,28 +8,8 @@ var KTDefinePasswordGeneral = function() {
     var validator;
     var passwordMeter;
 
-    const isValidPhone = function() {
-        return {
-            validate: function(input) {
-                const full = intl['registration_form_phone'].getNumber();
-                if (full.length == 12 && full.substr(0, 6) == "+22952") {
-                    return {
-                        valid: true,
-                    }
-                }
-                return {
-                    valid: intl.isValidNumber(),
-                }
-            }
-
-        };
-    };
-
-
     // Handle form
     var handleForm = function(e) {
-        // Init form validation rules. For more info check the FormValidation plugin's official documentation:https://formvalidation.io/
-        FormValidation.validators.validePhone = isValidPhone;
         validator = FormValidation.formValidation(
             form, {
                 fields: {
