@@ -50,7 +50,7 @@ class RegistrationController extends AbstractController
         $this->services = $services;
         $this->sMailer = $sMailer;
         $this->addEntity = $addEntity;
-        $urlGenerator = $urlGenerator;
+        $this->urlGenerator = $urlGenerator;
         $this->brickPhone = $brickPhone;
     }
 
