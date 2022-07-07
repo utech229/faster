@@ -194,7 +194,7 @@ class RegistrationController extends AbstractController
                     $base = $this->baseUrl;
                     $url = $base."/{_locale}/linker/pass_resetting/".$user->getUid()."/".$code;
                     $this->sMailer->nativeSend(
-                        $this->brand->get()['email']['support'], 
+                        $this->brand->get()['emails']['support'], 
                         $email , 
                         $this->intl->trans('Réinialisation de mot de passe'),
                         $url);
