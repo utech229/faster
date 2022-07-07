@@ -72,7 +72,7 @@ class LinkSettingController extends AbstractController
                 'title'           => $this->intl->trans('Mot de passe').' - '.$this->brand->get()['name'],
                 'menu_text'       => $this->intl->trans('Mot de passe'),
                 'brand'           => $this->brand->get(),
-                'baseUrl'         => $this->baseUrl,
+                'baseUrl'         => $this->baseUrl->init(),
                 'form'            => $form->createView(),
             ]);
         }else {
