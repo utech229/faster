@@ -260,11 +260,7 @@ class ContactGroupController extends AbstractController
                                 "data"  =>   $tabGroup
                         ];
 
-        if (!$this->pGView) {
-            
-            
-            return new JsonResponse($data);
-        }
+        if (!$this->pGView) return new JsonResponse($data);
 
         list($typeUser,$Id) =   $this->services->checkThisUser($this->pGAllView);
         switch ($request->request->get('_uid')) {
@@ -312,5 +308,33 @@ class ContactGroupController extends AbstractController
                 ];
        
         return new JsonResponse($data);
+    }
+
+    #[Route('/getinfogroup', name: 'app_get_info_group', methods: ['POST'])]
+    public function getInfoGroup(Request $request, ContactGroupRepository $contactGoupRepository): Response
+    {
+        //Vérification du tokken
+		if (!$this->isCsrfTokenValid($this->getUser()->getUid(), $request->request->get('_token')))
+        return $this->services->invalid_token_ajax_list($this->intl->trans('Récupération des groupes de contacts : token invalide'));
+
+        $infoGroup       =   [];
+
+        if (!$this->pGView) return new JsonResponse($infoGroup);
+
+        $group   =    $this->em->getRepository(ContactGroup::class)->findOneByUid($request->request->get('_uid'));
+
+        $infoGroup[1]           =   "Champ1";       $infoGroup[2]      =   "Champ2";
+            $infoGroup[3]       =   "Champ3";       $infoGroup[4]      =   "Champ4";
+            $infoGroup[5]       =   "Champ5";
+        
+            if (!$group)  return new JsonResponse($infoGroup);
+            
+            $infoGroup[1]      =   $group->getField1();$infoGroup[2]    =   $group->getField2();
+                $infoGroup[3]  =   $group->getField3();$infoGroup[4]    =   $group->getField4();
+                $infoGroup[5]  =   $group->getField5();
+       
+        $this->services->addLog($this->intl->trans("Récuperation des informations d'un groupe de contacts"));
+       
+        return new JsonResponse($infoGroup);
     }
 }
