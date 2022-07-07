@@ -7,9 +7,11 @@ use App\Entity\User;
 use App\Entity\Router;
 use App\Service\uBrand;
 use App\Service\BaseUrl;
+use App\Service\sMailer;
 use App\Service\Services;
 use App\Service\AddEntity;
 use App\Service\BrickPhone;
+use App\Form\PasswordFormType;
 use App\Security\EmailVerifier;
 use App\Form\RegistrationFormType;
 use App\Repository\UserRepository;
@@ -30,7 +32,8 @@ class RegistrationController extends AbstractController
     private EmailVerifier $emailVerifier;
 
     public function __construct(EmailVerifier $emailVerifier, UserRepository $userRepository, StatusRepository $statusRepository, 
-    uBrand $brand, TranslatorInterface $intl, BaseUrl $baseUrl, Services $services, BrickPhone $brickPhone, AddEntity $addEntity)
+    uBrand $brand, TranslatorInterface $intl, BaseUrl $baseUrl, Services $services, BrickPhone $brickPhone, AddEntity $addEntity,
+    sMailer $sMailer)
     {
         $this->emailVerifier     = $emailVerifier;
         $this->statusRepository  = $statusRepository;
@@ -44,6 +47,7 @@ class RegistrationController extends AbstractController
         $this->intl  = $intl;
         $this->baseUrl = $baseUrl->init();
         $this->services = $services;
+        $this->sMailer = $sMailer;
         $this->addEntity = $addEntity;
         $this->brickPhone = $brickPhone;
     }
@@ -62,7 +66,7 @@ class RegistrationController extends AbstractController
             if ($isExistedUser) {
                 return $this->services->msg_error(
                     $this->intl->trans("Ajout d'un nouvel utilisateur"),
-                    $this->intl->trans("Cet adresse email appartient à un compte existant, veuillez le changer"),
+                    $this->intl->trans("Cette adresse email appartient à un compte existant, veuillez le changer"),
                 );
             }
 
@@ -167,5 +171,59 @@ class RegistrationController extends AbstractController
         $this->addFlash('success', 'Your email address has been verified.');
 
         return $this->redirectToRoute('app_home');
+    }
+
+    #[Route('/{_locale}/reset/password', name: 'app_init_reset')]
+    public function app_password_reset(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
+    {
+        $user = new User();
+        $form = $this->createForm(PasswordFormType::class, $user);
+        $form->handleRequest($request);
+        if ($request->request->count() > 0)
+        {
+            if ($form->isSubmitted() && $form->isValid()) {
+                //emil verify 
+                $email = $form->get('email')->getData();
+                $user = $this->userRepository->findOneBy(['email' => $email, 'brand' => $this->brand->get()['brand']]);
+                if ($user) {
+                    $code = $this->services->idgenerate(10);
+                    $user->setActiveCode($code);
+                    $user->setUpdatedAt(new \DatetimeImmutable());
+                    $this->userRepository->add($user);
+                    // Lien de réinitialisation
+                    $base = $this->baseUrl;
+                    $url = $base."/{_locale}/linker/pass_resetting/".$user->getUid()."/".$code;
+                    $this->sMailer->nativeSend(
+                        $this->brand->get()['email']['support'], 
+                        $email , 
+                        $this->intl->trans('Réinialisation de mot de passe'),
+                        $url);
+                    return $this->services->msg_success(
+                        $this->intl->trans("Récupération de mot de passe"),
+                        $this->intl->trans("Veuillez vérifier votre boite de reception email pour réinitialiser votre nouveau mot de passe"),
+                        $url,
+                    );
+                }else {
+                    return $this->services->msg_error(
+                        $this->intl->trans("Récupération de mot de passe"),
+                        $this->intl->trans("Cette adresse email n'appartient à aucun compte existant"),
+                    );
+                }
+
+                return $this->services->msg_success(
+                    $this->intl->trans("Création d'un nouvel utilisateur"),
+                    $this->intl->trans("Votre compte à été crée avec succès, veuillez consulter votre boîte email pour valider votre compte. Merci")
+                );
+
+            }
+        }
+        $brand = $this->brand->get();
+        return $this->render('registration/'.$this->brand->get()['regisform'], [
+            'title'           => $this->intl->trans('Récupération de compte').' - '. $brand['name'],
+            'menu_text'       => $this->intl->trans('Récupération de compte'),
+            'brand'           => $brand,
+            'baseUrl'         => $this->baseUrl,
+            'form' => $form->createView(),
+        ]);
     }
 }
