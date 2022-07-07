@@ -88,7 +88,6 @@ class LinkSettingController extends AbstractController
         }
         else 
         {
-            dd('der');
             $user = $this->userRepository->findOneBy(["uid" => $uid]);
             if($user->getActiveCode() == $code) {
                 //$user->setActiveCode(null);
