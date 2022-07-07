@@ -206,7 +206,7 @@ class RegistrationController extends AbstractController
                         $url,
                     );
                 }else {
-                    return $this->services->msg_error(
+                    return $this->services->msg_warning(
                         $this->intl->trans("Récupération de mot de passe"),
                         $this->intl->trans("Cette adresse email n'appartient à aucun compte existant"),
                     );
