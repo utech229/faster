@@ -78,6 +78,11 @@ class LinkSettingController extends AbstractController
                     $this->intl->trans("Réinitialisation du mot de passe"),
                     $message
                 );
+            }else {
+                return $this->services->msg_success(
+                    $this->intl->trans("Réinitialisation du mot de passe"),
+                    '$message'
+                );
             }
         }
         else 
