@@ -13,7 +13,7 @@ var KTDefinePasswordGeneral = function() {
         validator = FormValidation.formValidation(
             form, {
                 fields: {
-                    'registration_form[plainPassword]': {
+                    'form[plainPassword]': {
                         validators: {
                             notEmpty: {
                                 message: _Password_Required
@@ -35,7 +35,7 @@ var KTDefinePasswordGeneral = function() {
                             },
                             identical: {
                                 compare: function() {
-                                    return form.querySelector('[name="registration_form[plainPassword]"]').value;
+                                    return form.querySelector('[name="form[plainPassword]"]').value;
                                 },
                                 message: _Password_Confirm
                             }
@@ -60,7 +60,7 @@ var KTDefinePasswordGeneral = function() {
         // Handle form submit
         submitButton.addEventListener('click', function(e) {
             e.preventDefault();
-            validator.revalidateField('registration_form[plainPassword]');
+            validator.revalidateField('form[plainPassword]');
             validator.validate().then(function(status) {
                 if (status == 'Valid') {
                     // Show loading indication
@@ -119,9 +119,9 @@ var KTDefinePasswordGeneral = function() {
         });
 
         // Handle password input
-        form.querySelector('input[name="registration_form[plainPassword]"]').addEventListener('input', function() {
+        form.querySelector('input[name="form[plainPassword]"]').addEventListener('input', function() {
             if (this.value.length > 0) {
-                validator.updateFieldStatus('registration_form[plainPassword]', 'NotValidated');
+                validator.updateFieldStatus('form[plainPassword]', 'NotValidated');
             }
         });
     }
