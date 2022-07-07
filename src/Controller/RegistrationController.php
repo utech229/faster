@@ -61,6 +61,8 @@ class RegistrationController extends AbstractController
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
 
+        $brand = $this->brand->get();
+        
         if ($form->isSubmitted() && $form->isValid()) {
             //emil verify 
             $email = $form->get('email')->getData();
@@ -153,7 +155,7 @@ class RegistrationController extends AbstractController
                 $this->intl->trans("Votre compte à été crée avec succès, veuillez consulter votre boîte email pour valider votre compte. Merci")
             );
         }
-        $brand = $this->brand->get();
+        
         return $this->render('registration/'.$this->brand->get()['regisform'], [
             'title'           => $this->intl->trans('Inscription').' - '. $brand['name'],
             'menu_text'       => $this->intl->trans('Inscription'),
