@@ -63,7 +63,7 @@ class LinkSettingController extends AbstractController
     {
         $user = new User();
         $form = $this->createForm(PasswordSettingFormType::class, $user);
-
+        $form->handleRequest($request);
         if ($request->request->count() > 0 && $code == null)
         {
             
