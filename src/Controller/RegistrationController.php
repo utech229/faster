@@ -200,7 +200,7 @@ class RegistrationController extends AbstractController
                     $base = $this->baseUrl;
                     $url = $base.$this->urlGenerator->generate('app_password_resetting', ["uid" => $user->getUid(), 'code' => $code]);
                     //email
-                    return $this->render('email/password-reset.html.twig', [
+                    $message = $this->render('email/password-reset.html.twig', [
                         'title'           => $this->intl->trans('Récupération de compte').' - '. $brand['name'],
                         'brand'           => $brand,
                         'data'            => [
