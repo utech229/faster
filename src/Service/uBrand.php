@@ -50,7 +50,8 @@ class uBrand extends AbstractController
                'rccm'           => $company->getRccm(),
            ],
            'year'               => date('Y'),
-           'brand'              =>  $brand,           
+           'brand'              =>  $brand,  
+           'color'              => ($brand->getName() == "FASTERMESSAGE") ? '#003366' : '#F5F8FA',
            'regisform'           => ($brand->getName() == "FASTERMESSAGE") ? "register.html.twig" : "register.blank.html.twig",              
        ];
     }
