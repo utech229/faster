@@ -71,7 +71,7 @@ class LinkSettingController extends AbstractController
             return $this->render('registration/'.$this->brand->get()['regisform'], [
                 'title'           => $this->intl->trans('Mot de passe').' - '.$this->brand->get()['name'],
                 'menu_text'       => $this->intl->trans('Mot de passe'),
-                'brand'           => $brand,
+                'brand'           => $this->brand->get(),
                 'baseUrl'         => $this->baseUrl,
                 'form'            => $form->createView(),
             ]);
