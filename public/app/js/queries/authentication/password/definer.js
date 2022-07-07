@@ -60,7 +60,7 @@ var KTDefinePasswordGeneral = function() {
         // Handle form submit
         submitButton.addEventListener('click', function(e) {
             e.preventDefault();
-            validator.revalidateField('input[name="password_setting_form[plainPassword]');
+            validator.revalidateField('password_setting_form[plainPassword]');
             validator.validate().then(function(status) {
                 if (status == 'Valid') {
                     // Show loading indication
