@@ -23,6 +23,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
@@ -33,7 +34,7 @@ class RegistrationController extends AbstractController
 
     public function __construct(EmailVerifier $emailVerifier, UserRepository $userRepository, StatusRepository $statusRepository, 
     uBrand $brand, TranslatorInterface $intl, BaseUrl $baseUrl, Services $services, BrickPhone $brickPhone, AddEntity $addEntity,
-    sMailer $sMailer)
+    sMailer $sMailer, UrlGeneratorInterface $urlGenerator )
     {
         $this->emailVerifier     = $emailVerifier;
         $this->statusRepository  = $statusRepository;
@@ -49,6 +50,7 @@ class RegistrationController extends AbstractController
         $this->services = $services;
         $this->sMailer = $sMailer;
         $this->addEntity = $addEntity;
+        $urlGenerator = $urlGenerator;
         $this->brickPhone = $brickPhone;
     }
 
