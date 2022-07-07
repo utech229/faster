@@ -45,6 +45,7 @@ class uBrand extends AbstractController
             ],
            'author'             => [
                'name'           => $company->getName(),
+               'address'        => $company->getAddress(),
                'ifu'            => $company->getIfu(),
                'rccm'           => $company->getRccm(),
            ],

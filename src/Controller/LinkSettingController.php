@@ -76,16 +76,10 @@ class LinkSettingController extends AbstractController
                 $user->setPassword($userPasswordHasher->hashPassword($user, $form->get('plainPassword')->getData()));
                 $this->userRepository->add($user);
                 $message = $this->intl->trans("Votre mot de passe à été modifié avec succès. Vous pouvez vous connecter à présent.");
-                $this->addFlash('info', $message);
+                $this->addFlash('success', $message);
                 return $this->services->msg_success(
                     $this->intl->trans("Réinitialisation du mot de passe"),
                     $message
-                );
-            }else {
-                dd($user);
-                return $this->services->msg_success(
-                    $this->intl->trans("Réinitialisation du mot de passe"),
-                    '$message'
                 );
             }
         }
@@ -93,7 +87,7 @@ class LinkSettingController extends AbstractController
         {
             $user = $this->userRepository->findOneBy(["uid" => $uid]);
             if($user->getActiveCode() == $code) {
-                //$user->setActiveCode(null);
+                $user->setActiveCode(null);
                 $user->setUpdatedAt(new \DatetimeImmutable());
                 $this->userRepository->add($user);
 

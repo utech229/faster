@@ -16,7 +16,7 @@
 		<meta property="og:url" content="{{ baseUrl }}" />
 		<meta property="og:site_name" content="{{ brand.name }} |{{ brand.name }}" />
 		<!-- Favicons -->
-        <link href="{{ asset('app/uploads/brands/logos/'~ brand.name|lower ~'.png') }}" rel="icon">
+        <link href="{{ asset('app/uploads/brands/logos/'~ brand.logo ~'') }}" rel="icon">
         <link href="{{ brand.apple_touch_icon }}" rel="apple-touch-icon">
 		<!--begin::Fonts-->
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" />
@@ -34,8 +34,6 @@
 		<!--begin::Main-->
 		{% block body %}{% endblock %}
 		<!--end::Main-->
-
-
 
 		<!--begin::Javascript-->
         <!--begin::Global Javascript Bundle(used by all pages)-->

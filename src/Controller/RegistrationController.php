@@ -178,9 +178,13 @@ class RegistrationController extends AbstractController
     #[Route('/{_locale}/reset/password', name: 'app_init_reset')]
     public function app_password_reset(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
     {
+
         $user = new User();
         $form = $this->createForm(PasswordFormType::class, $user);
         $form->handleRequest($request);
+
+        $brand = $this->brand->get();
+
         if ($request->request->count() > 0)
         {
             if ($form->isSubmitted() && $form->isValid()) {
@@ -195,11 +199,17 @@ class RegistrationController extends AbstractController
                     // Lien de réinitialisation
                     $base = $this->baseUrl;
                     $url = $base.$this->urlGenerator->generate('app_password_resetting', ["uid" => $user->getUid(), 'code' => $code]);
-                    $this->sMailer->nativeSend(
-                        $this->brand->get()['emails']['support'], 
-                        $email , 
-                        $this->intl->trans('Réinialisation de mot de passe'),
-                        $url);
+                    //email
+                    $message = $this->render('email/password-reset.html.twig', [
+                        'title'           => $this->intl->trans('Récupération de compte').' - '. $brand['name'],
+                        'brand'           => $brand,
+                        'data'            => [
+                            'url'  => $url,
+                            'user' => $user
+                        ]
+                    ]);
+                    $this->sMailer->nativeSend( $this->brand->get()['emails']['support'], 
+                        $email ,  $this->intl->trans('Réinialisation de mot de passe'),  $message);
 
                     $message = $this->intl->trans("Veuillez vérifier votre boite de reception email pour réinitialiser votre nouveau mot de passe");
                     $this->addFlash('info', $message);
@@ -222,7 +232,8 @@ class RegistrationController extends AbstractController
 
             }
         }
-        $brand = $this->brand->get();
+        
+
         return $this->render('registration/'.$this->brand->get()['regisform'], [
             'title'           => $this->intl->trans('Récupération de compte').' - '. $brand['name'],
             'menu_text'       => $this->intl->trans('Récupération de compte'),
