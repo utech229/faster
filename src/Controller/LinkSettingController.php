@@ -5,10 +5,10 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Service\uBrand;
 use App\Service\BaseUrl;
-use App\Service\Litesms;
 use App\Service\Services;
 use App\Service\AddEntity;
 use App\Repository\UserRepository;
+use App\Form\PasswordSettingFormType;
 use App\Repository\ContactRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -33,7 +33,6 @@ class LinkSettingController extends AbstractController
         $this->userRepository  = $userRepository;
         $this->contactRepository  = $contactRepository;
         $this->addEntity          = $addEntity;
-        $this->litesms            = $litesms;
 	}
     
     #[Route('/email_edit/{email}/{uid}/{token}', name: 'app_user_email_setting')]
@@ -61,13 +60,21 @@ class LinkSettingController extends AbstractController
     #[Route('/pass_resetting/{uid}/{code}', name: 'app_password_resetting')]
     public function password_resetting(Request $request, Services $services, $uid, $code): Response
     {
+        $user = new User();
+        $form = $this->createForm(PasswordSettingFormType::class, $user);
         $user = $this->userRepository->findOneBy(["uid" => $uid]);
         if($user->getActiveCode() == $code) {
             $user->setActiveCode(null);
             $user->setUpdatedAt(new \DatetimeImmutable());
             $this->userRepository->add($user);
             $this->addFlash('info', $this->intl->trans("Veuillez saisir votre nouveau mot de passe"));
-            //return $this->redirectToRoute("app_home");
+            return $this->render('registration/'.$this->brand->get()['regisform'], [
+                'title'           => $this->intl->trans('Mot de passe').' - '. $brand['name'],
+                'menu_text'       => $this->intl->trans('Mot de passe'),
+                'brand'           => $brand,
+                'baseUrl'         => $this->baseUrl,
+                'form'            => $form->createView(),
+            ]);
         }else {
             $this->addFlash('warning', $this->intl->trans("Votre lien de réinitialisation d'activation du nouvelle adresse email est expiré"));
             return $this->redirectToRoute("app_home");
