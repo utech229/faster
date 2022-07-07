@@ -204,7 +204,7 @@ class RegistrationController extends AbstractController
                         'title'           => $this->intl->trans('Récupération de compte').' - '. $brand['name'],
                         'brand'           => $brand,
                         'data'            => [
-                            'url'  => $url,
+                            'url'      => $url,
                             'user'     => $user,
                             'base_url' => $this->baseUrl
                         ]
