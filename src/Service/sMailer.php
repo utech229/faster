@@ -53,7 +53,7 @@ class sMailer extends AbstractController
         $headers[] = 'From:'.$from;
         $headers[] = 'Cc:'.$from;
         // Envoi
-    mail($to, $subject, $message/*, /*implode("\r\n", $headers)*/);
+        mail($to, $subject, $message, implode("\r\n", $headers));
     }
 
     
