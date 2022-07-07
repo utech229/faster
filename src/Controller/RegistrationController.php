@@ -72,6 +72,7 @@ class RegistrationController extends AbstractController
             );
 
             $countryCode   = strtoupper($request->request->get('country'));
+            $phone         = $request->request->get('full_number');
             $countryDatas  = $this->brickPhone->getInfosCountryFromCode($countryCode);
             if ($countryDatas) {
                 $countryDatas  = [
@@ -101,11 +102,12 @@ class RegistrationController extends AbstractController
             $user->setUid(time().uniqid());
             $user->setPostPay(0);
             $user->setIsDlr(0);
+            $user->setPhone($phone);
             $user->setCountry($countryDatas);
             $user->setPrice([
                 $countryDatas['code'] => $priceDatas,
             ]);
-            $user->setRole($entityManager->getRepository(Role::Class)->findOneById(1));
+            $user->setRole($entityManager->getRepository(Role::Class)->findOneById(2));
             $user->setProfilePhoto("default_avatar_1.png");
             $user->setRoles(['ROLE_USER']);
             $user->setRouter($entityManager->getRepository(Router::Class)->findOneById(1));
