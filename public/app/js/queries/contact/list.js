@@ -376,12 +376,12 @@ $(document).on('click', ".contactUpdater", function(e)
     
 });
 
-$(document).on('change',"#list_user_contact_id", function (e) {
-    let uid = $(this).val();
+function rechargeGroups(uid_user) {
+    
     $.ajax({
         url:get_group,
         type:"post",
-        data:{  _uid:   uid,
+        data:{  _uid:   uid_user,
                 _token: function() { return csrfToken; }
             },
         dataType:"json",
@@ -417,6 +417,11 @@ $(document).on('change',"#list_user_contact_id", function (e) {
         }
 
     });
+}
+
+$(document).on('change',"#list_user_contact_id", function (e) {
+    let uid_user = $(this).val();
+    rechargeGroups(uid_user);
 });
 
 

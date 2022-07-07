@@ -79,8 +79,8 @@ class ContactController extends AbstractController
         $groups             =   [];
 
 
-        if ($this->pView) {
-            $users          =   $this->services->getUserByPermission($this->pCreate, null, null, 1);
+        if ($this->pView || $this->pAllView) {
+            $users          =   $this->services->getUserByPermission($this->permission[1], $typeUser, $this->getUser(), 0);
             $groups         =   count($users) > 0 ? $groups : $this->getUser()->getContactGroups();
         }
         return $this->render('contact/index.html.twig', [
