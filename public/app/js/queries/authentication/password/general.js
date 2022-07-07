@@ -17,7 +17,7 @@ var KTSettingPasswordGeneral = function() {
             form, {
                 fields: {
                     
-                    'form[email]': {
+                    'password_form[email]': {
                         validators: {
                             notEmpty: {
                                 message: _Email_NotEmpty_Connexion
