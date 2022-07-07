@@ -69,7 +69,7 @@ class LinkSettingController extends AbstractController
             
             $uid  = $request->request->get('user');
             $user = $this->userRepository->findOneBy(["uid" => $uid]);
-            dd($user);
+            
             if ($form->isSubmitted() && $form->isValid()) {
                 //email verify 
                 $user->setPassword($userPasswordHasher->hashPassword($user, $form->get('plainPassword')->getData()));
@@ -81,6 +81,7 @@ class LinkSettingController extends AbstractController
                     $message
                 );
             }else {
+                dd($user);
                 return $this->services->msg_success(
                     $this->intl->trans("Réinitialisation du mot de passe"),
                     '$message'
