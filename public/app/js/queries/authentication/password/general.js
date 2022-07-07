@@ -60,7 +60,6 @@ var KTSignupGeneral = function() {
                         data:   data,
                         dataType: 'json',
                         success: function(response) {
-                            if (response.status === 'success') {
                                 // Hide loading indication
                                 submitButton.removeAttribute('data-kt-indicator');
                                 // Enable button
@@ -76,21 +75,14 @@ var KTSignupGeneral = function() {
                                         confirmButton: "btn btn-primary"
                                     }
                                 }).then(function(result) {
-                                    if (result.isConfirmed) {
-                                        form.reset(); // reset form              
+                                    form.reset();
+                                    if (result.isConfirmed && response.title == 'success') {             
                                         window.location.href = login_url;
                                     }
                                 });
                                 /*setTimeout(() => {
                                     window.location.href = login_url;
                                 }, 5000);*/
-                            } else {
-                                swalSimple(response.title,  response.message)
-                                // Hide loading indication
-                                submitButton.removeAttribute('data-kt-indicator');
-                                // Enable button
-                                submitButton.disabled = false;
-                            }
                         },
                         error: function(response) {
                             $(document).trigger('ajaxError');
