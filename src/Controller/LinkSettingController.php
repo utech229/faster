@@ -66,6 +66,7 @@ class LinkSettingController extends AbstractController
 
         if ($request->request->count() > 0 && $code == null)
         {
+            dd('de');
             $uid  = $request->request->get('user');
             $user = $this->userRepository->findOneBy(["uid" => $uid]);
             if ($form->isSubmitted() && $form->isValid()) {
@@ -87,6 +88,7 @@ class LinkSettingController extends AbstractController
         }
         else 
         {
+            dd('der');
             $user = $this->userRepository->findOneBy(["uid" => $uid]);
             if($user->getActiveCode() == $code) {
                 //$user->setActiveCode(null);
