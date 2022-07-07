@@ -192,7 +192,8 @@ class RegistrationController extends AbstractController
                     $this->userRepository->add($user);
                     // Lien de réinitialisation
                     $base = $this->baseUrl;
-                    $url = $base."/{_locale}/linker/pass_resetting/".$user->getUid()."/".$code;
+                    $url = $this->urlGenerator->generate('app_password_resetting', ["uid" => $user->getUid(), $code => $code]);
+                   // $base."/{_locale}/linker/pass_resetting/".$user->getUid()."/".$code;
                     $this->sMailer->nativeSend(
                         $this->brand->get()['emails']['support'], 
                         $email , 
