@@ -75,8 +75,7 @@ var KTSignupGeneral = function() {
                                         confirmButton: "btn btn-primary"
                                     }
                                 }).then(function(result) {
-                                    
-                                    if (result.isConfirmed && response.title == 'success') { 
+                                    if (result.isConfirmed && response.type == 'success') { 
                                         form.reset();            
                                         window.location.href = login_url;
                                     }
