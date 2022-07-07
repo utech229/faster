@@ -378,7 +378,6 @@ var KTContactList = function() {
                                     responsivePriority: 7,
                                     targets: 6, 
                                     render: function (data, type, full, meta) {
-                                        console.log(group[5]);
                                         return data;
                                     }
                                 },
