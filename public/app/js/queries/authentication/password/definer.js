@@ -138,7 +138,7 @@ var KTDefinePasswordGeneral = function() {
                         }
                     });
                 } else {
-                    swalSimple('error', _Form_Error_Swal_Notification)
+                    swalSimple('error', _Form_Error_Swal_Notification);
                     // Hide loading indication
                     submitButton.removeAttribute('data-kt-indicator');
 
