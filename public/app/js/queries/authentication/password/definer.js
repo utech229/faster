@@ -35,7 +35,7 @@ var KTDefinePasswordGeneral = function() {
                             },
                             identical: {
                                 compare: function() {
-                                    return form.querySelector('[name="form[plainPassword]"]').value;
+                                    return form.querySelector('[name="password_setting_form[plainPassword]"]').value;
                                 },
                                 message: _Password_Confirm
                             }
