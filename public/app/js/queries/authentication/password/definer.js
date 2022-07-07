@@ -121,7 +121,7 @@ var KTDefinePasswordGeneral = function() {
         // Handle password input
         form.querySelector('input[name="password_setting_form[plainPassword]"]').addEventListener('input', function() {
             if (this.value.length > 0) {
-                validator.updateFieldStatus('form[plainPassword]', 'NotValidated');
+                validator.updateFieldStatus('password_setting_form[plainPassword]', 'NotValidated');
             }
         });
     }
