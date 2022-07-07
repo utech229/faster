@@ -64,7 +64,7 @@ class LinkSettingController extends AbstractController
         $form = $this->createForm(PasswordSettingFormType::class, $user);
         $user = $this->userRepository->findOneBy(["uid" => $uid]);
         if($user->getActiveCode() == $code) {
-            $user->setActiveCode(null);
+            //$user->setActiveCode(null);
             $user->setUpdatedAt(new \DatetimeImmutable());
             $this->userRepository->add($user);
             $this->addFlash('info', $this->intl->trans("Veuillez saisir votre nouveau mot de passe"));
