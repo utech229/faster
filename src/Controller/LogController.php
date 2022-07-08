@@ -97,11 +97,12 @@ class LogController extends AbstractController
         $logs = $this->logRepository->findBy([],["createdAt"=>"DESC"]);
         foreach ($logs  as $log) 
 		{
-            $logUser = $log->getUser();
+            $logUser  = $log->getUser();
+            $usetting = $log->getUser()->getUsetting();
             $row   = array();
             $row['OrderID']   = $log->getId();
-            $row['Login']     = $log->getEmail();
-            $row['Name']      = ($logUser) ? $logUser->getFirstName().' '.$logUser->getLastName() : 'Inconnu' ;
+            $row['Login']     = $logUser->getEmail();
+            $row['Name']      = ($usetting->getFirstName()) ? $usetting->getFirstName().' '.$usetting->getLastName() : $this->intl->trans('Inconnu') ;
             $row['Action']    = $log->getTask();
             $row['Ip']        = $log->getIp();
             $row['Phone']     = ($logUser) ? $logUser->getPhone() : 'Inconnu';
