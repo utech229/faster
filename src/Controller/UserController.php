@@ -351,11 +351,22 @@ class UserController extends AbstractController
         );
 
         $affiliates = $user->getAffiliates();
-        foreach ($affiliates as $affiliate) {
+        foreach ($affiliates as $affiliate) 
+        {
             $this->userRepository->remove($affiliate);
             $this->usettingRepository->remove($affiliate->getUsetting());
+
+            $logs = $affiliate->getLogs();
+            foreach ($logs as $log) {
+                $this->em->getRepository(Log::class)->remove($log);
+            }
         }
-      
+
+        $logs = $user->getLogs();
+        foreach ($logs as $log) {
+            $this->em->getRepository(Log::class)->remove($log);
+        }
+
         $this->userRepository->remove($user);
         $this->usettingRepository->remove($user->getUsetting());
         return $this->services->msg_success(
