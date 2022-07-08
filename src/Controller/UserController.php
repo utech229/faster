@@ -43,7 +43,7 @@ class UserController extends AbstractController
     AuthorizationRepository $authorizationRepository, uBrand $brand,ValidatorInterface $validator, UsettingRepository $usettingRepository,
     DbInitData $dbInitData, AddEntity $addEntity, StatusRepository $statusRepository, BrandRepository $brandRepository)
     {
-        $this->baseUrl         = $baseUrl;
+        $this->baseUrl         = $baseUrl->init();
         $this->urlGenerator    = $urlGenerator;
         $this->intl            = $translator;
         $this->services        = $services;
@@ -119,7 +119,7 @@ class UserController extends AbstractController
             ],
             'brand'           => $this->brand,
             'brands'          => $brands,
-            'baseUrl'         => $this->baseUrl->init(),
+            'baseUrl'         => $this->baseUrl,
             'users'           => $this->userRepository->findAll(),
             'userform'        => $form->createView(),
             'pCreateUser'     => $this->pCreate,
