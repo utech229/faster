@@ -484,7 +484,7 @@ class DbInitData extends AbstractController
 			$response = true;
 		}else{
 			$existed_sender->setManager($this->userRepository->findOneById(1));
-			$existed_sender->setCreatedBy($this->userRepository->findOneById(1));
+			$existed_sender->setCreateBy($this->userRepository->findOneById(1));
 			$this->senderRepository->add($existed_sender, true);
 		}
 	}
