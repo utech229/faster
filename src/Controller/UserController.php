@@ -8,6 +8,7 @@ use App\Entity\Brand;
 use App\Form\UserType;
 use App\Service\uBrand;
 use App\Service\BaseUrl;
+use App\Service\sMailer;
 use App\Service\Services;
 use App\Service\AddEntity;
 use App\Service\BrickPhone;
@@ -41,7 +42,7 @@ class UserController extends AbstractController
     EntityManagerInterface $entityManager, TranslatorInterface $translator,
     RoleRepository $roleRepository, UserRepository $userRepository, PermissionRepository $permissionRepository,
     AuthorizationRepository $authorizationRepository, uBrand $brand,ValidatorInterface $validator, UsettingRepository $usettingRepository,
-    DbInitData $dbInitData, AddEntity $addEntity, StatusRepository $statusRepository, BrandRepository $brandRepository)
+    DbInitData $dbInitData, AddEntity $addEntity, StatusRepository $statusRepository, BrandRepository $brandRepository, sMailer $sMailer)
     {
         $this->baseUrl         = $baseUrl->init();
         $this->urlGenerator    = $urlGenerator;
@@ -58,6 +59,7 @@ class UserController extends AbstractController
         $this->brandRepository  = $brandRepository;
         $this->validator         = $validator;
         $this->DbInitData        = $dbInitData;
+        $this->sMailer = $sMailer;
 
         $this->comptes = [
 			['Owner' =>'','Operator'=>'','Phone'=>'','TransactionId'=>'','Country'=>'', 'Status'=>''],
