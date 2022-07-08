@@ -97,7 +97,7 @@ class AddEntity extends AbstractController
                 ->setTimezone('+01:00')
                 ->setCreatedAt(new \DatetimeImmutable())
                 ->setUser($user);
-        $this->usettingRepository->add($usetting);
+        $this->usettingRepository->add($usetting, true);
     }
 
     //usetting datas for existed user
