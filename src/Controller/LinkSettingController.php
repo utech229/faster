@@ -113,18 +113,23 @@ class LinkSettingController extends AbstractController
     {
         $user = $this->userRepository->findOneBy(["uid" => $uid]);
 
-        if($user->getActiveCode() == $code) {
-            $user->setActiveCode(null);
-            $user->setUpdatedAt(new \DatetimeImmutable());
-            $user->setStatus($this->services->status(3));
-            $this->userRepository->add($user);
-
-            $this->addFlash('success', $this->intl->trans("Compte activé avec succès"));
+        if ($user->getStatus()->getCode() == 3) {
+            $this->addFlash('success', $this->intl->trans("Compte actif, connectez vous avec succès"));
             return $this->redirectToRoute('app_login');
-        }
-        else {
-            $this->addFlash('warning', $this->intl->trans("Votre lien d'activation de compte est expiré"));
-            return $this->redirectToRoute("app_login");
+        }else {
+            if($user->getActiveCode() == $code) {
+                $user->setActiveCode(null);
+                $user->setUpdatedAt(new \DatetimeImmutable());
+                $user->setStatus($this->services->status(3));
+                $this->userRepository->add($user);
+
+                $this->addFlash('success', $this->intl->trans("Compte activé avec succès"));
+                return $this->redirectToRoute('app_login');
+            }
+            else {
+                $this->addFlash('warning', $this->intl->trans("Votre lien d'activation de compte est expiré"));
+                return $this->redirectToRoute("app_login");
+            }
         }
     }
 

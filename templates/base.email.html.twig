@@ -32,8 +32,9 @@
                         <div style="text-align:left; margin: 0 20px; padding: 40px; background-color:#ffffff; border-radius: 6px">
                             <!--begin:Email content-->
                             {% block body %}{% endblock %}
+                            <hr>
                             <!--end:Email content-->
-                            <div style="padding-bottom: 10px">{% trans %}Cordialement, {% endtrans %},
+                            <div style="padding-bottom: 10px">{% trans %}Cordialement{% endtrans %},
                             <br> {% trans %}L'équipe {% endtrans %} {{ brand.name}}.
                             <tr>
                                 <td align="center" valign="center" style="font-size: 13px; text-align:center;padding: 20px; color: #fff;">
