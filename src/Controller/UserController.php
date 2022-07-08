@@ -48,7 +48,7 @@ class UserController extends AbstractController
         $this->intl            = $translator;
         $this->services        = $services;
         $this->brickPhone      = $brickPhone;
-        $this->brand           = $brand;
+        $this->brand           = $brand->get();
         $this->em	           = $entityManager;
         $this->addEntity	   = $addEntity;
         $this->userRepository  = $userRepository;
@@ -113,11 +113,11 @@ class UserController extends AbstractController
         return $this->render('user/index.html.twig', [
             'controller_name' => 'UserController',
             'role'            => $this->roleRepository->getManageUserRole($this->getUser()->getRole()->getLevel()),
-            'title'           => $this->intl->trans('Mes utilisateurs').' - '. $this->brand->get()['name'],
+            'title'           => $this->intl->trans('Mes utilisateurs').' - '. $this->brand['name'],
             'pageTitle'       => [
                 [$this->intl->trans('Utilisateurs')],
             ],
-            'brand'           => $this->brand->get(),
+            'brand'           => $this->brand,
             'brands'          => $brands,
             'baseUrl'         => $this->baseUrl->init(),
             'users'           => $this->userRepository->findAll(),
@@ -172,13 +172,14 @@ class UserController extends AbstractController
             );
             
             $currentUser   = $this->getUser(); //connected user
+            $the_password  = $this->services->idgenerate(8);
             //user data setting
             $user->setBrand($brand);
             $user->setBalance(100);
             $user->setPaymentAccount($this->comptes);
             $user->setApikey(bin2hex(random_bytes(32)));
             $user->setCreatedAt(new \DatetimeImmutable());
-            $user->setPassword($userPasswordHasher->hashPassword($user, strtoupper(123456/*$form->get('firstname')->getData()/*$this->services->idgenerate(8)*/)));
+            $user->setPassword($userPasswordHasher->hashPassword($user, $the_password));
             $user->setRoles(['ROLE_'.$form->get('role')->getData()->getName()]);
             $user->setCountry($countryDatas);
             $user->setPrice([
@@ -194,6 +195,34 @@ class UserController extends AbstractController
                 'ulastname'  => $form->get('lastname')->getData(),
             ];
             $setDefaultSetting = $this->addEntity->defaultUsetting($user, $settingData);
+       
+            // Lien d'activation'
+            if ($user->getStatus()->getCode()) {
+                $url = $this->baseUrl.$this->urlGenerator->generate('app_account_activation', ["uid" => $user->getUid(), 'code' => $code]);
+                $mailTemplate = 'new-user-account.html.twig';
+            }else {
+                //code
+                $code = $this->services->idgenerate(10);
+                $user->setActiveCode($code);
+                $url = $this->baseUrl.$this->urlGenerator->generate('app_account_activation', ["uid" => $user->getUid(), 'code' => $code]);
+                $mailTemplate = 'invitation.html.twig';
+            }
+           
+            //email
+            $message = $this->render('email/'.$emailTemplate, [
+                 'title'           => $this->intl->trans('Activation de compte').' - '. $brand['name'],
+                 'brand'           => $brand,
+                 'data'            => [
+                     'url'      => $url,
+                     'user'     => $user,
+                     'password' => $the_password,
+                     'base_url' => $this->baseUrl
+                 ]
+             ]);
+ 
+             $this->sMailer->nativeSend( $this->brand['emails']['support'], 
+                 $email ,  $this->intl->trans('Activation de compte'),  $message);
+
             return $this->services->msg_success(
                 $this->intl->trans("Création d'un nouvel utilisateur"),
                 $this->intl->trans("Utilisateur ajouté avec succès")
