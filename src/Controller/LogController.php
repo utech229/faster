@@ -100,7 +100,7 @@ class LogController extends AbstractController
             $logUser = $log->getUser();
             $row   = array();
             $row['OrderID']   = $log->getId();
-            $row['Login']     = $log->getEmail();
+            $row['Login']     = $logUser->getEmail();
             $row['Name']      = ($logUser) ? $logUser->getFirstName().' '.$logUser->getLastName() : 'Inconnu' ;
             $row['Action']    = $log->getTask();
             $row['Ip']        = $log->getIp();
