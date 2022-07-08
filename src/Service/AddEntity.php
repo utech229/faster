@@ -124,21 +124,22 @@ class AddEntity extends AbstractController
         if ($mainBrand){
             $mainBrand->setManager($this->userRepository->findOneById(1));
             $this->brandRepository->add($mainBrand, true);
-        }else
-        $brand = new Brand();
-        $brand->setUid($this->services->idgenerate(10))
-            ->setStatus($this->statusRepository->findOneByCode(3))
-            ->setName($defaultbrand['name'])
-            ->setSiteUrl($defaultbrand['base_url'])
-            ->setFavicon($defaultbrand['favicon_link'])
-            ->setEmail($defaultbrand['emails']['support'])
-            ->setLogo(strtolower($defaultbrand['name'].'.png'))
-            ->setCommission(0)
-            ->setNoreplyEmail('noreply@'.$defaultbrand['base_url'])
-            ->setPhone($defaultbrand['phone']['bj'])
-            ->setIsDefault(true)
-            ->setCreatedAt(new \DatetimeImmutable());
-        $this->brandRepository->add($brand);
+        }else{
+            $brand = new Brand();
+            $brand->setUid($this->services->idgenerate(10))
+                ->setStatus($this->statusRepository->findOneByCode(3))
+                ->setName($defaultbrand['name'])
+                ->setSiteUrl($defaultbrand['base_url'])
+                ->setFavicon($defaultbrand['favicon_link'])
+                ->setEmail($defaultbrand['emails']['support'])
+                ->setLogo(strtolower($defaultbrand['name'].'.png'))
+                ->setCommission(0)
+                ->setNoreplyEmail('noreply@'.$defaultbrand['base_url'])
+                ->setPhone($defaultbrand['phone']['bj'])
+                ->setIsDefault(true)
+                ->setCreatedAt(new \DatetimeImmutable());
+            $this->brandRepository->add($brand);
+        }
     }
 
     //usetting datas for new user
