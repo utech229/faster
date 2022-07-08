@@ -202,19 +202,21 @@ class UserController extends AbstractController
             $code = $this->services->idgenerate(10);
         
             // Lien d'activation'
-            if ($user->getStatus()->getCode()) {
+            if ($user->getStatus()->getCode() == 3) {
                 $url = $this->baseUrl.$this->urlGenerator->generate('app_account_activation', ["uid" => $user->getUid(), 'code' => $code]);
                 $mailTemplate = 'new-user-account.html.twig';
+                $titler = $this->intl->trans('Connexion au compte');
             }else {
                 
                 $user->setActiveCode($code);
                 $url = $this->baseUrl.$this->urlGenerator->generate('app_account_activation', ["uid" => $user->getUid(), 'code' => $code]);
                 $mailTemplate = 'invitation.html.twig';
+                $titler = $this->intl->trans('Activation de compte');
             }
            
             //email
             $message = $this->render('email/'.$mailTemplate, [
-                 'title'           => $this->intl->trans('Activation de compte').' - '.$this->brand['name'],
+                 'title'           => $titler .' - '.$this->brand['name'],
                  'brand'           => $this->brand,
                  'data'            => [
                      'url'      => $url,
@@ -225,7 +227,7 @@ class UserController extends AbstractController
              ]);
  
              $this->sMailer->nativeSend( $this->brand['emails']['support'], 
-                 $email ,  $this->intl->trans('Activation de compte'),  $message);
+                 $email ,  $titler,  $message);
 
             return $this->services->msg_success(
                 $this->intl->trans("Création d'un nouvel utilisateur"),
