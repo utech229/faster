@@ -310,8 +310,8 @@ class ContactGroupController extends AbstractController
         return new JsonResponse($data);
     }
 
-    #[Route('/getinfogroup', name: 'app_get_info_group', methods: ['POST'])]
-    public function getInfoGroup(Request $request, ContactGroupRepository $contactGoupRepository): Response
+    #[Route('/getchampgroup', name: 'app_get_champ_group', methods: ['POST'])]
+    public function getChampGroup(Request $request, ContactGroupRepository $contactGoupRepository): Response
     {
         //Vérification du tokken
 		if (!$this->isCsrfTokenValid($this->getUser()->getUid(), $request->request->get('_token')))
@@ -323,15 +323,17 @@ class ContactGroupController extends AbstractController
 
         $group   =    $this->em->getRepository(ContactGroup::class)->findOneByUid($request->request->get('_uid'));
 
-        $infoGroup[1]           =   "Champ1";       $infoGroup[2]      =   "Champ2";
-            $infoGroup[3]       =   "Champ3";       $infoGroup[4]      =   "Champ4";
-            $infoGroup[5]       =   "Champ5";
+        $infoGroup[1]      =   "Numéro";    $infoGroup[2]  =   "Champ1";
+                $infoGroup[3]  =   "Champ2";$infoGroup[4]  =   "Champ3";
+                $infoGroup[5]  =   "Champ4";$infoGroup[6]  =   "Champ5";;
+                $infoGroup[7]  =   "Crée le";          $infoGroup[8]  =   "Modifié le";
         
             if (!$group)  return new JsonResponse($infoGroup);
             
-            $infoGroup[1]      =   $group->getField1();$infoGroup[2]    =   $group->getField2();
-                $infoGroup[3]  =   $group->getField3();$infoGroup[4]    =   $group->getField4();
-                $infoGroup[5]  =   $group->getField5();
+            $infoGroup[1]      =   "Numéro";$infoGroup[2]  =   $group->getField1();
+                $infoGroup[3]  =   $group->getField2();$infoGroup[4]  =   $group->getField3();
+                $infoGroup[5]  =   $group->getField4();$infoGroup[6]  =   $group->getField5();
+                $infoGroup[7]  =   "Crée le";          $infoGroup[8]  =   "Modifié le";
        
         $this->services->addLog($this->intl->trans("Récuperation des informations d'un groupe de contacts"));
        
