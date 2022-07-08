@@ -200,7 +200,6 @@ class UserController extends AbstractController
 
             //code
             $code = $this->services->idgenerate(10);
-        
             // Lien d'activation'
             if ($user->getStatus()->getCode() == 3) {
                 $url = $this->baseUrl.$this->urlGenerator->generate('app_account_activation', ["uid" => $user->getUid(), 'code' => $code]);

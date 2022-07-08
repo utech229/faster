@@ -86,22 +86,3 @@ if (!pViewAffiliate) {
 }
 
 
-
-function statisticsReload(){
-    $.ajax({
-        url:  statistic_link,
-        type: "post",
-        data: {_token : csrfToken},
-        dataType: "json",
-        success: function(r) {
-            $('#stat_all').html(r.data.all);
-            $('#stat_pending').html(r.data.pending);
-            $('#stat_desactivated').html(r.data.desactivated);
-            $('#stat_active').html(r.data.active);
-            $('#stat_suspending').html(r.data.suspended);
-        },
-        error: function () { 
-            $(document).trigger('toastr.onAjaxError');
-        }
-    });
-};
