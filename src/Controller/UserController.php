@@ -194,9 +194,7 @@ class UserController extends AbstractController
                 'ufirstname' => $form->get('firstname')->getData(),
                 'ulastname'  => $form->get('lastname')->getData(),
             ];
-            $this->addEntity->defaultUsetting($user, $settingData);
-            
-       
+            dd($this->addEntity->defaultUsetting($user, $settingData));
             //code
             $code = $this->services->idgenerate(10);
         
