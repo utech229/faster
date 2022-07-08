@@ -120,8 +120,9 @@ class AddEntity extends AbstractController
     public function defaultBrand()
     {
         $mainBrand = $this->brandRepository->findOneById(1);
-        dd($mainBrand);
+        
         if ($mainBrand){
+            dd($mainBrand, 'tr');
             $mainBrand->setManager($this->userRepository->findOneById(1));
             $this->brandRepository->add($mainBrand, true);
         }else
