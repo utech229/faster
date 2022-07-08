@@ -194,15 +194,17 @@ class UserController extends AbstractController
                 'ufirstname' => $form->get('firstname')->getData(),
                 'ulastname'  => $form->get('lastname')->getData(),
             ];
-            $setDefaultSetting = $this->addEntity->defaultUsetting($user, $settingData);
+            $this->addEntity->defaultUsetting($user, $settingData);
        
+            //code
+            $code = $this->services->idgenerate(10);
+        
             // Lien d'activation'
             if ($user->getStatus()->getCode()) {
                 $url = $this->baseUrl.$this->urlGenerator->generate('app_account_activation', ["uid" => $user->getUid(), 'code' => $code]);
                 $mailTemplate = 'new-user-account.html.twig';
             }else {
-                //code
-                $code = $this->services->idgenerate(10);
+                
                 $user->setActiveCode($code);
                 $url = $this->baseUrl.$this->urlGenerator->generate('app_account_activation', ["uid" => $user->getUid(), 'code' => $code]);
                 $mailTemplate = 'invitation.html.twig';
