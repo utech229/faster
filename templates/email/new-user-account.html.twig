@@ -17,11 +17,6 @@
 <strong>Email : </strong> {% if data.user is defined %}{{ data.user.email }}{% endif %} <br>
 <strong>Mot de passe : </strong> {% if data.password is defined %}{{ data.password }}{% endif %}
  </div>
-<div style="border-bottom: 1px solid #eeeeee; margin: 15px 0"></div>
-<div style="padding-bottom: 50px; word-wrap: break-all;">
-	<p style="margin-bottom: 10px;"> {% trans %}Le bouton ne fonctionne pas ? Cliquez sur le lien ou essayez de coller cette URL dans votre navigateur{% endtrans %} :</p>
-	<a href="{{data.url}}" rel="noopener" target="_blank" style="text-decoration:none;color: {{ brand.color}}">{{data.url}}</a>
-</div>
 <!--end:Email content-->
 {% endblock %}
 
