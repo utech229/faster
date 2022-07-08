@@ -170,7 +170,7 @@ var KTUsersAddUser = function() {
 }();
 KTUtil.onDOMContentLoaded((function() {
     KTUsersAddUser.init();
-    setInterval(() => {
+    /*setInterval(() => {
         tableReloadButton.click();
-    }, 60000);
+    }, 60000);*/
 }));
