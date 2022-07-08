@@ -133,7 +133,7 @@ class RegistrationController extends AbstractController
 
             //code
             $code = $this->services->idgenerate(10);
-            $user->setBrand($this->brand->get()['brand']);
+            $user->setActiveCode($code);
             // Lien d'activation'
             $url = $this->baseUrl.$this->urlGenerator->generate('app_account_activation', ["uid" => $user->getUid(), 'code' => $code]);
             //email
