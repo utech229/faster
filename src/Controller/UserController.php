@@ -350,6 +350,11 @@ class UserController extends AbstractController
             $this->intl->trans("Vous ne pouvez pas supprimer cet utilisateur car il s'agit de l'administrateur de la marque active"),
         );
 
+        $affiliates = $user->getAffiliates();
+        foreach ($affiliates as $affiliate) {
+            $this->userRepository->remove($affiliate);
+            $this->usettingRepository->remove($affiliate);
+        }
       
         $this->userRepository->remove($user);
         $this->usettingRepository->remove($user->getUsetting());
