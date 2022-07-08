@@ -353,7 +353,7 @@ class UserController extends AbstractController
         $affiliates = $user->getAffiliates();
         foreach ($affiliates as $affiliate) {
             $this->userRepository->remove($affiliate);
-            $this->usettingRepository->remove($affiliate);
+            $this->usettingRepository->remove($affiliate->getUsetting());
         }
       
         $this->userRepository->remove($user);
