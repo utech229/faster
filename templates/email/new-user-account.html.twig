@@ -5,23 +5,18 @@
 {% block body %}
 <!--begin:Email content-->
 <div style="padding-bottom: 30px; font-size: 17px;">
-	<strong>{% trans %}Bonjour {% endtrans %} {% if user is defined %}{{ user.email }}{% endif %}</strong>
+	<strong>{% trans %}Bonjour {% endtrans %} {% if data.user is defined %}{{ data.user.email }}{% endif %}</strong>
 </div>
 <div style="padding-bottom: 30px">{% trans %}Vous recevez cet e-mail car un compte vous à été crée sur {% endtrans %} {{ brand.name }}. 
 {% trans %}Pour vous connecter à votre cliquez sur ce bouton : {% endtrans %}
 </div>
 <div style="padding-bottom: 40px; text-align:center;">
-	<a href="{{data.url}}" rel="noopener" style="text-decoration:none;display:inline-block;text-align:center;padding:0.75575rem 1.3rem;font-size:0.925rem;line-height:1.5;border-radius:0.35rem;color:#ffffff;background-color:{{ brand.color}};border:0px;margin-right:0.75rem!important;font-weight:600!important;outline:none!important;vertical-align:middle" target="_blank">{% trans %}Activation{% endtrans %}</a>
+	<a href="{{data.url}}" rel="noopener" style="text-decoration:none;display:inline-block;text-align:center;padding:0.75575rem 1.3rem;font-size:0.925rem;line-height:1.5;border-radius:0.35rem;color:#ffffff;background-color:{{ brand.color}};border:0px;margin-right:0.75rem!important;font-weight:600!important;outline:none!important;vertical-align:middle" target="_blank">{% trans %}Connexion{% endtrans %}</a>
 </div>
-<div style="padding-bottom: 30px">{% trans %}Vos identifiant de connexion sont : {% endtrans %} <br>
-<strong>Email : </strong> {% if user is defined %}{{ user.email }}{% endif %} <br>
-<strong>Mot de passe : </strong> {% if user is defined %}{{ data.password }}{% endif %}
+<div style="padding-bottom: 30px">{% trans %}Vos identifiants de connexion sont : {% endtrans %} <br>
+<strong>Email : </strong> {% if data.user is defined %}{{ data.user.email }}{% endif %} <br>
+<strong>Mot de passe : </strong> {% if data.password is defined %}{{ data.password }}{% endif %}
  </div>
-<div style="border-bottom: 1px solid #eeeeee; margin: 15px 0"></div>
-<div style="padding-bottom: 50px; word-wrap: break-all;">
-	<p style="margin-bottom: 10px;"> {% trans %}Le bouton ne fonctionne pas ? Cliquez sur le lien ou essayez de coller cette URL dans votre navigateur{% endtrans %} :</p>
-	<a href="{{data.url}}" rel="noopener" target="_blank" style="text-decoration:none;color: {{ brand.color}}">{{data.url}}</a>
-</div>
 <!--end:Email content-->
 {% endblock %}
 

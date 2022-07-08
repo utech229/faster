@@ -8,6 +8,7 @@ use App\Entity\Brand;
 use App\Form\UserType;
 use App\Service\uBrand;
 use App\Service\BaseUrl;
+use App\Service\sMailer;
 use App\Service\Services;
 use App\Service\AddEntity;
 use App\Service\BrickPhone;
@@ -41,14 +42,14 @@ class UserController extends AbstractController
     EntityManagerInterface $entityManager, TranslatorInterface $translator,
     RoleRepository $roleRepository, UserRepository $userRepository, PermissionRepository $permissionRepository,
     AuthorizationRepository $authorizationRepository, uBrand $brand,ValidatorInterface $validator, UsettingRepository $usettingRepository,
-    DbInitData $dbInitData, AddEntity $addEntity, StatusRepository $statusRepository, BrandRepository $brandRepository)
+    DbInitData $dbInitData, AddEntity $addEntity, StatusRepository $statusRepository, BrandRepository $brandRepository, sMailer $sMailer)
     {
-        $this->baseUrl         = $baseUrl;
+        $this->baseUrl         = $baseUrl->init();
         $this->urlGenerator    = $urlGenerator;
         $this->intl            = $translator;
         $this->services        = $services;
         $this->brickPhone      = $brickPhone;
-        $this->brand           = $brand;
+        $this->brand           = $brand->get();
         $this->em	           = $entityManager;
         $this->addEntity	   = $addEntity;
         $this->userRepository  = $userRepository;
@@ -58,6 +59,7 @@ class UserController extends AbstractController
         $this->brandRepository  = $brandRepository;
         $this->validator         = $validator;
         $this->DbInitData        = $dbInitData;
+        $this->sMailer = $sMailer;
 
         $this->comptes = [
 			['Owner' =>'','Operator'=>'','Phone'=>'','TransactionId'=>'','Country'=>'', 'Status'=>''],
@@ -113,13 +115,13 @@ class UserController extends AbstractController
         return $this->render('user/index.html.twig', [
             'controller_name' => 'UserController',
             'role'            => $this->roleRepository->getManageUserRole($this->getUser()->getRole()->getLevel()),
-            'title'           => $this->intl->trans('Mes utilisateurs').' - '. $this->brand->get()['name'],
+            'title'           => $this->intl->trans('Mes utilisateurs').' - '. $this->brand['name'],
             'pageTitle'       => [
                 [$this->intl->trans('Utilisateurs')],
             ],
-            'brand'           => $this->brand->get(),
+            'brand'           => $this->brand,
             'brands'          => $brands,
-            'baseUrl'         => $this->baseUrl->init(),
+            'baseUrl'         => $this->baseUrl,
             'users'           => $this->userRepository->findAll(),
             'userform'        => $form->createView(),
             'pCreateUser'     => $this->pCreate,
@@ -172,13 +174,14 @@ class UserController extends AbstractController
             );
             
             $currentUser   = $this->getUser(); //connected user
+            $the_password  = $this->services->idgenerate(8);
             //user data setting
             $user->setBrand($brand);
             $user->setBalance(100);
             $user->setPaymentAccount($this->comptes);
             $user->setApikey(bin2hex(random_bytes(32)));
             $user->setCreatedAt(new \DatetimeImmutable());
-            $user->setPassword($userPasswordHasher->hashPassword($user, strtoupper(123456/*$form->get('firstname')->getData()/*$this->services->idgenerate(8)*/)));
+            $user->setPassword($userPasswordHasher->hashPassword($user, $the_password));
             $user->setRoles(['ROLE_'.$form->get('role')->getData()->getName()]);
             $user->setCountry($countryDatas);
             $user->setPrice([
@@ -193,7 +196,37 @@ class UserController extends AbstractController
                 'ufirstname' => $form->get('firstname')->getData(),
                 'ulastname'  => $form->get('lastname')->getData(),
             ];
-            $setDefaultSetting = $this->addEntity->defaultUsetting($user, $settingData);
+            $this->addEntity->defaultUsetting($user, $settingData);
+
+            //code
+            $code = $this->services->idgenerate(10);
+            // Lien d'activation'
+            if ($user->getStatus()->getCode() == 3) {
+                $url = $this->baseUrl.$this->urlGenerator->generate('app_account_activation', ["uid" => $user->getUid(), 'code' => $code]);
+                $mailTemplate = 'new-user-account.html.twig';
+                $titler = $this->intl->trans('Connexion au compte');
+            }else {
+                $user->setActiveCode($code);
+                $url = $this->baseUrl.$this->urlGenerator->generate('app_account_activation', ["uid" => $user->getUid(), 'code' => $code]);
+                $mailTemplate = 'invitation.html.twig';
+                $titler = $this->intl->trans('Activation de compte');
+            }
+           
+            //email
+            $message = $this->render('email/'.$mailTemplate, [
+                 'title'           => $titler .' - '.$this->brand['name'],
+                 'brand'           => $this->brand,
+                 'data'            => [
+                     'url'      => $url,
+                     'user'     => $user,
+                     'password' => $the_password,
+                     'base_url' => $this->baseUrl
+                 ]
+             ]);
+ 
+             $this->sMailer->nativeSend( $this->brand['emails']['support'], 
+                 $email ,  $titler,  $message);
+
             return $this->services->msg_success(
                 $this->intl->trans("Création d'un nouvel utilisateur"),
                 $this->intl->trans("Utilisateur ajouté avec succès")
@@ -350,7 +383,23 @@ class UserController extends AbstractController
             $this->intl->trans("Vous ne pouvez pas supprimer cet utilisateur car il s'agit de l'administrateur de la marque active"),
         );
 
-      
+        $affiliates = $user->getAffiliates();
+        foreach ($affiliates as $affiliate) 
+        {
+            $this->userRepository->remove($affiliate);
+            $this->usettingRepository->remove($affiliate->getUsetting());
+
+            $logs = $affiliate->getLogs();
+            foreach ($logs as $log) {
+                $this->em->getRepository(Log::class)->remove($log);
+            }
+        }
+
+        $logs = $user->getLogs();
+        foreach ($logs as $log) {
+            $this->em->getRepository(Log::class)->remove($log);
+        }
+
         $this->userRepository->remove($user);
         $this->usettingRepository->remove($user->getUsetting());
         return $this->services->msg_success(

@@ -461,8 +461,8 @@ class DbInitData extends AbstractController
 
 	public function addSender():void
 	{
-		// $existed_sender  = $this->senderRepository->findAll();
-		// if (!$existed_sender) {
+		$existed_sender  = $this->senderRepository->findOneById(1);
+		if (!$existed_sender) {
 			$senderNames = [ "FASTERMSG"];
 			$senderDescription = [
 				"Identifiant d'envoie de SMS par défaut du système"
@@ -473,7 +473,6 @@ class DbInitData extends AbstractController
 				if (!$senderUser) {
 					$sender = new Sender();
 					$sender->setUid($this->services->idgenerate(10));
-					$sender->setManager($this->userRepository->findOneById(1));
 					$sender->setName($senderNames[$i]);
 					$sender->setStatus($status);
 					$sender->setObservation($senderDescription[$i]);
@@ -483,8 +482,10 @@ class DbInitData extends AbstractController
 			}
 			$this->em->flush();
 			$response = true;
-		// }else{
-		//     $response = false;
-		// }
+		}else{
+			$existed_sender->setManager($this->userRepository->findOneById(1));
+			$existed_sender->setCreateBy($this->userRepository->findOneById(1));
+			$this->senderRepository->add($existed_sender, true);
+		}
 	}
 }
