@@ -112,6 +112,7 @@ class LinkSettingController extends AbstractController
     public function account_activation(Request $request,Services $services,  $uid = null, $code = null): Response
     {
         $user = $this->userRepository->findOneBy(["uid" => $uid]);
+        dd($user);
         if($user->getActiveCode() == $code) {
             $user->setActiveCode(null);
             $user->setUpdatedAt(new \DatetimeImmutable());
