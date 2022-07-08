@@ -148,7 +148,26 @@ var KTContactList = function() {
                     t[5].setAttribute("data-order", l)
                 })),
                 (e = $(o).DataTable({
-                    responsive: true,
+                    responsive: {
+                        details: {
+                            renderer: function ( api, rowIdx, columns ) {
+                                var data = $.map( columns, function ( col, i ) {
+
+                                return col.hidden ?
+                                '<tr data-dt-row="'+col.rowIndex+'" data-dt-column="'+col.columnIndex+'">'+
+                                    '<td>'+group[col.columnIndex]+':'+'</td> '+
+                                    '<td>'+col.data+'</td>'+
+                                '</tr>' :
+                                '';
+
+                                } ).join('');
+             
+                                return data ?
+                                    $('<table/>').append( data ) :
+                                    false;
+                            }
+                        }
+                    },
                     ajax: {
                         url: contact_list,
                         type: "POST",
@@ -288,149 +307,26 @@ var KTContactList = function() {
 
                 })),
                 $('[data-kt-contact-group="group"]').on('change', function() {
-                   
-                    getInfoGroup($(this).val());
-                    setTimeout(() => {
-                       e = $(o).DataTable({
-                            destroy:true,
-                            responsive: true,
-                            ajax: {
-                                url: contact_list,
-                                type: "POST",
-                                data: {
-                                    _token: function(){ return csrfToken; },
-                                    _group: function(){ return document.querySelector('[data-kt-contact-group="group"]').value; },
-                                    _user: function(){ return document.querySelector('[data-kt-contact-user="user"]').value; }
-                                },
-                                error: function () { 
-                                    $(document).trigger('toastr.onAjaxError');
-                                },
-                                dataSrc: function(json) {
-                                    $("#stat_contact").text(json.data.length);
-                                    return json.data;
-                                }
-                                
+                    $.ajax({
+                        url:get_champ_group,
+                        type:"post",
+                        data:{  _uid:   $(this).val(),
+                                _token: function() { return csrfToken; }
                             },
-                            order: [[ 7, "desc" ]],
-                            'columnDefs': [
-                                
-                                // Uid
-                                {
-                                    orderable: !1,
-                                    responsivePriority: 0,
-                                    targets: 0, 
-                                    render: function (data, type, full, meta) {
-                                        tabUpdateContact[data[0]] = full;
-                                        return  `<div class="form-check form-check-sm form-check-custom form-check-solid">
-                                        <input class="form-check-input" type="checkbox" data-value="`+data[0]+`" />
-                                    </div>`;
-                                 
-                                    }
-                                },
-                                // Numéro
-                                {
-                                    orderable: !1,
-                                    responsivePriority: 1,
-                                    targets: 1, 
-                                    render: function (data, type, full, meta) {
-                                        return  data;
-                                    }
-                                },
-                                // Champ1
-                                {
-                                    title: group[1] ? group[1] : "Champ1",
-                                    responsivePriority: 3,
-                                    targets: 2, 
-                                    render: function (data, type, full, meta) {
-                                        return data;
-                                    }
-                                },
-                                // Champ2
-                                {
-                                    title: group[2] ? group[2] : "Champ2",
-                                    responsivePriority: 4,
-                                    targets: 3, 
-                                    render: function (data, type, full, meta) {
-                                        return data;
-                                    }
-                                },
-                                // Champ3
-                                {
-                                    title: group[3] ? group[3] : "Champ3",
-                                    responsivePriority: 5,
-                                    targets: 4, 
-                                    render: function (data, type, full, meta) {
-                                        return data;
-                                    }
-                                },
-                                // Champ4
-                                {
-                                    title: group[4] ? group[4] : "Champ4",
-                                    responsivePriority: 6,
-                                    targets: 5, 
-                                    render: function (data, type, full, meta) {
-                                        return data;
-                                    }
-                                },
-                                // Champ5
-                                {
-                                    title: group[5] ? group[5] : "Champ5",
-                                    responsivePriority: 7,
-                                    targets: 6, 
-                                    render: function (data, type, full, meta) {
-                                        return data;
-                                    }
-                                },
-                                // Date de création
-                                {
-                                    responsivePriority: 8,
-                                    targets: 7, 
-                                    render: function (data, type, full, meta) {
-                                    return  dateFormat(moment(data, "YYYY-MM-DDTHH:mm:ssZZ").format());
-                                    }
-                                },
-                                // Date de modification
-                                {
-                                    responsivePriority: 9,
-                                    targets: 8, 
-                                    render: function (data, type, full, meta) {
-                                    return  dateFormat(moment(data, "YYYY-MM-DDTHH:mm:ssZZ").format());
-                                    }
-                                },
-                                // Action
-                                {
-                                    orderable: !1,
-                                    responsivePriority: 2,
-                                    targets: 9, 
-                                    render: function (data, type, full, meta) {
-                                       
-                                        var updaterIcon =  `<!--begin::Update-->
-                                        <button class="btn btn-icon btn-active-light-primary w-30px h-30px me-3 contactUpdater" data-id=`+data+`>
-                                            <i id="editUserOption`+data+`" class="fa fa-edit"></i>
-                                        </button>
-                                        <!--end::Update-->`;
-                                        var deleterIcon =  `<!--begin::Delete-->
-                                        <button class="btn btn-icon btn-active-light-primary w-30px h-30px contactDeleter" 
-                                            data-id=`+data+`>
-                                                <i id=`+data+` class="text-danger fa fa-trash-alt"></i>
-                                        </button>
-                                        <!--end::Delete-->`;
-                                        updaterIcon = (pUpdate) ? updaterIcon : '' ;
-                                        deleterIcon = (pDelete) ? deleterIcon : '' ;
-                                        return updaterIcon + deleterIcon;
-                                    }
-                                }
-                            ],
-                            pageLength: 10,
-                            lengthChange: true,
-                            "info": true,
-                            lengthMenu: [10, 25, 100, 250, 500, 1000],
-                            language: {
-                                url: _language_datatables,
-                            },                 
-                        })
-                    // e.ajax.reload();
-                    }, 300);
+                        dataType:"json",
+                        success: function (response) {
+                            $(e.column(2).header()).text(response[2]);
+                            $(e.column(3).header()).text(response[3]);
+                            $(e.column(4).header()).text(response[4]);
+                            $(e.column(5).header()).text(response[5]);
+                            $(e.column(6).header()).text(response[6]);
+
+                            group = response;
+                            e.ajax.reload();
+                        },
+                        error: function () {
+                        }
+                    });
                 }),
                 document.querySelector('[data-kt-contact-table-filter="reset"]').addEventListener("click", (function() {
                     document.querySelector('[data-kt-contact-table-filter="form"]').querySelectorAll("select").forEach((e => {
@@ -454,16 +350,10 @@ var KTContactList = function() {
                 })
                 ());
                 e.on("draw", function() { l(), c(), a();
-                    // o.querySelector("#header").innerHTML = ``
-                    // console.log(o.querySelector("#header").innerHTML);
-                    // $("#champ1").text(group['field1'] ? group['field1'] : "Champ1") ;
-                    // $("#champ2").text(group['field2'] ? group['field2'] : "Champ2") ;
-                    // $("#champ3").text(group['field3'] ? group['field3'] : "Champ3")  ;
-                    // $("#champ4").text(group['field4'] ? group['field4'] : "Champ4") ;
+                    
                 })
         }
     };
-
 }();
 
 KTUtil.onDOMContentLoaded((function() {
@@ -520,7 +410,7 @@ $(document).on('click', ".contactUpdater", function(e)
     
 });
 
-function rechargeGroups(uid_user) {
+function rechargeGroups(uid_user,uid="") {
     
     $.ajax({
         url:get_group,
@@ -554,6 +444,10 @@ function rechargeGroups(uid_user) {
                 document.getElementById("list_group_id").appendChild(el2);
                 document.getElementById("id_group_contact_import").appendChild(el3);
             }
+
+            importContact == 2 ? $('#id_group_contact_import').val(uid).change() 
+            && $("#kt_modal_import_contacts").modal("show") :"";
+
             $('#kt_modal_add_contact_reload_button').click();
         },
         error: function () {
@@ -567,27 +461,6 @@ $(document).on('change',"#list_user_contact_id", function (e) {
     let uid_user = $(this).val();
     rechargeGroups(uid_user);
 });
-
-function getInfoGroup(uid) {
-    $.ajax({
-        url:get_info_group,
-        type:"post",
-        data:{  _uid:   uid,
-                _token: function() { return csrfToken; }
-            },
-        dataType:"json",
-        success: function (response) {
-            group = response;
-        },
-        error: function () {
-            
-        }
-
-    });
-    return group;
-}
-
-
 
 function infoImportFile() {
     console.log();
