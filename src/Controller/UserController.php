@@ -212,8 +212,8 @@ class UserController extends AbstractController
            
             //email
             $message = $this->render('email/'.$mailTemplate, [
-                 'title'           => $this->intl->trans('Activation de compte').' - '. $brand['name'],
-                 'brand'           => $brand,
+                 'title'           => $this->intl->trans('Activation de compte').' - '.$this->brand['name'],
+                 'brand'           => $this->brand,
                  'data'            => [
                      'url'      => $url,
                      'user'     => $user,
