@@ -63,15 +63,12 @@ var KTAddGroup = function() {
                                     t.isConfirmed, e.reset(), $('#list_user_add_group_id').val(null).trigger("change")
                                     $('#kt_modal_add_contact_group_reload_button').click();
                                     n.hide();
-                                    if(importContact == 1 ){
-                                        importContact =2;
-                                        let uid_user = document.querySelector('[data-kt-contact-user="user"]').value, uid = response.data.uid;
-                                        rechargeGroups(uid_user,uid);
-                                        // setTimeout(() => {
-                                        // $('#id_group_contact_import').val(uid).change();
-                                        // $("#kt_modal_import_contacts").modal("show");
-                                        // }, 1000);
-                                    }
+
+                                    let uid_user = document.querySelector('[data-kt-contact-user="user"]').value, uid = response.data.uid;
+
+                                    importContact == 1 ? importContact =2 : "";
+                                        
+                                    rechargeGroups(uid_user,uid);
                                 }
                             },
                             error: function () { 

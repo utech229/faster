@@ -98,7 +98,9 @@ var KTGroupList = function() {
                                         });
         
                                         if (response.type === 'success') {
-        
+
+                                            let user = document.querySelector('[data-kt-contact-user="user"]').value;
+                                            rechargeGroups(user);
                                             $('#kt_modal_add_contact_group_reload_button').click();
                                         }
                                     },

@@ -448,13 +448,14 @@ function rechargeGroups(uid_user,uid="") {
             importContact == 2 ? $('#id_group_contact_import').val(uid).change() 
             && $("#kt_modal_import_contacts").modal("show") :"";
 
-            $('#kt_modal_add_contact_reload_button').click();
         },
         error: function () {
             
         }
 
     });
+    // $('#kt_modal_add_contact_reload_button').click();
+
 }
 
 $(document).on('change',"#list_user_contact_id", function (e) {
