@@ -520,7 +520,7 @@
                                                 <!--end::Avatar-->
                                                 <!--begin::Username-->
                                                 <div class="d-flex flex-column">
-                                                    <div class="fw-bolder d-flex align-items-center fs-5"> {% if  app.user.usetting.firstname %} {{ app.user.usetting.firstname}} {% else %} {{ app.user.email|truncate()  }} ffffffffffffffffffffff {% endif %}
+                                                    <div class="fw-bolder d-flex align-items-center fs-5"> {% if  app.user.usetting.firstname %} {{ app.user.usetting.firstname}} {% else %} {{ app.user.email }} {% endif %}
                                                     </div>
                                                     <a href="javascript:;" class="fw-bold text-muted text-hover-primary fs-7">{{ app.user.phone }}</a>
                                                 </div>
@@ -535,6 +535,9 @@
                                         {% if permission(["PFIL0"], app.user) %}
                                         <div class="menu-item px-5">
                                             <a href="{{path("app_profile")}}" class="menu-link px-5">{% trans %}Mon profil{% endtrans %}</a>
+                                            <span class="menu-badge">
+                                                <span class="badge badge-light-danger badge-circle fw-bolder fs-7">3</span>
+                                            </span>
                                         </div>
                                         {% endif %}
                                         {% if permission(["AFFL0"], app.user) %}
