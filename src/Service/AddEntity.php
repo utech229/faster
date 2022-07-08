@@ -119,14 +119,12 @@ class AddEntity extends AbstractController
     //brand datas for new user
     public function defaultBrand()
     {
+        $defaultbrand  = $this->brand->get();
         $mainBrand = $this->brandRepository->findOneById(1);
-        
         if ($mainBrand){
-            dd($mainBrand, 'tr');
             $mainBrand->setManager($this->userRepository->findOneById(1));
             $this->brandRepository->add($mainBrand, true);
         }else
-        $defaultbrand  = $this->brand->get();
         $brand = new Brand();
         $brand->setUid($this->services->idgenerate(10))
             ->setStatus($this->statusRepository->findOneByCode(3))
