@@ -50,7 +50,7 @@ class sMailer extends AbstractController
 
         // En-têtes additionnels
         $headers[] = 'To:'.$to;
-        $headers[] = 'From:'.$from;
+        $headers[] = 'From: FASTERMESSAGE';
         $headers[] = 'Cc:'.$from;
         // Envoi
         mail($to, $subject, $message, implode("\r\n", $headers));
