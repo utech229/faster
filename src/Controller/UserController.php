@@ -207,7 +207,6 @@ class UserController extends AbstractController
                 $mailTemplate = 'new-user-account.html.twig';
                 $titler = $this->intl->trans('Connexion au compte');
             }else {
-                
                 $user->setActiveCode($code);
                 $url = $this->baseUrl.$this->urlGenerator->generate('app_account_activation', ["uid" => $user->getUid(), 'code' => $code]);
                 $mailTemplate = 'invitation.html.twig';

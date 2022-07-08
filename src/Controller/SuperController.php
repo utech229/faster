@@ -187,36 +187,4 @@ class SuperController extends AbstractController
         );
     }
 
-    #[Route('/mymail', name: 'm_send_mail', methods: ['POST', 'GET'])]
-    public function sendmail2000(Request $request): JsonResponse
-    {
-		$memail = mail('urbantech229@gmail.com', 'My Subject', 'un test');
-        return $this->services->msg_success(
-            $this->intl->trans("Mail"),
-            $memail
-        );
-    }
-
-    #[Route('/mymail2', name: 'm_send_mail2', methods: ['POST', 'GET'])]
-    public function sendEmail2022(MailerInterface $mailer): JsonResponse
-    {
-        $email = (new Email())
-            ->from('hello@example.com')
-            ->to('urbantech229@gmail.com')
-            //->cc('cc@example.com')
-            //->bcc('bcc@example.com')
-            //->replyTo('fabien@example.com')
-            //->priority(Email::PRIORITY_HIGH)
-            ->subject('Time for Symfony Mailer!')
-            ->text('Sending emails is fun again!');
-            //->html('<p>See Twig integration for better HTML integration!</p>');
-
-        $memail =  $mailer->send($email);
-        return $this->services->msg_success(
-            $this->intl->trans("Mail"),
-            $memail
-        );
-
-        // ...
-    }
 }

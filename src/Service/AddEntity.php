@@ -10,6 +10,7 @@ use App\Entity\Company;
 use App\Service\sBrand;
 use App\Entity\Usetting;
 use App\Service\Services;
+use App\Repository\UserRepository;
 use App\Repository\BrandRepository;
 use App\Repository\StatusRepository;
 use App\Repository\CompanyRepository;
@@ -36,12 +37,13 @@ class AddEntity extends AbstractController
 
     public function __construct(RouterInterface $router, UrlGeneratorInterface $urlGenerator,  TranslatorInterface $Translator,
     EntityManagerInterface $entityManager, UsettingRepository $usettingRepository, Services $services, sBrand $brand,
-    BrandRepository $brandRepository, CompanyRepository $companyRepository, StatusRepository $statusRepository ){
+    BrandRepository $brandRepository, CompanyRepository $companyRepository, StatusRepository $statusRepository, UserRepository $userRepository ){
         $this->router = $router;
         $this->urlGenerator = $urlGenerator;
         $this->intl = $Translator;
         $this->em = $entityManager;
         $this->services = $services;
+        $this->userRepository = $userRepository;
         $this->usettingRepository = $usettingRepository;
         $this->brandRepository = $brandRepository;
         $this->statusRepository = $statusRepository;
@@ -117,7 +119,11 @@ class AddEntity extends AbstractController
     //brand datas for new user
     public function defaultBrand()
     {
-        if (count($this->brandRepository->findAll()) > 0) return false;
+        $mainBrand = $this->brandRepository->findOneById(1);
+        if ($mainBrand){
+            $mainBrand->setManager($this->userRepository->findOneById(1));
+            $this->brandRepository->add($mainBrand, true);
+        }else
         $defaultbrand  = $this->brand->get();
         $brand = new Brand();
         $brand->setUid($this->services->idgenerate(10))
