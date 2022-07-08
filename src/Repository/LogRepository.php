@@ -92,6 +92,7 @@ class LogRepository extends ServiceEntityRepository
         ;
     }
 
+    
 //    /**
 //     * @return Log[] Returns an array of Log objects
 //     */
