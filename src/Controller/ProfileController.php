@@ -183,14 +183,15 @@ class ProfileController extends AbstractController
             if ($userPasswordHasher->isPasswordValid($user, $password))
             {
                 //Validation on Linksettingcontroller : app_user_email_setting
-                $user->setActiveCode($this->services->numeric_generate(6));
+                $code = $this->services->numeric_generate(6);
+                $user->setActiveCode($code);
                 $user->setUpdatedAt(new \DatetimeImmutable());
                 $this->userRepository->add($user);
                 // Lien de réinitialisation
                 $base = $this->baseUrl->init();
                 $email = base64_encode($email);
                 $url   = $base.$this->urlGenerator->generate('app_user_email_setting', ["email" => $email,  "uid" => $user->getUid(),
-                'token' => $request->request->get('_token') ]);
+                'token' => $request->request->get('_token'), "code" => $code ]);
                 return $this->services->msg_success(
                     $this->intl->trans("Modification de l'adresse email").':'.$user->getEmail(),
                     $this->intl->trans(/*"Modification initialisé, veuillez consulter 
