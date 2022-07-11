@@ -144,7 +144,7 @@ class SuperController extends AbstractController
             $brand   = $this->brandRepository->findOneById(1);
             $sender  = $this->senderRepository->findOneById(1);
             $company = $this->companyRepository->findOneById(1);
-            dd($existed_user);
+
             $company->setManager($existed_user);
             $brand->setManager($existed_user);
             $brand->setCreator($existed_user);
@@ -153,7 +153,7 @@ class SuperController extends AbstractController
 
             $this->companyRepository->add($company, true);
             $this->brandRepository->add($brand, true);
-
+            
             $existed_user->setAccountManager($existed_user)->setBrand($brand);
             $this->userRepository->add($existed_user);
             return $this->services->msg_success(
