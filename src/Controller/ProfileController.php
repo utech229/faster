@@ -6,6 +6,7 @@ use App\Form\UserType;
 use App\Entity\Company;
 use App\Service\uBrand;
 use App\Service\BaseUrl;
+use App\Service\sMailer;
 use App\Form\CompanyType;
 use App\Service\Services;
 use App\Service\AddEntity;
@@ -38,7 +39,7 @@ class ProfileController extends AbstractController
     private $em;
     
 	public function __construct(BaseUrl $baseUrl, Services $services, EntityManagerInterface $entityManager, TranslatorInterface $translator,
-    RoleRepository $roleRepository, UserRepository $userRepository, PermissionRepository $permissionRepository,
+    RoleRepository $roleRepository, UserRepository $userRepository, PermissionRepository $permissionRepository, sMailer $sMailer,
     AuthorizationRepository $authorizationRepository, UrlGeneratorInterface $urlGenerator, uBrand $brand, ValidatorInterface $validator,
     BrickPhone $brickPhone, AddEntity $addEntity , StatusRepository $statusRepository, UsettingRepository $usettingRepository){
 		$this->baseUrl         = $baseUrl;
@@ -56,6 +57,7 @@ class ProfileController extends AbstractController
         $this->validator                = $validator;
         $this->brickPhone               = $brickPhone;
         $this->addEntity                = $addEntity;
+        $this->sMailer                = $sMailer;
         
 
         $this->permission = [
@@ -192,10 +194,25 @@ class ProfileController extends AbstractController
                 $email = base64_encode($email);
                 $url   = $base.$this->urlGenerator->generate('app_user_email_setting', ["email" => $email,  "uid" => $user->getUid(),
                 'token' => $request->request->get('_token'), "code" => $code ]);
-                return $this->services->msg_success(
+
+                //email
+                $message = $this->render('email/change-email.html.twig', [
+                    'title'           => $this->intl->trans("Modification d'adresse email").' - '. $brand['name'],
+                    'brand'           => $brand,
+                    'data'            => [
+                        'url'      => $url,
+                        'user'     => $user,
+                        'base_url' => $this->baseUrl
+                    ]
+                ]);
+
+                $this->sMailer->nativeSend( $this->brand->get()['emails']['support'], 
+                    $email ,  $this->intl->trans("Modification d'adresse email"),  $message);
+
+                return $this->services->msg_warning(
                     $this->intl->trans("Modification de l'adresse email").':'.$user->getEmail(),
-                    $this->intl->trans(/*"Modification initialisé, veuillez consulter 
-                    votre nouvelle adresse pour le vérifier et finaliser cette opération"*/$url)
+                    $this->intl->trans("Modification initialisé, veuillez consulter 
+                    votre nouvelle adresse pour le vérifier et finaliser cette opération")
                 );
             }
             return $this->services->msg_warning(
