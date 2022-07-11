@@ -183,7 +183,7 @@ class ProfileController extends AbstractController
             if ($userPasswordHasher->isPasswordValid($user, $password))
             {
                 //Validation on Linksettingcontroller : app_user_email_setting
-                $user->setActiveCode($user->getUsetting()->getUid());
+                $user->setActiveCode($this->services->numeric_genarate(6));
                 $user->setUpdatedAt(new \DatetimeImmutable());
                 $this->userRepository->add($user);
                 // Lien de réinitialisation
