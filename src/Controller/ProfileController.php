@@ -181,13 +181,13 @@ class ProfileController extends AbstractController
             return $this->services->no_access($this->intl->trans("Modification de l'adresse email").': '.$user->getEmail());
 
             $email	       = $request->request->get('email');
-            $isExistedUser = $this->userRepository->findOneBy(['email' => $email, 'brand' => $this->brand->get()]);
+            /*$isExistedUser = $this->userRepository->findOneBy(['email' => $email, 'brand' => $this->brand->get()]);
             if ($isExistedUser) {
                 return $this->services->msg_error(
                     $this->intl->trans("Modification de l'adresse email"),
                     $this->intl->trans("Cet adresse email appartient à un compte existant, veuillez le changer"),
                 );
-            }
+            }*/
 
 		    $password =	$request->request->get('cpassword');
             if ($userPasswordHasher->isPasswordValid($user, $password))
