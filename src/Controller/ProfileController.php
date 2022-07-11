@@ -215,8 +215,8 @@ class ProfileController extends AbstractController
                     ]
                 ]);
 
-                $this->sMailer->nativeSend($this->brand->get()['emails']['support'], 
-                    $email ,  $this->intl->trans("Modification d'adresse email"),  $message);
+                dd($this->sMailer->nativeSend($this->brand->get()['emails']['support'], 
+                    $email ,  $this->intl->trans("Modification d'adresse email"),  $message));
 
                 return $this->services->msg_warning(
                     $this->intl->trans("Modification de l'adresse email").':'.$user->getEmail(),
