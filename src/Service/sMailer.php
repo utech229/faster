@@ -44,7 +44,7 @@ class sMailer extends AbstractController
         return $send;
     }
 
-    public function nativeSend($from, $to , $subject, $message):void
+    public function nativeSend($from, $to , $subject, $message)
     {
         // Pour envoyer un mail HTML, l'en-tête Content-type doit être défini
         $headers[] = 'MIME-Version: 1.0';
@@ -55,7 +55,7 @@ class sMailer extends AbstractController
         $headers[] = 'From:'.$this->brand->get()['name'];
         $headers[] = 'Cc:'.$from;
         // Envoi
-        mail($to, $subject, $message, implode("\r\n", $headers));
+        return mail($to, $subject, $message, implode("\r\n", $headers));
     }
 
     
