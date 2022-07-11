@@ -143,6 +143,14 @@ var KTUsersBrandUser = function() {
                                 }
                             }
                         },
+                        '_logo': {
+                            validators: {
+                                file: {
+                                    extension: 'jpg,jpeg,png',
+                                    message: _File_Required_
+                                },
+                            }
+                        },
                         '_phone_support': {
                             validators: {
                                 notEmpty: {
@@ -361,13 +369,13 @@ var KTUsersLoadBrand = function() {
 
                     { data: 'administrator', responsivePriority: -5},
 
-                    { data: 'urlSite', responsivePriority: -4  },
+                    { data: 'urlSite', responsivePriority: -4},
 
                     { data: 'emailV' , responsivePriority: 0},
 
                     { data: 'sender' , responsivePriority: 0},
 
-                    { data: 'status'},
+                    { data: 'status', responsivePriority: -8},
 
                     { data: 'createdAt'},
 
