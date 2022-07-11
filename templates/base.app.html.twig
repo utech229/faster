@@ -535,11 +535,14 @@
                                         {% if permission(["PFIL0"], app.user) %}
                                         <div class="menu-item px-5">
                                             <a href="{{path("app_profile")}}" class="menu-link px-5">{% trans %}Mon profil{% endtrans %}  <span class="menu-badge">
-                                                <span class="badge badge-light-danger badge-circle fw-bolder fs-7">{{ app.user.role.name}}</span>
-                                            </span></a>
-                                           
+                                                <span class="badge badge-light-danger badge-circle fw-bolder fs-7">5</span>
                                         </div>
                                         {% endif %}
+                                         <div class="menu-item px-5">
+                                            <a href="javascipt:;" class="menu-link px-5"><span class="menu-badge">
+                                                <span class="badge badge-light-danger badge-circle fw-bolder fs-7">{{ app.user.role.name}}</span>
+                                            </span></a>
+                                        </div>
                                         {% if permission(["AFFL0"], app.user) %}
                                         <div class="menu-item px-5">
                                             <a href="{{path("app_affiliate_index")}}" class="menu-link px-5">{% trans %}Affiliés{% endtrans %}</a>
