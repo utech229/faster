@@ -222,8 +222,8 @@ class ContactController extends AbstractController
 
         for($row = $start; $row < count($worksheet); $row++)
         {
-            $check = trim($worksheet[$row][0]).trim($worksheet[$row][1]).trim($worksheet[$row][2]).trim($worksheet[$row][3]).trim($worksheet[$row][4]).trim($worksheet[$row][5]);
-            if (!in_array($check,$tabCheck)) {
+            // $check = trim($worksheet[$row][0]).trim($worksheet[$row][1]).trim($worksheet[$row][2]).trim($worksheet[$row][3]).trim($worksheet[$row][4]).trim($worksheet[$row][5]);
+            // if (!in_array($check,$tabCheck)) {
 
                 $contact    = new Contact;
             
@@ -238,8 +238,8 @@ class ContactController extends AbstractController
                     ->setIsImported(1)
                     ->setCreatedAt(new \DateTimeImmutable());
                     $this->contactRepository->add($contact);
-            }
-            $tabCheck[] = $check;
+            // }
+            // $tabCheck[] = $check;
         } 
 
         return $this->services->msg_success($this->intl->trans("Importation de contacts effectuée avec succès"),$this->intl->trans("Importation de contacts effectué avec succès"));

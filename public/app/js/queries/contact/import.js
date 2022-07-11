@@ -13,7 +13,7 @@ var KTImportContact = function() {
                         'group': {
                             validators: {
                                 notEmpty: {
-                                    message: 'le groupe est obligatoire' 
+                                    message: 'Le groupe est obligatoire' 
                                 }
                             }
                         }
