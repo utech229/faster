@@ -98,7 +98,7 @@ class DbInitData extends AbstractController
 			"CNPY0", "CNPY1", "CNPY2","CNPY3","CNPY4","BRND0", "BRND1", "BRND2","BRND3","BRND4","XPER0", "XPER1", "XPER2","XPER3","XPER4",
 			"REC0", "REC1", "REC2","REC3","REC4", "DEV0", "DEV1", "DEV2","DEV3","DEV4",
 			"MANGR","COMM0", "COMM1", "COMM2","COMM3","COMM4","OPRT0", "OPRT1", "OPRT2","OPRT3","OPRT4",
-			"SMSA0","SMSA2", "STAT0", "STAT2", "STAT4",
+			"SMSA0","SMSA2", "STAT0", "STAT2", "STAT4", "RES5",
 		];
 		$permissionNames = [
 			"Menu utilisateur", "Ajout utilisateur", "Voir utilisateur", "Modification utilisateur",
@@ -127,7 +127,7 @@ class DbInitData extends AbstractController
 			"Gestionnaire de compte","Menu commission", "Ajout commission", "Voir commission","Modification commission", "Suppression commission",
 			"Menu opérateur GSM", "Ajout opérateur GSM", "Voir opérateur GSM","Modification opérateur GSM", "Suppression opérateur GSM",
 			"Accès aux messages SMS par API", "Voir tous les messages SMS par API",
-			"Accès aux statistiques des messages SMS", "Voir tous les statistiques des messages SMS", "Supprimer une statistique des messages SMS",
+			"Accès aux statistiques des messages SMS", "Voir tous les statistiques des messages SMS", "Supprimer une statistique des messages SMS", "Est un revendeur"
 		];
 		$permissionDescription = [
 			"Permet d\'afficher la page utilisateurs",
@@ -266,6 +266,7 @@ class DbInitData extends AbstractController
 			"Permet d\'afficher les statistiques des messages SMS",
 			"Permet d\'afficher les statistiques des messages SMS de tous les utilisateurs",
 			"Permet de supprimer les statistiques des messages SMS",
+			"Permet à un simple utilisteur de devenir un revendeur",
 		];
 		$status = $this->statusRepository->findOneByCode(3);
 		for ($i=0; $i < (count($permissionCodes)); $i++) {

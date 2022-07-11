@@ -60,9 +60,9 @@
 					<input type="hidden" name="id" value="{% if campaign %}{{campaign.uid}}{% endif %}"/>
 					<input type="hidden" name="saveMode" value="live"/>
 					<input type="hidden" name="messageText" value=""/>
-					<div class="row g-9">
+					<div class="row g-9" id="campaign_content">
 						<!--begin::Input group-->
-					<div class="fv-row col-md-6 {% if campaign or userType > 3 or statusCode == 0 or statusCode == 5 %}sr-only{% endif %}">
+						<div class="fv-row col-md-6 mt-4 {% if campaign or userType > 3 or statusCode == 0 or statusCode == 5 %}sr-only{% endif %}">
 							<!--begin::Label-->
 							<label class="fs-7 fw-bolder form-label mb-2 required" for="brand">
 								{{"Marque blanche"|trans}}
@@ -79,7 +79,7 @@
 						</div>
 						<!--end::Input group-->
 						<!--begin::Input group-->
-						<div class="fv-row col-md-6 {% if campaign or userType > 3 or statusCode == 0 or statusCode == 5 %}sr-only{% endif %}">
+						<div class="fv-row col-md-6 mt-4 {% if campaign or userType > 3 or statusCode == 0 or statusCode == 5 %}sr-only{% endif %}">
 							<!--begin::Label-->
 							<label class="fs-7 fw-bolder form-label mb-2 required" for="user">
 								{{"Utilisateur de la marque"|trans}}
@@ -87,16 +87,12 @@
 							<!--end::Label-->
 							<!--begin::Input-->
 							<select id="user" name="user" data-allow-clear="false" data-control="select2" class="form-select form-select-solid fw-bolder" data-placeholder="{{"Sélectionnez l'utilisateur" | trans}}">
-								<option value=""></option>
-								{% for user in users %}
-									<option value="{{ user.uid }}">{{ user.email }}</option>
-								{% endfor %}
 							</select>
 							<!--end::Input-->
 						</div>
 						<!--end::Input group-->
 						<!--begin::Input group-->
-						<div class="fv-row col-md-6 col-lg-8 col-xl-8">
+						<div class="fv-row col-md-6 col-lg-8 col-xl-8 mt-4">
 							<!--begin::Label-->
 							<label class="fs-7 fw-bolder form-label mb-2 required" for="name">
 								{{"Nom de la campagne"|trans}}
@@ -108,18 +104,14 @@
 						</div>
 						<!--end::Input group-->
 						<!--begin::Input group-->
-						<div class="fv-row col-md-6 col-lg-4">
+						<div class="fv-row col-md-6 col-lg-4 mt-4">
 							<!--begin::Label-->
-							<label class="fs-7 fw-bolder form-label mb-2 required" for="sender">
+							<label class="fs-7 fw-bolder form-label mb-2" for="sender">
 								{{"Expéditeur"|trans}}
 							</label>
 							<!--end::Label-->
 							<!--begin::Input-->
 							<select id="sender" name="sender" data-allow-clear="false" data-control="select2" class="form-select form-select-solid fw-bolder" data-placeholder="{{"Sélectionnez l'identifiant d'envoi" | trans}}">
-								<option value=""></option>
-								{% for sender in senders %}
-									<option value="{{ sender.uid }}">{{ sender.name }}</option>
-								{% endfor %}
 							</select>
 							<!--end::Input-->
 						</div>
@@ -275,7 +267,7 @@
 									</div>
 									<div class="tab-pane fade show active" id="group" role="tabpanel">
 										<!--begin::Input-->
-										<select id="group_contacts" name="groups" data-allow-clear="true" data-control="select2" class="form-select form-select-solid fw-bolder" data-placeholder="{{"Sélectionnez le(s) groupe(s) de contacts."|trans}}" multiple="multiple">
+										<select id="group_contacts" name="groups[]" data-allow-clear="true" data-control="select2" class="form-select form-select-solid fw-bolder" data-placeholder="{{"Sélectionnez le(s) groupe(s) de contacts."|trans}}" multiple="multiple">
 											{% for oneGroup in allGroup %}
 												<option value="{{oneGroup.uid}}">{{oneGroup.name}}</option>
 											{% endfor %}
@@ -353,7 +345,11 @@
 						<div class="d-flex justify-content-end">
 							<a href="{{path("campaign_sms")}}" class="btn btn-danger fw-bold me-2 px-6" id="cancel">{{"Quitter"|trans}}</a>
 							{% if statusCode != 0 and statusCode != 5 %}
-								<button type="button" class="btn btn-light btn-secondary fw-bold me-2 px-6" id="brouillon">{{"Brouillon"|trans}}</button>
+								<button type="button" class="btn btn-light btn-secondary fw-bold me-2 px-6" id="brouillon">
+									<span class="indicator-label">{{"Brouillon"|trans}}</span>
+									<span class="indicator-progress">{{'Veuillez patienter'|trans}}...
+									<span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+								</button>
 							{% endif %}
 							<button type="submit" class="btn btn-primary fw-bold px-6" id="submit">
 								<span class="indicator-label">{{'Soumettre'|trans}}</span>
@@ -549,14 +545,30 @@
 	deleteConfirm		= "{{"Voulez-vous supprimer cette ligne ?"|trans}}",
 	textBrouillon		= "{{"Enregistrement du brouillon"|trans}}";
 
+	const statusCode	= {{statusCode}};
+
+	var defaultSenders = {}
+
+	{% for brand in brands %}
+		defaultSenders["{{ brand.uid }}"] = {uid: "{{brand.defaultSender.uid}}", name: "{{brand.defaultSender.name}}"}
+	{% endfor %}
+
+	var dataUsers = [{id:'', text:''}];
+	{% for user in users %}
+		dataUsers.push({id:"{{user.uid}}", text:"{{user.email}}"})
+	{% endfor %}
+
+	var dataSenders = [{id:'', text:''}];
+	{% for sender in senders %}
+		dataSenders.push({id:"{{sender.uid}}", text:"{{sender.name}}"})
+	{% endfor %}
+
 	const brandInit	= {% if brands|length == 1 %} "{{brands[0].uid}}" {% else %} false {% endif %},
 	userInit		= {% if users|length == 1 %} "{{users[0].uid}}" {% else %} false {% endif %},
-	senderInit		= {% if senders %} "{{senders[0].uid}}" {% else %} false {% endif %},
+	senderInit		= {% if senders|length == 1 %} "{{senders[0].uid}}" {% else %} false {% endif %},
 	campaignType	= {% if campaign %}{{campaign.smsType}}{% else %} false {% endif %},
 	timezone		= {% if campaign %}"{{campaign.timezone}}"{% else %} false {% endif %},
 	groups			= {{groups|raw}};
-
-	const statusCode	= {{statusCode}};
 </script>
 {{ include('smsmessage/new.html.twig', {'brands':brands}) }}
 <script type="text/javascript" src="{{ asset('app/js/queries/sms/messageError.js')}}"></script>

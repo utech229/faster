@@ -106,7 +106,7 @@
                                 </div>
                                 {% if permission(["SMSC0", "SMSS0", "SMSA0", "STAT0"], app.user, false) %}
                                     <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-        							    <span class="menu-link">
+        							    <span class="menu-link  {{menu(route, ['message_sms_stats', 'message_sms', 'message_sms', 'campaign_sms', 'campaign_sms_view_created'])}}">
         									<span class="menu-icon">
                                                 <!--begin::Svg Icon | path: assets/media/icons/duotune/communication/com010.svg-->
                                                 <span class="svg-icon svg-icon-1"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -164,7 +164,7 @@
                                 {% endif %}
                                 {% if permission(["SEND0"], app.user, false) %}
                                     <div class="menu-item">
-                                        <a class="menu-link " href="{{ path('sender') }}">
+                                        <a class="menu-link {{menu(route, 'sender') }}" href="{{ path('sender') }}">
                                             <span class="menu-icon">
                                                 <!--begin::Svg Icon | path: icons/stockholm/Design/PenAndRuller.svg-->
                                                 <i class="fas fa-paper-plane fs-3"></i>
@@ -182,7 +182,7 @@
                                 </div>
                             </div>
                              <div class="menu-item">
-                                <a class="menu-link {{menu(uri, path('brand')) }}" href="{{ path('brand') }}">
+                                <a class="menu-link {{menu(route, 'brand') }}" href="{{ path('brand') }}">
                                     <span class="menu-icon">
                                         <!--begin::Svg Icon | path: icons/stockholm/Design/PenAndRuller.svg-->
                                         <i class="fas fa-copyright fs-3"></i>
@@ -218,7 +218,7 @@
                             {% endif %}
                             {% if permission(["MET0", "PAY0"], app.user, false) %}
                              <div class="menu-item">
-                                <a class="menu-link {{menu(uri, path('app_payment_index')) }}" href="{{ path('app_payment_index') }}">
+                                <a class="menu-link {{menu(route, 'app_payment_index') }}" href="{{ path('app_payment_index') }}">
                                     <span class="menu-icon">
                                         <!--begin::Svg Icon | path: icons/stockholm/Design/PenAndRuller.svg-->
                                         <i class="bi bi-coin fs-3"></i>
@@ -237,7 +237,7 @@
                             {% endif %}
                             {% if permission(["UTI0"], app.user) %}
                             <div class="menu-item">
-                                <a class="menu-link {{ menu(uri, path('app_user_index')) }}" href="{{ path('app_user_index') }}">
+                                <a class="menu-link {{ menu(route, 'app_user_index') }}" href="{{ path('app_user_index') }}">
                                     <span class="menu-icon">
                                        <i class="bi bi-people fs-3"></i>
                                     </span>
@@ -247,7 +247,7 @@
                             {% endif %}
                             {% if permission(["AFFL0"], app.user) %}
                             <div class="menu-item">
-                                <a class="menu-link {{menu(uri, path('app_affiliate_index')) }}" href="{{ path('app_affiliate_index') }}">
+                                <a class="menu-link {{menu(route, 'app_affiliate_index') }}" href="{{ path('app_affiliate_index') }}">
                                     <span class="menu-icon">
                                         <!--begin::Svg Icon | path: icons/stockholm/Design/PenAndRuller.svg-->
                                         <i class="bi bi-person-plus fs-3"></i>
@@ -259,7 +259,7 @@
                             {% endif %}
                             {% if permission(["ROL0"], app.user) %}
                              <div class="menu-item">
-                                <a class="menu-link {{ menu(uri, path('app_user_role')) }}" href="{{ path('app_user_role') }}">
+                                <a class="menu-link {{ menu(route, 'app_user_role') }}" href="{{ path('app_user_role') }}">
                                     <span class="menu-icon">
                                         <i class="bi bi-ui-checks fs-3"></i>
                                     </span>
@@ -269,7 +269,7 @@
                             {% endif %}
                             {% if permission(["PER0"], app.user) %}
                              <div class="menu-item">
-                                <a class="menu-link {{ menu(uri, path('app_user_permission_index')) }}" href="{{ path('app_user_permission_index') }}">
+                                <a class="menu-link {{ menu(route, 'app_user_permission_index') }}" href="{{ path('app_user_permission_index') }}">
                                     <span class="menu-icon">
                                         <i class="bi bi-key fs-3"></i>
                                     </span>
@@ -287,7 +287,7 @@
                             {% endif %}
                             {% if permission(["ROUT0"], app.user) %}
                             <div class="menu-item">
-                                <a class="menu-link {{ menu(uri, path('app_router_index')) }}" href="{{ path('app_router_index') }}">
+                                <a class="menu-link {{ menu(route, 'app_router_index') }}" href="{{ path('app_router_index') }}">
                                     <span class="menu-icon">
                                        <i class="bi bi-hdd-network fs-3"></i>
                                     </span>
@@ -297,7 +297,7 @@
                             {% endif %}
                             {% if permission(["STUT0"], app.user) %}
                              <div class="menu-item">
-                                <a class="menu-link {{ menu(uri, path('app_status_index')) }}" href="{{ path('app_status_index') }}">
+                                <a class="menu-link {{ menu(route, 'app_status_index') }}" href="{{ path('app_status_index') }}">
                                     <span class="menu-icon">
                                         <i class="bi bi-arrow-repeat fs-3"></i>
                                     </span>
@@ -307,7 +307,7 @@
                             {% endif %}
                             {% if permission(["OPRT0"], app.user) %}
                              <div class="menu-item">
-                                <a class="menu-link {{ menu(uri, path('app_operator_index')) }}" href="{{ path('app_operator_index') }}">
+                                <a class="menu-link {{ menu(route, 'app_operator_index') }}" href="{{ path('app_operator_index') }}">
                                     <span class="menu-icon">
                                         <i class="bi bi-phone-fill fs-3"></i>
                                     </span>
@@ -323,7 +323,7 @@
                                     </div>
                                 </div>
                                 <div class="menu-item">
-                                    <a class="menu-link {{ menu(uri, path('app_transaction_index')) }}" href="{{ path('app_transaction_index') }}">
+                                    <a class="menu-link {{ menu(route, 'app_transaction_index') }}" href="{{ path('app_transaction_index') }}">
                                         <span class="menu-icon">
                                         <i class="bi bi-cash-stack fs-3"></i>
                                         </span>
@@ -334,7 +334,7 @@
 
                             {% if permission(["COMM0"], app.user) %}
                                 <div class="menu-item">
-                                    <a class="menu-link {{ menu(uri, path('app_commission_index')) }}" href="{{ path('app_commission_index') }}">
+                                    <a class="menu-link {{ menu(route, 'app_commission_index') }}" href="{{ path('app_commission_index') }}">
                                         <span class="menu-icon">
                                         <i class="bi bi-cash-coin fs-3"></i>
                                         </span>
@@ -448,7 +448,7 @@
                                             </span>
                                             <div class="menu-sub menu-sub-lg-down-accordion menu-sub-lg-dropdown menu-rounded-0 py-lg-4 w-lg-225px">
                                                 <div class="menu-item">
-                                                    <a class="menu-link {{ menu(uri, path('app_home')) }} py-3" href="{{path("app_home")}}">
+                                                    <a class="menu-link {{ menu(route, 'app_home') }} py-3" href="{{path("app_home")}}">
                                                         <span class="menu-bullet">
                                                             <span class="bullet bullet-dot"></span>
                                                         </span>
@@ -456,7 +456,7 @@
                                                     </a>
                                                 </div>
                                                 <div class="menu-item">
-                                                    <a class="menu-link {{ menu(uri, path('campaign_sms')) }} py-3" href="{{ path('campaign_sms') }}">
+                                                    <a class="menu-link {{ menu(route, 'campaign_sms') }} py-3" href="{{ path('campaign_sms') }}">
                                                         <span class="menu-bullet">
                                                             <span class="bullet bullet-dot"></span>
                                                         </span>
@@ -464,7 +464,7 @@
                                                     </a>
                                                 </div>
                                                 <div class="menu-item">
-                                                    <a class="menu-link {{ menu(uri, path('app_recharge')) }} py-3" href="{{ path('campaign_sms') }}">
+                                                    <a class="menu-link {{ menu(route, 'app_recharge') }} py-3" href="{{ path('campaign_sms') }}">
                                                         <span class="menu-bullet">
                                                             <span class="bullet bullet-dot"></span>
                                                         </span>
@@ -472,7 +472,7 @@
                                                     </a>
                                                 </div>
                                                 <div class="menu-item">
-                                                    <a class="menu-link {{ menu(uri, path('sender')) }} py-3" href="{{ path('sender') }}">
+                                                    <a class="menu-link {{ menu(route, 'sender') }} py-3" href="{{ path('sender') }}">
                                                         <span class="menu-bullet">
                                                             <span class="bullet bullet-dot"></span>
                                                         </span>
@@ -760,8 +760,8 @@
     <script src="{{ asset('app/js/scripts.bundle.js') }}"></script>
     <script src="{{ asset('librairies/intl/build/js/intlTelInput.min.js') }}"></script>
     <!-- begin::moment -->
-    <script defer src="{{ asset('app/plugins/custom/moment/moment-with-locales.min.js') }}"></script>
-    <script defer src="{{ asset('app/plugins/custom/moment/moment-timezone-with-data.min.js') }}"></script>
+    <script src="{{ asset('app/plugins/custom/moment/moment-with-locales.min.js') }}"></script>
+    <script src="{{ asset('app/plugins/custom/moment/moment-timezone-with-data.min.js') }}"></script>
     <!-- end::moment -->
     <script src="{{ asset('app/js/queries/app-theme-mode.js') }}"></script>
     <script src="{{ asset('app/js/queries/general.js') }}"></script>

@@ -167,7 +167,7 @@
 							<div class="mb-3 row">
 								<div class="{% if lfrom == "campaign" %}col-12{% else %}col-6{% endif %}">
 									<label class="form-label fs-6 fw-bold">{% trans %}Statut{% endtrans %} :</label>
-									<select id="status" class="form-select form-select-solid fw-bolder" data-placeholder="{{'Statut des messages' | trans}}">
+									<select id="status" data-kt-select2="true" data-allow-clear="true" data-hide-search="true" class="form-select form-select-solid fw-bolder" data-placeholder="{{'Statut des messages' | trans}}">
 										{# data-allow-clear="true" data-control="select2"  #}
 										<option value="">{{"Tous"|trans}}</option>
 										{% for oneStatus in status %}
@@ -177,7 +177,7 @@
 								</div>
 								<div class="col-6 {% if lfrom == "campaign" %}sr-only{% endif %}">
 									<label class="form-label fs-6 fw-bold">{% trans %}Période{% endtrans %} :</label>
-									<select id="periode" class="form-select form-select-solid fw-bolder" data-placeholder="{{'Période de données' | trans}}">
+									<select id="periode" data-kt-select2="true" data-allow-clear="true" data-hide-search="true" class="form-select form-select-solid fw-bolder" data-placeholder="{{'Période de données' | trans}}">
 										{#  data-allow-clear="true" data-control="select2"  #}
 										<option value="1w">{{"1 semaine"|trans}}</option>
 										<option value="1m">{{"1 mois"|trans}}</option>
@@ -256,6 +256,7 @@
 							<th class="min-w-100px">{{"Nbr. de page"|trans}}</th>
 							<th class="min-w-100px">{{"Infos"|trans}}</th>
 							<th class="min-w-100px">{{"Message"|trans}}</th>
+							<th class="min-w-100px">{{"Créé le"|trans}}</th>
 							<th class="min-w-100px">{{"Actions"|trans}}</th>
 						</tr>
 					</thead>
@@ -281,16 +282,14 @@
 <script type="text/javascript">
 	const url_user		= "{{path('filter_user')}}",
 	url_sender_names	= "{{path('filter_sender_names')}}",
-	url_sender			= "{{path('filter_sender')}}",
+	url_sender			= "{{path('filter_sender_names')}}",
 	url_get				= "{{path("message_sms_listen")}}",
 	url_disable			= "{{path("message_sms_disable")}}",
 	url_delete			= "{{path("message_sms_delete")}}",
 	url_enable			= "{{path("message_sms_enable")}}",
 	_token				= "{{csrf_token("message")}}";
 
-	const filter_token	= "{{csrf_token("")}}",
-	brandInit			= {% if brands|length == 1 %} "{{brands[0].uid}}" {% else %} false {% endif %},
-	userInit			= {% if users|length == 1 %} "{{users[0].uid}}" {% else %} false {% endif %};
+	const filter_token	= "{{csrf_token("")}}";
 
 	const titleDelete	= "{{"Supprimer le message"|trans}}",
 	titleSuspend		= "{{"Suspendre l'envoi du message"|trans}}",
@@ -299,6 +298,26 @@
 	deleteConfirm		= "{{"Voulez-vous supprimer définitivement le message ?"|trans}}",
 	sendConfirm			= "{{"Voulez-vous relancer l'envoi du message ?"|trans}}"
 	;
+
+	var defaultSenders = {}
+
+	{% for brand in brands %}
+		defaultSenders["{{ brand.uid }}"] = {uid: "{{brand.defaultSender.uid}}", name: "{{brand.defaultSender.name}}"}
+	{% endfor %}
+
+	var dataUsers = [{id:'', text:''}];
+	{% for user in users %}
+		dataUsers.push({id:"{{user.uid}}", text:"{{user.email}}"})
+	{% endfor %}
+
+	var dataSenders = [{id:'', text:''}];
+	{% for sender in senders %}
+		dataSenders.push({id:"{{sender.uid}}", text:"{{sender.name}}"})
+	{% endfor %}
+
+	const brandInit = {% if brands|length == 1 %} "{{brands[0].uid}}" {% else %} false {% endif %},
+	userInit = {% if users|length == 1 %} "{{users[0].uid}}" {% else %} false {% endif %},
+	senderInit = {% if senders|length == 1 %} "{{senders[0].uid}}" {% else %} false {% endif %};
 </script>
 {{ include('smsmessage/new.html.twig', {'brands':brands}) }}
 <script type="text/javascript" src="{{ asset('app/js/queries/sms/list_message.js')}}"></script>

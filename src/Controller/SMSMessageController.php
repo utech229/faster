@@ -118,6 +118,7 @@ class SMSMessageController extends AbstractController
 		return $this->renderForm('smsmessage/index.html.twig', [
 			'brands'    => $brands,
 			'users'     => $users,
+			'senders'	=> [],
 			'userType'  => $userType,
 			'status'    => $this->status,
 			'brand'     => $this->brand->get(),
@@ -142,16 +143,15 @@ class SMSMessageController extends AbstractController
 		if (!$this->isCsrfTokenValid('message', $request->request->get('_token'))) return $this->src->msg_warning(
 			$this->intl->trans("Clé CSRF invalide."),
 			$this->intl->trans("Clé CSRF invalide. Rechargez la page."),
-			[]
 		);
 
-		$uidBrand   = $request->request->get("brand");
-		$uidManager = $request->request->get("manager");
-		$sender     = $request->request->get("sender");
-		$uidStatus  = $request->request->get("status");
-		$periode    = $request->request->get("periode");
-		$from       = $request->request->get("lfrom", null);
-		$of         = $request->request->get("lof", null);
+		$uidBrand   = trim($request->request->get("brand"));
+		$uidManager = trim($request->request->get("manager"));
+		$sender     = trim($request->request->get("sender"));
+		$uidStatus  = trim($request->request->get("status"));
+		$periode    = trim($request->request->get("periode"));
+		$from       = trim($request->request->get("lfrom", null));
+		$of         = trim($request->request->get("lof", null));
 
 		$status     = $this->em->getRepository(Status::class)->findOneByUid($uidStatus);
 
@@ -197,9 +197,10 @@ class SMSMessageController extends AbstractController
 				//$sendingAt = (new \DateTime($message["sendingAt"]))->setTimezone(new \DateTimeZone($message["timezone"]));
 				if(!$status || $status == $myStatus)
 				{
+					$sendingAt = (new \DateTime($message["sendingAt"]))->setTimezone(new \DateTimeZone($message["timezone"]));
 					$data[$key][] = $message["phone"];
 					$data[$key][] = $message["sender"];
-					$data[$key][] = $message["sendingAt"];
+					$data[$key][] = $sendingAt->format("Y-m-d H:i:sP");
 					$data[$key][] = [
 						"code"=>$myStatus->getCode(),
 						"label"=>$myStatus->getLabel(),
@@ -209,6 +210,7 @@ class SMSMessageController extends AbstractController
 					$data[$key][] = $message["pages"];
 					$data[$key][] = $message["phoneCountry"];
 					$data[$key][] = $message["message"];
+					$data[$key][] = $message["createdAt"];
 					$data[$key][] = null;
 
 					$key++;
@@ -282,6 +284,7 @@ class SMSMessageController extends AbstractController
 			$data[$key][] = $message->getPages();
 			$data[$key][] = $message->getPhoneCountry();
 			$data[$key][] = $message->getMessage();
+			$data[$key][] = $message->getCreatedAt()->format("Y-m-d H:i:sP");
 			$data[$key][] = $message->getUid();
 		}
 
@@ -340,10 +343,15 @@ class SMSMessageController extends AbstractController
 			$this->intl->trans("Impossible de retrouver cet utilisateur."),
 		);
 
-		$sender = $this->em->getRepository(Sender::class)->findOneBy([
-			"uid"=>$uidSender,
-			"manager"=>$user,
-		]);
+		if($uidSender == "" || $uidSender == null){
+			$sender = $brand->getDefaultSender();
+		}
+		else{
+			$sender = $this->em->getRepository(Sender::class)->findOneBy([
+				"uid"=>$uidSender,
+				"manager"=>$user,
+			]);
+		}
 
 		if(!$sender) return $this->src->msg_error(
 			$this->intl->trans("Echec lors de la création du SMS. L'identifiant %1% inconnu pour l'utilisateur %2%.", ["%1%"=>$uidSender, "%2%"=>$user->getEmail()]),
@@ -426,7 +434,7 @@ class SMSMessageController extends AbstractController
 		$this->em->persist($smsMessage);
 		$this->em->flush();
 
-		return $this->applyEnableMessage($message);
+		return $this->applyEnableMessage($smsMessage);
 	}
 
 	#[Route('/disable', name: 'message_sms_disable', methods: ['GET','POST'])]

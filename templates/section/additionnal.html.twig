@@ -20,6 +20,7 @@
             if($(els).length > 0){
                 $(els).removeAttr("data-kt-indicator");
                 $(els).removeAttr("disabled");
+				els.disabled = false;
             }
         }
     }
@@ -61,7 +62,7 @@
         imgAlt = (imgAlt !== "null")?imgAlt:"image";
         var template = '';
 
-        template += '<img src="' + imgUrl + '" class="h-20px me-2" alt="'+imgAlt+'"/>';
+        if(imgUrl) template += '<img src="' + imgUrl + '" class="h-20px me-2" alt="'+imgAlt+'"/>';
         template += item.text;
 
         span.innerHTML = template;
@@ -69,7 +70,7 @@
         return $(span);
     }
 
-  
+
     var select2Format2 = function(item) {
         if ( !item.id ) {
             return item.text;
@@ -79,7 +80,7 @@
         var imgUrl = item.element.getAttribute('data-kt-select2-country');
         var template = '';
 
-        template += '<img src="' + imgUrl + '" class="rounded-circle h-20px me-2" alt="image"/>';
+        if(imgUrl) template += '<img src="' + imgUrl + '" class="rounded-circle h-20px me-2" alt="image"/>';
         template += item.text;
 
         span.innerHTML = template;

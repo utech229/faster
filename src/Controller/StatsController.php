@@ -53,7 +53,6 @@ class StatsController extends AbstractController
 			"1"=>$this->src->status(1),
 			"8"=>$this->src->status(8),
 			"9"=>$this->src->status(9),
-			"5"=>$this->src->status(5),
 		];
 	}
 
@@ -80,6 +79,7 @@ class StatsController extends AbstractController
 		return $this->renderForm('stats/index.html.twig', [
 			'brands'    => $brands,
 			'users'     => $users,
+			'senders'	=> [],
 			'userType'  => $userType,
 			'status'    => $this->status,
 			'brand'     => $this->brand->get(),
@@ -100,6 +100,10 @@ class StatsController extends AbstractController
 	{
 		$session		= $this->getUser();
 		$allMessages	= [];
+		$programming	= 0;
+		$pending		= 0;
+		$undelivred		= 0;
+		$delivred		= 0;
 
 		if(!$this->pAccess) return $this->src->no_access($this->intl->trans("Acces refusé à la récupération du statistique des messages"));
 
@@ -108,11 +112,11 @@ class StatsController extends AbstractController
 			$this->intl->trans("Clé CSRF invalide. Rechargez la page."),
 		);
 
-		$uidBrand   = $request->request->get("brand");
-		$uidManager = $request->request->get("manager");
-		$sender     = $request->request->get("sender");
-		$uidStatus  = $request->request->get("status");
-		$periode    = $request->request->get("periode");
+		$uidBrand   = trim($request->request->get("brand"));
+		$uidManager = trim($request->request->get("manager"));
+		$sender     = trim($request->request->get("sender"));
+		$uidStatus  = trim($request->request->get("status"));
+		$periode    = trim($request->request->get("periode"));
 
 		switch ($periode) {
 			case '1m': $lastday = new \DateTime('-1 month'); break;
@@ -120,6 +124,9 @@ class StatsController extends AbstractController
 			case '1y': $lastday = new \DateTime('-1 year'); break;
 			default: $lastday = new \DateTime('-1 week'); break;
 		}
+
+		list($dataGraph1, $dataGraph2) = $this->statistiques($periode);
+		$dataGraph3 = [];
 
 		$request_campaigns = [];
 
@@ -129,17 +136,28 @@ class StatsController extends AbstractController
 		$user_manage = ($uidManager !== "") ? $this->em->getRepository(User::class)->findOneByUid($uidManager) : null;
 		if($user_manage) $request_campaigns["manager"] = $user_manage->getId();
 
+		$this->status['2'] = $this->src->status(2);
+
 		$status = ($uidStatus !== "") ? $this->em->getRepository(Status::class)->findOneByUid($uidStatus) : null;
-		if($status)
+		if($status && $status->getCode() == 1)
 		{
-			$status2 = $this->em->getRepository(Status::class)->findOneByCode(2);
-			if($status->getCode() == 1) $request_campaigns["status"] = [$status->getId(), $status2->getId()];
-			else $request_campaigns["status"] = $status->getId();
+			$request_campaigns["status"] = [$status->getId(), $this->status['2']->getId()];
+		}else if($status && $status->getCode() == 1)
+		{
+			$request_campaigns["status"] = [$status->getId()];
+		}else{
+			$request_campaigns["status"] = [
+				$this->status['0']->getId(),
+				$this->status['1']->getId(),
+				$this->status['2']->getId(),
+				$this->status['8']->getId(),
+				$this->status['9']->getId(),
+			];
 		}
 
 		if($sender !== "") $request_campaigns["sender"] = $sender;
 
-		$request_campaigns["lastday"] = $lastday->format("Y-m-d H:i:sP");
+		$request_campaigns["lastday"] = $lastday->format("Y-m-d 23:59:59P");
 
 		list($userType, $masterId, $userRequest) = $this->src->checkThisUser($this->pList);
 
@@ -152,31 +170,81 @@ class StatsController extends AbstractController
 		foreach ($campaigns as $key => $campaign) {
 			$campaignFile = $this->em->getRepository(SMSMessageFile::class)->findOneByCampaign($campaign);
 
+			$myStatus = $campaign->getStatus();
+
 			if($campaignFile){
 				if(is_file($campaignFile->getUrl())){
 					$messages = json_decode(file_get_contents($campaignFile->getUrl()), true);
-
 					$data = [];
 					$key = 0;
 					foreach ($messages as $message) {
-						$myStatus = $this->status[(string)$message["status"]];
-						if(!$status || $status == $myStatus)
-						{
-							$data[$key][] = $message["phone"];
-							$data[$key][] = $message["sender"];
-							$data[$key][] = $message["sendingAt"];
-							$data[$key][] = [
-								"code"=>$myStatus->getCode(),
-								"label"=>$myStatus->getLabel(),
-								"name"=>$myStatus->getName(),
-								"uid"=>$myStatus->getUid(),
-							];
-							$data[$key][] = $message["pages"];
-							$data[$key][] = $message["phoneCountry"];
-							$data[$key][] = $message["message"];
+						if($myStatus->getCode() == 8) $myStatus = $this->status[(string)$message["status"]];
+						else if($myStatus->getCode() == 2) $myStatus = $this->status["1"];
 
-							$key++;
+						$data[$key][] = $message["phone"];
+						$data[$key][] = $message["sender"];
+						$data[$key][] = $message["sendingAt"];
+						$data[$key][] = [
+							"code"=>$myStatus->getCode(),
+							"label"=>$myStatus->getLabel(),
+							"name"=>$myStatus->getName(),
+							"uid"=>$myStatus->getUid(),
+						];
+						$data[$key][] = $message["pages"];
+						$data[$key][] = $message["phoneCountry"];
+						$data[$key][] = ["campaign", $this->intl->trans("Campagne")];
+						$data[$key][] = $message["message"];
+						$data[$key][] = $message["createdAt"];
+
+						$dateIndex = null;
+
+						switch ($periode) {
+							case '3m':
+								$dateTime = new \DateTime($message["createdAt"]);
+								$monday = clone $dateTime->modify(('Sunday' == $dateTime->format('l')) ? 'Monday last week' : 'Monday this week');
+								$sunday = clone $dateTime->modify('Sunday this week');
+
+								$dateIndex = $monday->format('Ymd').'_'.$sunday->format('Ymd');
+								break;
+							case '1y':
+								$dateIndex = (new \DateTime($message["createdAt"]))->format('Ym01000000');
+								break;
+							default:
+								$dateIndex = (new \DateTime($message["createdAt"]))->format('Ymd000000');
+								break;
 						}
+
+						if($dateIndex){
+							$dataGraph2[$dateIndex][0][0] += $message["pages"];
+
+							switch ($myStatus->getCode()) {
+								case 1:
+									$dataGraph1[$dateIndex][0][1] += $message["pages"];
+									$pending		+= $message["pages"];
+									break;
+								case 9:
+									$dataGraph1[$dateIndex][0][2] += $message["pages"];
+									$undelivred		+= $message["pages"];
+									break;
+								case 8:
+									$dataGraph1[$dateIndex][0][3] += $message["pages"];
+									$delivred		+= $message["pages"];
+									break;
+								default:
+									$dataGraph1[$dateIndex][0][0] += $message["pages"];
+									$programming	+= $message["pages"];
+									break;
+							}
+						}
+
+						$thisOp = strtoupper($message["phoneCountry"]["operator"])."-".$message["phoneCountry"]["name"];
+						if(isset($dataGraph3[$thisOp])){
+							$dataGraph3[$thisOp] += $message["pages"];
+						}else{
+							$dataGraph3[$thisOp] = $message["pages"];
+						}
+
+						$key++;
 					}
 
 					$merge			= array_merge($allMessages, $data);
@@ -191,21 +259,90 @@ class StatsController extends AbstractController
 
 		$data = [];
 		foreach ($messages as $key => $message) {
-			$currency = ($message->getManager()->getUsetting()->getCurrency())["code"];
 			$sendingAt = ($message->getSendingAt())->setTimezone(new \DateTimeZone($message->getTimezone()));
+
+			$myStatus = $message->getStatus();
+
+			if($myStatus->getCode() == 2) $myStatus = $this->status["1"];
+
+			switch ($message->getCreateFrom()) {
+				case 'campaign': $source = $this->intl->trans("Campagne SMS"); break;
+				case 'api': $source = $this->intl->trans("SMS API"); break;
+				default: $source = $this->intl->trans("SMS"); break;
+			}
 
 			$data[$key][] = $message->getPhone();
 			$data[$key][] = $message->getSender();
-			$data[$key][] = $sendingAt->format("Y-m-d H:i:sP");
+			$data[$key][] = $sendingAt->format("Y-m-d 23:59:59P");
 			$data[$key][] = [
-				"code"=>$message->getStatus()->getCode(),
-				"label"=>$message->getStatus()->getLabel(),
-				"name"=>$message->getStatus()->getName(),
-				"uid"=>$message->getStatus()->getUid(),
+				"code"=>$myStatus->getCode(),
+				"label"=>$myStatus->getLabel(),
+				"name"=>$myStatus->getName(),
+				"uid"=>$myStatus->getUid(),
 			];
 			$data[$key][] = $message->getPages();
 			$data[$key][] = $message->getPhoneCountry();
+			$data[$key][] = [$message->getCreateFrom(), $source];
 			$data[$key][] = $message->getMessage();
+			$data[$key][] = $message->getCreatedAt()->format("Y-m-d H:i:sP");
+
+			$dateIndex = null;
+
+			switch ($periode) {
+				case '3m':
+					$dateTime = new \DateTime($message->getCreatedAt()->format("Y-m-d H:i:sP"));
+					$monday = clone $dateTime->modify(('Sunday' == $dateTime->format('l')) ? 'Monday last week' : 'Monday this week');
+					$sunday = clone $dateTime->modify('Sunday this week');
+
+					$dateIndex = $monday->format('Ymd').'_'.$sunday->format('Ymd');
+					break;
+				case '1y':
+					$dateIndex = (new \DateTime($message->getCreatedAt()->format("Y-m-d H:i:sP")))->format('Ym01000000');
+					break;
+				default:
+					$dateIndex = (new \DateTime($message->getCreatedAt()->format("Y-m-d H:i:sP")))->format('Ymd000000');
+					break;
+			}
+
+			if($dateIndex){
+				switch ($message->getCreateFrom()) {
+					case 'campaign':
+						$dataGraph2[$dateIndex][0][0] += $message->getPages();
+						break;
+					case 'api':
+						$dataGraph2[$dateIndex][0][1] += $message->getPages();
+						break;
+					default:
+						$dataGraph2[$dateIndex][0][2] += $message->getPages();
+						break;
+				}
+
+				switch ($myStatus->getCode()) {
+					case 1:
+						$dataGraph1[$dateIndex][0][1] += $message->getPages();
+						$pending	+= $message->getPages();
+						break;
+					case 9:
+						$dataGraph1[$dateIndex][0][2] += $message->getPages();
+						$undelivred	+= $message->getPages();
+						break;
+					case 8:
+						$dataGraph1[$dateIndex][0][3] += $message->getPages();
+						$delivred	+= $message->getPages();
+						break;
+					default:
+						$dataGraph1[$dateIndex][0][0] += $message->getPages();
+						$programming	+= $message->getPages();
+						break;
+				}
+			}
+
+			$thisOp = strtoupper($message->getPhoneCountry()["operator"])."-".$message->getPhoneCountry()["name"];
+			if(isset($dataGraph3[$thisOp])){
+				$dataGraph3[$thisOp] += $message->getPages();
+			}else{
+				$dataGraph3[$thisOp] = $message->getPages();
+			}
 		}
 
 		$merge			= array_merge($allMessages, $data);
@@ -222,8 +359,75 @@ class StatsController extends AbstractController
 					"pList"=>$this->pList,
 					"pEdit"=>$this->pEdit,
 					"pDelete"=>$this->pDelete,
+				],
+				"graphs"=>[
+					"graph1"=>$dataGraph1,
+					"graph2"=>$dataGraph2,
+					"graph3"=>$dataGraph3,
+				],
+				"stats"=>[
+					$programming,
+					$pending,
+					$undelivred,
+					$delivred
 				]
 			],
 		);
+	}
+
+	private function statistiques($periode){
+		switch ($periode) {
+			case '3m':
+				for ($i=6; $i > 0; $i--) {
+					$dateTime = new \DateTime('-'.$i.' week');
+					$monday = clone $dateTime->modify(('Sunday' == $dateTime->format('l')) ? 'Monday last week' : 'Monday this week');
+					$sunday = clone $dateTime->modify('Sunday this week');
+					$table[$monday->format('Ymd').'_'.$sunday->format('Ymd')] = [
+						$monday->format('Y-m-d 00:00:00'),
+						$sunday->format('Y-m-d 00:00:00')
+					];
+				}
+
+				$dateTime = new \DateTime();
+				$monday = clone $dateTime->modify(('Sunday' == $dateTime->format('l')) ? 'Monday last week' : 'Monday this week');
+				$sunday = clone $dateTime->modify('Sunday this week');
+				$table[$monday->format('Ymd').'_'.$sunday->format('Ymd')] = [
+					$monday->format('Y-m-d 00:00:00'),
+					$sunday->format('Y-m-d 00:00:00')
+				];
+				break;
+			case '1m':
+				for ($i=30; $i > 0; $i--) {
+					$table[(new \DateTime('-'.$i.' day'))->format('Ymd000000')] = (new \DateTime('-'.$i.' day'))->format('Y-m-d 00:00:00');
+				}
+				$table[(new \DateTime())->format('Ymd000000')] = (new \DateTime())->format('Y-m-d 00:00:00');
+				break;
+			case '1y':
+				for ($i=11; $i > 0; $i--) {
+					$table[(new \DateTime('-'.$i.' month'))->format('Ym01000000')] = (new \DateTime('-'.$i.' month'))->format('Y-m-01 00:00:00');
+				}
+				$table[(new \DateTime())->format('Ym01000000')] = (new \DateTime())->format('Y-m-01 00:00:00');
+				break;
+			default:
+				for ($i=6; $i > 0; $i--) {
+					$table[(new \DateTime('-'.$i.' day'))->format('Ymd000000')] = (new \DateTime('-'.$i.' day'))->format('Y-m-d 00:00:00');
+				}
+				$table[(new \DateTime())->format('Ymd000000')] = (new \DateTime())->format('Y-m-d 00:00:00');
+				break;
+		}
+
+		foreach ($table as $key => $line) {
+			$graph1[$key] = [
+				[0,0,0,0],
+				$line
+			];
+
+			$graph2[$key] = [
+				[0,0,0],
+				$line
+			];
+		}
+
+		return [$graph1, $graph2];
 	}
 }

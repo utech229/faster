@@ -72,7 +72,6 @@ class SMSCampaignController extends AbstractController
 			"0"=>$this->src->status(0),
 			"1"=>$this->src->status(1),
 			"8"=>$this->src->status(8),
-			"9"=>$this->src->status(9),
 			"5"=>$this->src->status(5),
 			"10"=>$this->src->status(10),
 		];
@@ -103,6 +102,7 @@ class SMSCampaignController extends AbstractController
 		return $this->renderForm('smscampaign/index.html.twig', [
 			'brands'    => $brands,
 			'users'     => $users,
+			'senders'	=> [],
 			'status'    => $this->status,
 			'brand'     => $this->brand->get(),
 			'pAccess'   => $this->pAccess,
@@ -136,7 +136,6 @@ class SMSCampaignController extends AbstractController
 		if (!$this->isCsrfTokenValid('campaign', $request->request->get('_token'))) return $this->src->msg_warning(
 			$this->intl->trans("Clé CSRF invalide."),
 			$this->intl->trans("Clé CSRF invalide. Rechargez la page."),
-			[]
 		);
 
 		$uidBrand   = trim($request->request->get("brand"));
@@ -161,12 +160,24 @@ class SMSCampaignController extends AbstractController
 		$user_manage = ($uidManager !== "") ? $this->em->getRepository(User::class)->findOneByUid($uidManager) : null;
 		if($user_manage) $request_campaigns["manager"] = $user_manage->getId();
 
+		$this->status['2'] = $this->src->status(2);
+
 		$status = ($uidStatus !== "") ? $this->em->getRepository(Status::class)->findOneByUid($uidStatus) : null;
-		if($status)
+		if($status && $status->getCode() == 1)
 		{
-			$status2 = $this->em->getRepository(Status::class)->findOneByCode(2);
-			if($status->getCode() == 1) $request_campaigns["status"] = [$status->getId(), $status2->getId()];
-			else $request_campaigns["status"] = $status->getId();
+			$request_campaigns["status"] = [$status->getId(), $this->status['2']->getId()];
+		}else if($status && $status->getCode() == 1)
+		{
+			$request_campaigns["status"] = [$status->getId()];
+		}else{
+			$request_campaigns["status"] = [
+				$this->status['0']->getId(),
+				$this->status['1']->getId(),
+				$this->status['2']->getId(),
+				$this->status['5']->getId(),
+				$this->status['8']->getId(),
+				$this->status['10']->getId(),
+			];
 		}
 
 		if($sender !== "") $request_campaigns["sender"] = $sender;
@@ -195,6 +206,7 @@ class SMSCampaignController extends AbstractController
 				"uid"=>$campaign->getStatus()->getUid(),
 			];
 			$data[$key][] = $campaign->getMessage();
+			$data[$key][] = $campaign->getCreatedAt()->format("Y-m-d H:i:sP");
 			$data[$key][] = $campaign->getUid();
 		}
 
@@ -226,7 +238,6 @@ class SMSCampaignController extends AbstractController
 		if (!$this->isCsrfTokenValid('campaign', $request->request->get('_token'))) return $this->src->msg_warning(
 			$this->intl->trans("Clé CSRF invalide."),
 			$this->intl->trans("Clé CSRF invalide. Rechargez la page."),
-			[]
 		);
 
 		$campaign = $this->em->getRepository(SMSCampaign::class)->findOneByUid($request->request->get('campaign'));
@@ -637,12 +648,12 @@ class SMSCampaignController extends AbstractController
 			$this->intl->trans("Acces refusé à la création de campagne."),
 		);
 
-		if (!$this->isCsrfTokenValid('campaign_create', $request->request->get('_token'))) return $this->src->msg_warning(
+		if (!$this->isCsrfTokenValid('campaign_create', $request->request->get('_token'))) return $this->src->msg_error(
 			$this->intl->trans("Clé CSRF invalide."),
 			$this->intl->trans("Clé CSRF invalide. Rechargez la page."),
 		);
 
-		$response = $this->createCampaign($request->request);
+		$response = $this->createCampaign($request);
 
 		if($response) return $response;
 
@@ -746,7 +757,7 @@ class SMSCampaignController extends AbstractController
 
 		if($phone_data) $phone_data["operator"] = $this->phoneOperator($phone_data["code"], $phoneNumber);
 
-		$lastMessage["updatedAt"]       = (new \DateTimeImmutable())->format("Y-d-m H:i:s P");
+		$lastMessage["updatedAt"]       = (new \DateTimeImmutable())->format("Y-m-d H:i:sP");
 		$lastMessage["message"]         = $dataMessage[1];
 		$lastMessage["messageAmount"]   = $dataAmount[1];
 		$lastMessage["status"]          = count($errors) == 0 ? $this->programming->getCode() : $this->suspend->getCode();
@@ -826,8 +837,9 @@ class SMSCampaignController extends AbstractController
 		return $this->applyEnableCampaign($campaign, $amount);
 	}
 
-	private function createCampaign($reqData)
+	private function createCampaign($request)
 	{
+		$reqData = $request; // En présence d'un select multiple, utiliser $request->get() pour toutes les récupérations
 		$brand = $this->em->getRepository(Brand::class)->findOneByUid($reqData->get("brand"));
 
 		if(!$brand) return $this->src->msg_error(
@@ -845,10 +857,17 @@ class SMSCampaignController extends AbstractController
 			$this->intl->trans("Impossible de retrouver cet utilisateur."),
 		);
 
-		$sender = $this->em->getRepository(Sender::class)->findOneBy([
-			"uid"=>$reqData->get("sender"),
-			"manager"=>$user,
-		]);
+		$uidSender = $reqData->get("sender");
+
+		if($uidSender == "" || $uidSender == null){
+			$sender = $brand->getDefaultSender();
+		}
+		else{
+			$sender = $this->em->getRepository(Sender::class)->findOneBy([
+				"uid"=>$reqData->get("sender"),
+				"manager"=>$user,
+			]);
+		}
 
 		if(!$sender) return $this->src->msg_error(
 			$this->intl->trans("Echec lors de la création d'une campagne SMS. L'identifiant %1% inconnu pour l'utilisateur %2%.", ["%1%"=>$reqData->get("sender"), "%2%"=>$user->getEmail()]),
@@ -903,7 +922,7 @@ class SMSCampaignController extends AbstractController
 
 		switch (true) {
 			case ($reqData->get("groups", "") != ""):
-				$phones = $this->campaignByGroupContacts($reqData->get("groups", ""));
+				$phones = $this->campaignByGroupContacts($request->get("groups"));
 				break;
 			case ($reqData->get("phones", "") != ""):
 				$phones = $this->campaignByWriteNumbers($reqData->get("phones", ""));
@@ -981,11 +1000,26 @@ class SMSCampaignController extends AbstractController
 		}
 
 		$this->em->persist($campaign);
-		$this->em->flush();
 
 		$lastPhones = [];
 
 		if($thisStatusCode != 10){
+			for ($i=0; $i < count($allMessages); $i++) {
+				$allMessages[$i]["sendingAt"]	= $sendingAt->format("Y-m-d H:i:sP");
+				$allMessages[$i]["updatedAt"]	= (new \DateTimeImmutable())->format("Y-m-d H:i:sP");
+				$allMessages[$i]["smsType"]		= $type;
+				$allMessages[$i]["timezone"]	= $timezone;
+				$allMessages[$i]["sender"]		= $sender->getName();
+				$allMessages[$i]["createBy"]	= $this->getUser()->getId();
+			}
+
+			if($campaignFile){
+				$fileUrl = $campaignFile->getUrl();
+				file_put_contents($fileUrl, json_encode($allMessages));
+				$campaignFile->setUpdatedAt(new \DateTimeImmutable());
+				$this->em->persist($campaignFile);
+			}
+
 			return $this->src->msg_success(
 				$this->intl->trans("Campagne %1% Mise à jour.", ["%1%"=>$campaign->getUid()]),
 				$this->intl->trans("Campagne modifiée avec succès."),
@@ -996,6 +1030,8 @@ class SMSCampaignController extends AbstractController
 				$lastPhones[] = $oneMessage["contact"];
 			}
 		}
+
+		$this->em->flush();
 
 		$merge		= array_merge($lastPhones, $phones);
 		$phones		= $merge;
@@ -1020,8 +1056,8 @@ class SMSCampaignController extends AbstractController
 			if($phone_data) $phone_data["operator"] = $this->sMessage->phoneOperator($phone_data["code"], $phone["number"], $this->brickPhone);
 
 			$data[] = [
-				"sendingAt"			=> $sendingAt->format("Y-d-m H:i:s P"),
-				"createdAt"			=> (new \DateTimeImmutable())->format("Y-d-m H:i:s P"),
+				"sendingAt"			=> $sendingAt->format("Y-m-d H:i:sP"),
+				"createdAt"			=> (new \DateTimeImmutable())->format("Y-m-d H:i:sP"),
 				"updatedAt"			=> null,
 				"message"			=> $dataMessage[1],
 				"messageAmount"		=> $dataAmount[1],
@@ -1120,18 +1156,21 @@ class SMSCampaignController extends AbstractController
 	private function campaignByGroupContacts($groups)
 	{
 		$phonesData = [];
+		$i = 0;
 		foreach ($groups as $group) {
-			$contacts = $this->em->getRepository(Contact::class)->findOneBy(["uid"=>$group, "status"=>$this->src->status(3)]);
+			$contactsGroup = $this->em->getRepository(ContactGroup::class)->findOneBy(["uid"=>$group]);
 
-			if($contacts){
-				foreach ($contacts as $contact) {
+			if($contactsGroup){
+				foreach ($contactsGroup->getContacts() as $contact) {
 					$phonesData[$i]["number"] = "+".str_replace("+","",$contact->getPhone());
-					$phonesData[$i]["param1"] = "";
-					$phonesData[$i]["param2"] = "";
-					$phonesData[$i]["param3"] = "";
-					$phonesData[$i]["param4"] = "";
-					$phonesData[$i]["param5"] = "";
+					$phonesData[$i]["param1"] = $contact->getField1();
+					$phonesData[$i]["param2"] = $contact->getField2();
+					$phonesData[$i]["param3"] = $contact->getField3();
+					$phonesData[$i]["param4"] = $contact->getField4();
+					$phonesData[$i]["param5"] = $contact->getField5();
 					$phonesData[$i]["param6"] = "";
+
+					$i++;
 				}
 			}
 		}
@@ -1279,7 +1318,7 @@ class SMSCampaignController extends AbstractController
 			->setUpdatedAt(new \DateTimeImmutable());
 		$this->em->persist($campaign);
 
-		$this->src->addBalanceChange($user, $lastBalance, $amount, ucfirst($status->getName())+" de campagne SMS", $campaign->getUid());
+		$this->src->addBalanceChange($user, $lastBalance, $amount, ucfirst($status->getName())." de campagne SMS", $campaign->getUid());
 
 		return $this->src->msg_success(
 			$this->intl->trans("La campagne '%1%' passe en %2%.", ["%1%"=>$campaign->getUid(), "%2%"=>$status->getName()]),
@@ -1295,11 +1334,11 @@ class SMSCampaignController extends AbstractController
 			->setUid($this->src->getUniqid())
 			->setCreatedAt(new \DateTimeImmutable())
 			->setUpdatedAt(null)
-			->setField1("champ1")
-			->setField2("champ2")
-			->setField3("champ3")
-			->setField4("champ4")
-			->setField5("champ5")
+			->setField1("Champ1")
+			->setField2("Champ2")
+			->setField3("Champ3")
+			->setField4("Champ4")
+			->setField5("Champ5")
 			->setAdmin($this->getUser())
 			;
 		$this->em->persist($group);

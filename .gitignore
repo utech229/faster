@@ -6,9 +6,8 @@
 /.env.*.local
 /config/secrets/prod/prod.decrypt.private.php
 /public/bundles/
+/public/campaign/
 /var/
-/config/packages/framework.yaml.local
+/config/packages/framework.yaml
 #/vendor/
 ###< symfony/framework-bundle ###
-config/packages/framework.yaml
-config/packages/framework.yaml
