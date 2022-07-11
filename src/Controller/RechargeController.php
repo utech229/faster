@@ -234,7 +234,6 @@ class RechargeController extends AbstractController
         if(in_array($checkEtat[0], [0, 1, 2, 3])){
             if($typeRecharge == $this->typeRecharge[0]){
                 if($amount > $this->getUser()->getBalance()){return $this->services->msg_error($this->intl->trans("Balance du revendeur incorrecte.").': '.$this->getUser()->getEmail(), $this->intl->trans("Le montant à recharger est supérieur à votre balance. Veuillez approvisionner votre compte pour continuer."));}
-                dd($user, $this->getUser());
                 $buildCom        = $this->buildCom($amount, $user);
                 $rechargeBy      = $userTransaction = $this->getUser();
                 $userTransaction = $rechargeBy      = $this->getUser();
