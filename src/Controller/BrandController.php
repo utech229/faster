@@ -113,7 +113,12 @@ class BrandController extends AbstractController
         if($executeReq[0]== 0 || $executeReq[0] == 1){
             $manager = $user;
         }else{
-            $manager = $this->getUser();
+            $checkEtat = $this->services->checkThisUser($this->pAllAccess);
+            switch($checkEtat[0]){
+                case 3: $manager  = $this->getUser()->getAffiliateManager(); break;
+                case 5: $manager  = $this->getUser()->getAffiliateManager(); break;
+                default: $manager = $this->getUser(); break;
+            }
         }
         $creator = $this->getUser();
         if($request->request->get('thisU')){
