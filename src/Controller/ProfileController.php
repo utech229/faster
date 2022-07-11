@@ -205,7 +205,7 @@ class ProfileController extends AbstractController
                 'token' => $request->request->get('_token'), "code" => $code ]);
 
                 //email
-                $message = $this->render('email/change-email.html.twig', [
+                $message = $this->render('email/email-change.html.twig', [
                     'title'           => $this->intl->trans("Modification d'adresse email").' - '. $brand['name'],
                     'brand'           => $brand,
                     'data'            => [
