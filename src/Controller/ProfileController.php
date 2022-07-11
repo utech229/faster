@@ -211,11 +211,11 @@ class ProfileController extends AbstractController
                     'data'            => [
                         'url'      => $url,
                         'user'     => $user,
-                        'base_url' => $this->baseUrl
+                        'base_url' => $this->baseUrl->init()
                     ]
                 ]);
 
-                $this->sMailer->nativeSend( $this->brand->get()['emails']['support'], 
+                $this->sMailer->nativeSend($this->brand->get()['emails']['support'], 
                     $email ,  $this->intl->trans("Modification d'adresse email"),  $message);
 
                 return $this->services->msg_warning(
