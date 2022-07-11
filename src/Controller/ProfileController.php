@@ -199,11 +199,10 @@ class ProfileController extends AbstractController
                 $user->setUpdatedAt(new \DatetimeImmutable());
                 $this->userRepository->add($user);
                 // Lien de réinitialisation
-                $base = $this->baseUrl->init();
+                $base  = $this->baseUrl->init();
                 $email = base64_encode($email);
                 $url   = $base.$this->urlGenerator->generate('app_user_email_setting', ["email" => $email,  "uid" => $user->getUid(),
                 'token' => $request->request->get('_token'), "code" => $code ]);
-
                 //email
                 $message = $this->render('email/email-change.html.twig', [
                     'title'           => $this->intl->trans("Modification d'adresse email").' - '. $brand['name'],
@@ -214,15 +213,10 @@ class ProfileController extends AbstractController
                         'base_url' => $this->baseUrl->init()
                     ]
                 ]);
-
-                dd($this->sMailer->nativeSend($this->brand->get()['emails']['support'], 
-                    $email, $this->intl->trans("Modification d'adresse email"),  $message));
-
-                return $this->services->msg_warning(
-                    $this->intl->trans("Modification de l'adresse email").':'.$user->getEmail(),
-                    $this->intl->trans("Modification initialisé, veuillez consulter 
-                    votre nouvelle adresse pour le vérifier et finaliser cette opération")
-                );
+                $this->sMailer->nativeSend($this->brand->get()['emails']['support'], $email, $this->intl->trans("Modification d'adresse email"),  
+                $message);
+                return $this->services->msg_warning($this->intl->trans("Modification de l'adresse email").':'.$user->getEmail(),
+                    $this->intl->trans("Modification initialisé, veuillez consulter votre nouvelle adresse pour le vérifier et finaliser cette opération"));
             }
             return $this->services->msg_warning(
                 $this->intl->trans("Modification de l'adresse email").':'.$user->getEmail(),

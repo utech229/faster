@@ -26,22 +26,19 @@ class sMailer extends AbstractController
        $this->brand = $brand;
     }
 
-    public function send()
+    public function send($from, $to , $subject, $message)
     {
-        $mailer = $this->mailer;
         $email = (new TemplatedEmail())
-            ->from('support@zekin.app')
-            ->to('enockiatk@gmail.com')
+            ->from($from)
+            ->to($to)
             //->cc('cc@example.com')
             //->bcc('bcc@example.com')
             //->replyTo('fabien@example.com')
             ->priority(Email::PRIORITY_HIGH)
-            ->subject('Time for Symfony Mailer!')
-            ->text('Sending emails is fun again!')
-            ->html('<p>See Twig integration for better HTML integration!</p>');
-
-        $send =  $mailer->send($email);
-        return $send;
+            ->subject($subject)
+            //->text('Sending emails is fun again!')
+            ->html($message);
+        return $mailer->send($email);
     }
 
     public function nativeSend($from, $to , $subject, $message)
