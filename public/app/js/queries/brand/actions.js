@@ -145,6 +145,9 @@ var KTUsersBrandUser = function() {
                         },
                         '_logo': {
                             validators: {
+                                notEmpty:{
+                                    message: _File_Required_
+                                },
                                 file: {
                                     extension: 'jpg,jpeg,png',
                                     message: _File_Required_

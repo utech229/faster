@@ -341,6 +341,7 @@ var KTGroupList = function() {
                         e.search("").draw()
                 })),
                 $('[data-kt-contact-group="user"]').on('change', function() {
+                    loading(true);
                     e.ajax.reload();
                 }),
                 c(), (() => {
@@ -359,7 +360,9 @@ var KTGroupList = function() {
                 })
                 ());
 
-            e.on("draw", function() { l(), c(), a()})
+            e.on("draw", function() { l(), c(), a();
+                loading();
+            })
         }
     }
 }();

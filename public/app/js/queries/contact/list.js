@@ -296,7 +296,12 @@ var KTContactList = function() {
                     lengthMenu: [10, 25, 100, 250, 500, 1000],
                     language: {
                         url: _language_datatables,
-                    },                 
+                    },
+                    dom: `<"tab-content"
+                            <"top text-end bt-export d-none"B>
+                            <"#campaign_targets_card_pane.tab-pane fade row">
+                            <"#campaign_targets_table_pane.tab-pane fade show active"rtF>>
+                            <"row"<"col-sm-6"l><"col-sm-6"p>>`               
                 }),
                 $('#kt_modal_add_contact_reload_button').on('click', function() {
                     e.ajax.reload(null, false);
@@ -307,6 +312,7 @@ var KTContactList = function() {
 
                 })),
                 $('[data-kt-contact-group="group"]').on('change', function() {
+                    loading(true);
                     $.ajax({
                         url:get_champ_group,
                         type:"post",
@@ -327,6 +333,9 @@ var KTContactList = function() {
                         error: function () {
                         }
                     });
+                }),
+			    $("#export").on('click', ($this)=>{ 
+                    $this.preventDefault(); return $(".bt-export").hasClass('d-none')?$(".bt-export").removeClass('d-none'):$(".bt-export").addClass('d-none');
                 }),
                 document.querySelector('[data-kt-contact-table-filter="reset"]').addEventListener("click", (function() {
                     document.querySelector('[data-kt-contact-table-filter="form"]').querySelectorAll("select").forEach((e => {
@@ -350,7 +359,7 @@ var KTContactList = function() {
                 })
                 ());
                 e.on("draw", function() { l(), c(), a();
-                    
+                    loading();
                 })
         }
     };
@@ -464,7 +473,6 @@ $(document).on('change',"#list_user_contact_id", function (e) {
 });
 
 function infoImportFile() {
-    console.log();
     window.location.href = _base_url+'/app/exemple/exemple.xlsx';
 }
 // Champ Importation
