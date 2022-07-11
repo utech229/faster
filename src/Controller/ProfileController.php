@@ -174,14 +174,15 @@ class ProfileController extends AbstractController
     #[Route('/init_email_change', name: 'app_user_email_edit', methods: ['POST'])]
     public function email_reset(Request $request, UserPasswordHasherInterface $userPasswordHasher)
     {
-        $user = $this->getUser();
+        $user  = $this->getUser();
+        $brand = $this->brand->get();
         if ($request->request->count() > 0) 
         {
             if (!$this->isCsrfTokenValid($user->getUid(), $request->request->get('_token'))) 
             return $this->services->no_access($this->intl->trans("Modification de l'adresse email").': '.$user->getEmail());
 
             $email	       = $request->request->get('email');
-            /*$isExistedUser = $this->userRepository->findOneBy(['email' => $email, 'brand' => $this->brand->get()]);
+            /*$isExistedUser = $this->userRepository->findOneBy(['email' => $email, 'brand' => $brand->get()]);
             if ($isExistedUser) {
                 return $this->services->msg_error(
                     $this->intl->trans("Modification de l'adresse email"),
