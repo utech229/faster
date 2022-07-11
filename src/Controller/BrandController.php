@@ -70,7 +70,7 @@ class BrandController extends AbstractController
             case 1: $inBrand  = true; $users = $this->services->getUserByPermission('MANGR'); break;
             case 2: $inBrand  = $this->bRepository->findOneBy(['manager'=> $this->getUser()]); break;
             case 4: $inBrand  = $this->bRepository->findOneBy(['manager'=> $this->getUser()]); break;
-            default: $inBrand = $this->bRepository->findOneBy(['manager'=> $this->getUser()->getAffiliationManager()]); break;
+            default: $inBrand = $this->bRepository->findOneBy(['manager'=> $this->getUser()->getAffiliateManager()]); break;
         }
 
         return $this->render('brand/index.html.twig', [
