@@ -217,7 +217,7 @@ class BrandController extends AbstractController
                     if($manager->getId() == $inSender->getManager()->getId()) $eSender = true;
                 }else{
                     if($typeUser == 3 || $typeUser == 2 ){
-                        if($this->getUser()->getAffiliateManager()->getId()){
+                        if($this->getUser()->getAffiliateManager()){
                             if($this->getUser()->getAffiliateManager()->getId() == $inSender->getManager()->getId()){$eSender = true;};
                         }else{
                             if($this->getUser()->getId() == $inSender->getManager()->getId()){$eSender = true;}
