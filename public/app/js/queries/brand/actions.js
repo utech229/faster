@@ -23,9 +23,10 @@ $(document).on('click', '.updateBrand', function(e){
             $('#adressEmail').val(r.adressS);
             $('#noreplyEmail').val(r.adressN);
             $('#phoneb').val(r.phone);
-            $('#phoneb').val(r.phone);
+            // $('#phoneb').val(r.phone);
             // $('#_uSelect').val()
             // $('#observations').val(r.observations);
+            $('#_sender').val(r.sender);
             $('#thisU').val(r.manager[1]);
             $('#_uSelect').val(r.manager[0]).trigger('change');
             $('#waiting').modal('hide');
@@ -84,8 +85,15 @@ $(document).on('click', ".sBrand", function() {
 	// });
     $("#brand_name").text($(this).data('name'));
     $('#key').val($(this).data('id'));
-    if($(this).data('status') == 3){
-        $('input:radio[name=st]')[2].checked=true;
+    $('#observations').val($(this).data('ob'));
+
+    switch($(this).data('status')){
+        case 3:
+            $('input:radio[name=st]')[0].checked=true; break;
+        case 5:
+            $('input:radio[name=st]')[1].checked=true; break;
+        default:
+            $('input:radio[name=st]')[2].checked=true; break;
     }
     $('#kt_modal_reload_brand').modal('show');
 });
@@ -113,6 +121,9 @@ var KTUsersBrandUser = function() {
                         },
                         '_mail_support': {
                             validators: {
+                                notEmpty: {
+                                    message: _mail_required
+                                },
                                 stringLength: {
                                     min: 11,
                                     max: 30,
@@ -120,13 +131,27 @@ var KTUsersBrandUser = function() {
                                 }
                             }
                         },
-                        '_mail_noreply': {
+                        '_sender': {
                             validators: {
+                                notEmpty: {
+                                    message: _noSender_required
+                                },
                                 stringLength: {
-                                    min: 11,
-                                    max: 30,
-                                    message:  _mail_required
+                                    min: 3,
+                                    max: 11,
+                                    message:  _sender_required
                                 }
+                            }
+                        },
+                        '_logo': {
+                            validators: {
+                                notEmpty:{
+                                    message: _File_Required_
+                                },
+                                file: {
+                                    extension: 'jpg,jpeg,png, JPG',
+                                    message: _File_Required_
+                                },
                             }
                         },
                         '_phone_support': {
@@ -300,7 +325,7 @@ var KTUsersLoadBrand = function() {
                     targets: 0,
                 },
                 {
-                    targets: 4,
+                    targets: 5,
                     render: function(data, type, full, meta) {
                         var status = {
                             1 : { 'title': _pendingb, 'class': 'warning' },
@@ -317,7 +342,7 @@ var KTUsersLoadBrand = function() {
                 },
                 {
                     orderable: !1,
-                    targets: 6,
+                    targets: 7,
                     // visible: (!pDownload && !pRefresh) ? false : true,
                     render : function (data) {
                         var detailIcon =  `<a class="btn btn-icon btn-active-light-primary w-30px h-30px me-3 detailBrand" href="`+data.link+`" target="_blank">
@@ -330,8 +355,8 @@ var KTUsersLoadBrand = function() {
                         </button>`;
                         var validateIcon = `
                         <button class="btn btn-icon btn-active-light-info w-30px h-30px sBrand"
-                            data-id=`+data.uid+` data-status="`+data.status+`" data-name="`+data.name+`" data-kt-users-table-filter="delete_row">
-                                <i id="deleteUserOption`+data.uid+`"  title="`+_validateInfo+`" class="text-info i bi-gear-wide-connected"></i>
+                            data-id=`+data.uid+` data-status="`+data.status+`" data-name="`+data.name+`" data-ob="`+data.observations+`" data-kt-users-table-filter="delete_row">
+                                <i id="deleteUserOption`+data.uid+`" title="`+_validateInfo+`" class="text-info i bi-gear-wide-connected"></i>
                         </button>`;
 
                         var validate = (data.pvalidate) ? validateIcon : '';
@@ -347,11 +372,13 @@ var KTUsersLoadBrand = function() {
 
                     { data: 'administrator', responsivePriority: -5},
 
-                    { data: 'urlSite', responsivePriority: -4  },
+                    { data: 'urlSite', responsivePriority: -4},
 
                     { data: 'emailV' , responsivePriority: 0},
 
-                    { data: 'status'},
+                    { data: 'sender' , responsivePriority: 0},
+
+                    { data: 'status', responsivePriority: -8},
 
                     { data: 'createdAt'},
 

@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Service\uBrand;
 use App\Service\Services;
 use Symfony\Component\Mime\Email;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
@@ -17,29 +18,40 @@ class sMailer extends AbstractController
 {
     protected $brand;
    
-	public function __construct(TranslatorInterface $intl,Services $services, MailerInterface $mailer)
+	public function __construct(TranslatorInterface $intl,Services $services, MailerInterface $mailer, uBrand $brand)
 	{
        $this->intl    = $intl;
        $this->services = $services;
        $this->mailer = $mailer;
+       $this->brand = $brand;
     }
 
-    public function send()
+    public function send($from, $to , $subject, $message)
     {
-        $mailer = $this->mailer;
         $email = (new TemplatedEmail())
-            ->from('support@zekin.app')
-            ->to('enockiatk@gmail.com')
+            ->from($from)
+            ->to($to)
             //->cc('cc@example.com')
             //->bcc('bcc@example.com')
             //->replyTo('fabien@example.com')
             ->priority(Email::PRIORITY_HIGH)
-            ->subject('Time for Symfony Mailer!')
-            ->text('Sending emails is fun again!')
-            ->html('<p>See Twig integration for better HTML integration!</p>');
+            ->subject($subject)
+            //->text('Sending emails is fun again!')
+            ->html($message);
+        return $mailer->send($email);
+    }
 
-        $send =  $mailer->send($email);
-        return $send;
+    public function nativeSend($from, $to , $subject, $message)
+    {
+        // Pour envoyer un mail HTML, l'en-tête Content-type doit être défini
+        $headers[] = 'MIME-Version: 1.0';
+        $headers[] = 'Content-type: text/html; charset=iso-8859-1';
+        // En-têtes additionnels
+        $headers[] = 'To:'.$to;
+        $headers[] = 'From:'.$this->brand->get()['name'];
+        $headers[] = 'Cc:'.$from;
+        // Envoi
+        return mail($to, $subject, $message, implode("\r\n", $headers));
     }
 
     

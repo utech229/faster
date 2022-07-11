@@ -37,7 +37,9 @@ $(document).on('click', ".groupDeleter", function() {
                     if (response.status === 'success') {
 
                         $(document).trigger('entityUpStop', ['#', uid, 'fa-trash-alt']);
-                        $('#kt_modal_add_contact_group_reload_button').click();
+						let user = document.querySelector('[data-kt-contact-user="user"]').value;
+                        rechargeGroups(user);
+						$('#kt_modal_add_contact_group_reload_button').click();
                     }
 				},
                 error:function(response) {

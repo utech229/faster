@@ -83,7 +83,7 @@ var KTSignupGeneral = function() {
                             callback: {
                                 message: _Password_Valid,
                                 callback: function(input) {
-                                    if (input.value.length > 0) {
+                                    if (input.value.length > 1) {
                                         return validatePassword();
                                     }
                                 }
@@ -199,16 +199,7 @@ var KTSignupGeneral = function() {
                         }
                     });
                 } else {
-                    // Show error popup. For more info check the plugin's official documentation: https://sweetalert2.github.io/
-                    Swal.fire({
-                        text: _Form_Error_Swal_Notification,
-                        icon: "error",
-                        buttonsStyling: false,
-                        confirmButtonText: _Form_Ok_Swal_Button_Text_Notification,
-                        customClass: {
-                            confirmButton: "btn btn-primary"
-                        }
-                    });
+                    swalSimple('error', _Form_Error_Swal_Notification)
                     // Hide loading indication
                     submitButton.removeAttribute('data-kt-indicator');
 
@@ -228,7 +219,7 @@ var KTSignupGeneral = function() {
 
     // Password input validation
     var validatePassword = function() {
-        return (passwordMeter.getScore() >= 50);
+        return (passwordMeter.getScore() == 100);
     }
 
     // Public functions

@@ -221,8 +221,24 @@
                     </div>
                     <!--end::Menu 1-->
                     <!--end::Filter-->
-                   <!--begin::Export-->
+                   <!--begin::Importer-->
                     <button type="button" class="btn btn-light-primary me-3" id="open_modal_import_contacts_id">
+                    <!--begin::Svg Icon | path: icons/duotune/arrows/arr078.svg-->
+                    <span class="svg-icon svg-icon-primary svg-icon-2"><!--begin::Svg Icon | path:C:\wamp64\www\keenthemes\themes\metronic\theme\html\demo1\dist/../src/media/svg/icons\Files\Import.svg-->
+                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                            <rect x="0" y="0" width="24" height="24"/>
+                            <rect fill="#000000" opacity="0.3" transform="translate(12.000000, 7.000000) rotate(-180.000000) translate(-12.000000, -7.000000) " x="11" y="1" width="2" height="12" rx="1"/>
+                            <path d="M17,8 C16.4477153,8 16,7.55228475 16,7 C16,6.44771525 16.4477153,6 17,6 L18,6 C20.209139,6 22,7.790861 22,10 L22,18 C22,20.209139 20.209139,22 18,22 L6,22 C3.790861,22 2,20.209139 2,18 L2,9.99305689 C2,7.7839179 3.790861,5.99305689 6,5.99305689 L7.00000482,5.99305689 C7.55228957,5.99305689 8.00000482,6.44077214 8.00000482,6.99305689 C8.00000482,7.54534164 7.55228957,7.99305689 7.00000482,7.99305689 L6,7.99305689 C4.8954305,7.99305689 4,8.88848739 4,9.99305689 L4,18 C4,19.1045695 4.8954305,20 6,20 L18,20 C19.1045695,20 20,19.1045695 20,18 L20,10 C20,8.8954305 19.1045695,8 18,8 L17,8 Z" fill="#000000" fill-rule="nonzero" opacity="0.3"/>
+                            <path d="M14.2928932,10.2928932 C14.6834175,9.90236893 15.3165825,9.90236893 15.7071068,10.2928932 C16.0976311,10.6834175 16.0976311,11.3165825 15.7071068,11.7071068 L12.7071068,14.7071068 C12.3165825,15.0976311 11.6834175,15.0976311 11.2928932,14.7071068 L8.29289322,11.7071068 C7.90236893,11.3165825 7.90236893,10.6834175 8.29289322,10.2928932 C8.68341751,9.90236893 9.31658249,9.90236893 9.70710678,10.2928932 L12,12.5857864 L14.2928932,10.2928932 Z" fill="#000000" fill-rule="nonzero"/>
+                        </g>
+                    </svg><!--end::Svg Icon-->
+                    </span>
+                    <!--end::Svg Icon-->{{"Importer"| trans}}</button>
+                    <!--end::Importer-->
+
+                    <!--begin::Export-->
+                    <button type="button" class="btn btn-light-primary me-3" id="export">
                     <!--begin::Svg Icon | path: icons/duotune/arrows/arr078.svg-->
                     <span class="svg-icon svg-icon-2">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -231,7 +247,7 @@
                             <path d="M18.75 8.25H17.75C17.1977 8.25 16.75 8.69772 16.75 9.25C16.75 9.80228 17.1977 10.25 17.75 10.25C18.3023 10.25 18.75 10.6977 18.75 11.25V18.25C18.75 18.8023 18.3023 19.25 17.75 19.25H5.75C5.19772 19.25 4.75 18.8023 4.75 18.25V11.25C4.75 10.6977 5.19771 10.25 5.75 10.25C6.30229 10.25 6.75 9.80228 6.75 9.25C6.75 8.69772 6.30229 8.25 5.75 8.25H4.75C3.64543 8.25 2.75 9.14543 2.75 10.25V19.25C2.75 20.3546 3.64543 21.25 4.75 21.25H18.75C19.8546 21.25 20.75 20.3546 20.75 19.25V10.25C20.75 9.14543 19.8546 8.25 18.75 8.25Z" fill="#C4C4C4" />
                         </svg>
                     </span>
-                    <!--end::Svg Icon-->{{"Importer"| trans}}</button>
+                    <!--end::Svg Icon-->{{"Exporter"| trans}}</button>
                     <!--end::Export-->
 
                     <button type="button" data-bs-toggle="modal" data-bs-target="#kt_modal_create_contact"  class="btn btn-light-primary {{ pCreate ? "" : "d-none"}}">
@@ -264,7 +280,7 @@
                 <div class="d-flex justify-content-end align-items-center d-none" data-kt-contact-table-toolbar="selected">
                     <div class="fw-bolder me-5">
                     <span class="me-2" data-kt-contact-table-toolbar="selected_count"></span>{{"Sélection(s)"| trans }}</div>
-                    <button type="button" class="btn btn-danger" data-kt-contact-table-toolbar="delete_selected">{{"Supprimé(s)"| trans}}</button>
+                    <button type="button" class="btn btn-danger" data-kt-contact-table-toolbar="delete_selected">{{"Supprimer"| trans}}</button>
                 </div>
             <!--end::Group actions-->
 
@@ -548,7 +564,7 @@
                                                         <div class="col-xl-4">
                                                             <!--begin::Input group-->
                                                             <div class="fv input-group mb-5">
-                                                                <input type="text" name="set1" class="form-control" placeholder="{{'Champ1'| trans}}" aria-label="{{'Champ1'| trans}}" aria-describedby="basic-addon2"/>
+                                                                <input type="text" name="set1" class="form-control" maxlength="300" placeholder="{{'Champ1'| trans}}" aria-label="{{'Champ1'| trans}}" aria-describedby="basic-addon2"/>
                                                                 <span class="input-group-text" id="basic-addon2">
                                                                     <i class="las la-tools fs-4"></i>
                                                                 </span>
@@ -558,7 +574,7 @@
                                                         <div class="col-xl-4">
                                                             <!--begin::Input group-->
                                                             <div class="fv input-group mb-5">
-                                                                <input type="text" name="set2" class="form-control" placeholder="{{'Champ2'| trans}}" aria-label="{{'Champ2'| trans}}" aria-describedby="basic-addon2"/>
+                                                                <input type="text" name="set2" class="form-control" maxlength="300" placeholder="{{'Champ2'| trans}}" aria-label="{{'Champ2'| trans}}" aria-describedby="basic-addon2"/>
                                                                 <span class="input-group-text" id="basic-addon2">
                                                                     <i class="las la-tools fs-4"></i>
                                                                 </span>
@@ -573,7 +589,7 @@
                                                         <div class="col-xl-4">
                                                             <!--begin::Input group-->
                                                             <div class="fv input-group mb-5">
-                                                                <input type="text" name="set3" class="form-control" placeholder="{{'Champ3'| trans}}" aria-label="{{'Champ3'| trans}}" aria-describedby="basic-addon2"/>
+                                                                <input type="text" name="set3" class="form-control" maxlength="300" placeholder="{{'Champ3'| trans}}" aria-label="{{'Champ3'| trans}}" aria-describedby="basic-addon2"/>
                                                                 <span class="input-group-text" id="basic-addon2">
                                                                     <i class="las la-tools fs-4"></i>
                                                                 </span>
@@ -583,7 +599,7 @@
                                                         <div class="col-xl-4">
                                                             <!--begin::Input group-->
                                                             <div class="fv input-group mb-5">
-                                                                <input type="text" name="set4" class="form-control" placeholder="{{'Champ4'| trans}}" aria-label="{{'Champ4'| trans}}" aria-describedby="basic-addon2"/>
+                                                                <input type="text" name="set4" class="form-control" maxlength="300" placeholder="{{'Champ4'| trans}}" aria-label="{{'Champ4'| trans}}" aria-describedby="basic-addon2"/>
                                                                 <span class="input-group-text" id="basic-addon2">
                                                                     <i class="las la-tools fs-4"></i>
                                                                 </span>
@@ -593,7 +609,7 @@
                                                         <div class="col-xl-4">
                                                             <!--begin::Input group-->
                                                             <div class="fv input-group mb-5">
-                                                                <input type="text" name="set5" class="form-control" placeholder="{{'Champ5'| trans}}" aria-label="{{'Champ5'| trans}}" aria-describedby="basic-addon2"/>
+                                                                <input type="text" name="set5" class="form-control" maxlength="300" placeholder="{{'Champ5'| trans}}" aria-label="{{'Champ5'| trans}}" aria-describedby="basic-addon2"/>
                                                                 <span class="input-group-text" id="basic-addon2">
                                                                     <i class="las la-tools fs-4"></i>
                                                                 </span>
@@ -605,11 +621,11 @@
 
                                                     <div class="row">
 
-                                                        <div class="offset-xl-10 col-xl-2">
+                                                        <div class="offset-xl-9 col-xl-3">
                                                             <!--begin::Input group-->
                                                             <div class="input-group mb-0">
                                                                 <button type="button" data-repeater-delete  class="btn btn-light-danger">
-                                                                    <i class="la la-trash-o"></i>Delete
+                                                                    <i class="la la-trash-o"></i>Supprimer
                                                                 </button>
                                                                 {# <a href="javascript:;" data-repeater-delete class="btn btn-sm btn-light-danger ">
                                                                     <i class="la la-trash-o"></i>Delete
@@ -714,7 +730,7 @@
                                                 <!--begin::Input group-->
                                                 <div class="fv input-group mb-5">
                                                     <input type="hidden" name="_uid" id="contact_id"/>
-                                                    <input type="text" name="set1" id="contact_set1" class="form-control" placeholder="{{'Champ1'| trans}}" aria-label="{{'Champ1'| trans}}" aria-describedby="basic-addon2"/>
+                                                    <input type="text" name="set1" id="contact_set1" class="form-control" maxlength="300" placeholder="{{'Champ1'| trans}}" aria-label="{{'Champ1'| trans}}" aria-describedby="basic-addon2"/>
                                                     <span class="input-group-text" id="basic-addon2">
                                                         <i class="las la-tools fs-4"></i>
                                                     </span>
@@ -724,7 +740,7 @@
                                             <div class="col-xl-4">
                                                 <!--begin::Input group-->
                                                 <div class="fv input-group mb-5">
-                                                    <input type="text" name="set2" id="contact_set2" class="form-control" placeholder="{{'Champ2'| trans}}" aria-label="{{'Champ2'| trans}}" aria-describedby="basic-addon2"/>
+                                                    <input type="text" name="set2" id="contact_set2" class="form-control" maxlength="300" placeholder="{{'Champ2'| trans}}" aria-label="{{'Champ2'| trans}}" aria-describedby="basic-addon2"/>
                                                     <span class="input-group-text" id="basic-addon2">
                                                         <i class="las la-tools fs-4"></i>
                                                     </span>
@@ -739,7 +755,7 @@
                                             <div class="col-xl-4">
                                                 <!--begin::Input group-->
                                                 <div class="fv input-group mb-5">
-                                                    <input type="text" name="set3" id="contact_set3" class="form-control" placeholder="{{'Champ3'| trans}}" aria-label="{{'Champ3'| trans}}" aria-describedby="basic-addon2"/>
+                                                    <input type="text" name="set3" id="contact_set3" class="form-control" maxlength="300" placeholder="{{'Champ3'| trans}}" aria-label="{{'Champ3'| trans}}" aria-describedby="basic-addon2"/>
                                                     <span class="input-group-text" id="basic-addon2">
                                                         <i class="las la-tools fs-4"></i>
                                                     </span>
@@ -749,7 +765,7 @@
                                             <div class="col-xl-4">
                                                 <!--begin::Input group-->
                                                 <div class="fv input-group mb-5">
-                                                    <input type="text" name="set4" id="contact_set4" class="form-control" placeholder="{{'Champ4'| trans}}" aria-label="{{'Champ4'| trans}}" aria-describedby="basic-addon2"/>
+                                                    <input type="text" name="set4" id="contact_set4" class="form-control" maxlength="300" placeholder="{{'Champ4'| trans}}" aria-label="{{'Champ4'| trans}}" aria-describedby="basic-addon2"/>
                                                     <span class="input-group-text" id="basic-addon2">
                                                         <i class="las la-tools fs-4"></i>
                                                     </span>
@@ -759,7 +775,7 @@
                                             <div class="col-xl-4">
                                                 <!--begin::Input group-->
                                                 <div class="fv input-group mb-5">
-                                                    <input type="text" name="set5" id="contact_set5" class="form-control" placeholder="{{'Champ5'| trans}}" aria-label="{{'Champ5'| trans}}" aria-describedby="basic-addon2"/>
+                                                    <input type="text" name="set5" id="contact_set5" class="form-control" maxlength="300" placeholder="{{'Champ5'| trans}}" aria-label="{{'Champ5'| trans}}" aria-describedby="basic-addon2"/>
                                                     <span class="input-group-text" id="basic-addon2">
                                                         <i class="las la-tools fs-4"></i>
                                                     </span>
@@ -861,7 +877,6 @@
                                             {% if users|length > 0 %}
                                             <select  data-allow-clear="true" name="user_group" data-dropdown-parent="#kt_modal_create_contact_group" id="list_user_add_group_id" data-control="select2" class="form-select form-select-solid fw-bolder" data-placeholder="{{'Selectionnez un utilisateurs'| trans}}"/>
                                                     <option value="">Sélectionnez un utilisateur</option>
-                                                    <option value="qcAe6S0qWfl02Is8YbZlAq6yURQBtD">Admin test</option>
                                                     {% for user in users %}
                                                     <option value="{{ user.uid }}" >{{ user.email }}</option>
                                                     {% endfor %}
@@ -875,14 +890,14 @@
                                     <div class="col-xl-4">
                                         <!--begin::Input group-->
                                         <div class="fv input-group mb-8">
-                                            <input type="text" name="groupName"  class="form-control required " placeholder="Nom du groupe" />
+                                            <input type="text" name="groupName"  class="form-control required " maxlength="300" placeholder="Nom du groupe" />
                                         </div>
                                         <!--end::Input group-->
                                     </div>
                                     <div class="col-xl-4">
                                         <!--begin::Input group-->
                                         <div class="fv input-group mb-5">
-                                            <input type="text" name="set1" class="form-control" placeholder="{{'Champ1'| trans}}" aria-label="{{'Champ1'| trans}}" aria-describedby="basic-addon2"/>
+                                            <input type="text" name="set1" class="form-control" maxlength="300" placeholder="{{'Champ1'| trans}}" aria-label="{{'Champ1'| trans}}" aria-describedby="basic-addon2"/>
                                             <span class="input-group-text" id="basic-addon2">
                                                 <i class="las la-tools fs-4"></i>
                                             </span>
@@ -892,7 +907,7 @@
                                     <div class="col-xl-4">
                                         <!--begin::Input group-->
                                         <div class="fv input-group mb-5">
-                                            <input type="text" name="set2" class="form-control" placeholder="{{'Champ2'| trans}}" aria-label="{{'Champ2'| trans}}" aria-describedby="basic-addon2"/>
+                                            <input type="text" name="set2" class="form-control" maxlength="300" placeholder="{{'Champ2'| trans}}" aria-label="{{'Champ2'| trans}}" aria-describedby="basic-addon2"/>
                                             <span class="input-group-text" id="basic-addon2">
                                                 <i class="las la-tools fs-4"></i>
                                             </span>
@@ -903,7 +918,7 @@
                                     <div class="col-xl-4">
                                         <!--begin::Input group-->
                                         <div class="fv input-group mb-5">
-                                            <input type="text" name="Champ3" class="form-control" placeholder="{{'Champ3'| trans}}" aria-label="{{'Champ3'| trans}}" aria-describedby="basic-addon2"/>
+                                            <input type="text" name="set3" class="form-control" maxlength="300" placeholder="{{'Champ3'| trans}}" aria-label="{{'Champ3'| trans}}" aria-describedby="basic-addon2"/>
                                             <span class="input-group-text" id="basic-addon2">
                                                 <i class="las la-tools fs-4"></i>
                                             </span>
@@ -913,7 +928,7 @@
                                     <div class="col-xl-4">
                                         <!--begin::Input group-->
                                         <div class="fv input-group mb-5">
-                                            <input type="text" name="set4" class="form-control" placeholder="{{'Champ4'| trans}}" aria-label="{{'Champ4'| trans}}" aria-describedby="basic-addon2"/>
+                                            <input type="text" name="set4" class="form-control" maxlength="300" placeholder="{{'Champ4'| trans}}" aria-label="{{'Champ4'| trans}}" aria-describedby="basic-addon2"/>
                                             <span class="input-group-text" id="basic-addon2">
                                                 <i class="las la-tools fs-4"></i>
                                             </span>
@@ -923,7 +938,7 @@
                                     <div class="col-xl-4">
                                         <!--begin::Input group-->
                                         <div class="fv input-group mb-5">
-                                            <input type="text" name="set5" class="form-control" placeholder="{{'Champ5'| trans}}" aria-label="{{'Champ5'| trans}}" aria-describedby="basic-addon2"/>
+                                            <input type="text" name="set5" class="form-control" maxlength="300" placeholder="{{'Champ5'| trans}}" aria-label="{{'Champ5'| trans}}" aria-describedby="basic-addon2"/>
                                             <span class="input-group-text" id="basic-addon2">
                                                 <i class="las la-tools fs-4"></i>
                                             </span>
@@ -995,14 +1010,14 @@
                                         <div class="col-xl-4">
                                             <!--begin::Input group-->
                                             <div class="fv input-group mb-8">
-                                                <input type="text" name="groupName" id="group_name" class="form-control required " placeholder="Nom du groupe" />
+                                                <input type="text" name="groupName" id="group_name" class="form-control required " maxlength="300" placeholder="Nom du groupe" />
                                             </div>
                                             <!--end::Input group-->
                                         </div>
                                         <div class="col-xl-4">
                                             <!--begin::Input group-->
                                             <div class="fv input-group mb-5">
-                                                <input type="text" name="set1" id="group_set1" class="form-control" aria-label="{{'Champ1'| trans}}" aria-describedby="basic-addon2"/>
+                                                <input type="text" name="set1" id="group_set1" class="form-control" maxlength="300" aria-label="{{'Champ1'| trans}}" aria-describedby="basic-addon2"/>
                                                 <input type="hidden" name="_uid" id="group_uid"/>
                                                 <span class="input-group-text" id="basic-addon2">
                                                     <i class="las la-tools fs-4"></i>
@@ -1013,7 +1028,7 @@
                                         <div class="col-xl-4">
                                             <!--begin::Input group-->
                                             <div class="fv input-group mb-5">
-                                                <input type="text" name="set2" id="group_set2" class="form-control" placeholder="{{'Champ2'| trans}}" aria-label="{{'Champ2'| trans}}" aria-describedby="basic-addon2"/>
+                                                <input type="text" name="set2" id="group_set2" class="form-control" maxlength="300" placeholder="{{'Champ2'| trans}}" aria-label="{{'Champ2'| trans}}" aria-describedby="basic-addon2"/>
                                                 <span class="input-group-text" id="basic-addon2">
                                                     <i class="las la-tools fs-4"></i>
                                                 </span>
@@ -1028,7 +1043,7 @@
                                         <div class="col-xl-4">
                                             <!--begin::Input group-->
                                             <div class="fv input-group mb-5">
-                                                <input type="text" name="set3" id="group_set3" class="form-control" placeholder="{{'Champ3'| trans}}" aria-label="{{'Champ3'| trans}}" aria-describedby="basic-addon2"/>
+                                                <input type="text" name="set3" id="group_set3" class="form-control" maxlength="300" placeholder="{{'Champ3'| trans}}" aria-label="{{'Champ3'| trans}}" aria-describedby="basic-addon2"/>
                                                 <span class="input-group-text" id="basic-addon2">
                                                     <i class="las la-tools fs-4"></i>
                                                 </span>
@@ -1038,7 +1053,7 @@
                                         <div class="col-xl-4">
                                             <!--begin::Input group-->
                                             <div class="fv input-group mb-5">
-                                                <input type="text" name="set4" id="group_set4" class="form-control" placeholder="{{'Champ4'| trans}}" aria-label="{{'Champ4'| trans}}" aria-describedby="basic-addon2"/>
+                                                <input type="text" name="set4" id="group_set4" class="form-control" maxlength="300" placeholder="{{'Champ4'| trans}}" aria-label="{{'Champ4'| trans}}" aria-describedby="basic-addon2"/>
                                                 <span class="input-group-text" id="basic-addon2">
                                                     <i class="las la-tools fs-4"></i>
                                                 </span>
@@ -1048,7 +1063,7 @@
                                         <div class="col-xl-4">
                                             <!--begin::Input group-->
                                             <div class="fv input-group mb-5">
-                                                <input type="text" name="set5" id="group_set5" class="form-control" placeholder="{{'Champ5'| trans}}" aria-label="{{'Champ5'| trans}}" aria-describedby="basic-addon2"/>
+                                                <input type="text" name="set5" id="group_set5" class="form-control" maxlength="300" placeholder="{{'Champ5'| trans}}" aria-label="{{'Champ5'| trans}}" aria-describedby="basic-addon2"/>
                                                 <span class="input-group-text" id="basic-addon2">
                                                     <i class="las la-tools fs-4"></i>
                                                 </span>
@@ -1117,7 +1132,6 @@
                                                     
                                             </select>
                                 {% else %}
-                                            <label class="form-label fs-6 fw-bold">{% trans %}Groupe de contacts{% endtrans %}</label>
                                             <select name="group" id="id_group_contact_import" data-allow-clear="true" data-control="select2" data-dropdown-parent="#kt_modal_import_contacts" class="form-select form-select-solid fw-bolder " data-placeholder="{{'Selectionnez un groupe'| trans}}"/>
                                                     <option value="">Sélectionnez un groupe</option>
                                                     {% for group in groups %}
@@ -1223,14 +1237,16 @@
     const group_delete          = "{{ path('app_contact_group_delete') }}";
     const group_edit            = "{{ path('app_contact_group_edit') }}";
     const get_group             = "{{ path('app_get_group') }}";
+    const get_champ_group       = "{{ path('app_get_champ_group') }}";
+
 
     const url_import            = "{{path('smscampaign_import')}}";
     const url_campaign          = "{{path('campaign_sms_view_created')}}";
 
     const _canceled             = "{{'Annuler'|trans}}";
     const _redirect             = '{{"Vous serez rédiriger vers la page de création de campagne"|trans}}';
-    const _selectOneUser        = '{{"Veuillez sélectionner spécifiquement un utilisateur et non <<tous>> au niveau de la sélection des utilisateurs"|trans}}'
-
+    const _selectOneUser        = '{{"Veuillez sélectionner spécifiquement un utilisateur et non <<tous>> au niveau de la sélection des utilisateurs"|trans}}';
+    const _selectUser           =  '{{"Veuillez sélectionner d\'abord un utilisateur"|trans}}';
 
 </script>
 <!--end::Page Custom Javascript-->

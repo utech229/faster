@@ -98,7 +98,9 @@ var KTGroupList = function() {
                                         });
         
                                         if (response.type === 'success') {
-        
+
+                                            let user = document.querySelector('[data-kt-contact-user="user"]').value;
+                                            rechargeGroups(user);
                                             $('#kt_modal_add_contact_group_reload_button').click();
                                         }
                                     },
@@ -320,7 +322,10 @@ var KTGroupList = function() {
                     pageLength: 10,
                     lengthChange: true,
                     "info": true,
-                    lengthMenu: [10, 25, 100, 250, 500, 1000],                   
+                    lengthMenu: [10, 25, 100, 250, 500, 1000],
+                    language: {
+                        url: _language_datatables,
+                    },                  
                 }),
                 $('#kt_modal_add_contact_group_reload_button').on('click', function() {
                     e.ajax.reload(null, false);
@@ -336,6 +341,7 @@ var KTGroupList = function() {
                         e.search("").draw()
                 })),
                 $('[data-kt-contact-group="user"]').on('change', function() {
+                    loading(true);
                     e.ajax.reload();
                 }),
                 c(), (() => {
@@ -354,7 +360,9 @@ var KTGroupList = function() {
                 })
                 ());
 
-            e.on("draw", function() { l(), c(), a()})
+            e.on("draw", function() { l(), c(), a();
+                loading();
+            })
         }
     }
 }();

@@ -42,11 +42,12 @@ class RechargeRepository extends ServiceEntityRepository
     }
 
     //GET Recharge By or Reseller or Brand
-    public function getRechargeBy($idManager = NULL, $idReseller = NULL, $idBrand = NULL){
+    public function getRechargeBy($idManager = NULL, $idReseller = NULL, $idBrand = NULL, $status){
         $q = $this->createQueryBuilder('r')->from(User::class, "u")->from(Brand::class, "b");
         if($idManager)  $q->andWhere('r.user = u.id')->andWhere('u.accountManager = :id')->setParameter('id', $idManager);
         if($idReseller) $q->andWhere('r.user = u.id')->andWhere('u.brand = b.id')->andWhere('b.manager = :id')->setParameter('id', $idReseller);
         if($idBrand)    $q->andWhere('r.user = u.id')->andWhere('u.brand = b.id')->andWhere('b.brand = :id')->setParameter('id', $idBrand);
+        if($status)     $q->andWhere('r.status = :status')->setParameter('status', $status);
         return $q->orderBy('r.id', 'DESC')->getQuery()->getResult();
     }
     //  //Manager id

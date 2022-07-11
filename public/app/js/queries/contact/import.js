@@ -13,7 +13,7 @@ var KTImportContact = function() {
                         'group': {
                             validators: {
                                 notEmpty: {
-                                    message: 'le groupe est obligatoire' 
+                                    message: 'Le groupe est obligatoire' 
                                 }
                             }
                         }
@@ -35,7 +35,7 @@ var KTImportContact = function() {
                     e.preventDefault();
                     document.querySelector('[data-kt-contact-user="user"]').value == "" ?
                     Swal.fire({
-                        text: "Veuillez sélectionner d'abord un utilisateur",
+                        text: _selectUser,
                         icon: "warning",
                         buttonsStyling: !1,
                         confirmButtonText: _Form_Ok_Swal_Button_Text_Notification,
@@ -52,7 +52,6 @@ var KTImportContact = function() {
                     $("[data-kt-import-contact-modal-action=close]").click();
                     $("#kt_modal_create_contact_group").modal("show");
 
-                   
                 });
                 t.querySelector('[data-kt-import-contact-modal-action="cancel"]').addEventListener("click", ($this) => {
                     $this.preventDefault();
@@ -88,6 +87,7 @@ var KTImportContact = function() {
                                         t.isConfirmed, e.reset(),
                                         $('#kt_modal_add_contact_reload_button').click();
                                         n.hide();
+                                        $('#id_group_contact_import').val(null).trigger('change');
                                     }
                             },
                             error: function () { 

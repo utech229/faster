@@ -8,7 +8,7 @@
 		<meta charset="UTF-8">
         <title>{% block title %}{{title}} {% endblock %}</title>
 		<meta name="keywords" content="SMS, SMS Banking">
-        <meta name="description" content="{{"Fastermessage est une solution SMS professionnels, elle vous permet d'importer votre base de données de contacts et de gérer vos campagnes SMS. C'est un moyen d'envoi de messages personnalisés, groupés en quantité importante partout dans le monde. Elle dispose également d'une API facile à intégrer et flexible, très pratique pour les développeurs."| trans}}">
+        <meta name="description" content="{{"Solution SMS professionnels, elle vous permet d'importer votre base de données de contacts et de gérer vos campagnes SMS. C'est un moyen d'envoi de messages personnalisés, groupés en quantité importante partout dans le monde. Elle dispose également d'une API facile à intégrer et flexible, très pratique pour les développeurs."| trans}}">
         <meta name="author" content="{{ brand.name }}">
 		<meta property="og:locale" content="{{ _locale }}" />
 		<meta property="og:type" content="article" />
@@ -16,7 +16,7 @@
 		<meta property="og:url" content="{{ baseUrl }}" />
 		<meta property="og:site_name" content="{{ brand.name }} |{{ brand.name }}" />
 		<!-- Favicons -->
-        <link href="{{ asset('app/uploads/brands/logos/'~ brand.name|lower ~'.png') }}" rel="icon">
+        <link href="{{ asset('app/uploads/brands/logos/'~ brand.logo ~'') }}" rel="icon">
         <link href="{{ brand.apple_touch_icon }}" rel="apple-touch-icon">
 		<!--begin::Fonts-->
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" />
@@ -32,59 +32,9 @@
 	<!--begin::Body-->
 	<body id="kt_body" class="bg-body">
 		<!--begin::Main-->
-		<!--begin::Root-->
-		<div class="d-flex flex-column flex-root">
-			<!--begin::Authentication - Sign-in -->
-			<div class="d-flex flex-column flex-lg-row flex-column-fluid">
-				<!--begin::Aside-->
-				<div class="d-flex flex-column flex-lg-row-auto w-xl-50 positon-xl-relative" style="background-color: #003366">
-					<!--begin::Wrapper-->
-					<div class="d-flex flex-column position-xl-fixed top-0 bottom-0 w-xl-50 scroll-y">
-						<!--begin::Content-->
-						<div class="d-flex flex-row-fluid flex-column text-center p-10 pt-lg-20">
-							<!--begin::Logo-->
-							<a href="{{ path('app_login')}}" class="mb-12">
-								<img alt="{{ brand.name}}" style="-webkit-filter: saturate(100%);filter: saturate(100%);"  src="{{ asset('app/uploads/brands/logos/'~ brand.name|lower ~'.png') }}" class="h-60px" />
-							</a>
-							<!--end::Logo-->
-							<!--begin::Description-->
-							<p class="fw-bold fs-2" style="color: #fff;">{% trans %}Vos SMS professionnels partout{% endtrans %}
-							<br />{% trans %}dans le monde{% endtrans %}</p>
-							<!--end::Description-->
-						</div>
-						<!--end::Content-->
-						<!--begin::Illustration-->
-						<div class="d-flex flex-row-auto bgi-no-repeat bgi-position-x-center bgi-size-contain bgi-position-y-bottom min-h-100px min-h-lg-450px" style="background-image: url({{ asset('app/media/login/faster-img.png') }}"></div>
-						<!--end::Illustration-->
-					</div>
-					<!--end::Wrapper-->
-				</div>
-				<!--end::Aside-->
-				<!--begin::Body-->
-				<div class="d-flex flex-column flex-lg-row-fluid py-10">
-					<!--begin::Content-->
-					<div class="d-flex flex-center flex-column flex-column-fluid">
-						{% block body %}{% endblock %}
-					</div>
-					<!--end::Content-->
-					<!--begin::Footer-->
-					<div class="d-flex flex-center flex-wrap fs-6 p-5 pb-0">
-						<!--begin::Links-->
-						<div class="d-flex flex-center fw-bold fs-6">
-							<a href="{{ path('app_login')}}" class="text-muted text-hover-primary px-2">{% trans %}A propos{% endtrans %} </a>
-							<a href="{{brand.emails.support}}" class="text-muted text-hover-primary px-2">{% trans %}Contact{% endtrans %}</a>
-							<a href="{{ path('app_login')}}" class="text-muted text-hover-primary px-2">{% trans %}Contactez-nous{% endtrans %}</a>
-						</div>
-						<!--end::Links-->
-					</div>
-					<!--end::Footer-->
-				</div>
-				<!--end::Body-->
-			</div>
-			<!--end::Authentication - Sign-in-->
-		</div>
-		<!--end::Root-->
+		{% block body %}{% endblock %}
 		<!--end::Main-->
+
 		<!--begin::Javascript-->
         <!--begin::Global Javascript Bundle(used by all pages)-->
         <script src="{{ asset('app/plugins/global/plugins.bundle.js') }}"></script>
@@ -96,7 +46,26 @@
 		<!--end::Javascript-->
         {% include 'translations/global.html.twig' %}
 		{% include 'section/intl.input.html.twig' %}
+    	{% include 'section/additionnal.html.twig' %}
     	{% include 'section/toastr.flash.html.twig' %}
+		<!--begin::Page Custom Javascript(used by this page)-->
+		<script>
+			const register_url     = "{{path('app_register')}}";
+			const password_reset_url     = "{{path('app_init_reset')}}";
+			const password_resetting_new = "{{path('app_password_resetting_new')}}"
+			const login_url         = "{{path('app_login', {'slug': 'registered'})}}";
+		</script>
+		                            <!--begin::Form-->
+        {% if route    == "app_register" %}     
+		<script src="{{ asset('app/js/queries/authentication/sign-up/general.js') }}"></script>
+        {% elseif route == 'app_init_reset' %}
+		<script src="{{ asset('app/js/queries/authentication/password/general.js') }}"></script>
+		{% elseif route == 'app_password_resetting' %}
+		<script src="{{ asset('app/js/queries/authentication/password/definer.js') }}"></script>
+		{% elseif route == 'app_login' %}
+		<script src="{{ asset('app/js/queries/authentication/sign-in/general.js') }}"></script>
+		{% endif %}
+		<!--end::Page Custom Javascript-->
         {% block javascripts %} {% endblock %}
 		<!--end::Javascript-->
 	</body>

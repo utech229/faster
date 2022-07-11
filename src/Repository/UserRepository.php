@@ -142,6 +142,28 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         ;
     }
 
+    public function countAllUsers()
+    {
+        return $this->createQueryBuilder('m')
+        ->select('COUNT(m.id)')
+        ->Where("m.status !=:status")
+        ->setParameter('status', 4)
+        ->getQuery()
+        ->getResult()
+        ;
+    }
+
+    public function countAllUsersByStatus($status)
+    {
+        return $this->createQueryBuilder('m')
+        ->Where("m.status =:status")
+        ->setParameter('status', $status)
+        ->select('COUNT(m.id)')
+        ->getQuery()
+        ->getResult()
+        ;
+    }
+
 
     // Retourne les utilisateur ayant un level de role inférieur à celui de l'utilisteur actuel
     public function findUserByLevel($level, $brand = null)

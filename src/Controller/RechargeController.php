@@ -7,6 +7,7 @@ use App\Service\BaseUrl;
 use App\Service\Services;
 use App\Entity\User;
 use App\Entity\Transaction;
+use App\Entity\Status;
 use App\Entity\Recharge;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -16,6 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 use App\Repository\UserRepository;
 use App\Repository\TransactionRepository;
 use App\Repository\BrandRepository;
+use App\Repository\StatusRepository;
 use App\Repository\RechargeRepository;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -34,7 +36,7 @@ class RechargeController extends AbstractController
 {
 
     public function __construct(BaseUrl $baseUrl, Services $services, uBrand $brand, TranslatorInterface $translator, EntityManagerInterface $entityManager,
-        UrlGeneratorInterface $urlGenerator, UserRepository $userRepository, RechargeRepository $rechargeRepository, BrandRepository $brandRepository,
+        UrlGeneratorInterface $urlGenerator, UserRepository $userRepository, StatusRepository $statusRepository, RechargeRepository $rechargeRepository, BrandRepository $brandRepository,
         TransactionRepository $transactionRepository){
         $this->baseUrl         = $baseUrl;
         $this->urlGenerator    = $urlGenerator;
@@ -46,6 +48,7 @@ class RechargeController extends AbstractController
         $this->tRepository     = $transactionRepository;
         $this->rRepository     = $rechargeRepository;
         $this->bRepository     = $brandRepository;
+        $this->sRepository     = $statusRepository;
         $this->permission      = ["REC0", "REC1", "REC2", "REC3"];
         $this->pAccess         = $this->services->checkPermission($this->permission[0]);
         $this->pRecharge       = $this->services->checkPermission($this->permission[1]);
@@ -89,6 +92,8 @@ class RechargeController extends AbstractController
             'pageTitle'          => [
                                         [$this->intl->trans('Gestion des recharges')],
                                         [$this->intl->trans('Recharger compte')],
+            ],
+            'status'            => [$this->services->status(2), $this->services->status(6), $this->services->status(7)
             ],
             'canRechargeUser'    => $this->pRechargeUser,
             'pAllAccess'         => $this->pAllAccess,
@@ -135,7 +140,7 @@ class RechargeController extends AbstractController
             default:
                 $url = "http://pay.zekin.app/api/v1/transactions/create";
                 $data = [
-                    "description"   => $info['description'], "amount"          => 100, "firstname"    => $info['firstname'], "lastname" => $info['lastname'],
+                    "description"   => $info['description'], "amount"          => $info['amount'], "firstname"    => $info['firstname'], "lastname" => $info['lastname'],
                     "email"         => $info['email'], "phone_number"  => $info['phone_number'], "internal_ref"  => $info['internal_ref'],
                     "process"       => $info['process'],"expired"      => $info['expired']
                 ];
@@ -155,10 +160,11 @@ class RechargeController extends AbstractController
     }
 
     //Build Commission
-    public function buildCom($amount, $user, bool $self = false){
+    public function buildCom($amount, $user, bool $self = false, $bool = false){
         $admin               = $user->getBrand()->getManager();
         $user                = $user;
         $priceU              = $user->getPrice()['BJ']['price'];
+
 
         if(!isset($admin->getPrice()['BJ'])){$this->services->msg_error($this->intl->trans("Récupération du prix Admin échouée."), $this->intl->trans("Le prix de l'administrateur de l'utilisateur à recharger n'est pas défini. Contactez votre administrateur ou gestion de compte pour continuer."));}
         $priceA              = $admin->getPrice()['BJ']['price'];
@@ -177,12 +183,14 @@ class RechargeController extends AbstractController
         $this->uRepository->add($user);
 
         //Si l'utilisateur rechargé est un gestionnaire ou administrateur ne peut pas calculer la commission
-        $diffAmount          = ($amount / $priceA) - ($amount / $priceU);
-        $commission          = $diffAmount * $priceA;
-        $beforeCommission    = $user->getBrand()->getCommission();
-        $afterCommission     = $nCommission = ($beforeCommission + $commission);
-        $user->getBrand()    ->setCommission($nCommission);
-        $this->bRepository   ->add($user->getBrand());
+        if(!$bool){
+            $diffAmount          = ($amount / $priceA) - ($amount / $priceU);
+            $commission          = $diffAmount * $priceA;
+            $beforeCommission    = $user->getBrand()->getCommission();
+            $afterCommission     = $nCommission = ($beforeCommission + $commission);
+            $user->getBrand()    ->setCommission($nCommission);
+            $this->bRepository   ->add($user->getBrand());
+        }
 
         return $data = [
             // 'rechargeBy'      => $rechargeBy,
@@ -213,7 +221,7 @@ class RechargeController extends AbstractController
         }
         $amount         = $request->request->get('amount');
         if(!is_numeric($amount) || $amount < $this->minimumRecharge){
-            return $this->services->msg_error($this->intl->trans("Recharge montant incorrect.").': '.$this->getUser()->getEmail(), $this->intl->trans("Le montant que vous avez renseigné est incorrect. Corrigez pour continuer."));
+            return $this->services->msg_error($this->intl->trans("Recharge montant incorrect.").': '.$this->getUser()->getEmail(), $this->intl->trans("Ma recharge minimum est de 500 XOF. Veuillez corriger pour continuer."));
         }
         //Mode paiment:::: [0] => paiement mobile;  [1] => rechargement par balance;
         $creatDate       = new \DatetimeImmutable();
@@ -226,10 +234,9 @@ class RechargeController extends AbstractController
         if(in_array($checkEtat[0], [0, 1, 2, 3])){
             if($typeRecharge == $this->typeRecharge[0]){
                 if($amount > $this->getUser()->getBalance()){return $this->services->msg_error($this->intl->trans("Balance du revendeur incorrecte.").': '.$this->getUser()->getEmail(), $this->intl->trans("Le montant à recharger est supérieur à votre balance. Veuillez approvisionner votre compte pour continuer."));}
-
                 $buildCom        = $this->buildCom($amount, $user);
                 $rechargeBy      = $userTransaction = $this->getUser();
-                $userTransaction = $rechargeBy = $this->getUser();
+                $userTransaction = $rechargeBy      = $this->getUser();
                 $bBalanceAdmin   = $buildCom['bBalanceAdmin'];
                 $aBalanceAdmin   = $buildCom['aBalanceAdmin'];
                 $bBalanceUser    = $buildCom['bBalanceUser'];
@@ -244,7 +251,7 @@ class RechargeController extends AbstractController
                 $linkRedirect    = NULL;
                 $processMobile   = false;
             }else{
-                $processMobile = true;
+                $processMobile   = true;
             }
         }
         if($processMobile)
@@ -396,9 +403,8 @@ class RechargeController extends AbstractController
         }
     }
 
-    public function getRecharge($allAccess = NULL, $idManager = NULL, $idReseller = NULL, $user = NULL, $idBrand = NULL, $all = NULL){
+    public function getRecharge($allAccess = NULL, $idManager = NULL, $idReseller = NULL, $user = NULL, $idBrand = NULL, $all = NULL, $status = NULL){
         //$all voir toutes les recharges de ses utilisateurs;
-        // dd($user);
         if($user) return $this->rRepository->findBy(['user'=> $user]);
         // if($idReseller) return $this->rRepository->getRechargeBy($idReseller);
         if($idBrand) return $this->rRepository->getRechargeBy($idBrand);
@@ -418,14 +424,17 @@ class RechargeController extends AbstractController
             $brands  = $this->bRepository->findOneBy(['uid'=> $brand]); if(!$brands) return $this->services->msg_error($this->intl->trans("La marque recherchée n'existe plus."), $this->intl->trans("La marque recherchée n'existe plus."));
             $idBrand = $brands->getId();
         }
+        $status      = ($request->get('_status')) ? $this->sRepository->findOneBy(['uid'=> $request->get('_status')]): NULL;
         $checkEtat   = $this->services->checkThisUser($this->pAllAccess);
+        // dd($this->pAllAccess, $idManager, $idReseller, $user, $idBrand, $all, $status);
         switch($checkEtat[0]){
-            case 0: $allRecharges  = $this->getRecharge($this->pAllAccess, $idManager, $idReseller, $user, $idBrand, $all); break;
-            case 1: $allRecharges  = $this->getRecharge($this->pAllAccess, $this->getUser()->getId(), $idReseller, $user, $idBrand, $all); break;
-            case 2: $user = ($user) ? $user: $this->getUser(); $allRecharges = $this->getRecharge($this->pAllAccess, $idManager, $idReseller, $user, $idBrand, $all); break;
-            case 3: $allRecharges  = $this->getRecharge($this->pAllAccess, $idManager, $this->getUser()->getAffiliateManager()->getId(), $user, $idBrand, $all); break;
-            case 4: $allRecharges  = $this->getRecharge($this->pAllAccess, $idManager, $idReseller, $this->getUser()); break;
-            default: $allRecharges = $this->getRecharge($this->pAllAccess, $idManager, $idReseller, $this->getUser()->getAffiliateManager()); break;
+            // case 0: $allRecharges  = $this->rRepository->getRechargeBy($this->pAllAccess, $idManager, $idReseller, $user, $idBrand, $all, $status); break;
+            case 0: $allRecharges  = $this->getRecharge($this->pAllAccess, $idManager, $idReseller, $user, $idBrand, $all, $status); break;
+            case 1: $allRecharges  = $this->getRecharge($this->pAllAccess, $this->getUser()->getId(), $idReseller, $user, $idBrand, $all, $status); break;
+            case 2: $user = ($user) ? $user: $this->getUser(); $allRecharges = $this->getRecharge($this->pAllAccess, $idManager, $idReseller, $user, $idBrand, $all, $status); break;
+            case 3: $allRecharges  = $this->getRecharge($this->pAllAccess, $idManager, $this->getUser()->getAffiliateManager()->getId(), $user, $idBrand, $all, $status); break;
+            case 4: $allRecharges  = $this->getRecharge($this->pAllAccess, $idManager, $idReseller, $this->getUser(), $status); break;
+            default: $allRecharges = $this->getRecharge($this->pAllAccess, $idManager, $idReseller, $this->getUser()->getAffiliateManager(), $status); break;
         }
         // dd($this->pAllAccess, $userSelect, $this->getUser());
         // dd($allRecharges);
@@ -442,7 +451,7 @@ class RechargeController extends AbstractController
                 $row['status']     = $getRecharge->getStatus()->getCode();
                 $row['date']       = $getRecharge->getCreatedAt()->format("d-m-Y H:i");
                 $row['action' ]    = [
-                                        'uid'    =>  $getRecharge->getUid(),
+                                        'uid'    => $getRecharge->getUid(),
                                         'status' => $getRecharge->getStatus()->getCode()
                 ];
                 switch($getRecharge->getStatus()->getCode()){
@@ -452,12 +461,9 @@ class RechargeController extends AbstractController
                 }
                 $data[]           = $row;
             }
-            // dd($amountPending, $data);
         }
         $this->services->addLog($this->intl->trans('Lecture de la liste des recharges'));
         $output = array("data" => $data, "amountP"=>$amountPending, "amountA"=>$amountApproved, "amountR"=>$amountRejected);
         return new JsonResponse($output);
-
     }
-    //This function is used re
 }

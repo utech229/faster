@@ -260,11 +260,7 @@ class ContactGroupController extends AbstractController
                                 "data"  =>   $tabGroup
                         ];
 
-        if (!$this->pGView) {
-            
-            
-            return new JsonResponse($data);
-        }
+        if (!$this->pGView) return new JsonResponse($data);
 
         list($typeUser,$Id) =   $this->services->checkThisUser($this->pGAllView);
         switch ($request->request->get('_uid')) {
@@ -312,5 +308,35 @@ class ContactGroupController extends AbstractController
                 ];
        
         return new JsonResponse($data);
+    }
+
+    #[Route('/getchampgroup', name: 'app_get_champ_group', methods: ['POST'])]
+    public function getChampGroup(Request $request, ContactGroupRepository $contactGoupRepository): Response
+    {
+        //Vérification du tokken
+		if (!$this->isCsrfTokenValid($this->getUser()->getUid(), $request->request->get('_token')))
+        return $this->services->invalid_token_ajax_list($this->intl->trans('Récupération des groupes de contacts : token invalide'));
+
+        $infoGroup       =   [];
+
+        if (!$this->pGView) return new JsonResponse($infoGroup);
+
+        $group   =    $this->em->getRepository(ContactGroup::class)->findOneByUid($request->request->get('_uid'));
+
+        $infoGroup[1]      =   "Numéro";    $infoGroup[2]  =   "Champ1";
+                $infoGroup[3]  =   "Champ2";$infoGroup[4]  =   "Champ3";
+                $infoGroup[5]  =   "Champ4";$infoGroup[6]  =   "Champ5";;
+                $infoGroup[7]  =   "Crée le";          $infoGroup[8]  =   "Modifié le";
+        
+            if (!$group)  return new JsonResponse($infoGroup);
+            
+            $infoGroup[1]      =   "Numéro";$infoGroup[2]  =   $group->getField1();
+                $infoGroup[3]  =   $group->getField2();$infoGroup[4]  =   $group->getField3();
+                $infoGroup[5]  =   $group->getField4();$infoGroup[6]  =   $group->getField5();
+                $infoGroup[7]  =   "Crée le";          $infoGroup[8]  =   "Modifié le";
+       
+        $this->services->addLog($this->intl->trans("Récuperation des informations d'un groupe de contacts"));
+       
+        return new JsonResponse($infoGroup);
     }
 }

@@ -70,6 +70,7 @@
                                     <th class="min-w-125px">{% trans %}Administrateur{% endtrans %}</th>
                                     <th class="min-w-125px">{% trans %}Nom de domaine{% endtrans %}</th>
                                     <th class="min-w-100px">{% trans %}Validée par{% endtrans %}</th>
+                                    <th class="min-w-100px">{% trans %}Expéditeur{% endtrans %}</th>
                                     <th class="min-w-100px">{% trans %}Statut{% endtrans %}</th>
                                     <th class="min-w-100px">{% trans %}Créer le{% endtrans %}</th>
                                     <th class="text-center min-w-100px">{% trans %}Actions{% endtrans %}</th>
@@ -135,19 +136,19 @@
                                         </div>
                                         <div class="fv-row mb-10">
                                             <label class="d-flex align-items-center fs-5 fw-bold mb-2">
-                                                <span class="required">{{"Adresse email noreply"|trans }}</span>
-                                                <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="{{"Il s'agit de l'adresse mail par défaut qui sera utilisée pour envoyer des messages sans réponses. Ex: noreply@fastermessage.com"|trans }}"></i>
+                                                <span class="required">{{"Téléphone de la marque"|trans }}</span>
+                                                <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="{{"Il s'agit des numéros de contact, en cas de besoin pour joindre la marque."|trans }}"></i>
                                             </label>
-                                            <input type="text" id="noreplyEmail" class="form-control form-control-lg form-control-solid" name="_mail_noreply" placeholder="{{"Adresse email support"|trans }}" value="" />
+                                            <input type="text" id="phoneb" class="form-control form-control-lg form-control-solid" name="_phone_support" placeholder="{{"Téléphone support"|trans }}" value="" />
                                         </div>
                                     </div>
                                     <div class="flex-row-fluid py-lg-6 px-lg-6">
                                         <div class="fv-row mb-10">
                                             <label class="d-flex align-items-center fs-5 fw-bold mb-2">
-                                                <span class="required">{{"Téléphone de la marque"|trans }}</span>
-                                                <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="{{"Il s'agit des numéros de contact, en cas de besoin pour joindre la marque."|trans }}"></i>
+                                                <span class="required">{{"Expéditeur par défaut"|trans }}</span>
+                                                <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="{{"Cet expéditeur par défaut sera utilisé pour tous vos utilisateurs pour effectuer des tests."|trans }}"></i>
                                             </label>
-                                            <input type="text" id="phoneb" class="form-control form-control-lg form-control-solid" name="_phone_support" placeholder="{{"Téléphone support"|trans }}" value="" />
+                                            <input type="text" id="_sender" class="form-control form-control-lg form-control-solid" name="_sender" placeholder="{{"Expéditeur par défaut"|trans }}" value="" />
                                         </div>
                                         <div class="fv-row mb-10">
                                             <label class="d-flex align-items-center fs-5 fw-bold mb-2">
@@ -375,7 +376,7 @@
                                                         <span class="required">{{'Observations'|trans }}</span>
                                                         <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="{{'Remplissez ce champs si vous avez un commentaire à faire sur la marque.'|trans }}"></i>
                                                     </label>
-                                                    <textarea type="text" rows="5" class="form-control form-control-lg form-control-solid" name="observations" placeholder="{{"Optionnel."|trans }}" value="" /></textarea>
+                                                    <textarea type="text" rows="5" class="form-control form-control-lg form-control-solid" name="observations" id="observations" placeholder="{{"Optionnel."|trans }}" value="" /></textarea>
                                                 </div>
                                                 <!--end::Input group-->
                                             </div>
@@ -449,6 +450,9 @@
     const _url_brand            = `{{"Assurez-vous de mettre un nom de domaine correct SVP !"|trans }}`;
     const _phone_required       = `{{"Le numéro de téléphone doit contenir au moins 8 et au plus 25 caractères."|trans }}`;
     const _empty_info           = `{{"Ce champs est requis. Renseignez pour continuer SVP !"|trans }}`;
+    const _noSender_required    = `{{"Veuillez définir un expéditeur par défaut."|trans }}`;
+    const _File_Required_       = `{{"Mauvais format du fichier"|trans }}`;
+    const _sender_required      = `{{"Un expéditeur est d'au moins 3 et 11 caractères. Corrigez pour continuer."|trans}}`;
 
 </script>
 <!--begin::Page Vendors Javascript(used by this page)-->

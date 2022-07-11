@@ -6,6 +6,7 @@ use App\Form\UserType;
 use App\Entity\Company;
 use App\Service\uBrand;
 use App\Service\BaseUrl;
+use App\Service\sMailer;
 use App\Form\CompanyType;
 use App\Service\Services;
 use App\Service\AddEntity;
@@ -38,7 +39,7 @@ class ProfileController extends AbstractController
     private $em;
     
 	public function __construct(BaseUrl $baseUrl, Services $services, EntityManagerInterface $entityManager, TranslatorInterface $translator,
-    RoleRepository $roleRepository, UserRepository $userRepository, PermissionRepository $permissionRepository,
+    RoleRepository $roleRepository, UserRepository $userRepository, PermissionRepository $permissionRepository, sMailer $sMailer,
     AuthorizationRepository $authorizationRepository, UrlGeneratorInterface $urlGenerator, uBrand $brand, ValidatorInterface $validator,
     BrickPhone $brickPhone, AddEntity $addEntity , StatusRepository $statusRepository, UsettingRepository $usettingRepository){
 		$this->baseUrl         = $baseUrl;
@@ -56,6 +57,7 @@ class ProfileController extends AbstractController
         $this->validator                = $validator;
         $this->brickPhone               = $brickPhone;
         $this->addEntity                = $addEntity;
+        $this->sMailer                = $sMailer;
         
 
         $this->permission = [
@@ -172,31 +174,51 @@ class ProfileController extends AbstractController
     #[Route('/init_email_change', name: 'app_user_email_edit', methods: ['POST'])]
     public function email_reset(Request $request, UserPasswordHasherInterface $userPasswordHasher)
     {
-        $user = $this->getUser();
+        $user  = $this->getUser();
+        $brand = $this->brand->get();
         if ($request->request->count() > 0) 
         {
             if (!$this->isCsrfTokenValid($user->getUid(), $request->request->get('_token'))) 
             return $this->services->no_access($this->intl->trans("Modification de l'adresse email").': '.$user->getEmail());
 
-            $email	  = $request->request->get('email');
+            $email	       = $request->request->get('email');
+            /*$isExistedUser = $this->userRepository->findOneBy(['email' => $email, 'brand' => $brand->get()]);
+            if ($isExistedUser) {
+                return $this->services->msg_error(
+                    $this->intl->trans("Modification de l'adresse email"),
+                    $this->intl->trans("Cet adresse email appartient à un compte existant, veuillez le changer"),
+                );
+            }*/
+
 		    $password =	$request->request->get('cpassword');
             if ($userPasswordHasher->isPasswordValid($user, $password))
             {
                 //Validation on Linksettingcontroller : app_user_email_setting
-                $user->setActiveCode($user->getUsetting()->getUid());
+                $code = $this->services->numeric_generate(6);
+                $user->setActiveCode($code);
                 $user->setUpdatedAt(new \DatetimeImmutable());
                 $this->userRepository->add($user);
                 // Lien de réinitialisation
-                $base = $this->baseUrl->init();
+                $base  = $this->baseUrl->init();
                 $email = base64_encode($email);
-                $url = $base."/fr/settingbylink/email_edit/".$email."/".$user->getUid()."/".$request->request->get('_token');
-                return $this->services->msg_success(
-                    $this->intl->trans("Modification de l'adresse email").':'.$user->getEmail(),
-                    $this->intl->trans(/*"Modification initialisé, veuillez consulter 
-                    votre nouvelle adresse pour le vérifier et finaliser cette opération"*/$url)
-                );
+                $url   = $base.$this->urlGenerator->generate('app_user_email_setting', ["email" => $email,  "uid" => $user->getUid(),
+                'token' => $request->request->get('_token'), "code" => $code ]);
+                //email
+                $message = $this->render('email/email-change.html.twig', [
+                    'title'           => $this->intl->trans("Modification d'adresse email").' - '. $brand['name'],
+                    'brand'           => $brand,
+                    'data'            => [
+                        'url'      => $url,
+                        'user'     => $user,
+                        'base_url' => $this->baseUrl->init()
+                    ]
+                ]);
+                $this->sMailer->nativeSend($this->brand->get()['emails']['support'], $email, $this->intl->trans("Modification d'adresse email"),  
+                $message);
+                return $this->services->msg_warning($this->intl->trans("Modification de l'adresse email").':'.$user->getEmail(),
+                    $this->intl->trans("Modification initialisé, veuillez consulter votre nouvelle adresse pour le vérifier et finaliser cette opération"));
             }
-            return $this->services->ajax_warning_crud(
+            return $this->services->msg_warning(
                 $this->intl->trans("Modification de l'adresse email").':'.$user->getEmail(),
                 $this->intl->trans("Le mot de passe saisie est incorrecte, veuillez vérifier et saisir votre mot de passe.")
             );
@@ -220,7 +242,7 @@ class ProfileController extends AbstractController
             if ($userPasswordHasher->isPasswordValid($user, $password))
             {
                 if  ($userPasswordHasher->isPasswordValid($user, $newpassword))
-                return $this->services->ajax_warning_crud(
+                return $this->services->msg_warning(
                     $this->intl->trans("Modification du mot de passe"),
                     $this->intl->trans("Veuillez saisir un mot de passe différent de l'actuel")
                 );
@@ -238,7 +260,7 @@ class ProfileController extends AbstractController
                     $this->baseUrl->init().$this->urlGenerator->generate("app_logout")
                 );
             }
-            return $this->services->ajax_warning_crud(
+            return $this->services->msg_warning(
                 $this->intl->trans("Modification du mot de passe"),
                 $this->intl->trans("L'ancien mot de passe saisie est incorrecte, veuillez vérifier et saisir votre mot de passe.")
             );

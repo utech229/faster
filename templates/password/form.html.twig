@@ -1,0 +1,37 @@
+
+        <!--begin::Form-->
+        {{ form_start(form,{'attr': {'class': 'form w-100','novalidate': 'novalidate','id':'kt_password_resetting_form' }}) }}
+            <!--begin::Heading-->
+            <div class="mb-10 text-center">
+                <!--begin::Title-->
+                <h1 class="text-dark mb-3">{% trans %}Récupération{% endtrans %}</h1>
+                <!--end::Title-->
+                <!--begin::Link-->
+                <div class="text-gray-400 fw-bold fs-4">{% trans %}Récupérer {% endtrans %}
+                <a href="{{ path('app_login') }}" class="link-primary fw-bolder">{% trans %}mon compte{% endtrans %}</a></div>
+                <!--end::Link-->
+            </div>
+            <!--end::Heading-->
+            <!--begin::Input group-->
+            <div class="row fv-row mb-7">
+                <!--begin::Col-->
+                <div class="col-xl-12">
+                    <label class="form-label fw-bolder text-dark fs-6 required">{% trans %}Email{% endtrans %}</label>
+                    {{ form_row(form.email, {'attr': {'class': 'form-control form-control-lg form-control-solid',
+                    'type': 'email','placeholder': 'monemail@...com'  }}) }}
+                </div>
+                <!--end::Col-->
+            </div>
+            <!--end::Input group-->
+            <!--begin::Actions-->
+            <div class="text-center">
+                <button type="submit" id="kt_password_resetting_submit" class="btn btn-lg btn-primary">
+                    <span class="indicator-label">{% trans %}Soumettre{% endtrans %}</span>
+                    <span class="indicator-progress">{% trans %}Patienter...{% endtrans %}
+                    <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                </button>
+            </div>
+            <!--end::Actions-->
+            {% include 'registration/form.action.html.twig' %}
+        {{ form_end(form) }}
+        <!--end::Form-->

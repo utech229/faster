@@ -8,6 +8,7 @@ use App\Entity\Brand;
 use App\Form\UserType;
 use App\Service\uBrand;
 use App\Service\BaseUrl;
+use App\Service\sMailer;
 use App\Service\Services;
 use App\Service\AddEntity;
 use App\Form\AffiliateType;
@@ -40,7 +41,7 @@ class AffiliateController extends AbstractController
     public function __construct(BaseUrl $baseUrl, UrlGeneratorInterface $urlGenerator, Services $services, BrickPhone $brickPhone,  
     EntityManagerInterface $entityManager, TranslatorInterface $translator,
     RoleRepository $roleRepository, UserRepository $userRepository, PermissionRepository $permissionRepository,
-    AuthorizationRepository $authorizationRepository, uBrand $brand,ValidatorInterface $validator,
+    AuthorizationRepository $authorizationRepository, uBrand $brand,ValidatorInterface $validator, sMailer $sMailer,
     DbInitData $dbInitData, AddEntity $addEntity, StatusRepository $statusRepository, BrandRepository $brandRepository)
     {
         $this->baseUrl         = $baseUrl;
@@ -51,6 +52,7 @@ class AffiliateController extends AbstractController
         $this->brand           = $brand;
         $this->em	           = $entityManager;
         $this->addEntity	   = $addEntity;
+        $this->sMailer         = $sMailer;
         $this->userRepository  = $userRepository;
         $this->roleRepository    = $roleRepository;
         $this->statusRepository  = $statusRepository;
@@ -159,13 +161,14 @@ class AffiliateController extends AbstractController
                 $this->intl->trans("Insertion du tableau de données pays"),
                 $this->intl->trans("La recherche du nom du pays à échoué : BrickPhone"),
             );
+            $the_password  = $this->services->idgenerate(8);
             //affiliate data setting
             $affiliate->setBrand($admin->getBrand());
             $affiliate->setBalance($admin->getBalance());
             $affiliate->setPaymentAccount($admin->getPaymentAccount());
             $affiliate->setApikey($admin->getApikey());
             $affiliate->setCreatedAt(new \DatetimeImmutable());
-            $affiliate->setPassword($affiliatePasswordHasher->hashPassword($affiliate, strtoupper(123456)));
+            $affiliate->setPassword($affiliatePasswordHasher->hashPassword($affiliate, $the_password));
             $affiliate->setRoles(['ROLE_'.$role->getName()]);
             $affiliate->setRole($role);
             $affiliate->setAffiliateManager($admin);
@@ -184,6 +187,36 @@ class AffiliateController extends AbstractController
                 'ulastname'  => $form->get('lastname')->getData(),
             ];
             $setDefaultSetting = $this->addEntity->defaultUsetting($affiliate, $settingData);
+
+            //code
+            $code = $this->services->idgenerate(10);
+            // Lien d'activation'
+            if ($affiliate->getStatus()->getCode() == 3) {
+                $url          = $this->baseUrl.$this->urlGenerator->generate('app_account_activation', ["uid" => $affiliate->getUid(), 'code' => $code]);
+                $mailTemplate = 'new-user-account.html.twig';
+                $titler       = $this->intl->trans('Connexion au compte');
+            }else {
+                $affiliate->setActiveCode($code);
+                $url          = $this->baseUrl.$this->urlGenerator->generate('app_account_activation', ["uid" => $affiliate->getUid(), 'code' => $code]);
+                $mailTemplate = 'invitation.html.twig';
+                $titler       = $this->intl->trans('Activation de compte');
+            }
+           
+            //email
+            $message = $this->render('email/'.$mailTemplate, [
+                 'title'           => $titler .' - '.$this->brand['name'],
+                 'brand'           => $this->brand,
+                 'data'            => [
+                     'url'      => $url,
+                     'user'     => $affiliate,
+                     'password' => $the_password,
+                     'base_url' => $this->baseUrl
+                 ]
+             ]);
+ 
+             $this->sMailer->nativeSend( $this->brand['emails']['support'], 
+                 $email ,  $titler,  $message);
+
 
             return $this->services->msg_success(
                 $this->intl->trans("Création d'un nouvel affilié"),

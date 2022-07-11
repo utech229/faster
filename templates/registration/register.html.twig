@@ -3,26 +3,78 @@
 {% block title %}{{ title }}{% endblock %}
 
 {% block body %}
-    {% for flash_error in app.flashes('verify_email_error') %}
-        <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
-    {% endfor %}
-    
-    <!--begin::Wrapper-->
-    <div class="w-lg-600px bg-body rounded shadow-sm p-10 p-lg-15 mx-auto border border-dashed border-primary">
-        {% include 'section/login.intl.dropdown.html.twig' %}
-        <!--begin::Form-->
-        {% include 'registration/form.html.twig' %}
-        <!--end::Form-->
-    </div>
-    <!--end::Wrapper-->
+        <!--begin::Root-->
+        <div class="d-flex flex-column flex-root">
+            <!--begin::Authentication - Sign-in -->
+            <div class="d-flex flex-column flex-lg-row flex-column-fluid">
+                <!--begin::Aside-->
+                <div class="d-flex flex-column flex-lg-row-auto w-xl-50 positon-xl-relative" style="background-color: {{ brand.color}}">
+                    <!--begin::Wrapper-->
+                    <div class="d-flex flex-column position-xl-fixed top-0 bottom-0 w-xl-50 scroll-y">
+                        <!--begin::Content-->
+                        <div class="d-flex flex-row-fluid flex-column text-center p-10 pt-lg-20">
+                            <!--begin::Logo-->
+                            <a href="{{ path('app_login')}}" class="mb-12">
+                                <img alt="{{ brand.name}}" style="-webkit-filter: saturate(100%);filter: saturate(100%);"  src="{{ asset('app/uploads/brands/logos/'~ brand.name|lower ~'.png') }}" class="h-60px" />
+                            </a>
+                            <!--end::Logo-->
+                            <!--begin::Description-->
+                            <p class="fw-bold fs-2" style="color: #fff;">{% trans %}Vos SMS professionnels partout{% endtrans %}
+                            <br />{% trans %}dans le monde{% endtrans %}</p>
+                            <!--end::Description-->
+                        </div>
+                        <!--end::Content-->
+                        <!--begin::Illustration-->
+                        <div class="d-flex flex-row-auto bgi-no-repeat bgi-position-x-center bgi-size-contain bgi-position-y-bottom max-h-400px min-h-100px min-h-lg-350px" style="background-image: url({{ asset('app/media/login/faster-img.png') }}"></div>
+                        <!--end::Illustration-->
+                    </div>
+                    <!--end::Wrapper-->
+                </div>
+                <!--end::Aside-->
+                <!--begin::Body-->
+                <div class="d-flex flex-column flex-lg-row-fluid py-10">
+                    <!--begin::Content-->
+                    <div class="d-flex flex-center flex-column flex-column-fluid">
+                        <!--begin::Wrapper-->
+                        <div class="w-lg-600px bg-body rounded shadow-sm p-10 p-lg-15 mx-auto border border-dashed border-primary">
+                            
+                            {% for flash_error in app.flashes('verify_email_error') %}
+                                <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+                            {% endfor %}
+
+                            {% include 'section/login.intl.dropdown.html.twig' %}
+                            <!--begin::Form-->
+                            {% if route == "app_register" %}
+                                {% include 'registration/form.html.twig' %}
+                            {% elseif route == 'app_init_reset' %}
+                                {% include 'password/form.html.twig' %}
+                            {% elseif route == 'app_password_resetting' %}
+                                {% include "password/form.set.password.html.twig" %}
+                            {% elseif route == 'app_login' %}
+                                {% include 'security/form.html.twig' %}
+                            {% endif %}
+                            <!--end::Form-->
+                        </div>
+                    </div>
+                    <!--end::Content-->
+                    <!--begin::Footer-->
+                    <div class="d-flex flex-center flex-wrap fs-6 p-5 pb-0">
+                        <!--begin::Links-->
+                        <div class="d-flex flex-center fw-bold fs-6">
+                            <a href="https://fastermessage.com" class="text-muted text-hover-primary px-2">{% trans %}A propos{% endtrans %} </a>
+                            <a href="https://fastermessage.com/cgv.html" class="text-muted text-hover-primary px-2">{% trans %}Conditions d'utilisation{% endtrans %}</a>
+                            <a href="" class="text-muted text-hover-primary px-2">{% trans %}Confidentialité{% endtrans %}</a>
+                            <a href="https://wa.me/+22952734444" class="text-muted text-hover-primary px-2">{% trans %}Support {% endtrans %}</a>
+                        </div>
+                        <!--end::Links-->
+                    </div>
+                    <!--end::Footer-->
+                </div>
+                <!--end::Body-->
+            </div>
+            <!--end::Authentication - Sign-in-->
+        </div>
+        <!--end::Root-->
 {% endblock %}
 
-{% block javascripts %} 
-<!--begin::Page Custom Javascript(used by this page)-->
-<script>
-    const register_url = "{{path('app_register')}}";
-    const login_url    = "{{path('app_login', {'slug': 'registered'})}}";
-</script>
-<script src="{{ asset('app/js/queries/authentication/sign-up/general.js') }}"></script>
-<!--end::Page Custom Javascript-->
-{% endblock %}
+{% block javascripts %} {% endblock %}
