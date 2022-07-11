@@ -93,7 +93,7 @@ class DbInitData extends AbstractController
 			"PFIL1", "PFIL2", "PFIL3","PFIL4","CFIG0", "CFIG1", "CFIG2","CFIG3","CFIG4",
 			"LOG0", "LOG1","AFFL0", "AFFL1", "AFFL2","AFFL3","AFFL4","PAY0", "PAY1", "PAY2","PAY3","PAY4",
 			"MET0", "MET1", "MET2","MET3","MET4","ROUT0", "ROUT1", "ROUT2","ROUT3","ROUT4","SEND0", "SEND1", "SEND2","SEND3","SEND4","SEND5",
-			"STUT0", "STUT1", "STUT2","STUT3","STUT4","CNTS0", "CNTS1", "CNTS2","CNTS3","CNTS4","CNTG0", "CNTG1", "CNTG2","CNTG3","CNTG4","CNTG5",
+			"STUT0", "STUT1", "STUT2","STUT3","STUT4","CNTS0", "CNTS1", "CNTS2","CNTS3","CNTS4","CNTS5","CNTG0", "CNTG1", "CNTG2","CNTG3","CNTG4","CNTG5",
 			"SMSS0", "SMSS1", "SMSS2","SMSS3","SMSS4","SMSC0", "SMSC1", "SMSC2","SMSC3","SMSC4","CTGF0", "CTGF1", "CTGF2","CTGF3","CTGF4",
 			"CNPY0", "CNPY1", "CNPY2","CNPY3","CNPY4","BRND0", "BRND1", "BRND2","BRND3","BRND4","XPER0", "XPER1", "XPER2","XPER3","XPER4",
 			"REC0", "REC1", "REC2","REC3","REC4", "DEV0", "DEV1", "DEV2","DEV3","DEV4",
@@ -114,7 +114,7 @@ class DbInitData extends AbstractController
 			"Menu route du système", "Ajout route du système", "Voir route du système","Modification route du système", "Suppression route du système",
 			"Menu sender(s)", "Ajout sender(s)", "Voir sender(s)","Modification sender(s)", "Suppression sender(s)", "Activation et désactivation sender(s)",
 			"Menu status", "Ajout status", "Voir status","Modification status", "Suppression status",
-			"Menu contact", "Ajout contact", "Voir contact","Modification contact", "Suppression contact",
+			"Menu contact", "Ajout contact", "Voir ses contacts","Modification contact", "Suppression contact","Voir tous les contacts",
 			"Menu groupe de contacts", "Ajout groupe de contacts", "Voir ses groupes de contacts","Modification groupe de contacts", "Suppression groupe de contacts","voir tous les groupes de contacts",
 			"Menu Message", "Ajout Message", "Voir Message","Modification Message", "Suppression Message",
 			"Menu campagne", "Ajout campagne", "Voir campagne","Modification campagne", "Suppression campagne",
@@ -461,8 +461,8 @@ class DbInitData extends AbstractController
 
 	public function addSender():void
 	{
-		// $existed_sender  = $this->senderRepository->findAll();
-		// if (!$existed_sender) {
+		$existed_sender  = $this->senderRepository->findOneById(1);
+		if (!$existed_sender) {
 			$senderNames = [ "FASTERMSG"];
 			$senderDescription = [
 				"Identifiant d'envoie de SMS par défaut du système"
@@ -473,7 +473,6 @@ class DbInitData extends AbstractController
 				if (!$senderUser) {
 					$sender = new Sender();
 					$sender->setUid($this->services->idgenerate(10));
-					$sender->setManager($this->userRepository->findOneById(1));
 					$sender->setName($senderNames[$i]);
 					$sender->setStatus($status);
 					$sender->setObservation($senderDescription[$i]);
@@ -483,8 +482,10 @@ class DbInitData extends AbstractController
 			}
 			$this->em->flush();
 			$response = true;
-		// }else{
-		//     $response = false;
-		// }
+		}else{
+			$existed_sender->setManager($this->userRepository->findOneById(1));
+			$existed_sender->setCreateBy($this->userRepository->findOneById(1));
+			$this->senderRepository->add($existed_sender, true);
+		}
 	}
 }

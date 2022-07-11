@@ -51,7 +51,7 @@ class SecurityController extends AbstractController
         // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
 
-        return $this->render('security/'.$this->brand->get()['loginform'], 
+        return $this->render('registration/'.$this->brand->get()['regisform'], 
         [
             'last_username'   => $lastUsername, 
             'error'           => $error,

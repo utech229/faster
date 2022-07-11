@@ -248,7 +248,10 @@ var KTTransactionsList = function() {
                     pageLength: 10,
                     lengthChange: true,
                     "info": true,
-                    lengthMenu: [10, 25, 100, 250, 500, 1000],                   
+                    lengthMenu: [10, 25, 100, 250, 500, 1000],
+                    language: {
+                        url: _language_datatables,
+                    },                  
                 }),
                 $('#kt_modal_add_transaction_reload_button').on('click', function() {
                     e.ajax.reload(null, false);

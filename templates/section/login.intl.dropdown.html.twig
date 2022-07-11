@@ -9,12 +9,12 @@
 			<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
 				 {% if _locale == 'fr' %}
 					<li><a href="{{path(app.request.get('_route'), app.request.get('_route_params')|merge({'_locale':'en'}))}}" class="dropdown-item" id="textBackMHdrop1">
-						<img src="{{ asset('app/media/flags/england.svg') }}" style="border-radius: 10px" width="15" height="15" alt="{% trans %}annonce en ligne{% endtrans %}">
+						<img src="{{ asset('app/media/flags/england.svg') }}" style="border-radius: 10px" width="15" height="15" alt="{% trans %}Marketing{% endtrans %}">
 						<b>{% trans %} Anglais{% endtrans %}</b>
 					</a></li>
 				{% else %}
 					<li><a href="{{path(app.request.get('_route'), app.request.get('_route_params')|merge({'_locale':'fr'}))}}" class="dropdown-item" id="textBackMHdrop2">
-						<img src="{{ asset('app/media/flags/france.svg') }}" style="border-radius: 10px" width="15" height="15" alt="{% trans %}Base de contact{% endtrans %}">
+						<img src="{{ asset('app/media/flags/france.svg') }}" style="border-radius: 10px" width="15" height="15" alt="{% trans %}SMS professionnel{% endtrans %}">
 						<b>{% trans %} Français{% endtrans %}</b>
 					</a></li>
 				{% endif %}

@@ -11,6 +11,7 @@ use App\Service\Services;
 use App\Service\AddEntity;
 use App\Service\BrickPhone;
 use App\Service\DbInitData;
+use Symfony\Component\Mime\Email;
 use App\Repository\RoleRepository;
 use App\Repository\UserRepository;
 use App\Repository\BrandRepository;
@@ -22,6 +23,7 @@ use App\Repository\PermissionRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\AuthorizationRepository;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -184,4 +186,5 @@ class SuperController extends AbstractController
             $this->intl->trans("Données par défaut mise à jour")
         );
     }
+
 }

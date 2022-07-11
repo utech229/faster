@@ -39,6 +39,60 @@ class LogRepository extends ServiceEntityRepository
         }
     }
 
+    //Get all log count
+    public function countAll()
+    {
+        return $this->createQueryBuilder('m')
+        ->select('COUNT(m.id)')
+        ->getQuery()
+        ->getResult()
+        ;
+    }
+
+    public function countAllForToday()
+    {
+        $date = date('Y-m-d');
+        return $this->createQueryBuilder('m')
+        ->Where("m.createdAt >=:createdAt")
+        ->setParameter('createdAt', new \DatetimeImmutable(($date." 00:00:00")))
+        ->select('COUNT(m.id)')
+        ->getQuery()
+        ->getResult()
+        ;
+    }
+
+    public function countAllForMonth($startDate)
+    {
+        $date = date('Y-m-d');
+        return $this->createQueryBuilder('m')
+        ->Where("m.createdAt >=:startCreatedAt")
+        ->andWhere("m.createdAt <=:createdAt")
+        ->andWhere("m.task =:task")
+        ->orWhere("m.task =:tasken")
+        ->setParameter('startCreatedAt', new \DatetimeImmutable(($startDate." 00:00:00")))
+        ->setParameter('createdAt', new \DatetimeImmutable(($date." 00:00:00")))
+        ->setParameter('task', 'Connexion au compte')
+        ->setParameter('tasken', 'Login to account')
+        ->select('COUNT(m.id)')
+        ->getQuery()
+        ->getResult()
+        ;
+    }
+
+    public function countAllConnexion()
+    {
+        return $this->createQueryBuilder('m')
+        ->select('COUNT(m.id)')
+        ->Where("m.task =:task")
+        ->orWhere("m.task =:tasken")
+        ->setParameter('task', 'Connexion au compte')
+        ->setParameter('tasken', 'Login to account')
+        ->getQuery()
+        ->getResult()
+        ;
+    }
+
+    
 //    /**
 //     * @return Log[] Returns an array of Log objects
 //     */

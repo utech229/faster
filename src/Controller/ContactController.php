@@ -79,8 +79,8 @@ class ContactController extends AbstractController
         $groups             =   [];
 
 
-        if ($this->pView) {
-            $users          =   $this->services->getUserByPermission($this->pCreate, null, null, 1);
+        if ($this->pView || $this->pAllView) {
+            $users          =   $this->services->getUserByPermission($this->permission[1], $typeUser, $this->getUser(), 0);
             $groups         =   count($users) > 0 ? $groups : $this->getUser()->getContactGroups();
         }
         return $this->render('contact/index.html.twig', [
@@ -216,7 +216,7 @@ class ContactController extends AbstractController
 		$A2 = isset($worksheet[1][0]) ? $worksheet[1][0] : "";
 		if(is_numeric($A1)) $start = 0; else if(is_numeric($A2)) $start = 1;
 
-        if($start == -1)    return $this->services->msg_error($this->intl->trans("Echec d'importation de contact:Mauvais formatage de fichier."),$this->intl->trans("Votre fichier a été mal conçu pour l'importation.Veuillez revoir le contenu du fichier et réessayez."));
+        if($start == -1)    return $this->services->msg_error($this->intl->trans("Echec d'importation de contact:Mauvais formatage du fichier."),$this->intl->trans("Votre fichier a été mal formaté pour l'importation.Veuillez revoir le contenu du fichier et réessayez."));
         
         $tabCheck =   [];
 
@@ -242,7 +242,7 @@ class ContactController extends AbstractController
             $tabCheck[] = $check;
         } 
 
-        return $this->services->msg_success($this->intl->trans("Importation de contacts effectué avec succès"),$this->intl->trans("Importation de contacts effectué avec succès"));
+        return $this->services->msg_success($this->intl->trans("Importation de contacts effectuée avec succès"),$this->intl->trans("Importation de contacts effectué avec succès"));
     }
 
     #[Route('/{id}', name: 'app_contact_show', methods: ['GET'])]

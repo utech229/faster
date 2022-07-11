@@ -148,7 +148,26 @@ var KTContactList = function() {
                     t[5].setAttribute("data-order", l)
                 })),
                 (e = $(o).DataTable({
-                    responsive: true,
+                    responsive: {
+                        details: {
+                            renderer: function ( api, rowIdx, columns ) {
+                                var data = $.map( columns, function ( col, i ) {
+
+                                return col.hidden ?
+                                '<tr data-dt-row="'+col.rowIndex+'" data-dt-column="'+col.columnIndex+'">'+
+                                    '<td>'+group[col.columnIndex]+':'+'</td> '+
+                                    '<td>'+col.data+'</td>'+
+                                '</tr>' :
+                                '';
+
+                                } ).join('');
+             
+                                return data ?
+                                    $('<table/>').append( data ) :
+                                    false;
+                            }
+                        }
+                    },
                     ajax: {
                         url: contact_list,
                         type: "POST",
@@ -162,7 +181,6 @@ var KTContactList = function() {
                         },
                         dataSrc: function(json) {
                             $("#stat_contact").text(json.data.length);
-                            group=json.group;
                             return json.data;
                         }
                         
@@ -185,6 +203,7 @@ var KTContactList = function() {
                         },
                         // Numéro
                         {
+                            orderable: !1,
                             responsivePriority: 1,
                             targets: 1, 
                             render: function (data, type, full, meta) {
@@ -249,6 +268,7 @@ var KTContactList = function() {
                         },
                         // Action
                         {
+                            orderable: !1,
                             responsivePriority: 2,
                             targets: 9, 
                             render: function (data, type, full, meta) {
@@ -273,7 +293,10 @@ var KTContactList = function() {
                     pageLength: 10,
                     lengthChange: true,
                     "info": true,
-                    lengthMenu: [10, 25, 100, 250, 500, 1000],                   
+                    lengthMenu: [10, 25, 100, 250, 500, 1000],
+                    language: {
+                        url: _language_datatables,
+                    },                 
                 }),
                 $('#kt_modal_add_contact_reload_button').on('click', function() {
                     e.ajax.reload(null, false);
@@ -284,7 +307,26 @@ var KTContactList = function() {
 
                 })),
                 $('[data-kt-contact-group="group"]').on('change', function() {
-                    e.ajax.reload();
+                    $.ajax({
+                        url:get_champ_group,
+                        type:"post",
+                        data:{  _uid:   $(this).val(),
+                                _token: function() { return csrfToken; }
+                            },
+                        dataType:"json",
+                        success: function (response) {
+                            $(e.column(2).header()).text(response[2]);
+                            $(e.column(3).header()).text(response[3]);
+                            $(e.column(4).header()).text(response[4]);
+                            $(e.column(5).header()).text(response[5]);
+                            $(e.column(6).header()).text(response[6]);
+
+                            group = response;
+                            e.ajax.reload();
+                        },
+                        error: function () {
+                        }
+                    });
                 }),
                 document.querySelector('[data-kt-contact-table-filter="reset"]').addEventListener("click", (function() {
                     document.querySelector('[data-kt-contact-table-filter="form"]').querySelectorAll("select").forEach((e => {
@@ -308,15 +350,10 @@ var KTContactList = function() {
                 })
                 ());
                 e.on("draw", function() { l(), c(), a();
-                    $("#champ1").text(group['field1'] ? group['field1'] : "Champ1") ;
-                    $("#champ2").text(group['field2'] ? group['field2'] : "Champ2") ;
-                    $("#champ3").text(group['field3'] ? group['field3'] : "Champ3")  ;
-                    $("#champ4").text(group['field4'] ? group['field4'] : "Champ4") ;
-                    $("#champ5").text(group['field5'] ? group['field5'] : "Champ5") ;
+                    
                 })
         }
     };
-
 }();
 
 KTUtil.onDOMContentLoaded((function() {
@@ -373,12 +410,12 @@ $(document).on('click', ".contactUpdater", function(e)
     
 });
 
-$(document).on('change',"#list_user_contact_id", function (e) {
-    let uid = $(this).val();
+function rechargeGroups(uid_user,uid="") {
+    
     $.ajax({
         url:get_group,
         type:"post",
-        data:{  _uid:   uid,
+        data:{  _uid:   uid_user,
                 _token: function() { return csrfToken; }
             },
         dataType:"json",
@@ -407,16 +444,24 @@ $(document).on('change',"#list_user_contact_id", function (e) {
                 document.getElementById("list_group_id").appendChild(el2);
                 document.getElementById("id_group_contact_import").appendChild(el3);
             }
-            $('#kt_modal_add_contact_reload_button').click();
+
+            importContact == 2 ? $('#id_group_contact_import').val(uid).change() 
+            && $("#kt_modal_import_contacts").modal("show") :"";
+
         },
         error: function () {
             
         }
 
     });
+    // $('#kt_modal_add_contact_reload_button').click();
+
+}
+
+$(document).on('change',"#list_user_contact_id", function (e) {
+    let uid_user = $(this).val();
+    rechargeGroups(uid_user);
 });
-
-
 
 function infoImportFile() {
     console.log();
