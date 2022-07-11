@@ -185,12 +185,13 @@ var KTUsersList = function() {
                         targets: 3,
                         render: function(data, type, full, meta) {
                             var status = {
-                                'ROLE_AFFILIATE_USER': { 'title': 'Affilié revendeur', 'class': 'warning' },
-                                'ROLE_AFFILIATE_RESELLER': { 'title': 'Affilié revendeur', 'class': 'primary' },
-                                'ROLE_RESELLER': { 'title': 'Revendeur', 'class': 'warning' },
-                                'ROLE_USER': { 'title': 'Utilisateur', 'class': 'info' },
-                                'ROLE_ADMINISTRATOR': { 'title': 'Administrateur', 'class': 'secondary' },
-                                'ROLE_SUPER_ADMINISTRATOR': { 'title': 'Super administrateur', 'class': 'info' },
+                                'ROLE_AFFILIATE_USER': { 'title': _user_affiliate, 'class': 'warning' },
+                                'ROLE_AFFILIATE_RESELLER': { 'title': _reseller_affiliate, 'class': 'secondary' },
+                                'ROLE_RESELLER': { 'title': _reseller, 'class': 'danger' },
+                                'ROLE_USER': { 'title': _user, 'class': 'info' },
+                                'ROLE_ACCOUNTING': { 'title': _accounting, 'class': 'info' },
+                                'ROLE_ADMINISTRATOR': { 'title': _administrator, 'class': 'success' },
+                                'ROLE_SUPER_ADMINISTRATOR': { 'title': _super_administrator, 'class': 'primary' },
                             };
                             if (typeof status[data] === 'undefined') {
                                 return data;
