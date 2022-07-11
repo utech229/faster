@@ -8,6 +8,13 @@
 		const _base_url               = "{{ app.request.schemeAndHttpHost }}";
 		{#const ajaxBaseUrl			  = "{{app.request.schemeAndHttpHost ~ "/" ~ app.request.locale|default('fr') }}";#}
 
+		const _user                =  `{{ "Utilisateur!"|trans }}`;
+		const _user_affiliate      =  `{{ "Affilié utilisateur!"|trans }}`;
+		const _reseller            =  `{{ "Revendeur!"|trans }}`;
+		const _reseller_affiliate  =  `{{ "Affilié revendeur!"|trans }}`;
+		const _administrator       =  `{{ "Administrateur!"|trans }}`;
+		const _super_administrator =  `{{ "Super administrateur"|trans }}`;
+		const _accounting          =  `{{ "Comptable!"|trans }}`;
 		// Ajax Error
 		const _AjaxError          =  `{{ "Une erreur est survenu, veuillez réessayer plus tard"|trans }}`;
 		const _AjaxTableListIToken       =  `{{ "Une erreur s'est produite pour l'accès au données du tableau, veuillez réessayer"|trans }}`;

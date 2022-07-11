@@ -189,14 +189,15 @@ class ProfileController extends AbstractController
                 // Lien de réinitialisation
                 $base = $this->baseUrl->init();
                 $email = base64_encode($email);
-                $url = $base."/fr/settingbylink/email_edit/".$email."/".$user->getUid()."/".$request->request->get('_token');
+                $url   = $base.$this->urlGenerator->generate('app_user_email_setting', ["email" => $email,  "uid" => $user->getUid(),
+                'token' => $request->request->get('_token') ]);
                 return $this->services->msg_success(
                     $this->intl->trans("Modification de l'adresse email").':'.$user->getEmail(),
                     $this->intl->trans(/*"Modification initialisé, veuillez consulter 
                     votre nouvelle adresse pour le vérifier et finaliser cette opération"*/$url)
                 );
             }
-            return $this->services->ajax_warning_crud(
+            return $this->services->msg_warning(
                 $this->intl->trans("Modification de l'adresse email").':'.$user->getEmail(),
                 $this->intl->trans("Le mot de passe saisie est incorrecte, veuillez vérifier et saisir votre mot de passe.")
             );
@@ -220,7 +221,7 @@ class ProfileController extends AbstractController
             if ($userPasswordHasher->isPasswordValid($user, $password))
             {
                 if  ($userPasswordHasher->isPasswordValid($user, $newpassword))
-                return $this->services->ajax_warning_crud(
+                return $this->services->msg_warning(
                     $this->intl->trans("Modification du mot de passe"),
                     $this->intl->trans("Veuillez saisir un mot de passe différent de l'actuel")
                 );
@@ -238,7 +239,7 @@ class ProfileController extends AbstractController
                     $this->baseUrl->init().$this->urlGenerator->generate("app_logout")
                 );
             }
-            return $this->services->ajax_warning_crud(
+            return $this->services->msg_warning(
                 $this->intl->trans("Modification du mot de passe"),
                 $this->intl->trans("L'ancien mot de passe saisie est incorrecte, veuillez vérifier et saisir votre mot de passe.")
             );

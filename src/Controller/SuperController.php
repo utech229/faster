@@ -153,7 +153,7 @@ class SuperController extends AbstractController
 
             $this->companyRepository->add($company, true);
             $this->brandRepository->add($brand, true);
-
+            
             $existed_user->setAccountManager($existed_user)->setBrand($brand);
             $this->userRepository->add($existed_user);
             return $this->services->msg_success(

@@ -70,7 +70,7 @@ class BrandController extends AbstractController
             case 1: $inBrand  = true; $users = $this->services->getUserByPermission('MANGR'); break;
             case 2: $inBrand  = $this->bRepository->findOneBy(['manager'=> $this->getUser()]); break;
             case 4: $inBrand  = $this->bRepository->findOneBy(['manager'=> $this->getUser()]); break;
-            default: $inBrand = $this->bRepository->findOneBy(['manager'=> $this->getUser()->getAffiliationManager()]); break;
+            default: $inBrand = $this->bRepository->findOneBy(['manager'=> $this->getUser()->getAffiliateManager()]); break;
         }
 
         return $this->render('brand/index.html.twig', [
@@ -113,7 +113,12 @@ class BrandController extends AbstractController
         if($executeReq[0]== 0 || $executeReq[0] == 1){
             $manager = $user;
         }else{
-            $manager = $this->getUser();
+            $checkEtat = $this->services->checkThisUser($this->pAllAccess);
+            switch($checkEtat[0]){
+                case 3: $manager  = $this->getUser()->getAffiliateManager(); break;
+                case 5: $manager  = $this->getUser()->getAffiliateManager(); break;
+                default: $manager = $this->getUser(); break;
+            }
         }
         $creator = $this->getUser();
         if($request->request->get('thisU')){
@@ -210,7 +215,6 @@ class BrandController extends AbstractController
         //si 1 continuer...
         $eSender    = false;
         $inSender   = $this->sRepository->findOneBy(['name'=> $sender]);
-
         if($inSender) {
             if($update){
                 if($typeUser == 0 || $typeUser == 1){
@@ -218,7 +222,11 @@ class BrandController extends AbstractController
                     if($manager->getId() == $inSender->getManager()->getId()) $eSender = true;
                 }else{
                     if($typeUser == 3 || $typeUser == 2 ){
-                        if($this->getUser()->getAffiliateManager()->getId() == $inSender->getManager()->getId()){$eSender = true;};
+                        if($this->getUser()->getAffiliateManager()){
+                            if($this->getUser()->getAffiliateManager()->getId() == $inSender->getManager()->getId()){$eSender = true;};
+                        }else{
+                            if($this->getUser()->getId() == $inSender->getManager()->getId()){$eSender = true;}
+                        }
                         // dd("Revendeur", "utilisateur");
                     }else{
                         if($this->getUser()->getId() == $inSender->getManager()->getId()){ $eSender = true;}
