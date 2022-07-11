@@ -189,7 +189,8 @@ class ProfileController extends AbstractController
                 // Lien de réinitialisation
                 $base = $this->baseUrl->init();
                 $email = base64_encode($email);
-                $url = $base."/fr/settingbylink/email_edit/".$email."/".$user->getUid()."/".$request->request->get('_token');
+                $url   = $this->baseUrl.$this->urlGenerator->generate('app_user_email_setting', ["email" => $email,  "uid" => $user->getUid(),
+                'token' => $request->request->get('_token') ]);
                 return $this->services->msg_success(
                     $this->intl->trans("Modification de l'adresse email").':'.$user->getEmail(),
                     $this->intl->trans(/*"Modification initialisé, veuillez consulter 
