@@ -49,7 +49,6 @@ class sMailer extends AbstractController
         // Pour envoyer un mail HTML, l'en-tête Content-type doit être défini
         $headers[] = 'MIME-Version: 1.0';
         $headers[] = 'Content-type: text/html; charset=iso-8859-1';
-
         // En-têtes additionnels
         $headers[] = 'To:'.$to;
         $headers[] = 'From:'.$this->brand->get()['name'];
