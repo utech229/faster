@@ -210,7 +210,6 @@ class BrandController extends AbstractController
         //si 1 continuer...
         $eSender    = false;
         $inSender   = $this->sRepository->findOneBy(['name'=> $sender]);
-
         if($inSender) {
             if($update){
                 if($typeUser == 0 || $typeUser == 1){
@@ -218,7 +217,11 @@ class BrandController extends AbstractController
                     if($manager->getId() == $inSender->getManager()->getId()) $eSender = true;
                 }else{
                     if($typeUser == 3 || $typeUser == 2 ){
-                        if($this->getUser()->getAffiliateManager()->getId() == $inSender->getManager()->getId()){$eSender = true;};
+                        if($this->getUser()->getAffiliateManager()->getId()){
+                            if($this->getUser()->getAffiliateManager()->getId() == $inSender->getManager()->getId()){$eSender = true;};
+                        }else{
+                            if($this->getUser()->getId() == $inSender->getManager()->getId()){$eSender = true;}
+                        }
                         // dd("Revendeur", "utilisateur");
                     }else{
                         if($this->getUser()->getId() == $inSender->getManager()->getId()){ $eSender = true;}
