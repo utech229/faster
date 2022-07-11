@@ -121,14 +121,14 @@
                         </div>
                         <!--end::Search-->
                         <button type="button" class="btn btn-light-primary me-3" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
-                    <!--begin::Svg Icon | path: icons/duotune/general/gen031.svg-->
-                    <span class="svg-icon svg-icon-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                            <path d="M19.0759 3H4.72777C3.95892 3 3.47768 3.83148 3.86067 4.49814L8.56967 12.6949C9.17923 13.7559 9.5 14.9582 9.5 16.1819V19.5072C9.5 20.2189 10.2223 20.7028 10.8805 20.432L13.8805 19.1977C14.2553 19.0435 14.5 18.6783 14.5 18.273V13.8372C14.5 12.8089 14.8171 11.8056 15.408 10.964L19.8943 4.57465C20.3596 3.912 19.8856 3 19.0759 3Z" fill="currentColor" />
-                        </svg>
-                    </span>
-                    <!--end::Svg Icon-->{{ 'Filtre' | trans }}</button>
-                    <!--begin::Menu 1-->
+                        <!--begin::Svg Icon | path: icons/duotune/general/gen031.svg-->
+                        <span class="svg-icon svg-icon-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <path d="M19.0759 3H4.72777C3.95892 3 3.47768 3.83148 3.86067 4.49814L8.56967 12.6949C9.17923 13.7559 9.5 14.9582 9.5 16.1819V19.5072C9.5 20.2189 10.2223 20.7028 10.8805 20.432L13.8805 19.1977C14.2553 19.0435 14.5 18.6783 14.5 18.273V13.8372C14.5 12.8089 14.8171 11.8056 15.408 10.964L19.8943 4.57465C20.3596 3.912 19.8856 3 19.0759 3Z" fill="currentColor" />
+                            </svg>
+                        </span>
+                        <!--end::Svg Icon-->{{ 'Filtre' | trans }}</button>
+                        <!--begin::Menu 1-->
                         <div class="menu menu-sub menu-sub-dropdown w-300px w-md-325px" data-kt-menu="true" id="menu-filter">
                             <!--begin::Header-->
                             <div class="px-7 py-5">
@@ -144,6 +144,7 @@
                                 <!--begin::Input group-->
                                 <form id="formFilter">
                                     <input type="hidden" value="{{ csrf_token(app.user.uid) }}" name="_token">
+                                    {% if canRechargeUser %}
                                     <div class="mb-5">
                                         <label class="form-label fs-6 fw-bold">{{ 'Sélectionnez Marque' | trans }} :</label>
                                         <select class="form-select form-select-solid fw-bolder" name="brand" data-kt-select2="true" data-placeholder="{{"Choisissez marque"}}" data-allow-clear="true">
@@ -155,6 +156,7 @@
                                             {% endif %}
                                         </select>
                                     </div>
+
                                     <!--begin::Input group-->
                                     <div class="mb-5">
                                         <label class="form-label fs-6 fw-bold">{{ 'Sélectionnez utilisateur' | trans }} :</label>
@@ -163,6 +165,18 @@
                                             {% if users is defined %}
                                                 {% for user in users %}
                                                     <option value="{{user.uid }}">{{ user.email }}</option>
+                                                {% endfor %}
+                                            {% endif %}
+                                        </select>
+                                    </div>
+                                    {% endif %}
+                                    <div class="mb-5">
+                                        <label class="form-label fs-6 fw-bold">{{ 'Sélectionnez statut' | trans }} :</label>
+                                        <select class="form-select form-select-solid fw-bolder" name="_status" data-kt-select2="true" data-placeholder="{{"Filtrer par statut"}}" data-allow-clear="true">
+                                            <option value="alls">{{"Tous"|trans}}</option>
+                                            {% if status is defined %}
+                                                {% for thisStatus in status %}
+                                                    <option value="{{thisStatus.uid }}">{{ thisStatus.name }}</option>
                                                 {% endfor %}
                                             {% endif %}
                                         </select>
@@ -178,20 +192,7 @@
                             <!--end::Content-->
                         </div>
                     </div>
-                    <div class="modal fade" id="waiting" tabindex="-1" aria-hidden="true">
-                        <!--begin::Modal dialog-->
-                        <div class="modal-dialog modal-dialog-centered mw-400px">
-                            <!--begin::Modal content-->
-                            <div class="modal-content text-center">
-                                <div class="fv-row p-10 text-warning">
-                                    <span class="spinner-border spinner-border-sm align-middle ms-2"></span> En cours de chargement</span>
-                                </div>
 
-                            </div>
-                            <!--end::Modal content-->
-                        </div>
-                        <!--end::Modal dialog-->
-                    </div>
                     <!--end::Card title-->
                     <!--begin::Card toolbar-->
                     {% if pAllAccess == false %}
@@ -247,8 +248,6 @@
                             {% trans %}Recharger le tableau{% endtrans %}</button>
                         </div>
                     {% endif %}
-                    <!--end::Card toolbar-->
-                    <!--end::Card toolbar-->
                 </div>
                 <div class="modal fade" id="kt_modal_recharge" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered mw-600px">

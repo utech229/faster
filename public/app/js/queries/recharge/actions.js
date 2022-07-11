@@ -24,14 +24,14 @@ $(document).on('click', '#self_recharge', function(e){
     $('#kt_modal_recharge_self').modal('show');
 });
 function reload(r, rRecharge){
-    // $('#waiting').modal('show');
+    $('#waiting').modal('show');
     $.ajax({
         url: rRecharge,
         type: "post",
         data: {u : r, _token : csrfToken},
         dataType: "json",
         success: function(response) {
-            // $('#waiting').modal('hide');
+            $('#waiting').modal('hide');
             tableReloadButton.click();
             Swal.fire({
                 text: response.message,
@@ -302,11 +302,13 @@ var KTUsersLoadRecharge = function() {
                 t.ajax.reload(null, false);
             }),
             $(document).on('submit', '#formFilter', function(e){
+                $('#waiting').modal('show');
                 e.preventDefault();
                 t.ajax.url(uriLoad+'?'+$(this).serialize()).load(function(e){
                     $('.all_recharge').text(e.amountA);
                     $('.recharges_pending').text(e.amountP);
                     $('.recharge_rejected').text(e.amountR);
+                    $('#waiting').modal('hide');
                 });
             }),
             document.querySelector('[data-kt-recharge-table-filter="search"]').addEventListener("keyup", (function(e) {

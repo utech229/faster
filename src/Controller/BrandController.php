@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Service\uBrand;
 use App\Entity\Brand;
+use App\Entity\Sender;
 
 use App\Service\BaseUrl;
 use App\Service\Services;
@@ -18,6 +19,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use App\Repository\UserRepository;
+use App\Repository\SenderRepository;
 use App\Repository\BrandRepository;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -33,7 +35,7 @@ use Dompdf\Options;
 class BrandController extends AbstractController
 {
     public function __construct(BaseUrl $baseUrl, Services $services, uBrand $brand, TranslatorInterface $translator, EntityManagerInterface $entityManager,
-        UrlGeneratorInterface $urlGenerator, UserRepository $userRepository, BrandRepository $brandRepository, AddEntity $addEntity){
+        UrlGeneratorInterface $urlGenerator, UserRepository $userRepository, SenderRepository $senderRepository, BrandRepository $brandRepository, AddEntity $addEntity){
         $this->baseUrl         = $baseUrl;
         $this->urlGenerator    = $urlGenerator;
         $this->intl            = $translator;
@@ -43,6 +45,7 @@ class BrandController extends AbstractController
         $this->addEntity	   = $addEntity;
         $this->uRepository     = $userRepository;
         $this->bRepository     = $brandRepository;
+        $this->sRepository     = $senderRepository;
         $this->permission      = ["BRND0", "BRND1", "BRND2", "BRND3", "BRND4", "BRND5"];
         $this->pAccess         = $this->services->checkPermission($this->permission[0]);
         $this->pCreate         = $this->services->checkPermission($this->permission[1]);
@@ -108,17 +111,18 @@ class BrandController extends AbstractController
 
         $executeReq  = $this->services->checkThisUser($this->pAllAccess, NULL, NULL, $user);
         if($executeReq[0]== 0 || $executeReq[0] == 1){
-            $creator = $this->getUser();
             $manager = $user;
         }else{
-            $creator = NULL;
             $manager = $this->getUser();
         }
-
+        $creator = $this->getUser();
         if($request->request->get('thisU')){
             $inBrand = $this->bRepository->findOneBy(['uid'=> $request->request->get('thisU')]);
             //Permettre également à l'utilisateur de pouvoir changer le statut
             if($inBrand){
+                $sender = $this->checkSender($executeReq[0], $request->request->get('_sender'), $manager, 1);
+                if(!$sender[0]) return $this->services->msg_error($this->intl->trans("Expéditeur existant."), $this->intl->trans("Cet expéditeur existe déjà. Veuillez créer un nouvel expéditeur pour continuer."));
+
                 /** @var UploadedFile $logo */
                 $logo = $request->files->get("_logo");
                 if (isset($logo) && $logo->getError() == 0) {$loadFile  = $this->services->checkFile($logo, $this->ext, 1024000);
@@ -135,10 +139,11 @@ class BrandController extends AbstractController
                         -> setLogo('$buildImg')
                         -> setFavicon('$buildImg')
                         -> setEmail($request->request->get('_mail_support'))
-                        -> setNoreplyEmail($request->request->get('_mail_noreply'))
+                        -> setNoreplyEmail(("noreply".strstr($request->request->get('_mail_support'), '@')))
                         -> setIsDefault(1)
                         -> setPhone($request->request->get('_phone_support'))
-                        -> setCreatedAt(new \DatetimeImmutable())
+                        -> setUpdatedAt(new \DatetimeImmutable())
+                        -> setDefaultSender(($sender[1]) ? $sender[1] : $this->createSender($manager, $request->request->get('_sender')))
                         -> setCreator($creator);
                         // -> setObservations($request->request->get('observations'));
                         $this->bRepository->add($inBrand);
@@ -150,6 +155,9 @@ class BrandController extends AbstractController
         }else{
             $existBrand = $this->bRepository->findOneBy(['name'=> $request->request->get('_name_brand')]);
             if($existBrand){ return $this->services->msg_error($this->intl->trans("Création de marque échouée."), $this->intl->trans("Ce nom de marque n'est pas disponible. Veuillez changer le nom pour continuer."));}
+            $sender = $this->checkSender($executeReq[0], $request->request->get('_sender'), $manager);
+            if(!$sender[0]) return $this->services->msg_error($this->intl->trans("Expéditeur existant."), $this->intl->trans("Cet expéditeur existe déjà. Veuillez créer un nouvel expéditeur pour continuer."));
+
             $uid = $this->services->getUniqid();
             /** @var UploadedFile $logo */
             $logo = $request->files->get("_logo");
@@ -159,13 +167,8 @@ class BrandController extends AbstractController
                 }else{
                     return $this->services->msg_error($this->intl->trans("Image logo sélectionnée incorrecte."), $this->intl->trans("Le format du logo que vous avez sélectionné est incorrect ou la taille est trop grande. veuillez choisir une autre image SVP."));
                 }
-                // dd($upload_result);
             }
-            // $buildImg = $this->services->imageSetter($request , $request->request->get('_name_brand'));
-            // dd($buildImg);
-            // if (isset($buildImg['error']) && $buildImg['error'] == true){
-            //     return $this->services->ajax_error_crud($this->intl->trans('Traitement du fichier image de profil'), $avatarProcess['info']);
-            // }
+
             $newBrand   = new Brand;
             $newBrand   -> setManager($manager)
                         -> setStatus($this->services->status(1))
@@ -175,11 +178,12 @@ class BrandController extends AbstractController
                         -> setLogo($upload_result)
                         -> setFavicon($upload_result)
                         -> setEmail($request->request->get('_mail_support'))
-                        -> setNoreplyEmail($request->request->get('_mail_noreply'))
+                        -> setNoreplyEmail(("noreply".strstr($request->request->get('_mail_support'), '@')))
                         -> setIsDefault(1)
                         -> setPhone($request->request->get('_phone_support'))
                         -> setCreatedAt(new \DatetimeImmutable())
                         -> setCommission(0)
+                        -> setDefaultSender($this->createSender($manager, $request->request->get('_sender')))
                         -> setCreator($creator);
             $this->bRepository->add($newBrand);
             $msg1 =$this->intl->trans("Création de marque ").': '.$this->getUser()->getEmail();
@@ -187,6 +191,47 @@ class BrandController extends AbstractController
             //Envoie de mail pour la création de marque blanche
         }
         return $this->services->msg_success($msg1,$msg2);
+    }
+
+    //Make sender
+    public function createSender($manager, $_sender){
+        $newSender  = new Sender;
+        $newSender  -> setManager($manager)
+                    -> setStatus($this->services->status(1))
+                    -> setUid($this->services->getUniqid())
+                    -> setName($_sender)
+                    -> setCreatedAt(new \DatetimeImmutable())
+                    -> setCreateBy($this->getUser());
+        $this->sRepository->add($newSender);
+        return $newSender;
+    }
+    //Use this function notify sender in dataBase
+    public function checkSender($typeUser, $sender, $manager, $update = 0){
+        //si 1 continuer...
+        $eSender    = false;
+        $inSender   = $this->sRepository->findOneBy(['name'=> $sender]);
+
+        if($inSender) {
+            if($update){
+                if($typeUser == 0 || $typeUser == 1){
+                    //dd("Admin");
+                    if($manager->getId() == $inSender->getManager()->getId()) $eSender = true;
+                }else{
+                    if($typeUser == 3 || $typeUser == 2 ){
+                        if($this->getUser()->getAffiliateManager()->getId() == $inSender->getManager()->getId()){$eSender = true;};
+                        // dd("Revendeur", "utilisateur");
+                    }else{
+                        if($this->getUser()->getId() == $inSender->getManager()->getId()){ $eSender = true;}
+                        // dd("affilié revendeur", "affilié user");
+                    }
+                }
+            }
+        }else{
+            $eSender = true;
+        }
+        // $test = ($inSender) ? $inSender:'';
+        // // dd($eSender, $test);
+        return [$eSender, ($inSender) ? $inSender:''];
     }
     //This function reload brand
     #[Route('{_locale}/rbrand', name: 'rbrand')]
@@ -243,7 +288,7 @@ class BrandController extends AbstractController
                         'manager'   => [$checkBrand->getManager()->getUid(), $checkBrand->getUid()],
                         'urlSite'   => $checkBrand->getSiteUrl(),
                         'adressS'   => $checkBrand->getEmail(),
-                        'adressN'   => $checkBrand->getNoreplyEmail(),
+                        'sender'    => $checkBrand->getDefaultSender()->getName(),
                         'phone'     => $checkBrand->getPhone(),
                         'uriLogo'   => $checkBrand->getLogo(),
                         'status'    => $checkBrand->getStatus()->getCode(),
@@ -274,14 +319,16 @@ class BrandController extends AbstractController
                 $row['administrator']  = $getBrand->getManager()->getEmail();
                 $row['urlSite']        = $getBrand->getSiteUrl();
                 $row['emailV']         = ($getBrand->getValidator()) ? $getBrand->getValidator()->getEmail() : '';
+                $row['sender']         = $getBrand->getDefaultSender()->getName();
                 $row['status']         = $getBrand->getStatus()->getCode();
                 $row['createdAt']      = $getBrand->getCreatedAt()->format("d-m-Y H:i");
                 $row['action']         = [
                                             'uid'       => $getBrand->getUid(),
                                             'status'    => $getBrand->getStatus()->getCode(),
                                             'pvalidate' => $this->pAllAccess,
-                                            'link'      => 'https:'.$getBrand->getSiteUrl(),
-                                            'name'      => $getBrand->getName()
+                                            'link'      => 'https://'.$getBrand->getSiteUrl(),
+                                            'name'      => $getBrand->getName(),
+                                            'observations'=> $getBrand->getObservations()
                 ];
                 $data[]                = $row;
             }
