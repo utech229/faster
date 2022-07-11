@@ -535,9 +535,7 @@
                                         {% if permission(["PFIL0"], app.user) %}
                                         <div class="menu-item px-5">
                                             <a href="{{path("app_profile")}}" class="menu-link px-5">{% trans %}Mon profil{% endtrans %}  <span class="menu-badge">
-                                                <span class="badge badge-light-danger badge-circle fw-bolder fs-7">{{ app.user.role.name}}</span>
-                                            </span></a>
-                                           
+                                                <span class="badge badge-light-danger badge-circle fw-bolder fs-7">5</span>
                                         </div>
                                         {% endif %}
                                         {% if permission(["AFFL0"], app.user) %}
@@ -545,6 +543,9 @@
                                             <a href="{{path("app_affiliate_index")}}" class="menu-link px-5">{% trans %}Affiliés{% endtrans %}</a>
                                         </div>
                                         {% endif %}
+                                        <div class="menu-item px-5">
+                                            <span class="menu-link px-5 badge badge-light-danger text-danger">{{ app.user.role.name}}</span>
+                                        </div>
                                         <!--begin::Menu separator-->
                                         <div class="separator my-2"></div>
                                         <!--end::Menu separator-->
