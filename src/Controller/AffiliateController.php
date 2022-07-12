@@ -104,7 +104,7 @@ class AffiliateController extends AbstractController
         return $this->render('affiliate/index.html.twig', [
             'controller_name' => 'AffiliateController',
             'role'            => $this->roleRepository->getManageUserRole($this->getUser()->getRole()->getLevel()),
-            'title'           => $this->intl->trans('Mes affiliés').' - '. $this->brand->get()['name'],
+            'title'           => $this->intl->trans('Mes affiliés').' - '. $this->brand['name'],
             'pageTitle'       => [
                 [$this->intl->trans('Affiliés')],
             ],
