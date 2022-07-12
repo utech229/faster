@@ -62,12 +62,13 @@ var KTAddGroup = function() {
 
                                     t.isConfirmed, e.reset(), $('#list_user_add_group_id').val(null).trigger("change")
                                     n.hide();
-                                    $('#kt_modal_add_contact_group_reload_button').click();
+                                    
                                     if (importContact == 1) {
                                         importContact =2;
+                                        deleteG = 1;
                                     }else{
                                         importContact = 0;
-                                        
+                                        $('#kt_modal_add_contact_group_reload_button').click();
                                     }
 
                                     let uid_user = document.querySelector('[data-kt-contact-user="user"]').value, uid = response.data.uid;
