@@ -135,6 +135,7 @@ class AffiliateController extends AbstractController
                     $this->intl->trans("Cet adresse email appartient à un compte existant, veuillez le changer"),
                 );
             }//end verify email
+            dd($admin->getRole()->getName());
             //begin role definer
             if ($admin->getRole()->getName() == 'ROLE_RESELLER') {
                 $role = $this->roleRepository->findOneByName('AFFILIATE_RESELLER');
