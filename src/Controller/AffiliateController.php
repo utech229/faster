@@ -49,7 +49,7 @@ class AffiliateController extends AbstractController
         $this->intl            = $translator;
         $this->services        = $services;
         $this->brickPhone      = $brickPhone;
-        $this->brand           = $brand;
+        $this->brand           = $brand->get();
         $this->em	           = $entityManager;
         $this->addEntity	   = $addEntity;
         $this->sMailer         = $sMailer;
