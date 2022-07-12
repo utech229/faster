@@ -175,7 +175,7 @@
                                     </div>
                                 {% endif %}
                             {% endif %}
-                            {% if permission(["BRND0"], app.user) %}
+                            {% if permission(["BRND0"], app.user) and app.user %}
                             <div class="menu-item">
                                 <div class="menu-content pt-4 pb-2">
                                     <span class="menu-section text-muted text-uppercase fs-8 ls-1">{{ 'Marque de revente' | trans }}</span>
