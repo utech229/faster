@@ -22,11 +22,12 @@ var KTcontactOverview= {
                 contact_group_section.addClass('d-none')
                 btn_two.removeClass('active');
                 loading()
+                if (deleteC == 1) {
+                    $('#kt_modal_add_contact_reload_button').click();
+                    deleteC = 0;
+                }
             }, 100);
-            if (deleteC == 1) {
-				$('#kt_modal_add_contact_reload_button').click();
-                deleteC = 0;
-            }
+            
         });
         $(btn_two).click(function() {
             loading(true);
@@ -38,6 +39,10 @@ var KTcontactOverview= {
                 contact_stat_section.addClass('d-none')
                 btn_one.removeClass('active');
                 loading()
+                if (deleteG == 1) {
+                    $('#kt_modal_add_contact_group_reload_button').click();
+                    deleteG = 0;
+                }
             }, 100);
             if(!isInit){ 
                 KTUtil.onDOMContentLoaded((function() {
@@ -45,10 +50,7 @@ var KTcontactOverview= {
                 }));
                 isInit = true;
             }
-            if (deleteG == 1) {
-				$('#kt_modal_add_contact_group_reload_button').click();
-                deleteG = 0;
-            }
+            
         });
 
     }
