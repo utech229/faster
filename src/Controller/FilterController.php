@@ -45,24 +45,27 @@ class FilterController extends AbstractController
 			return new JsonResponse($data);
 		}
 
-		$level = (int)$request->request->get("level", "1");
+ 		list($ut, $mId, $rq) = $this->src->checkThisUser($this->src->checkPermission("UTI2"));
 
-		$brand = $this->em->getRepository(Brand::class)->findOneByUid($request->request->get("brand", ""));
+		$users = $ut == 5 ? [$this->getUser()->getAffiliateManager()] : [$this->getUser()];
 
-		if(!$brand) return new JsonResponse($data);
+		if($ut < 4){
+			$level = (int)$request->request->get("level", "1");
+			$brand = $this->em->getRepository(Brand::class)->findOneByUid($request->request->get("brand", ""));
 
-		//$users = $this->em->getRepository(User::class)->getUsersByPermission("", 2, $brand->getManager()->getId(), $level);
+			if(!$brand) return new JsonResponse($data);
 
-		foreach ($brand->getUsers() as $key => $user) {
-			if(($level == 1 && $user->getAffiliateManager() == null) || ($level == 2 && $user->getAffiliateManager() != null) || ($level != 1 && $level != 2))
-			{
-				$data["results"][] = [
-					"id"=>$user->getUid(),
-					"text"=>$user->getEmail(),
-				];
+			foreach ($users as $key => $user) {
+				if(($level == 1 && $user->getAffiliateManager() == null) || ($level == 2 && $user->getAffiliateManager() != null) || ($level != 1 && $level != 2))
+				{
+					$data["results"][] = [
+						"id"=>$user->getUid(),
+						"text"=>$user->getEmail(),
+					];
+				}
 			}
 		}
-
+		
 		return new JsonResponse($data);
 	}
 

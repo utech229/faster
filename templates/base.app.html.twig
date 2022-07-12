@@ -175,7 +175,7 @@
                                     </div>
                                 {% endif %}
                             {% endif %}
-                            {% if permission(["BRND0"], app.user) %}
+                            {% if permission(["BRND0"], app.user) and app.user %}
                             <div class="menu-item">
                                 <div class="menu-content pt-4 pb-2">
                                     <span class="menu-section text-muted text-uppercase fs-8 ls-1">{{ 'Marque de revente' | trans }}</span>
@@ -339,6 +339,16 @@
                                         <i class="bi bi-cash-coin fs-3"></i>
                                         </span>
                                         <span class="menu-title">{{ "Commissions" | trans }} </span>
+                                    </a>
+                                </div>
+                            {% endif %}
+                            {% if permission(["BALA0"], app.user, false) %}
+								<div class="menu-item">
+									<a class="menu-link {{ menu(route, 'history_balance') }}" href="{{ path('history_balance') }}">
+										<span class="menu-icon">
+										<i class="bi bi-bank2 fs-3"></i>
+										</span>
+										<span class="menu-title">{{ 'Historique de balance' | trans }} </span>
                                     </a>
                                 </div>
                             {% endif %}
