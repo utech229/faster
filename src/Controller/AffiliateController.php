@@ -137,10 +137,10 @@ class AffiliateController extends AbstractController
             }//end verify email
             dd($admin->getRole()->getName());
             //begin role definer
-            if ($admin->getRole()->getName() == 'ROLE_RESELLER') {
-                $role = $this->roleRepository->findOneByName('AFFILIATE_RESELLER');
+            if ($admin->getRole()->getName() == 'RESELLER') {
+                $role = $this->roleRepository->findOneByName('RESELLER');
             }else
-            $role = $this->roleRepository->findOneByName('AFFILIATE_USER');
+            $role = $this->roleRepository->findOneByName('USER');
             //end role definer
             //profil photo setting begin
             $avatarProcess = $this->addEntity->profilePhotoSetter($request , $affiliate);
