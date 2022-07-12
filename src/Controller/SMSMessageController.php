@@ -556,7 +556,7 @@ class SMSMessageController extends AbstractController
 
 			$this->em->persist($manager);
 
-			$this->src->addBalanceChange($manager, $myBalance, $amount, "Suppression de message SMS", $message->getUid());
+			$this->src->addBalanceChange($manager, $myBalance, $amount, $this->intl->trans("Suppression du message SMS au '%1%'", ["%1%"=>$message->getPhone()]), $message->getUid());
 		}
 
 		$this->em->remove($message);
@@ -652,7 +652,7 @@ class SMSMessageController extends AbstractController
 			->setUpdatedAt(new \DateTimeImmutable());
 		$this->em->persist($message);
 
-		$this->src->addBalanceChange($user, $lastBalance, -$amount, "Lancement de message SMS", $message->getUid());
+		$this->src->addBalanceChange($user, $lastBalance, -$amount, $this->intl->trans("Lancement du message SMS au '%1%'", ["%1%"=>$message->getPhone()]), $message->getUid());
 
 		return $this->src->msg_success(
 			$this->intl->trans("Le message '%1%' passe en %2%.", ["%1%"=>$message->getUid(), "%2%"=>$status->getName()]),
@@ -673,7 +673,7 @@ class SMSMessageController extends AbstractController
 			->setUpdatedAt(new \DateTimeImmutable());
 		$this->em->persist($message);
 
-		$this->src->addBalanceChange($user, $lastBalance, $amount, "Suppression de message SMS", $message->getUid());
+		$this->src->addBalanceChange($user, $lastBalance, $amount, $this->intl->trans("Suspension du message SMS au '%1%'", ["%1%"=>$message->getPhone()]), $message->getUid());
 
 		return $this->src->msg_success(
 			$this->intl->trans("Le message '%1%' passe en %2%.", ["%1%"=>$message->getUid(), "%2%"=>$status->getName()]),
