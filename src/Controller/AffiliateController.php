@@ -108,7 +108,7 @@ class AffiliateController extends AbstractController
             'pageTitle'       => [
                 [$this->intl->trans('Affiliés')],
             ],
-            'brand'           => $this->brand->get(),
+            'brand'           => $this->brand,
             'brands'          => $brands,
             'baseUrl'         => $this->baseUrl,
             'affiliateform'        => $form->createView(),
