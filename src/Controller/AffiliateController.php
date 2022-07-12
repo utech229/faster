@@ -136,7 +136,7 @@ class AffiliateController extends AbstractController
                 );
             }//end verify email
             //begin role definer
-            if ($admin->getRole()->getName() == 'RESELLER') {
+            if ($admin->getRole()->getName() == 'ROLE_RESELLER') {
                 $role = $this->roleRepository->findOneByName('AFFILIATE_RESELLER');
             }else
             $role = $this->roleRepository->findOneByName('AFFILIATE_USER');
