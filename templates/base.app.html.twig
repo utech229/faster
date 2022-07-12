@@ -342,6 +342,16 @@
                                     </a>
                                 </div>
                             {% endif %}
+                            {% if permission(["BALA0"], app.user, false) %}
+								<div class="menu-item">
+									<a class="menu-link {{ menu(route, 'history_balance') }}" href="{{ path('history_balance') }}">
+										<span class="menu-icon">
+										<i class="bi bi-bank2 fs-3"></i>
+										</span>
+										<span class="menu-title">{{ 'Historique de balance' | trans }} </span>
+                                    </a>
+                                </div>
+                            {% endif %}
                             {% if permission(["DEV0", "DEV1", "DEV2"], app.user, false) %}
                             <div class="menu-item">
                                 <div class="menu-content pt-4 pb-2">

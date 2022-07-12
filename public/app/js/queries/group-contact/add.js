@@ -61,12 +61,16 @@ var KTAddGroup = function() {
                                 if (response.type === 'success') {
 
                                     t.isConfirmed, e.reset(), $('#list_user_add_group_id').val(null).trigger("change")
-                                    $('#kt_modal_add_contact_group_reload_button').click();
                                     n.hide();
+                                    $('#kt_modal_add_contact_group_reload_button').click();
+                                    if (importContact == 1) {
+                                        importContact =2;
+                                    }else{
+                                        importContact = 0;
+                                        
+                                    }
 
                                     let uid_user = document.querySelector('[data-kt-contact-user="user"]').value, uid = response.data.uid;
-
-                                    importContact == 1 ? importContact =2 : "";
                                         
                                     rechargeGroups(uid_user,uid);
                                 }

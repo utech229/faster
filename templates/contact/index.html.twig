@@ -250,7 +250,7 @@
                     <!--end::Svg Icon-->{{"Exporter"| trans}}</button>
                     <!--end::Export-->
 
-                    <button type="button" data-bs-toggle="modal" data-bs-target="#kt_modal_create_contact"  class="btn btn-light-primary {{ pCreate ? "" : "d-none"}}">
+                    <button type="button" id="add_contact_id" class="btn btn-light-primary {{ pCreate ? "" : "d-none"}}">
                         <!--begin::Svg Icon | path: icons/duotune/general/gen035.svg-->
                         <span class="svg-icon svg-icon-3">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -543,7 +543,7 @@
                                         <div data-repeater-list="kt_docs_repeater_basic">
                                                         <div class="separator separator-dotted separator-content border-dark my-2 mb-15">
                                                             <div class="row fv">
-                                                                        <label class="form-label fs-6 fw-bold">{% trans %}Groupe de contacts{% endtrans %}</label>
+                                                                        {# <label class="form-label fs-6 fw-bold">{% trans %}Groupe de contacts{% endtrans %}</label> #}
                                                                         <select name="groupe" id="group_id_add_contact" data-allow-clear="true" data-control="select2" data-dropdown-parent="#kt_modal_create_contact" class="form-select form-select-solid fw-bolder min-w-300px mw-300px" data-placeholder="{{'Selectionnez un groupe'| trans}}"/>
                                                                                 <option value="">Sélectionnez un groupe</option>
                                                                                 
@@ -707,7 +707,7 @@
                                 <div class="form-group">
                                     <div class="separator separator-dotted separator-content border-dark my-2 mb-15">
                                             <div class="row fv">
-                                                        <label class="form-label fs-6 fw-bold">{% trans %}Groupe de contacts{% endtrans %}</label>
+                                                        {# <label class="form-label fs-6 fw-bold">{% trans %}Groupe de contacts{% endtrans %}</label> #}
                                                         <select name="groupe" id="id_group_contact" data-allow-clear="true" data-control="select2" data-dropdown-parent="#kt_modal_update_contact" class="form-select form-select-solid fw-bolder min-w-300px mw-300px" data-placeholder="{{'Selectionnez un groupe'| trans}}"/>
                                                                 <option value="">Sélectionnez un groupe</option>
                                                                 {% for group in groups %}
@@ -1206,6 +1206,7 @@
         <!--end::Modal dialog-->
     </div>
 <!--end::Modal - Importation contacts-->
+
 
 {% endblock %}
 

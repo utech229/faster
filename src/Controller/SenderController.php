@@ -170,11 +170,12 @@ class SenderController extends AbstractController
 	#[Route('/all', name: 'sender_all', methods: ['POST'])]
 	public function all(Request $request): JsonResponse
 	{
-		$session = $this->getUser();
-		if (!$this->isCsrfTokenValid('sender', $request->request->get('_token')))
-			return $this->src->no_access($this->intl->trans("Récupération des senders bloquée. (Erreur de requête)"));
-
 		if(!$this->pAccess) return $this->src->no_access($this->intl->trans("Acces refusé à la récupération des senders"));
+
+		if (!$this->isCsrfTokenValid('sender', $request->request->get('_token'))) return $this->src->msg_warning(
+			$this->intl->trans("Clé CSRF invalide."),
+			$this->intl->trans("Clé CSRF invalide. Rechargez la page."),
+		);
 
 		$senders = [];
 		$request_sender = [];

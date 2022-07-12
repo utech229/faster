@@ -120,8 +120,6 @@ class SMSCampaignController extends AbstractController
 	#[Route('/listen', name: 'campaign_sms_listen', methods: ['GET','POST'])]
 	public function listen(Request $request)
 	{
-		$session = $this->getUser();
-
 		// $campaigns = $this->em->getRepository(SMSCampaign::class)->findAll();
 		// foreach ($campaigns as $campaign) {
 		// 	if($campaign->getStatus()->getCode() == 5){
@@ -350,7 +348,7 @@ class SMSCampaignController extends AbstractController
 
 			$this->em->persist($manager);
 
-			$this->src->addBalanceChange($manager, $myBalance, $amount, "Suppression de campagne SMS", $campaign->getUid());
+			$this->src->addBalanceChange($manager, $myBalance, $amount, $this->intl->trans("Suppression de la campagne SMS '%1%'", ["%1%"=>$campaign->getName()]), $campaign->getUid());
 		}
 
 		$file = $this->em->getRepository(SMSMessageFile::class)->findOneByCampaign($campaign);
@@ -1297,11 +1295,11 @@ class SMSCampaignController extends AbstractController
 			->setUpdatedAt(new \DateTimeImmutable());
 		$this->em->persist($campaign);
 
-		$this->src->addBalanceChange($user, $lastBalance, -$amount, "Lancement de campagne SMS", $campaign->getUid());
+		$this->src->addBalanceChange($user, $lastBalance, -$amount, $this->intl->trans("Lancement de campagne SMS '%1%'", ["%1%"=>$campaign->getName()]), $campaign->getUid());
 
 		return $this->src->msg_success(
 			$this->intl->trans("La campagne '%1%' passe en %2%.", ["%1%"=>$campaign->getUid(), "%2%"=>$status->getName()]),
-			$this->intl->trans("La campagne %1% dans la liste avec succès.", ["%1%"=>$status->getName()]),
+			$this->intl->trans("La campagne %1% dans la liste avec succès.", ["%1%"=>strtolower($status->getName())]),
 		);
 	}
 
@@ -1318,11 +1316,11 @@ class SMSCampaignController extends AbstractController
 			->setUpdatedAt(new \DateTimeImmutable());
 		$this->em->persist($campaign);
 
-		$this->src->addBalanceChange($user, $lastBalance, $amount, ucfirst($status->getName())." de campagne SMS", $campaign->getUid());
+		$this->src->addBalanceChange($user, $lastBalance, $amount, $this->intl->trans("Suspenssion de campagne SMS '%1%'", ["%1%"=>$campaign->getName()]), $campaign->getUid());
 
 		return $this->src->msg_success(
 			$this->intl->trans("La campagne '%1%' passe en %2%.", ["%1%"=>$campaign->getUid(), "%2%"=>$status->getName()]),
-			$this->intl->trans("La campagne %1% avec succès.", ["%1%"=>$status->getName()]),
+			$this->intl->trans("La campagne %1% avec succès.", ["%1%"=>strtolower($status->getName())]),
 		);
 	}
 
