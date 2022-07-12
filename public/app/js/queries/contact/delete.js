@@ -4,7 +4,7 @@ $(document).on('click', ".contactDeleter", function() {
 	let uid = $(this).data('id');
     let tabUid  =  [];
     tabUid.push(uid);
-	$(document).trigger('entityUpBegin', ['#', uid, 'fa-trash-alt']);
+	$(document).trigger('entityUpBegin', ['#deleteC', uid, 'fa-trash-alt']);
 	Swal.fire({
 		text: _Deletion_request,
 		icon: "warning",
@@ -24,7 +24,7 @@ $(document).on('click', ".contactDeleter", function() {
 				data: { tabUid: tabUid, _token: function(){ return csrfToken; }},
 				dataType: "json",
 				success: function(response) {
-					$(document).trigger('securityFirewall', [response, '#', uid, 'fa-trash-alt']);
+					$(document).trigger('securityFirewall', [response, '#deleteC', uid, 'fa-trash-alt']);
 					Swal.fire({
                         text: response.message,
                         icon: response.type,
@@ -36,17 +36,17 @@ $(document).on('click', ".contactDeleter", function() {
                     });
                     if (response.status === 'success') {
 
-                        $(document).trigger('entityUpStop', ['#', uid, 'fa-trash-alt']);
+                        $(document).trigger('entityUpStop', ['#deleteC', uid, 'fa-trash-alt']);
                         $('#kt_modal_add_contact_reload_button').click();
                     }
 				},
                 error:function(response) {
 					$(document).trigger('onAjaxError');
-					$(document).trigger('entityUpStop', ['#', uid, 'fa-trash-alt']);
+					$(document).trigger('entityUpStop', ['#deleteC', uid, 'fa-trash-alt']);
 				}
 			});	
 		} else if (result.dismiss === 'cancel') {
-			$(document).trigger('entityUpStop', ['#', uid, 'fa-trash-alt']);
+			$(document).trigger('entityUpStop', ['#deleteC', uid, 'fa-trash-alt']);
 			
 		}
 	});

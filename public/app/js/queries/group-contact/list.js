@@ -74,6 +74,7 @@ var KTGroupList = function() {
                         }
                     }).then((function(t) {
                         if (t.value) {
+                            loading(true);
                             let tabUid  =  [];
                             c.forEach((t => {
                                         if(t.checked && $(t).attr("data-value") != undefined){
@@ -102,6 +103,7 @@ var KTGroupList = function() {
                                             let user = document.querySelector('[data-kt-contact-user="user"]').value;
                                             rechargeGroups(user);
                                             $('#kt_modal_add_contact_group_reload_button').click();
+						                    deleteC =	1;
                                         }
                                     },
                                     error: function () { 
@@ -301,7 +303,7 @@ var KTGroupList = function() {
                                 var deleterIcon =  `<!--begin::Delete-->
                                 <button class="btn btn-icon btn-active-light-primary w-30px h-30px groupDeleter" 
                                     data-id=`+data+` >
-                                        <i id=`+data+` class="text-danger fa fa-trash-alt"></i>
+                                        <i id="deleteG`+data+`" class="text-danger fa fa-trash-alt"></i>
                                 </button>
                                 <!--end::Delete-->`;
                                 var createCampaignIcon =  `<!--begin::Campaign-->
@@ -325,7 +327,9 @@ var KTGroupList = function() {
                     lengthMenu: [10, 25, 100, 250, 500, 1000],
                     language: {
                         url: _language_datatables,
-                    },                  
+                    },
+                    dom: `<"table-responsive w-100%"rtF>
+					<"row"<"col-sm-6"l><"col-sm-6"p>>`,                  
                 }),
                 $('#kt_modal_add_contact_group_reload_button').on('click', function() {
                     e.ajax.reload(null, false);

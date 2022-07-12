@@ -4,7 +4,7 @@ $(document).on('click', ".groupDeleter", function() {
 	let uid = $(this).data('id');
     let tabUid  =  [];
     tabUid.push(uid)
-	$(document).trigger('entityUpBegin', ['#', uid, 'fa-trash-alt']);
+	$(document).trigger('entityUpBegin', ['#deleteG', uid, 'fa-trash-alt']);
 	Swal.fire({
 		text: _Deletion_request,
 		icon: "warning",
@@ -24,7 +24,7 @@ $(document).on('click', ".groupDeleter", function() {
 				data: { tabUid: tabUid, _token: function(){ return csrfToken; }},
 				dataType: "json",
 				success: function(response) {
-					$(document).trigger('securityFirewall', [response, '#', uid, 'fa-trash-alt']);
+					$(document).trigger('securityFirewall', [response, '#deleteG', uid, 'fa-trash-alt']);
 					Swal.fire({
                         text: response.message,
                         icon: response.type,
@@ -36,19 +36,20 @@ $(document).on('click', ".groupDeleter", function() {
                     });
                     if (response.status === 'success') {
 
-                        $(document).trigger('entityUpStop', ['#', uid, 'fa-trash-alt']);
+                        $(document).trigger('entityUpStop', ['#deleteG', uid, 'fa-trash-alt']);
 						let user = document.querySelector('[data-kt-contact-user="user"]').value;
                         rechargeGroups(user);
 						$('#kt_modal_add_contact_group_reload_button').click();
+						deleteC =	1;
                     }
 				},
                 error:function(response) {
 					$(document).trigger('onAjaxError');
-					$(document).trigger('entityUpStop', ['#', uid, 'fa-trash-alt']);
+					$(document).trigger('entityUpStop', ['#deleteG', uid, 'fa-trash-alt']);
 				}
 			});	
 		} else if (result.dismiss === 'cancel') {
-			$(document).trigger('entityUpStop', ['#', uid, 'fa-trash-alt']);
+			$(document).trigger('entityUpStop', ['#deleteG', uid, 'fa-trash-alt']);
 			
 		}
 	});

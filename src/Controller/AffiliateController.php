@@ -44,12 +44,12 @@ class AffiliateController extends AbstractController
     AuthorizationRepository $authorizationRepository, uBrand $brand,ValidatorInterface $validator, sMailer $sMailer,
     DbInitData $dbInitData, AddEntity $addEntity, StatusRepository $statusRepository, BrandRepository $brandRepository)
     {
-        $this->baseUrl         = $baseUrl;
+        $this->baseUrl         = $baseUrl->init();
         $this->urlGenerator    = $urlGenerator;
         $this->intl            = $translator;
         $this->services        = $services;
         $this->brickPhone      = $brickPhone;
-        $this->brand           = $brand;
+        $this->brand           = $brand->get();
         $this->em	           = $entityManager;
         $this->addEntity	   = $addEntity;
         $this->sMailer         = $sMailer;
@@ -104,13 +104,13 @@ class AffiliateController extends AbstractController
         return $this->render('affiliate/index.html.twig', [
             'controller_name' => 'AffiliateController',
             'role'            => $this->roleRepository->getManageUserRole($this->getUser()->getRole()->getLevel()),
-            'title'           => $this->intl->trans('Mes affiliés').' - '. $this->brand->get()['name'],
+            'title'           => $this->intl->trans('Mes affiliés').' - '. $this->brand['name'],
             'pageTitle'       => [
                 [$this->intl->trans('Affiliés')],
             ],
-            'brand'           => $this->brand->get(),
+            'brand'           => $this->brand,
             'brands'          => $brands,
-            'baseUrl'         => $this->baseUrl->init(),
+            'baseUrl'         => $this->baseUrl,
             'affiliateform'        => $form->createView(),
             'pCreateAffiliate'     => $this->pCreate,
             'pEditAffiliate'       => $this->pUpdate,
@@ -137,9 +137,9 @@ class AffiliateController extends AbstractController
             }//end verify email
             //begin role definer
             if ($admin->getRole()->getName() == 'RESELLER') {
-                $role = $this->roleRepository->findOneByName('AFFILIATE_RESELLER');
+                $role = $this->roleRepository->findOneByName('RESELLER');
             }else
-            $role = $this->roleRepository->findOneByName('AFFILIATE_USER');
+            $role = $this->roleRepository->findOneByName('USER');
             //end role definer
             //profil photo setting begin
             $avatarProcess = $this->addEntity->profilePhotoSetter($request , $affiliate);

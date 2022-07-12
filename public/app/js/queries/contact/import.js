@@ -35,7 +35,7 @@ var KTImportContact = function() {
                     e.preventDefault();
                     document.querySelector('[data-kt-contact-user="user"]').value == "" ?
                     Swal.fire({
-                        text: _selectUser,
+                        html: _selectUser,
                         icon: "warning",
                         buttonsStyling: !1,
                         confirmButtonText: _Form_Ok_Swal_Button_Text_Notification,
