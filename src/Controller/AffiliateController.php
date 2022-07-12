@@ -44,7 +44,7 @@ class AffiliateController extends AbstractController
     AuthorizationRepository $authorizationRepository, uBrand $brand,ValidatorInterface $validator, sMailer $sMailer,
     DbInitData $dbInitData, AddEntity $addEntity, StatusRepository $statusRepository, BrandRepository $brandRepository)
     {
-        $this->baseUrl         = $baseUrl;
+        $this->baseUrl         = $baseUrl->init();
         $this->urlGenerator    = $urlGenerator;
         $this->intl            = $translator;
         $this->services        = $services;
@@ -110,7 +110,7 @@ class AffiliateController extends AbstractController
             ],
             'brand'           => $this->brand->get(),
             'brands'          => $brands,
-            'baseUrl'         => $this->baseUrl->init(),
+            'baseUrl'         => $this->baseUrl,
             'affiliateform'        => $form->createView(),
             'pCreateAffiliate'     => $this->pCreate,
             'pEditAffiliate'       => $this->pUpdate,
