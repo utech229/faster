@@ -22,7 +22,7 @@ const SMSListMessageManager = function(){
 		},
 		{ // Expéditeur
 			targets: 1,
-			responsivePriority: 3,
+			responsivePriority: 2,
 			render: function(data, type, full, meta) {
 				return "<span class='badge badge-light fw-bold me-auto'>"+data+"</span>";
 			},
@@ -30,7 +30,7 @@ const SMSListMessageManager = function(){
 		},
 		{ // Date d'envoi
 			targets: 2,
-			responsivePriority: 2,
+			responsivePriority: 4,
 			render: function(data, type, full, meta) {
 				return data;//viewTime(data);
 			},
@@ -45,7 +45,7 @@ const SMSListMessageManager = function(){
 		},
 		{ // Nombre de page
 			targets: 4,
-			responsivePriority: 4,
+			responsivePriority: 6,
 			render: function(data, type, full, meta) {
 				return "<div class='w-50 text-center'>"+data+"</div>";
 			},
@@ -53,20 +53,27 @@ const SMSListMessageManager = function(){
 		},
 		{ // Infos
 			targets: 5,
-			responsivePriority: 5,
+			responsivePriority: 7,
 			render: function(data, type, full, meta) {
 				return '<span class="badge badge-light-dark fw-bolder me-auto">'+data['name']+' ('+data['code']+'); '+data['operator']+'</span>';;
 			},
 		},
 		{ // Message
 			targets: 6,
-			responsivePriority: 7,
+			responsivePriority: 8,
 			render: function(data, type, full, meta) {
 				return data;
 			},
 		},
-		{ // Actions
+		{ // Date de création
 			targets: 7,
+			responsivePriority: 5,
+			render: function(data, type, full, meta) {
+				return viewTime(data);
+			},
+		},
+		{ // Actions
+			targets: 8,
 			orderable: !1,
 			responsivePriority: 3,
 			render : function (data, type, full, meta) {
@@ -106,58 +113,67 @@ const SMSListMessageManager = function(){
 		}
 	];
 
+	const initSelects = ()=>{
+					// Filter
+		$(brand).select2({
+			templateSelection: select2Format1,
+			templateResult: select2Format1,
+		});
+		// Charge par ajax les utilisateurs sous la marque sélectionnée
+		$(user).css("width","100%");
+		$(brand).on("change.select2", ($this)=>{
+			const $thisValue = $($this.target).val()
+			$(user).select2({data:[{id:'',text:''}]});
+			$(user).val("").trigger("change.select2");
+			$(user).select2({
+				data: dataUsers,
+				ajax: {
+					url: url_user,
+					type: "post",
+					data: {
+						token: filter_token,
+						brand: $thisValue,
+					},
+					/*success: function(response){
+						return response;
+					}*/
+				},
+				language: _locale,
+				width: 'resolve'
+			});
+		});
+
+		$(sender).css("width","100%");
+		$(user).on("change", ($this)=>{
+			$(sender).select2({data:[{id:'',text:''}]});
+			$(sender).val("").trigger("change.select2");
+			$(sender).select2({
+				data: dataSenders,
+				ajax: {
+					url: url_sender,
+					type: "post",
+					data: {
+						token: filter_token,
+						user: $($this.target).val(),
+					},
+					/*success: function(response){
+						return response;
+					}*/
+				},
+				language: _locale,
+				width: 'resolve'
+			});
+		});
+
+		if(brandInit) $(brand).val(brandInit).trigger("change.select2");
+
+		if(userInit) $(user).val(userInit).trigger("change.select2"); else $(user).val("").trigger("change.select2");
+
+		if(senderInit) $(sender).val(senderInit).trigger("change.select2"); else $(sender).val("").trigger("change.select2");
+	}
+
 	return {
 		init: ()=>{
-			$(brand).select2({
-				templateSelection: select2Format1,
-				templateResult: select2Format1
-			});
-
-			$(user).css("width","100%");
-			$(brand).on("change", ($this)=>{
-				$(user).select2({data:[{id:'',text:''}]});
-				$(user).val("").trigger("change");
-				$(user).select2({
-					ajax: {
-						url: url_user,
-						type: "post",
-						data: {
-							token: filter_token,
-							brand: $($this.target).val(),
-						},
-						/*success: function(response){
-							return response;
-						}*/
-					},
-					language: _locale,
-					width: 'resolve'
-				});
-			});
-
-			$(sender).css("width","100%");
-			$(user).on("change", ($this)=>{
-				$(sender).select2({data:[{id:'',text:''}]});
-				$(sender).val("").trigger("change");
-				$(sender).select2({
-					ajax: {
-						url: url_sender_names,
-						type: "post",
-						data: {
-							token: filter_token,
-							user: $($this.target).val(),
-						},
-						/*success: function(response){
-							return response;
-						}*/
-					},
-					language: _locale,
-					width: 'resolve'
-				});
-			});
-
-			if(brandInit) $(brand).val(brandInit).trigger("change");
-			if(userInit) $(user).val(userInit).trigger("change");
-
 			datatableMessage = $(el).DataTable({ // Initiation du datatable
 				responsive: true,
 				ajax: {
@@ -200,25 +216,6 @@ const SMSListMessageManager = function(){
 				},
 				dom: '<"top text-end bt-export d-none"B>rtF<"row"<"col-sm-6"l><"col-sm-6"p>>',
 			});
-
-			// Action sur bouton export
-			$("#export").on('click', ($this)=>{ $this.preventDefault(); return $(".bt-export").hasClass('d-none')?$(".bt-export").removeClass('d-none'):$(".bt-export").addClass('d-none'); });
-
-			$("#search").on('keyup', ($this)=>{ datatableMessage.search($this.target.value).draw(); }); // Recherche dans l'input search
-
-			// Si bouton reset du filtre et cliqué
-			$("#menu-filter #reset").on("click", ()=>{
-				if(brandInit) $(brand).val(brandInit).trigger("change");
-				if(userInit) $(user).val(userInit).trigger("change");
-				$(sender).val("").trigger("change");
-				$(status).val("").trigger("change");
-				$(periode).val("1w").trigger("change");
-				loading(true);
-				datatableMessage.ajax.reload();
-			});
-
-			// Si bouton submit du filtre et cliqué
-			$("#menu-filter #submit").on("click", ()=>{loading(true); datatableMessage.ajax.reload();});
 
 			datatableMessage.on('draw', ()=>{ // A chaque rafraichissement du tableau
 				const view = datatableMessage.data().context[0].aiDisplay;
@@ -329,6 +326,25 @@ const SMSListMessageManager = function(){
 				});
 				loading();
 			});
+
+			// Action sur bouton export
+			$("#export").on('click', ($this)=>{ $this.preventDefault(); return $(".bt-export").hasClass('d-none')?$(".bt-export").removeClass('d-none'):$(".bt-export").addClass('d-none'); });
+
+			$("#search").on('keyup', ($this)=>{ datatableMessage.search($this.target.value).draw(); }); // Recherche dans l'input search
+
+			initSelects()
+
+			// Si bouton reset du filtre et cliqué
+			$("#menu-filter #reset").on("click", ()=>{
+				initSelects();
+				$(status).val("").trigger("change");
+				$(periode).val("1w").trigger("change");
+				loading(true);
+				datatableMessage.ajax.reload();
+			});
+
+			// Si bouton submit du filtre et cliqué
+			$("#menu-filter #submit").on("click", ()=>{loading(true); datatableMessage.ajax.reload();});
 		}
 	}
 }();

@@ -17,14 +17,69 @@ const SMSMewMessageManager = function(){
 	;
 	var intlTel = null;
 
+	const initSelects = ()=>{
+					// Filter
+		$(brand).select2({
+			templateSelection: select2Format1,
+			templateResult: select2Format1,
+		});
+		// Charge par ajax les utilisateurs sous la marque sélectionnée
+		$(user).css("width","100%");
+		$(brand).on("change.select2", ($this)=>{
+			const $thisValue = $($this.target).val()
+			if(typeof defaultSenders[$thisValue] !== "undefined") viewAlert("#message_modal_scroll", defaultSenders[$thisValue].name);
+			$(user).select2({data:[{id:'',text:''}]});
+			$(user).val("").trigger("change.select2");
+			$(user).select2({
+				data: dataUsers,
+				ajax: {
+					url: url_user,
+					type: "post",
+					data: {
+						token: filter_token,
+						brand: $thisValue,
+					},
+					/*success: function(response){
+						return response;
+					}*/
+				},
+				language: _locale,
+				width: 'resolve'
+			});
+		});
+
+		$(sender).css("width","100%");
+		$(user).on("change", ($this)=>{
+			$(sender).select2({data:[{id:'',text:''}]});
+			$(sender).val("").trigger("change.select2");
+			$(sender).select2({
+				data: dataSenders,
+				ajax: {
+					url: url_sender,
+					type: "post",
+					data: {
+						token: filter_token,
+						user: $($this.target).val(),
+					},
+					/*success: function(response){
+						return response;
+					}*/
+				},
+				language: _locale,
+				width: 'resolve'
+			});
+		});
+
+		if(brandInit) $(brand).val(brandInit).trigger("change.select2");
+
+		if(userInit) $(user).val(userInit).trigger("change.select2"); else $(user).val("").trigger("change.select2");
+
+		if(senderInit) $(sender).val(senderInit).trigger("change.select2"); else $(sender).val("").trigger("change.select2");
+	}
+
 	return {
 		init: ()=>{
 			intlTel = intlPhone(message_phone);
-
-			$(brand).select2({
-				templateSelection: select2Format1,
-				templateResult: select2Format1
-			});
 
 			// Champ date et heure
 			const now = moment().add(1,"h");
@@ -40,54 +95,13 @@ const SMSMewMessageManager = function(){
 			$(datetime_message).flatpickr(flatpickr);
 			$("[name=timezone]").val(now.format("Z")).trigger("change");
 
-			$(user).css("width","100%");
-			$(brand).on("change", ($this)=>{
-				$(user).select2({data:[{id:'',text:''}]});
-				$(user).val("").trigger("change");
-				$(user).select2({
-					ajax: {
-						url: url_user,
-						type: "post",
-						data: {
-							token: filter_token,
-							brand: $($this.target).val(),
-						},
-						/*success: function(response){
-							return response;
-						}*/
-					},
-					language: _locale,
-					width: 'resolve'
-				});
-			});
-
-			$(sender).css("width","100%");
-			$(user).on("change", ($this)=>{
-				$(sender).select2({data:[{id:'',text:''}]});
-				$(sender).val("").trigger("change");
-				$(sender).select2({
-					ajax: {
-						url: url_sender,
-						type: "post",
-						data: {
-							token: filter_token,
-							user: $($this.target).val(),
-						},
-						/*success: function(response){
-							return response;
-						}*/
-					},
-					language: _locale,
-					width: 'resolve'
-				});
-			});
-
-			if(brandInit) $(brand).val(brandInit).trigger("change");
+			initSelects()
 
 			$(btnClose).on("click", ()=>{modal.hide()})
 			$(modalClose).on("click", ()=>{modal.hide()})
 
-			$(btn_new).on("click", (e)=>{
+			$(btn_new).on("click", ($this)=>{
+				initSelects()
 				$(message_phone).val("").trigger("change");
 				$(datetime_message).val("").trigger("change");
 				$(message).val("").trigger("change");
@@ -116,8 +130,10 @@ const SMSMewMessageManager = function(){
 							if(typeof datatableMessage === 'undefined'){
 								swalConfirm("success", (response.message)+"<br/>"+loadPage, ()=>{window.location.replace(url_message)});
 							}else{
+								swalSimple(response.type, response.message);
 								datatableMessage.ajax.reload();
 							}
+							modal.hide()
 						}else{
 							swalSimple(response.type, response.message);
 						}

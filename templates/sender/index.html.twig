@@ -62,14 +62,13 @@
 							<div class="mb-5 {% if userType > 3 %}sr-only{% endif %}">
 								<label class="form-label fs-6 fw-bold">{{ 'Utilisateur' | trans }} :</label>
 								<select class="form-select form-select-solid fw-bolder" data-kt-select2="true" data-placeholder="{{"Choisissez l'utilisateur"| trans}}" data-allow-clear="true" id="user">
-									<option value="">{{"Tous"|trans}}</option>
 								</select>
 							</div>
 							<!--end::Input group-->
 							<!--begin::Input group-->
 							<div class="mb-5">
 								<label class="form-label fs-6 fw-bold">{% trans %}Statut{% endtrans %} :</label>
-								<select id="status" data-hide-search="true" data-allow-clear="true" data-control="select2" class="form-select form-select-solid fw-bolder" data-placeholder="{{'Statut des identifiants' | trans}}">
+								<select id="status" data-hide-search="true" data-allow-clear="true" data-control="select2" class="form-select form-select-solid fw-bolder" data-placeholder="{{'Statut des expéditeurs' | trans}}">
 									<option value="">{{"Tous"|trans}}</option>
 									{% for oneStatus in status %}
 										<option value="{{ oneStatus.uid }}">{{ oneStatus.name }}</option>
@@ -94,18 +93,27 @@
 				<div class="card-toolbar">
 					<!--begin::Button-->
 					{% if pCreate %}
-						<button type="button" id="add_sender" class="btn btn-light-primary">
-							<!--begin::Svg Icon | path: icons/duotune/general/gen035.svg-->
-							<span class="svg-icon svg-icon-3">
-								<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-									<rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="currentColor" />
-									<rect x="10.8891" y="17.8033" width="12" height="2" rx="1" transform="rotate(-90 10.8891 17.8033)" fill="currentColor" />
-									<rect x="6.01041" y="10.9247" width="12" height="2" rx="1" fill="currentColor" />
-								</svg>
-							</span>
-							<!--end::Svg Icon-->
-							{% trans %}Nouvel{% endtrans %}
-						</button>
+						<div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+							<button id="add_sender" class="btn btn-light-primary btn-active-primary">
+								<!--begin::Svg Icon | path: icons/duotune/general/gen035.svg-->
+								<span class="svg-icon svg-icon-3">
+									<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+										<rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="currentColor" />
+										<rect x="10.8891" y="17.8033" width="12" height="2" rx="1" transform="rotate(-90 10.8891 17.8033)" fill="currentColor" />
+										<rect x="6.01041" y="10.9247" width="12" height="2" rx="1" fill="currentColor" />
+									</svg>
+								</span>
+								<!--end::Svg Icon-->
+								{{"Nouveau"|trans}}
+							</button>
+							<div class="btn-group" role="group">
+								<button id="btnGroupDrop1" type="button" class="btn btn-light-primary btn-active-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+								</button>
+								<ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+									<li><a class="dropdown-item" href="javascript:void" id="message_sms_create">{{"Message test"|trans}}</a></li>
+								</ul>
+							</div>
+						</div>
 					{% endif %}
 
 					<button type="button" id="export" class="btn btn-secondary ms-2">
@@ -175,16 +183,17 @@
 					<!--begin::Modal body-->
 					<div class="modal-body scroll-y mx-5 my-5">
 						<!--begin::Form-->
-						{{ form_start(form, {'attr':{'id':'form_sender', 'action':path('sender_new'), 'class':'row'}}) }}
+						<form id="form_sender" class="row" action="{{path('sender_new')}}" method="post">
+							<input type="hidden" name="sender_uid" value=""/>
 							<!--begin::Input group-->
-							<div class="fv-row mb-10 col-lg-6 {% if userType > 3 %}sr-only{% endif %}">
+							<div class="fv-row mb-5 col-lg-6 {% if userType > 3 %}sr-only{% endif %}">
 								<!--begin::Label-->
 								<label class="fs-5 fw-bolder form-label mb-2 required">
 									<span class="">{{'Marque'|trans}}</span>
 								</label>
 								<!--end::Label-->
 								<!--begin::Input-->
-								<select class="form-select form-select-solid fw-bolder" data-kt-select2="true" data-control="select2" data-dropdown-parent="#modal_sender" data-placeholder="{{"Choisissez la marque"| trans}}" data-allow-clear="true" name="brand" id="sender_brand">
+								<select class="form-select form-select-solid fw-bolder" data-kt-select2="true" data-control="select2" data-dropdown-parent="#modal_sender" data-placeholder="{{"Choisissez la marque"| trans}}" data-allow-clear="false" name="brand" id="sender_brand">
 									<option value="">{{"Toutes"|trans}}</option>
 									{% for brand in brands %}
 										<option value="{{ brand.uid }}" data-select2-avatar="{{asset('app/uploads/brands/logos/' ~ brand.logo)}}" data-select2-alt="{{brand.name}}">{{ brand.name }}</option>
@@ -193,50 +202,52 @@
 								<!--end::Input-->
 							</div>
 							<!--end::Input group--><!--begin::Input group-->
-							<div class="fv-row mb-10 col-lg-6 {% if userType > 3 %}sr-only{% endif %}">
+							<div class="fv-row mb-5 col-lg-6 {% if userType > 3 %}sr-only{% endif %}">
 								<!--begin::Label-->
-								<label class="fs-5 fw-bolder form-label mb-2">
-									<span class="">{{ form_label(form.manager, 'Utilisateur'|trans, {'label_attr': {'class': 'foo'}}) }}</span>
+								<label class="fs-5 fw-bolder form-label mb-2 required" for="sender_manager">
+									{{'Utilisateur'|trans}}
 								</label>
 								<!--end::Label-->
 								<!--begin::Input-->
-								{{ form_widget(form.manager, {'attr': {'class': 'form-control form-control-solid', 'data-kt-select2':"true", 'data-allow-clear':"true", 'data-placeholder':"Selectionnez l'utilisateur"|trans, 'data-control':"select2", 'data-dropdown-parent':'#modal_sender' }}) }}
+								<select class="form-select form-select-solid fw-bolder" data-kt-select2="true" data-control="select2" data-dropdown-parent="#modal_sender" data-placeholder="{{"Selectionnez l'utilisateur"| trans}}" data-allow-clear="false" name="manager" id="sender_manager">
+								</select>
 								<!--end::Input-->
 							</div>
 							<!--end::Input group-->
 							<!--begin::Input group-->
-							<div class="fv-row mb-10 col-lg-6">
+							<div class="fv-row mb-5 col-lg-6">
 								<!--begin::Label-->
-								<label class="fs-5 fw-bolder form-label mb-2">
-									<span class="">{{ form_label(form.name, 'Expéditeur'|trans, {'label_attr': {'class': 'foo'}}) }}</span>
+								<label class="fs-5 fw-bolder form-label mb-2 required" for="sender_name">
+									{{'Expéditeur'|trans}}
 								</label>
 								<!--end::Label-->
 								<!--begin::Input-->
-								{{ form_widget(form.name, {'attr': {'class':'form-control form-control-solid', 'maxlength': 50, 'placeholder':"Entrer l'expéditeur"|trans }}) }}
+								<input type="text" name="name" class='form-control form-control-solid' id="sender_name" value="" maxlength="50" placeholder="{{"Entrer l'expéditeur"|trans }}"/>
 								<!--end::Input-->
 							</div>
 							<!--end::Input group-->
 							{# <!--begin::Input-->
-							<div class="fv-row mb-10 col-lg-6">
+							<div class="fv-row mb-5 col-lg-6">
 								<!--begin::Label-->
-								<label class="fs-5 fw-bolder form-label mb-2">
-									<span class="">{{ form_label(form.status, 'Statut'|trans, {'label_attr': {'class': 'foo'}}) }}</span>
+								<label class="fs-5 fw-bolder form-label mb-2" for="sender_status">
+									{{ 'Statut'|trans}}
 								</label>
 								<!--end::Label-->
 								<!--begin::Input-->
-								{{ form_widget(form.status, {'attr': {'class': 'form-control form-control-solid', 'data-placeholder':"Choisissez le statut"|trans, 'data-allow-clear':"true", 'data-hide-search':"true" }}) }}
+								<select class="form-select form-select-solid fw-bolder" data-kt-select2="true" data-control="select2" data-dropdown-parent="#modal_sender" data-hide-search':"true" data-placeholder="{{"Choisissez le statut"| trans}}" data-allow-clear="true" name="status" id="sender_status">
+								</select>
 								<!--end::Input-->
 							</div>
 							<!--end::Input--> #}
 							<!--begin::Input-->
-							<div class="fv-row mb-10 col-12">
+							<div class="fv-row mb-5 col-12">
 								<!--begin::Label-->
-								<label class="fs-5 fw-bolder form-label mb-2">
-									<span class="">{{ form_label(form.observation, 'Observation'|trans, {'label_attr': {'class': ''}}) }}</span>
+								<label class="fs-5 fw-bolder form-label mb-2" for="sender_observation">
+									{{ 'Observation'|trans}}
 								</label>
 								<!--end::Label-->
 								<!--begin::Input-->
-								{{ form_widget(form.observation, {'attr': {'class': 'form-control form-control-solid'}}) }}
+								<textarea name="observation" id="sender_observation" rows="5" cols="80" class='form-control form-control-solid'></textarea>
 								<!--end::Input-->
 							</div>
 							<!--end::Input-->
@@ -250,7 +261,7 @@
 								</button>
 							</div>
 							<!--end::Actions-->
-						{{ form_end(form) }}
+						</form>
 						<!--end::Form-->
 					</div>
 					<!--end::Modal body-->
@@ -284,9 +295,26 @@
 	const addTitle	= "{{"Créer un expéditeur"|trans}}",
 	updateTitle		= "{{"Modifier un expéditeur"|trans}}";
 
+	var defaultSenders = {}
+
+	{% for brand in brands %}
+		defaultSenders["{{ brand.uid }}"] = {uid: "{{brand.defaultSender.uid}}", name: "{{brand.defaultSender.name}}"}
+	{% endfor %}
+
+	var dataUsers = [{id:'', text:''}];
+	{% for user in users %}
+		dataUsers.push({id:"{{user.uid}}", text:"{{user.email}}"})
+	{% endfor %}
+
+	var dataSenders = [{id:'', text:''}];
+	{% for sender in senders %}
+		dataSenders.push({id:"{{sender.uid}}", text:"{{sender.name}}"})
+	{% endfor %}
+
 	const brandInit = {% if brands|length == 1 %} "{{brands[0].uid}}" {% else %} false {% endif %},
-	userInit = {% if users|length == 1 %} "{{users[0].uid}}" {% else %} false {% endif %};
+	userInit = {% if users|length == 1 %} "{{users[0].uid}}" {% else %} false {% endif %},
+	senderInit = {% if senders|length == 1 %} "{{senders[0].uid}}" {% else %} false {% endif %};
 </script>
-{# {{ include('smsmessage/new.html.twig', {'brands':brands}) }} #}
+{{ include('smsmessage/new.html.twig', {'brands':brands}) }}
 <script type="text/javascript" src="{{ asset('app/js/queries/sender/sender.js')}}"></script>
 {% endblock %}
