@@ -147,7 +147,6 @@ class RegistrationController extends AbstractController
                     'base_url' => $this->baseUrl
                 ]
             ]);
-
             $this->sMailer->nativeSend( $this->brand->get()['emails']['support'], 
                 $email ,  $this->intl->trans('Activation de compte'),  $message);
 
@@ -155,8 +154,7 @@ class RegistrationController extends AbstractController
                 $this->intl->trans("Création d'un nouvel utilisateur"),
                 $this->intl->trans("Votre compte à été crée avec succès, veuillez consulter votre boîte email pour valider votre compte. Merci")
             );
-        }
-        
+        }   
         return $this->render('registration/'.$this->brand->get()['regisform'], [
             'title'           => $this->intl->trans('Inscription').' - '. $brand['name'],
             'menu_text'       => $this->intl->trans('Inscription'),

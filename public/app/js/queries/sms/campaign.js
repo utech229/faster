@@ -7,16 +7,146 @@ const SMSCampaignManager = function(){
 	sender = form.querySelector("[name=sender]"),
 	input_fileUrl = form.querySelector("[name=fileUrl]"),
 	input_phones = form.querySelector("[name=phones]"),
-	group_contacts = form.querySelector("[name=groups]"),
+	group_contacts = form.querySelector("#group_contacts"),
 	addContacts = form.querySelector("[name=saveContacts]"),
 	message = form.querySelector("[name=message]"),
 	apercuMessage = form.querySelector("[name=true_message]")
 	;
 
+	var submitButton = submitForm;
+
+	const initSelects = ()=>{
+		// Filter
+		$(brand).select2({
+			templateSelection: select2Format1,
+			templateResult: select2Format1,
+		});
+		// Charge par ajax les utilisateurs sous la marque sélectionnée
+		$(user).css("width","100%");
+		$(brand).on("change.select2", ($this)=>{
+			const $thisValue = $($this.target).val()
+			if(typeof defaultSenders[$thisValue] !== "undefined") viewAlert("#campaign_content", defaultSenders[$thisValue].name);
+			$(user).select2({data:[{id:'',text:''}]});
+			$(user).val("").trigger("change.select2");
+			$(user).select2({
+				data: dataUsers,
+				ajax: {
+					url: url_user,
+					type: "post",
+					data: {
+						token: filter_token,
+						brand: $thisValue,
+					},
+					/*success: function(response){
+						return response;
+					}*/
+				},
+				language: _locale,
+				width: 'resolve'
+			});
+		});
+
+		$(sender).css("width","100%");
+		$(user).on("change", ($this)=>{
+			$(sender).select2({data:[{id:'',text:''}]});
+			$(sender).val("").trigger("change.select2");
+			$(sender).select2({
+				data: dataSenders,
+				ajax: {
+					url: url_sender,
+					type: "post",
+					data: {
+						token: filter_token,
+						user: $($this.target).val(),
+					},
+					/*success: function(response){
+						return response;
+					}*/
+				},
+				language: _locale,
+				width: 'resolve'
+			});
+
+			// $(group_contacts).select2({data:[{id:'',text:''}]});
+			$(group_contacts).val("").trigger("change");
+			$(group_contacts).select2({
+				ajax: {
+					url: url_groups,
+					type: "post",
+					data: {
+						token: filter_token,
+						user: $($this.target).val(),
+					},
+					/*success: function(response){
+						return response;
+					}*/
+				},
+				language: _locale,
+				width: 'resolve'
+			});
+
+			$("#template").select2({data:[{id:'',text:''}]});
+			$("#template").val("").trigger("change");
+			$("#template").select2({
+				ajax: {
+					url: url_template,
+					type: "post",
+					data: {
+						token: filter_token,
+						user: $($this.target).val(),
+					},
+					/*success: function(response){
+						return response;
+					}*/
+				},
+				language: _locale,
+				width: 'resolve'
+			});
+		});
+
+		if(brandInit) $(brand).val(brandInit).trigger("change.select2");
+
+		if(userInit) $(user).val(userInit).trigger("change.select2"); else $(user).val("").trigger("change.select2");
+
+		if(senderInit) $(sender).val(senderInit).trigger("change.select2"); else $(sender).val("").trigger("change.select2");
+
+		if(campaignType)	$("[name=type]").val(campaignType).trigger("change");
+		if(timezone)		$("[name=timezone]").val(timezone).trigger("change");
+		if(groups.length > 0)	$(group_contacts).val(groups).trigger("change");
+	}
+
+	const checkActiveTab = (finalPoint, $this)=>{
+		const activeId = $("#dest_tab .active").attr("id");
+		var valActiveInput;
+		switch (activeId) {
+			case "write": valActiveInput = $(input_phones).val(); break;
+			case "import": valActiveInput = $(input_fileUrl).val(); break;
+			default: valActiveInput = $(group_contacts).val(); break;
+		}
+		if(activeId != finalPoint && valActiveInput != "" && valActiveInput != null) {
+			swalConfirm(
+				"warning",
+				ongletAlert,
+				()=>{
+					$(group_contacts).val("").trigger("change");
+					$(input_fileUrl).val("");
+					$(input_phones).val("");
+				},
+				()=>{
+					$("#dest_nav a").removeClass("active");
+					$("#dest_tab .tab-pane").removeClass("show active");
+
+					$("#li_"+activeId+" a").addClass("active");
+					$("#dest_tab #"+activeId).addClass("show active");
+				}
+			);
+		}
+	}
+
 	return {
 		init: ()=>{
 			// Champ date et heure
-			const now = moment().add(1,"h");
+			const now = moment();//.add(1,"h");
 			var flatpickr = {
 				minDate: "today",
 				enableTime: true,
@@ -57,10 +187,13 @@ const SMSCampaignManager = function(){
 				}
 			});
 
+			initSelects()
+
 			$(document).on("submit", "#form", ($this)=>{
 				$this.preventDefault();
+				btnAnimation();
 				$("[name=messageText]").val($(apercuMessage).val())
-				btnAnimation(submitForm, true);
+				btnAnimation(submitButton, true);
 				$.ajax({
 					url: $(form).attr("action"),
 					type: 'post',
@@ -68,13 +201,13 @@ const SMSCampaignManager = function(){
 					processData: false,
 					cache: false,
 					contentType: false,
+					dataType: 'json',
 					success: function (response) {
-						btnAnimation(submitForm);
+						btnAnimation();
 						swalSimple(response.type, response.message);
 						if (response.status === 'warning') {
-							$(submitForm).addClass("sr-only");
 							$("#brouillon").addClass("sr-only");
-							submitForm.disabled = true;
+							$(submitForm).addClass("sr-only");
 							SMSCampaignManagerError.init(response.data);
 							$(form).trigger("reset");
 						}else if (response.status === 'success') {
@@ -83,113 +216,16 @@ const SMSCampaignManager = function(){
 					},
 					error: function (response) {
 						swalSimple("error", _Form_Error_Swal);
-						btnAnimation(submitForm);
+						btnAnimation();
 						console.log(response);
 					}
-				});
-				// }
-			});
-
-			$(brand).select2({
-				templateSelection: select2Format1,
-				templateResult: select2Format1
-			});
-
-			$(user).css("width","100%");
-			$(brand).on("change", ($this)=>{
-				$(user).select2({data:[{id:'',text:''}]});
-				$(user).val("").trigger("change");
-				$(user).select2({
-					ajax: {
-						url: url_user,
-						type: "post",
-						data: {
-							token: filter_token,
-							brand: $($this.target).val(),
-						},
-						/*success: function(response){
-							return response;
-						}*/
-					},
-					language: _locale,
-					width: 'resolve'
-				});
-			});
-
-			$(sender).css("width","100%");
-			$(user).on("change", ($this)=>{
-				$(sender).select2({data:[{id:'',text:''}]});
-				$(sender).val("").trigger("change");
-				$(sender).select2({
-					ajax: {
-						url: url_sender,
-						type: "post",
-						data: {
-							token: filter_token,
-							user: $($this.target).val(),
-						},
-						/*success: function(response){
-							return response;
-						}*/
-					},
-					language: _locale,
-					width: 'resolve'
-				});
-			});
-
-			$(group_contacts).css("width","100%");
-			$(user).on("change", ($this)=>{
-				//$(group_contacts).select2({data:[{id:'',text:''}]});
-				$(group_contacts).val("").trigger("change");
-				$(group_contacts).select2({
-					ajax: {
-						url: url_groups,
-						type: "post",
-						data: {
-							token: filter_token,
-							user: $($this.target).val(),
-						},
-						/*success: function(response){
-							return response;
-						}*/
-					},
-					language: _locale,
-					width: 'resolve'
-				});
-
-				$("#template").select2({data:[{id:'',text:''}]});
-				$("#template").val("").trigger("change");
-				$("#template").select2({
-					ajax: {
-						url: url_template,
-						type: "post",
-						data: {
-							token: filter_token,
-							user: $($this.target).val(),
-						},
-						/*success: function(response){
-							return response;
-						}*/
-					},
-					language: _locale,
-					width: 'resolve'
 				});
 			});
 
 			$("#template").on("change", ($this)=>{
 				var text = $($this.target).val();
-				if(text != ""){
-					$("#message").val();
-					$("#message").trigger("change");
-				}
+				if(text != "") $(message).val(text).trigger("change");
 			});
-
-			if(brandInit)		$(brand).val(brandInit).trigger("change");
-			if(userInit)		$(user).val(userInit).trigger("change");
-			if(senderInit)		$(sender).val(senderInit).trigger("change");
-			if(campaignType)	$("[name=type]").val(campaignType).trigger("change");
-			if(timezone)		$("[name=timezone]").val(timezone).trigger("change");
-			if(groups.length > 0)	$(group_contacts).val(groups).trigger("change");
 
 			$("#li_group").on("click", ($this)=>{
 				checkActiveTab("group", $this)
@@ -206,46 +242,25 @@ const SMSCampaignManager = function(){
 			// $("#clear").on("click", ()=>{$("#datetime").val("")})
 			$("#form #clear").on("click", ()=>{$("#form #datetime").val("")})
 
-			$("#brouillon").on("click", ()=>{
+			$("#form #brouillon").on("click", ($this)=>{
+				$this.preventDefault()
 				$("[name=saveMode]").val("offlive");
 				toastr.info(textBrouillon)
-				setTimeout(function() {$(submitForm).trigger("click")}, 300);
+				submitButton = ($this.target).closest("#brouillon");
+				$("#form").submit()
 			})
 
-			function checkActiveTab(finalPoint, $this){
-				const activeId = $("#dest_tab .active").attr("id");
-				var valActiveInput;
-				switch (activeId) {
-					case "write": valActiveInput = $(input_phones).val(); break;
-					case "import": valActiveInput = $(input_fileUrl).val(); break;
-					default: valActiveInput = $(group_contacts).val(); break;
-				}
-				if(activeId != finalPoint && valActiveInput != "" && valActiveInput != null) {
-					swalConfirm(
-						"warning",
-						ongletAlert,
-						()=>{
-							$(group_contacts).val("").trigger("change");
-							$(input_fileUrl).val("");
-							$(input_phones).val("");
-						},
-						()=>{
-							$("#dest_nav a").removeClass("active");
-							$("#dest_tab .tab-pane").removeClass("show active");
-
-							$("#li_"+activeId+" a").addClass("active");
-							$("#dest_tab #"+activeId).addClass("show active");
-						}
-					);
-				}
-			}
+			$("#form #submit").on("click", ($this)=>{
+				$this.preventDefault()
+				$("[name=saveMode]").val("live");
+				submitButton = ($this.target).closest("#submit");
+				$("#form").submit()
+			})
 
 			$(message).on("keyup change", ()=>{$(apercuMessage).text(countMessageCaracts(message, "p#countOne"))});
 
 			$(document).on("reset", "#form", ()=>{
-				if(brandInit) $(brand).val(brandInit).trigger("change");
-				if(userInit) $(user).val(userInit).trigger("change");
-				if(senderInit) $(sender).val(senderInit).trigger("change");
+				initSelects()
 				$(apercuMessage).text(countMessageCaracts(message, "p#countOne"))
 			});
 

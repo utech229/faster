@@ -38,11 +38,7 @@ class LinkSettingController extends AbstractController
     
     #[Route('/email_edit/{email}/{uid}/{token}/{code}', name: 'app_user_email_setting')]
     public function index(Request $request, Services $services, $email, $uid, $token, $code): Response
-    {
-        if (!$this->isCsrfTokenValid($uid, $token)) { 
-            $this->addFlash('warning', $this->intl->trans("Tentative frauduleuse de modification d'adresse email"));
-            return $this->redirectToRoute("app_login");}
-            
+    {    
         $user = $this->userRepository->findOneByUid($uid);
         if($user->getActiveCode() == $code) {
             $email = base64_decode (".$email.");

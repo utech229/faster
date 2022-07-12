@@ -35,7 +35,7 @@ const SMSListCampaignManager = function(){
 		},
 		{ // Nombre de page (SMS)
 			targets: 3,
-			responsivePriority: 5,
+			responsivePriority: 6,
 			render: function(data, type, full, meta) {
 				return "<div class='w-70 text-center'>"+data[1]+"</div>";
 			},
@@ -51,13 +51,21 @@ const SMSListCampaignManager = function(){
 		{ // Message
 			targets: 5,
 			//visible: false,
-			responsivePriority: 6,
+			responsivePriority: 7,
 			render: function(data, type, full, meta) {
 				return data;
 			}
 		},
-		{ // Actions
+		{ // Date de création
 			targets: 6,
+			responsivePriority: 5,
+			render: function(data, type, full, meta) {
+				return data;//viewTime(data);
+			},
+
+		},
+		{ // Actions
+			targets: 7,
 			orderable: !1,
 			responsivePriority: 3,
 			render : function (data, type, full, meta) {
@@ -65,6 +73,64 @@ const SMSListCampaignManager = function(){
 			}
 		}
 	];
+
+	const initSelects = ()=>{
+					// Filter
+		$(brand).select2({
+			templateSelection: select2Format1,
+			templateResult: select2Format1,
+		});
+		// Charge par ajax les utilisateurs sous la marque sélectionnée
+		$(user).css("width","100%");
+		$(brand).on("change.select2", ($this)=>{
+			const $thisValue = $($this.target).val()
+			$(user).val("").trigger("change.select2");
+			$(user).select2({
+				data: dataUsers,
+				ajax: {
+					url: url_user,
+					type: "post",
+					data: {
+						token: filter_token,
+						brand: $thisValue,
+					},
+					/*success: function(response){
+						return response;
+					}*/
+				},
+				language: _locale,
+				width: 'resolve'
+			});
+		});
+
+		$(sender).css("width","100%");
+		$(user).on("change", ($this)=>{
+			// $(sender).select2({data:[{id:'',text:''}]});
+			$(sender).val("").trigger("change.select2");
+			$(sender).select2({
+				data: dataSenders,
+				ajax: {
+					url: url_sender_names,
+					type: "post",
+					data: {
+						token: filter_token,
+						user: $($this.target).val(),
+					},
+					/*success: function(response){
+						return response;
+					}*/
+				},
+				language: _locale,
+				width: 'resolve'
+			});
+		});
+
+		if(brandInit) $(brand).val(brandInit).trigger("change.select2");
+
+		if(userInit) $(user).val(userInit).trigger("change.select2"); else $(user).val("").trigger("change.select2");
+
+		if(senderInit) $(sender).val(senderInit).trigger("change.select2"); else $(sender).val("").trigger("change.select2");
+	}
 
 	function addContentPane(dataInner, adding = true){
 		var statusBar;
@@ -77,7 +143,7 @@ const SMSListCampaignManager = function(){
 			default: statusBar = "primary";
 		}
 		var action = `<!--begin::View-->
-			<a href="`+url_home_message.replace('_1_', dataInner[6])+`" class="btn btn-icon btn-active-light-success w-30px h-30px" title="`+titleMessages+`" id="view">
+			<a href="`+url_home_message.replace('_1_', dataInner[7])+`" class="btn btn-icon btn-active-light-success w-30px h-30px" title="`+titleMessages+`" id="view">
 				<span class="indicator-label"><i class="fa fa-mail-bulk"></i></span>
 				<span class="indicator-progress"><span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
 			</a>
@@ -85,7 +151,7 @@ const SMSListCampaignManager = function(){
 
 		if(pEdit && dataInner[4]['code'] != 8 && dataInner[4]['code'] != 1 && dataInner[4]['code'] != 2){
 			action += `<!--begin::Update-->
-				<a href="`+url_message_create.replace("_1_", dataInner[6])+`" class="btn btn-icon btn-active-light-warning w-30px h-30px" title="`+titleEdit+`" id="edit">
+				<a href="`+url_message_create.replace("_1_", dataInner[7])+`" class="btn btn-icon btn-active-light-warning w-30px h-30px" title="`+titleEdit+`" id="edit">
 					<span class="indicator-label"><i class="fa fa-edit text-warning"></i></span>
 					<span class="indicator-progress"><span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
 				</a>
@@ -94,7 +160,7 @@ const SMSListCampaignManager = function(){
 
 		if(pEdit && dataInner[4]['code'] == 0){
 			action += `<!--begin::disable-->
-				<button class="btn btn-icon btn-active-light-dark w-25px h-25px" data-id="`+dataInner[6]+`" title="`+titleSuspend+`" id="disable">
+				<button class="btn btn-icon btn-active-light-dark w-25px h-25px" data-id="`+dataInner[7]+`" title="`+titleSuspend+`" id="disable">
 					<span class="indicator-label"><i class="fa fa-power-off text-dark"></i></span>
 					<span class="indicator-progress"><span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
 				</button>
@@ -103,7 +169,7 @@ const SMSListCampaignManager = function(){
 
 		if(pEdit && dataInner[4]['code'] == 5){
 			action += `<!--begin::Send-->
-				<button class="btn btn-icon btn-active-light-primary w-25px h-25px" data-id="`+dataInner[6]+`" title="`+titleSend+`" id="send">
+				<button class="btn btn-icon btn-active-light-primary w-25px h-25px" data-id="`+dataInner[7]+`" title="`+titleSend+`" id="send">
 					<span class="indicator-label"><i class="fa fa-paper-plane text-primary"></i></span>
 					<span class="indicator-progress"><span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
 				</button>
@@ -112,7 +178,7 @@ const SMSListCampaignManager = function(){
 
 		if(pDelete && dataInner[4]['code'] != 1 && dataInner[4]['code'] != 2){
 			action += `<!--begin::Delete-->
-				<button class="btn btn-icon btn-active-light-danger w-25px h-25px" data-id="`+dataInner[6]+`" title="`+titleDelete+`" id="delete">
+				<button class="btn btn-icon btn-active-light-danger w-25px h-25px" data-id="`+dataInner[7]+`" title="`+titleDelete+`" id="delete">
 					<span class="indicator-label"><i class="fa fa-trash-alt text-danger"></i></span>
 					<span class="indicator-progress"><span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
 				</button>
@@ -144,39 +210,37 @@ const SMSListCampaignManager = function(){
 							<!--begin::Content-->
 							<div class="fs-7 fw-bold text-gray-600 mb-5">`+dataInner[5]+`</div>
 							<!--end::Content-->
+							<!--begin::Users-->
+							<div class="w-100 text-center">
+								<span class="badge badge-light-`+dataInner[4]['label']+` fw-bolder me-auto">`+dataInner[4]['name']+`</span>
+							</div>
+							<!--end::Users-->
 							<!--begin::Footer-->
 							<div class="d-flex flex-stack flex-wrapr">
-								<!--begin::Users-->
-								<span class="badge badge-light-`+dataInner[4]['label']+` fw-bolder me-auto">`+dataInner[4]['name']+`</span>
-								<!--end::Users-->
-								<!--begin::Stats-->
-								<div class="d-flex my-1">
-									<!--begin::Stat-->
-									<div class="border border-dashed border-gray-300 rounded py-2 px-3">
-										<span class="ms-1 fs-7 fw-bolder text-gray-600">`+dataInner[3][0]+`</span>
-										<!--begin::Svg Icon | path: assets/media/icons/duotune/communication/com014.svg-->
-										<span class="svg-icon svg-icon-3">
-											<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-												<path d="M16.0173 9H15.3945C14.2833 9 13.263 9.61425 12.7431 10.5963L12.154 11.7091C12.0645 11.8781 12.1072 12.0868 12.2559 12.2071L12.6402 12.5183C13.2631 13.0225 13.7556 13.6691 14.0764 14.4035L14.2321 14.7601C14.2957 14.9058 14.4396 15 14.5987 15H18.6747C19.7297 15 20.4057 13.8774 19.912 12.945L18.6686 10.5963C18.1487 9.61425 17.1285 9 16.0173 9Z" fill="currentColor"/><rect opacity="0.3" x="14" y="4" width="4" height="4" rx="2" fill="currentColor"/><path d="M4.65486 14.8559C5.40389 13.1224 7.11161 12 9 12C10.8884 12 12.5961 13.1224 13.3451 14.8559L14.793 18.2067C15.3636 19.5271 14.3955 21 12.9571 21H5.04292C3.60453 21 2.63644 19.5271 3.20698 18.2067L4.65486 14.8559Z" fill="currentColor"/><rect opacity="0.3" x="6" y="5" width="6" height="6" rx="3" fill="currentColor"/>
-											</svg>
-										</span>
-										<!--end::Svg Icon-->
-									</div>
-									<!--end::Stat-->
-									<!--begin::Stat-->
-									<div class="border border-dashed border-gray-300 rounded py-2 px-3 ms-3">
-										<span class="ms-1 fs-7 fw-bolder text-gray-600">`+dataInner[3][1]+`</span>
-										<!--begin::Svg Icon | path: assets/media/icons/duotune/communication/com011.svg-->
-										<span class="svg-icon svg-icon-3">
-											<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-												<path opacity="0.3" d="M21 19H3C2.4 19 2 18.6 2 18V6C2 5.4 2.4 5 3 5H21C21.6 5 22 5.4 22 6V18C22 18.6 21.6 19 21 19Z" fill="currentColor"/><path d="M21 5H2.99999C2.69999 5 2.49999 5.10005 2.29999 5.30005L11.2 13.3C11.7 13.7 12.4 13.7 12.8 13.3L21.7 5.30005C21.5 5.10005 21.3 5 21 5Z" fill="currentColor"/>
-											</svg>
-										</span>
-										<!--end::Svg Icon-->
-									</div>
-									<!--end::Stat-->
+								<!--begin::Stat-->
+								<div class="border border-dashed border-gray-300 rounded py-2 px-3" title="">
+									<span class="ms-1 fs-7 fw-bolder text-gray-600">`+dataInner[3][0]+`</span>
+									<!--begin::Svg Icon | path: assets/media/icons/duotune/communication/com014.svg-->
+									<span class="svg-icon svg-icon-3">
+										<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+											<path d="M16.0173 9H15.3945C14.2833 9 13.263 9.61425 12.7431 10.5963L12.154 11.7091C12.0645 11.8781 12.1072 12.0868 12.2559 12.2071L12.6402 12.5183C13.2631 13.0225 13.7556 13.6691 14.0764 14.4035L14.2321 14.7601C14.2957 14.9058 14.4396 15 14.5987 15H18.6747C19.7297 15 20.4057 13.8774 19.912 12.945L18.6686 10.5963C18.1487 9.61425 17.1285 9 16.0173 9Z" fill="currentColor"/><rect opacity="0.3" x="14" y="4" width="4" height="4" rx="2" fill="currentColor"/><path d="M4.65486 14.8559C5.40389 13.1224 7.11161 12 9 12C10.8884 12 12.5961 13.1224 13.3451 14.8559L14.793 18.2067C15.3636 19.5271 14.3955 21 12.9571 21H5.04292C3.60453 21 2.63644 19.5271 3.20698 18.2067L4.65486 14.8559Z" fill="currentColor"/><rect opacity="0.3" x="6" y="5" width="6" height="6" rx="3" fill="currentColor"/>
+										</svg>
+									</span>
+									<!--end::Svg Icon-->
 								</div>
-								<!--end::Stats-->
+								<!--end::Stat-->
+								<!--begin::Stat-->
+								<div class="border border-dashed border-gray-300 rounded py-2 px-3 ms-3" title="">
+									<span class="ms-1 fs-7 fw-bolder text-gray-600">`+dataInner[3][1]+`</span>
+									<!--begin::Svg Icon | path: assets/media/icons/duotune/communication/com011.svg-->
+									<span class="svg-icon svg-icon-3">
+										<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+											<path opacity="0.3" d="M21 19H3C2.4 19 2 18.6 2 18V6C2 5.4 2.4 5 3 5H21C21.6 5 22 5.4 22 6V18C22 18.6 21.6 19 21 19Z" fill="currentColor"/><path d="M21 5H2.99999C2.69999 5 2.49999 5.10005 2.29999 5.30005L11.2 13.3C11.7 13.7 12.4 13.7 12.8 13.3L21.7 5.30005C21.5 5.10005 21.3 5 21 5Z" fill="currentColor"/>
+										</svg>
+									</span>
+									<!--end::Svg Icon-->
+								</div>
+								<!--end::Stat-->
 							</div>
 							<!--end::Footer-->
 						</div>
@@ -199,56 +263,6 @@ const SMSListCampaignManager = function(){
 
 	return {
 		init: ()=>{
-			$(brand).select2({
-				templateSelection: select2Format1,
-				templateResult: select2Format1
-			});
-
-			$(user).css("width","100%");
-			$(brand).on("change", ($this)=>{
-				$(user).select2({data:[{id:'',text:''}]});
-				$(user).val("").trigger("change");
-				$(user).select2({
-					ajax: {
-						url: url_user,
-						type: "post",
-						data: {
-							token: filter_token,
-							brand: $($this.target).val(),
-						},
-						/*success: function(response){
-							return response;
-						}*/
-					},
-					language: _locale,
-					width: 'resolve'
-				});
-			});
-
-			$(sender).css("width","100%");
-			$(user).on("change", ($this)=>{
-				$(sender).select2({data:[{id:'',text:''}]});
-				$(sender).val("").trigger("change");
-				$(sender).select2({
-					ajax: {
-						url: url_sender_names,
-						type: "post",
-						data: {
-							token: filter_token,
-							user: $($this.target).val(),
-						},
-						/*success: function(response){
-							return response;
-						}*/
-					},
-					language: _locale,
-					width: 'resolve'
-				});
-			});
-
-			if(brandInit) $(brand).val(brandInit).trigger("change");
-			if(userInit) $(user).val(userInit).trigger("change");
-
 			datatable = $(el).DataTable({ // Initiation du datatable
 				responsive: true,
 				createdRow: function(row, data, key) {
@@ -292,29 +306,10 @@ const SMSListCampaignManager = function(){
 				// dom: '<"top text-end bt-export d-none"B>rtF<"row"<"col-sm-6"l><"col-sm-6"p>>',
 				dom: `<"tab-content"
 				<"top text-end bt-export d-none"B>
-				<"#campaign_targets_card_pane.tab-pane fade row">
-				<"#campaign_targets_table_pane.tab-pane fade show active"rtF>>
+				<"#targets_card_pane.tab-pane fade row">
+				<"#targets_table_pane.tab-pane table-responsive fade show active"rtF>>
 				<"row"<"col-sm-6"l><"col-sm-6"p>>`
 			});
-
-			// Action sur bouton export
-			$("#export").on('click', ($this)=>{ $this.preventDefault(); return $(".bt-export").hasClass('d-none')?$(".bt-export").removeClass('d-none'):$(".bt-export").addClass('d-none'); });
-
-			$("#search").on('keyup', ($this)=>{ datatable.search($this.target.value).draw(); }); // Recherche dans l'input search
-
-			// Si bouton reset du filtre et cliqué
-			$("#menu-filter #reset").on("click", ()=>{
-				if(brandInit) $(brand).val(brandInit).trigger("change");
-				if(userInit) $(user).val(userInit).trigger("change");
-				$(sender).val("").trigger("change");
-				$(status).val("").trigger("change");
-				$(periode).val("1w").trigger("change");
-				loading(true);
-				datatable.ajax.reload();
-			});
-
-			// Si bouton submit du filtre et cliqué
-			$("#menu-filter #submit").on("click", ()=>{loading(true); datatable.ajax.reload();});
 
 			datatable.on('draw', ()=>{ // A chaque rafraichissement du tableau
 				const view = datatable.data().context[0].aiDisplay;
@@ -460,6 +455,27 @@ const SMSListCampaignManager = function(){
 				});
 				loading();
 			});
+
+			// Action sur bouton export
+			$("#export").on('click', ($this)=>{ $this.preventDefault(); return $(".bt-export").hasClass('d-none')?$(".bt-export").removeClass('d-none'):$(".bt-export").addClass('d-none'); });
+
+			$("#search").on('keyup', ($this)=>{ datatable.search($this.target.value).draw(); }); // Recherche dans l'input search
+
+			$("#reload").on('click', ()=>{ loading(true); datatable.ajax.reload(); });
+
+			initSelects()
+
+			// Si bouton reset du filtre et cliqué
+			$("#menu-filter #reset").on("click", ()=>{
+				initSelects()
+				$(status).val("").trigger("change");
+				$(periode).val("1w").trigger("change");
+				loading(true);
+				datatable.ajax.reload();
+			});
+
+			// Si bouton submit du filtre et cliqué
+			$("#menu-filter #submit").on("click", ()=>{loading(true); datatable.ajax.reload();});
 		}
 	}
 }();

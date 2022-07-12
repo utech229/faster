@@ -114,6 +114,136 @@ const SenderManager = function(){
 		}
 	]
 	;
+
+	const initSelectsFilter = ()=>{
+		// Filter
+		$(brandFilter).select2({
+			templateSelection: select2Format1,
+			templateResult: select2Format1,
+		});
+		// Charge par ajax les utilisateurs sous la marque sélectionnée
+		$(userFilter).css("width","100%");
+		$(brandFilter).on("change.select2", ($this)=>{
+			$(userFilter).select2({data:[{id:'',text:''}]});
+			$(userFilter).val("").trigger("change.select2");
+			$(userFilter).select2({
+				data: dataUsers,
+				ajax: {
+					url: url_user,
+					type: "post",
+					data: {
+						token: filter_token,
+						brand: $($this.target).val(),
+					},
+					/*success: function(response){
+						return response;
+					}*/
+				},
+				language: _locale,
+				width: 'resolve'
+			});
+		});
+
+		if(brandInit) $(brandFilter).val(brandInit).trigger("change.select2"); else  $(brandFilter).val("").trigger("change.select2");
+
+		if(userInit) $(userFilter).val(userInit).trigger("change.select2"); else  $(userFilter).val("").trigger("change.select2");
+	}
+
+	const initSelectsSender = ()=>{
+					// Filter
+		$(brandSender).select2({
+			templateSelection: select2Format1,
+			templateResult: select2Format1,
+		});
+		// Charge par ajax les utilisateurs sous la marque sélectionnée
+		$(userSender).css("width","100%");
+		$(brandSender).on("change.select2", ($this)=>{
+			$(userSender).select2({data:[{id:'',text:''}]});
+			$(userSender).val("").trigger("change.select2");
+			$(userSender).select2({
+				data: dataUsers,
+				ajax: {
+					url: url_user,
+					type: "post",
+					data: {
+						token: filter_token,
+						brand: $($this.target).val(),
+					},
+					/*success: function(response){
+						return response;
+					}*/
+				},
+				language: _locale,
+				width: 'resolve'
+			});
+		});
+
+		if(brandInit) $(brandSender).val(brandInit).trigger("change.select2");
+
+		if(userInit) $(userSender).val(userInit).trigger("change.select2"); else $(userSender).val("").trigger("change.select2");
+	}
+
+	const resetSenderForm = ()=>{
+		senderForm.reset();
+
+		initSelectsSender()
+
+		$(senderForm.querySelector("#sender__token")).val(_token);
+		btnAnimation(submitSender);
+	}
+
+	const fillingSenderForm = (target)=>{ // filling : function pour remplir le formulaire sur click d'un bouton ayant data-id = uid de la ligne
+		const $this = target.closest("button");
+		if($($this).length == 0) return false;
+
+		const id = $($this).attr("data-id");
+		$(senderForm).attr("action",url_edit.replace("_1_", id));
+
+		$(brandSender).val(saveData[id][3][1]).trigger("change")
+
+		$(userSender).select2({
+			data: [{id:saveData[id][4][1],text:saveData[id][4][0]}]
+		});
+		$(userSender).val(saveData[id][4][1]).trigger("change")
+
+		$(senderForm.querySelector("#sender_name")).val(saveData[id][0]);
+		$(senderForm.querySelector("#sender_observation")).val(saveData[id][6]);
+		$(senderForm.querySelector("#sender_uid")).val(saveData[id][7]);
+	}
+
+	const post = (target, action)=>{ // post : function exécutant les changement de status (activation, désactivation et suppression)
+		const $this = target.closest("button");
+		if($($this).length == 0) return false;
+		const id = $($this).attr("data-id");
+		var message;
+		switch (action) {
+			case "1": message = _enabled_data; break;
+			case "2": message = _delete_question; break;
+			default: message = _disabled_data; break;
+		}
+		swalConfirm("warning", message, ()=>{
+			btnAnimation($this, true);
+			$.ajax({
+				url: url_action.replace("_1_", id),
+				type: 'post',
+				data: {_token, action},
+				dataType: 'json',
+				success: function (response) {
+					swalSimple(response.type, response.message);
+					if (response.status === 'success') {
+						datatable.ajax.reload();
+					}
+					btnAnimation($this);
+				},
+				error: function (response) {
+					swalSimple("error", _Form_Error_Swal);
+					btnAnimation($this);
+					console.log(response);
+				}
+			});
+		});
+	}
+
 	return {
 		init: ()=>{
 			datatable = $(el).DataTable({ // Initiation du datatable
@@ -142,7 +272,7 @@ const SenderManager = function(){
 					}
 				},
 				info: !1,
-				order: [[ 1, "desc" ]],
+				order: [[ 2, "desc" ]],
 				columnDefs: cls,
 				lengthMenu: [10, 25, 100, 250, 500, 1000],
 				pageLength: 10,
@@ -191,36 +321,7 @@ const SenderManager = function(){
 				return $(".bt-export").hasClass('d-none')?$(".bt-export").removeClass('d-none'):$(".bt-export").addClass('d-none');
 			})
 
-			// Filter
-			$(brandFilter).select2({
-				templateSelection: select2Format1,
-				templateResult: select2Format1
-			});
-			// Charge par ajax les utilisateurs sous la marque sélectionnée
-			$(userFilter).css("width","100%");
-			$(userFilter).select2({data:[{id:'',text:''}]});
-			$(brandFilter).on("change", ($this)=>{
-				$(userFilter).select2({data:[{id:'',text:''}]});
-				$(userFilter).val("").trigger("change");
-				$(userFilter).select2({
-					ajax: {
-						url: url_user,
-						type: "post",
-						data: {
-							token: filter_token,
-							brand: $($this.target).val(),
-						},
-						/*success: function(response){
-							return response;
-						}*/
-					},
-					language: _locale,
-					width: 'resolve'
-				});
-			});
-
-			if(brandInit) $(brandFilter).val(brandInit).trigger("change");
-			if(userInit) $(userFilter).val(userInit).trigger("change");
+			initSelectsFilter()
 
 			$(submitFilter).on("click", ($this)=>{
 				loading(true)
@@ -228,19 +329,10 @@ const SenderManager = function(){
 			})
 
 			$(resetFilter).on("click", ($this)=>{
-				$(brandFilter).val("").trigger("change");
-				$(userFilter).val("").trigger("change");
-				$(statusFilter).val("").trigger("change");
+				initSelectsFilter()
+				$(statusFilter).val("").trigger("change.select2");
 				loading(true);
 				datatable.ajax.reload()
-			})
-
-			$("#add_sender").on("click", ($this)=>{
-				$this.preventDefault();
-				$(titleSenderModal).html(addTitle)
-				$(senderForm).attr("action",url_new);
-				resetSenderForm()
-				senderModal.show()
 			})
 
 			$(elSenderModal.querySelector("#close")).on("click", ($this)=>{
@@ -253,39 +345,15 @@ const SenderManager = function(){
 				senderModal.hide()
 			})
 
-			$(brandSender).select2({
-				templateSelection: select2Format1,
-				templateResult: select2Format1
-			});
+			initSelectsSender()
 
-			// Charge par ajax les utilisateurs sous la marque sélectionnée
-			$(userSender).css("width","100%");
-			$(brandSender).on("change", ($this)=>{
-				$(userSender).select2({data:[{id:'',text:''}]});
-				$(userSender).val("").trigger("change");
-				$(userSender).select2({
-					ajax: {
-						url: url_user,
-						type: "post",
-						data: {
-							token: filter_token,
-							brand: $($this.target).val(),
-						},
-						/*success: function(response){
-							return response;
-						}*/
-					},
-					language: _locale,
-					width: 'resolve'
-				});
-			});
-
-			if(brandInit) $(brandSender).val(brandInit).trigger("change");
-			if(userInit) $(userSender).val(userInit).trigger("change");
-
-			// $(statusSender).select2({
-			// 	disabled:pStatus?false:true,
-			// })
+			$("#add_sender").on("click", ($this)=>{
+				$this.preventDefault();
+				$(titleSenderModal).html(addTitle)
+				$(senderForm).attr("action",url_new);
+				resetSenderForm()
+				senderModal.show()
+			})
 
 			$(document).on("submit", "#form_sender", ($this)=>{ // soumission du formulaire
 				$this.preventDefault();
@@ -312,57 +380,6 @@ const SenderManager = function(){
 					}
 				});
 			});
-
-			function resetSenderForm(){
-				senderForm.reset();
-				$(senderForm.querySelector("#sender__token")).val(_token);
-				btnAnimation(submitSender);
-			}
-
-			function fillingSenderForm(target){ // filling : function pour remplir le formulaire sur click d'un bouton ayant data-id = uid de la ligne
-				const $this = target.closest("button");
-				if($($this).length == 0) return false;
-				const id = $($this).attr("data-id");
-				$(senderForm).attr("action",url_edit.replace("_1_", id));
-				$(brandSender).val(saveData[id][3][1]); $(brandSender).trigger("change");
-				$(userSender).val(saveData[id][4][1]); $(userSender).trigger("change");
-				$(senderForm.querySelector("#sender_name")).val(saveData[id][0]);
-				$(senderForm.querySelector("#sender_observation")).val(saveData[id][6]);
-				$(senderForm.querySelector("#sender_uid")).val(saveData[id][7]);
-			}
-
-			function post(target, action){ // post : function exécutant les changement de status (activation, désactivation et suppression)
-				const $this = target.closest("button");
-				if($($this).length == 0) return false;
-				const id = $($this).attr("data-id");
-				var message;
-				switch (action) {
-					case "1": message = _enabled_data; break;
-					case "2": message = _delete_question; break;
-					default: message = _disabled_data; break;
-				}
-				swalConfirm("warning", message, ()=>{
-					btnAnimation($this, true);
-					$.ajax({
-						url: url_action.replace("_1_", id),
-						type: 'post',
-						data: {_token, action},
-						dataType: 'json',
-						success: function (response) {
-							swalSimple(response.type, response.message);
-							if (response.status === 'success') {
-								datatable.ajax.reload();
-							}
-							btnAnimation($this);
-						},
-						error: function (response) {
-							swalSimple("error", _Form_Error_Swal);
-							btnAnimation($this);
-							console.log(response);
-						}
-					});
-				});
-			}
 		}
 	}
 }();

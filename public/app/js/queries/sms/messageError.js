@@ -78,7 +78,7 @@ const SMSCampaignManagerError = function(){
 	;
 	var datatable, data = [];
 
-	function initDataTable(){
+	const initDataTable = ()=>{
 		datatable = $(el).DataTable({ // Initiation du datatable
 			destroy: true,
 			responsive: true,
@@ -95,37 +95,6 @@ const SMSCampaignManagerError = function(){
 		});
 	}
 
-	$(document).on("submit", "#formEdith", ($this)=>{
-		$this.preventDefault();
-		// if($($this.target).attr('id') === "formEdith")
-		// {
-			btnAnimation(submitForm, true);
-			$.ajax({
-				url: $(editForm).attr("action"),
-				type: 'post',
-				data: new FormData(editForm),
-				processData: false,
-				cache: false,
-				contentType: false,
-				success: function (response) {
-					btnAnimation(submitForm);
-					swalSimple(response.type, response.message);
-					if (response.status === 'warning') {
-						data = response.data;
-						initDataTable();
-					}else if (response.status === 'success') {
-						window.location.replace(url_home);
-					}
-				},
-				error: function (response) {
-					swalSimple("error", _Form_Error_Swal);
-					btnAnimation(submitForm);
-					console.log(response);
-				}
-			});
-		// }
-	});
-
 	return {
 		init: (dataSrc = [])=>{
 			data = dataSrc;
@@ -133,15 +102,6 @@ const SMSCampaignManagerError = function(){
 			initDataTable();
 
 			datatable.on('draw', ()=>{
-				handleEdit();
-				handleDelete();
-			});
-
-			$(editModalClose).on("click", ()=>{editModal.hide();})
-			$(editModalCancel).on("click", ()=>{editModal.hide();})
-			$(messageForm).on("keyup change", ()=>{countMessageCaracts(messageForm, "p#countTwo")});
-
-			function handleEdit(){
 				$(el).off("click", "button#update");
 				$(el).on("click", "button#update", ($this)=>{
 					const position = $($this.target.closest("button")).attr("data-id");
@@ -161,9 +121,7 @@ const SMSCampaignManagerError = function(){
 						editModal.show();
 					}
 				});
-			}
 
-			function handleDelete(){
 				$(el).off("click", "button#delete");
 				$(el).on("click", "button#delete", ($this)=>{
 					$this.preventDefault();
@@ -194,7 +152,42 @@ const SMSCampaignManagerError = function(){
 						});
 					}, ()=>{btnAnimation(ele);});
 				});
-			}
+			});
+
+			$(document).on("submit", "#formEdith", ($this)=>{
+				$this.preventDefault();
+				// if($($this.target).attr('id') === "formEdith")
+				// {
+					btnAnimation(submitForm, true);
+					$.ajax({
+						url: $(editForm).attr("action"),
+						type: 'post',
+						data: new FormData(editForm),
+						processData: false,
+						cache: false,
+						contentType: false,
+						success: function (response) {
+							btnAnimation(submitForm);
+							swalSimple(response.type, response.message);
+							if (response.status === 'warning') {
+								data = response.data;
+								initDataTable();
+							}else if (response.status === 'success') {
+								window.location.replace(url_home);
+							}
+						},
+						error: function (response) {
+							swalSimple("error", _Form_Error_Swal);
+							btnAnimation(submitForm);
+							console.log(response);
+						}
+					});
+				// }
+			});
+
+			$(editModalClose).on("click", ()=>{editModal.hide();})
+			$(editModalCancel).on("click", ()=>{editModal.hide();})
+			$(messageForm).on("keyup change", ()=>{countMessageCaracts(messageForm, "p#countTwo")});
 		}
 	}
 }();

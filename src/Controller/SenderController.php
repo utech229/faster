@@ -68,33 +68,58 @@ class SenderController extends AbstractController
 			$sender->setStatus($this->src->status(2));
 		}
 
-		$form = $this->createForm(SenderType::class, $sender);
-		$form->handleRequest($request);
+		if($request->isXmlHttpRequest()){
+			$uidBrand	= trim($request->request->get("brand"));
+			$uidUser	= trim($request->request->get("manager"));
+			$name		= trim($request->request->get("name"));
+			$observ		= trim($request->request->get("observation"));
 
-		if($form->isSubmitted() && $form->isValid()) {
-			if($sender->getUid()){
+			//$brand = $this->em->getRepository(Brand::class)->findOneByUid($uidBrand);
+
+			$user = $this->em->getRepository(User::class)->findOneBy([
+				"uid"=>$uidUser,
+				//"brand"=>$brand,
+			]);
+
+			if(!$user) return $this->src->msg_error(
+				$this->intl->trans("Echec lors de l'édition d'expéditeur. Utilisateur %1% inconnu.", ["%1%"=>$uidUser]),
+				$this->intl->trans("Impossible de retrouver cet utilisateur."),
+			);
+
+			if($user->getBrand()->getUid() != $uidBrand) return $this->src->msg_error(
+				$this->intl->trans("Echec lors de l'édition d'expéditeur'. Erreur dans requête."),
+				$this->intl->trans("La marque n'est pas indiquée."),
+			);
+
+			if($sender->getUid() && $this->pEdit){
+				$sender->setName($name)
+					->setUpdatedAt(new \DateTimeImmutable())
+					->setCreateBy($this->getUser())
+					->setObservation($observ);
+
 				$task = $this->intl->trans("Mise à jour du Sender : ".$sender->getName());
-				if(!$this->pEdit) return $this->src->no_access($this->intl->trans("Acces refusé à la modification du sender : ".$sender->getName()));
-				$message = $this->intl->trans("Mise à jour de l'identifiant effectuée.");
-				$sender->setUpdatedAt(new \DateTimeImmutable());
-			}else{
-				$sender->setUid($this->src->getUniqid())->setCreatedAt(new \DateTimeImmutable())->setCreateBy($this->getUser());
+				$message = $this->intl->trans("Mise à jour de l'expéditeur effectuée.");
+			}
+			else if($this->pCreate){
+				$sender->setUid($this->src->getUniqid())
+					->setName($name)
+					->setManager($user)
+					->setCreatedAt(new \DateTimeImmutable())
+					->setUpdatedAt(null)
+					->setCreateBy($this->getUser())
+					->setObservation($observ);
+
 				$task = $this->intl->trans("Création du Sender : ".$sender->getName());
-				if(!$this->pCreate) return $this->src->no_access($this->intl->trans("Acces refusé à l'ajout du sender : ".$sender->getName()));
-				$message = $this->intl->trans("Identifiant créé avec succès.");
+				$message = $this->intl->trans("Expéditeur créé avec succès.");
+			}
+			else{
+				return $this->src->no_access($this->intl->trans("Acces refusé à l'édition de sender."));
 			}
 
 			$senderRepository->add($sender, true);
 
-			if($request->isXmlHttpRequest()) return $this->src->msg_success($task , $message, []);
-
-			$this->addFlash('success', $message);
-			$this->src->addLog($task, 200);
-
-			return $this->redirectToRoute('sender', [], Response::HTTP_SEE_OTHER);
+			return $this->src->msg_success($task , $message);
 		}
-
-		if($form->isSubmitted() && $request->isXmlHttpRequest()) return $this->src->invalidForm($form);
 
 		list($userType, $masterId, $userRequest) = $this->src->checkThisUser($this->pList);
 		$status = [
@@ -118,24 +143,27 @@ class SenderController extends AbstractController
 		switch ($userType) {
 			case 4: $users = [$this->getUser()]; break;
 			case 5: $users = [$this->getUser()->getAffiliateManager()]; break;
-			default: $users = [$this->getUser()]; break;
+			default: $users = []; break;
 		}
 
 		return $this->renderForm('sender/index.html.twig', [
-			'form'      => $form,
-			'sender'    => $sender,
-			'brands'    => $brands,
+			// 'form'      => $form,
+			'sender'	=> $sender,
+			'brands'	=> $brands,
 			'users'		=> $users,
-			'status'    => $status,
-			'brand'     => $this->brand->get(),
-			'pAccess'   => $this->pAccess,
-			'pCreate'   => $this->pCreate,
+			'senders'	=> [],
+			'status'	=> $status,
+			'brand'		=> $this->brand->get(),
+			'pAccess'	=> $this->pAccess,
+			'pCreate'	=> $this->pCreate,
 			'userType'	=> $userType,
-			'pList'     => $this->pList,
-			'pEdit'     => $this->pEdit,
-			'pDelete'   => $this->pDelete,
-			'pStatus'   => $this->pStatus,
-			'pageTitle' => []
+			'pList'		=> $this->pList,
+			'pEdit'		=> $this->pEdit,
+			'pDelete'	=> $this->pDelete,
+			'pStatus'	=> $this->pStatus,
+			'pageTitle'	=> [
+				[$this->intl->trans("Expéditeur")]
+			]
 		]);
 	}
 
@@ -212,34 +240,6 @@ class SenderController extends AbstractController
 			"",
 			[]
 		);
-	}
-
-	#[Route('/user/get', name: 'sender_user', methods: ['POST'])]
-	public function user(Request $request): Response
-	{
-		$data = [
-			"results"=>[
-				["id"=>"", "text"=>""],
-			]
-		];
-		if (!$this->isCsrfTokenValid('sender', $request->request->get('_token'))){
-			$this->src->addLog($this->intl->trans("Actions sur sender bloquées à l'utilisateur (Erreur de requête)."));
-			return new JsonResponse($data);
-		}
-
-		$brand = $this->em->getRepository(Brand::class)->findOneByUid($request->request->get("brand"));
-
-		if($brand) $users = $this->em->getRepository(User::class)->getUsersByPermission("", 2, $brand->getManager()->getId(), 1);
-		else $users = $this->em->getRepository(User::class)->getUsersByPermission("", null, null, 1);
-
-		foreach ($users as $key => $user) {
-			$data["results"][] = [
-				"id"=>$user->getUid(),
-				"text"=>$user->getEmail(),
-			];
-		}
-
-		return new JsonResponse($data);
 	}
 
 	#[Route('/{uid}', name: 'sender_action', methods: ['GET', 'POST'])]

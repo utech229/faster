@@ -19,24 +19,6 @@
 				</div>
 				<!--end::Col-->
 				<!--begin::Col-->
-				<div class="col-md-2 mt-0">
-					<!--begin::Col header-->
-					<div class="mb-2">
-						<div class="d-flex flex-stack mb-2 px-2">
-							<div class="fw-bolder fs-4">{{"Brouillons"|trans}}
-							<span class="text-gray-400 ms-2" id="count_brouillon">0</span></div>
-							<!--begin::Menu-->
-							{# <div class="fs-8">
-								<span class="ms-2" id="amount_brouillon">0</span><span class="ms-2" id="amount-currency">XOF</span>
-							</div> #}
-							<!--end::Menu-->
-						</div>
-						<div class="h-3px w-100 bg-dark"></div>
-					</div>
-					<!--end::Col header-->
-				</div>
-				<!--end::Col-->
-				<!--begin::Col-->
 				<div class="col-md-3 mt-0">
 					<!--begin::Col header-->
 					<div class="mb-2">
@@ -55,7 +37,7 @@
 				</div>
 				<!--end::Col-->
 				<!--begin::Col-->
-				<div class="col-md-2 mt-0">
+				<div class="col-md-3 mt-0">
 					<!--begin::Col header-->
 					<div class="mb-2">
 						<div class="d-flex flex-stack mb-2 px-2">
@@ -91,7 +73,7 @@
 				</div>
 				<!--end::Col-->
 				<!--begin::Col-->
-				<div class="col-md-2 mt-0">
+				<div class="col-md-3 mt-0">
 					<!--begin::Col header-->
 					<div class="mb-2">
 						<div class="d-flex flex-stack mb-2 px-2">
@@ -104,6 +86,42 @@
 							<!--end::Menu-->
 						</div>
 						<div class="h-3px w-100 bg-success"></div>
+					</div>
+					<!--end::Col header-->
+				</div>
+				<!--end::Col-->
+				<!--begin::Col-->
+				<div class="col-md-6 mt-0">
+					<!--begin::Col header-->
+					<div class="mb-2">
+						<div class="d-flex flex-stack mb-2 px-2">
+							<div class="fw-bolder fs-4">{{"Brouillons"|trans}}
+							<span class="text-gray-400 ms-2" id="count_brouillon">0</span></div>
+							<!--begin::Menu-->
+							{# <div class="fs-8">
+								<span class="ms-2" id="amount_brouillon">0</span><span class="ms-2" id="amount-currency">XOF</span>
+							</div> #}
+							<!--end::Menu-->
+						</div>
+						<div class="h-3px w-100 bg-dark"></div>
+					</div>
+					<!--end::Col header-->
+				</div>
+				<!--end::Col-->
+				<!--begin::Col-->
+				<div class="col-md-6 mt-0">
+					<!--begin::Col header-->
+					<div class="mb-2">
+						<div class="d-flex flex-stack mb-2 px-2">
+							<div class="fw-bolder fs-4">{{"Total"|trans}}
+							<span class="text-gray-400 ms-2" id="count_all">0</span></div>
+							<!--begin::Menu-->
+							{# <div class="fs-8">
+								<span class="ms-2" id="amount_all">0</span><span class="ms-2" id="amount-currency">XOF</span>
+							</div> #}
+							<!--end::Menu-->
+						</div>
+						<div class="h-3px w-100 bg-info"></div>
 					</div>
 					<!--end::Col header-->
 				</div>
@@ -180,19 +198,17 @@
 							<div class="mb-3 row">
 								<div class="col-6">
 									<label class="form-label fs-6 fw-bold">{% trans %}Statut{% endtrans %} :</label>
-									<select id="status" class="form-select form-select-solid fw-bolder" data-placeholder="{{'Statut des identifiants' | trans}}">
+									<select id="status" data-kt-select2="true" data-allow-clear="true" data-hide-search="true" class="form-select form-select-solid fw-bolder" data-placeholder="{{'Statut des identifiants' | trans}}">
 										{# data-allow-clear="true" data-control="select2"  #}
 										<option value="">{{"Tous"|trans}}</option>
-										{% if status is not defined %}
-											{% for oneStatus in status %}
-												<option value="{{ oneStatus.uid }}">{{ oneStatus.name }}</option>
-											{% endfor %}
-										{% endif %}
+										{% for oneStatus in status %}
+											<option value="{{ oneStatus.uid }}">{{ oneStatus.name }}</option>
+										{% endfor %}
 									</select>
 								</div>
 								<div class="col-6">
 									<label class="form-label fs-6 fw-bold">{% trans %}Période{% endtrans %} :</label>
-									<select id="periode" class="form-select form-select-solid fw-bolder" data-placeholder="{{'Période de données' | trans}}">
+									<select id="periode" data-kt-select2="true" data-allow-clear="true" data-hide-search="true" class="form-select form-select-solid fw-bolder" data-placeholder="{{'Période de données' | trans}}">
 										{#  data-allow-clear="true" data-control="select2"  #}
 										<option value="1w">{{"1 semaine"|trans}}</option>
 										<option value="1m">{{"1 mois"|trans}}</option>
@@ -253,12 +269,20 @@
 			<!--begin::Card body-->
 			<div class="card-body pt-0 pb-2">
 				<div class="d-flex flex-wrap flex-stack py-0">
+					<a href="javascript:void" class="btn btn-sm btn-icon btn-light btn-color-muted btn-active-primary" id="reload">
+						<!--begin::Svg Icon | path: assets/media/icons/duotune/arrows/arr029.svg-->
+						<span class="svg-icon svg-icon-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+						<path d="M14.5 20.7259C14.6 21.2259 14.2 21.826 13.7 21.926C13.2 22.026 12.6 22.0259 12.1 22.0259C9.5 22.0259 6.9 21.0259 5 19.1259C1.4 15.5259 1.09998 9.72592 4.29998 5.82592L5.70001 7.22595C3.30001 10.3259 3.59999 14.8259 6.39999 17.7259C8.19999 19.5259 10.8 20.426 13.4 19.926C13.9 19.826 14.4 20.2259 14.5 20.7259ZM18.4 16.8259L19.8 18.2259C22.9 14.3259 22.7 8.52593 19 4.92593C16.7 2.62593 13.5 1.62594 10.3 2.12594C9.79998 2.22594 9.4 2.72595 9.5 3.22595C9.6 3.72595 10.1 4.12594 10.6 4.02594C13.1 3.62594 15.7 4.42595 17.6 6.22595C20.5 9.22595 20.7 13.7259 18.4 16.8259Z" fill="currentColor"/>
+						<path opacity="0.3" d="M2 3.62592H7C7.6 3.62592 8 4.02592 8 4.62592V9.62589L2 3.62592ZM16 14.4259V19.4259C16 20.0259 16.4 20.4259 17 20.4259H22L16 14.4259Z" fill="currentColor"/>
+						</svg></span>
+						<!--end::Svg Icon-->
+					</a>
 					<!--begin::Controls-->
 					<div class="d-flex flex-wrap my-1">
 						<!--begin::Tab nav-->
-						<ul class="nav nav-pills me-5">
+						<ul class="nav nav-pills">
 							<li class="nav-item m-0">
-								<a class="btn btn-sm btn-icon btn-light btn-color-muted btn-active-primary active me-3" data-bs-toggle="tab" href="#campaign_targets_table_pane">
+								<a class="btn btn-sm btn-icon btn-light btn-color-muted btn-active-primary active me-3" data-bs-toggle="tab" href="#targets_table_pane">
 									<!--begin::Svg Icon | path: icons/duotune/abstract/abs015.svg-->
 									<span class="svg-icon svg-icon-2">
 										<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -270,7 +294,7 @@
 								</a>
 							</li>
 							<li class="nav-item m-0">
-								<a class="btn btn-sm btn-icon btn-light btn-color-muted btn-active-primary" data-bs-toggle="tab" href="#campaign_targets_card_pane">
+								<a class="btn btn-sm btn-icon btn-light btn-color-muted btn-active-primary" data-bs-toggle="tab" href="#targets_card_pane">
 									<!--begin::Svg Icon | path: icons/duotune/general/gen024.svg-->
 									<span class="svg-icon svg-icon-1">
 										<svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24">
@@ -291,12 +315,6 @@
 					<!--end::Controls-->
 				</div>
 			</div>
-			<!--end::Card body-->
-		</div>
-		<!--end::Card-->
-		<!--end::Toolbar-->
-		<!--begin::Tab Content-->
-		<div class="card card-flush">
 			<div class="card-body row">
 				<!--begin::Table-->
 				<table id="campaign_overview_table" class="table table-row-bordered table-row-dashed gy-4 align-middle">
@@ -309,6 +327,7 @@
 							<th class="min-w-100px">{{"Nbr. de pages"|trans}}</th>
 							<th class="min-w-100px">{{"Statut"|trans}}</th>
 							<th class="min-w-100px">{{"Message"|trans}}</th>
+							<th class="min-w-100px">{{"Créée le"|trans}}</th>
 							<th class="min-w-100px">{{"Actions"|trans}}</th>
 						</tr>
 					</thead>
@@ -320,8 +339,10 @@
 				</table>
 				<!--end::Table-->
 			</div>
+			<!--end::Card body-->
 		</div>
-		<!--end::Tab Content-->
+		<!--end::Card-->
+		<!--end::Toolbar-->
 	</div>
 	<!--end::Container-->
 </div>
@@ -358,7 +379,7 @@
 	datesend			= "{{"Date d'envoi"|trans}}";
 
 	function startContentPane(){
-		$("#campaign_targets_card_pane").html("<div id='campaign_create_content' class='row w-100%'></div>");
+		$("#targets_card_pane").html("<div id='campaign_create_content' class='row w-100%'></div>");
 	}
 	function endContentPane(){
 		$("#campaign_create_content").append(`
@@ -370,8 +391,25 @@
 		`);
 	}
 
+	var defaultSenders = {}
+
+	{% for brand in brands %}
+		defaultSenders["{{ brand.uid }}"] = {uid: "{{brand.defaultSender.uid}}", name: "{{brand.defaultSender.name}}"}
+	{% endfor %}
+
+	var dataUsers = [{id:'', text:''}];
+	{% for user in users %}
+		dataUsers.push({id:"{{user.uid}}", text:"{{user.email}}"})
+	{% endfor %}
+
+	var dataSenders = [{id:'', text:''}];
+	{% for sender in senders %}
+		dataSenders.push({id:"{{sender.uid}}", text:"{{sender.name}}"})
+	{% endfor %}
+
 	const brandInit = {% if brands|length == 1 %} "{{brands[0].uid}}" {% else %} false {% endif %},
-	userInit = {% if users|length == 1 %} "{{users[0].uid}}" {% else %} false {% endif %};
+	userInit = {% if users|length == 1 %} "{{users[0].uid}}" {% else %} false {% endif %},
+	senderInit = {% if senders|length == 1 %} "{{senders[0].uid}}" {% else %} false {% endif %};
 </script>
 {{ include('smsmessage/new.html.twig', {'brands':brands}) }}
 <script type="text/javascript" src="{{ asset('app/js/queries/sms/list_campaign.js')}}"></script>
