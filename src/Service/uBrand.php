@@ -30,7 +30,7 @@ class uBrand extends AbstractController
         $search_brand = $this->brandRepository->findOneBy(['siteUrl' => 'https://'.$_SERVER['HTTP_HOST'], "status" => $this->services->status(3)]);
         $brand        = ($search_brand) ? $search_brand : $this->brandRepository->findOneBy(['siteUrl' => 'http://'.$_SERVER['HTTP_HOST'], "status" => $this->services->status(3)]);
         $brandAdmin   = $brand->getManager();
-        $company      = ($brandAdmin) ? $brandAdmin->getCompany() : $this->companyRepository->findOneBy(['id' => 1]);
+        $company      = $brandAdmin->getCompany();
         return[
            'name'               => $brand->getName(),
            'site_url'           => $brand->getSiteUrl(),
@@ -44,15 +44,15 @@ class uBrand extends AbstractController
                 'support'     => $brand->getEmail(),
             ],
            'author'             => [
-               'name'           => $company->getName(),
-               'address'        => $company->getAddress(),
-               'ifu'            => $company->getIfu(),
-               'rccm'           => $company->getRccm(),
+               'name'           => ($company) ? $company->getName() : $brandAdmin->getUsetting()->getFirstName(),
+               'address'        => ($company) ? $company->getAddress() : $brandAdmin->getEmail(),
+               'ifu'            => ($company) ? $company->getIfu() : '',
+               'rccm'           => ($company) ? $company->getRccm() : '',
            ],
            'year'               => date('Y'),
            'brand'              =>  $brand,  
            'color'              => ($brand->getName() == "FASTERMESSAGE") ? '#003366' : '#F5F8FA',
-           'regisform'           => ($brand->getName() == "FASTERMESSAGE") ? "register.html.twig" : "register.blank.html.twig",              
+           'regisform'          => ($brand->getName() == "FASTERMESSAGE") ? "register.html.twig" : "register.blank.html.twig",              
        ];
     }
   

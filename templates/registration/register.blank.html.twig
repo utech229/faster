@@ -4,11 +4,11 @@
 
 {% block body %}
         <!--begin::Root-->
-		<div class="d-flex flex-column flex-root">
+		{#<div class="d-flex flex-column flex-root">
 			<!--begin::Authentication - Signup Free Trial-->
-			<div class="d-flex flex-column flex-xl-row flex-column-fluid">
+			<div class="d-flex flex-column flex-xl-row flex-column-fluid ">
 				<!--begin::Aside-->
-				<div class="d-flex flex-column flex-center flex-lg-row-fluid" v>
+				<div class="d-flex flex-column flex-center flex-lg-row-fluid">
 					<!--begin::Content-->
 					<div class="d-flex align-items-start flex-column p-5 p-lg-15">
 						<!--begin::Logo-->
@@ -57,18 +57,60 @@
 					<!--end::Wrapper-->
 				</div>
 				<!--end::Right Content-->
-				<!--begin::Footer-->
-				<div class="d-flex flex-center flex-wrap fs-6 p-5 pb-0">
-					<!--begin::Links-->
-					<div class="d-flex flex-center fw-bold fs-6">
-						<a href="https://fastermessage.com" class="text-muted text-hover-primary px-2">{% trans %}A propos{% endtrans %} </a>
-						<a href="https://fastermessage.com/cgv.html" class="text-muted text-hover-primary px-2">{% trans %}Conditions d'utilisation{% endtrans %}</a>
-						<a href="" class="text-muted text-hover-primary px-2">{% trans %}Confidentialité{% endtrans %}</a>
-						<a href="https://wa.me/+22952734444" class="text-muted text-hover-primary px-2">{% trans %}Support {% endtrans %}</a>
+			</div>
+			<!--end::Authentication - Signup Free Trial-->
+		</div>#}
+		<!--end::Root-->
+		<!--begin::Root-->
+		<div class="d-flex flex-column flex-root" style="background-color: #000">
+			<!--begin::Authentication - Signup Free Trial-->
+			<div class="d-flex flex-column flex-xl-row flex-column-fluid">
+				<!--begin::Aside-->
+				<div class="d-flex flex-column flex-center flex-lg-row-fluid">
+					<!--begin::Content-->
+					<div class="d-flex align-items-start flex-column p-5 p-lg-15">
+						<!--begin::Logo-->
+						<a href="{{ path('app_login')}}" class="mb-12">
+							<img alt="{{ brand.name}}" style="-webkit-filter: saturate(100%);filter: saturate(100%);"  src="{{ asset('app/uploads/brands/logos/'~ brand.logo ~'') }}" class="h-50px" />
+						</a>
+						<!--end::Logo-->
+						<!--begin::Title-->
+						<h1 class="text-white fs-2x mb-3">{{brand.name}}</h1>
+						<!--end::Title-->
+						<!--begin::Description-->
+						<div class="fw-bold fs-4 text-gray-400 mb-10">
+						{% if brand.name == "LITESMS" %}
+							{% trans %}Plateforme de SMS marketing propulseur{% endtrans %}
+						{% else %}
+							{% trans %}Solution de campagne marketing par SMS{% endtrans %}
+						{% endif %}
+						</div>
+						<!--begin::Description-->
+						
+						<!--begin::Illustration-->
+						<img src="{{ asset('app/media/login/blank-img.png') }}" class="h-250px h-lg-250px" />
+						<!--end::Illustration-->
 					</div>
-					<!--end::Links-->
+					<!--end::Content-->
 				</div>
-				<!--end::Footer-->
+				<!--begin::Aside-->
+				<!--begin::Content-->
+				<div class="flex-row-fluid d-flex flex-center justfiy-content-xl-first p-10">
+					<!--begin::Wrapper-->
+					<div class="d-flex flex-center p-15 shadow-sm bg-body rounded w-100 w-md-550px mx-auto ms-xl-20">
+						<!--begin::Form-->
+						{% if route     == "app_register" %}
+                            {% include 'registration/form.html.twig' %}
+                        {% elseif route == 'app_init_reset' %}
+                            {% include 'password/form.html.twig' %}
+                        {% elseif route == 'app_login' %}
+                            {% include 'security/form.html.twig' %}
+                        {% endif %}
+						<!--end::Form-->
+					</div>
+					<!--end::Wrapper-->
+				</div>
+				<!--end::Right Content-->
 			</div>
 			<!--end::Authentication - Signup Free Trial-->
 		</div>

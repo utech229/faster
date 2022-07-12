@@ -187,7 +187,7 @@ var KTUsersList = function() {
                             var status = {
                                 'ROLE_AFFILIATE_USER': { 'title': _user_affiliate, 'class': 'warning' },
                                 'ROLE_AFFILIATE_RESELLER': { 'title': _reseller_affiliate, 'class': 'secondary' },
-                                'ROLE_RESELLER': { 'title': _reseller, 'class': 'danger' },
+                                'ROLE_RESELLER': { 'title': _reseller, 'class': 'success' },
                                 'ROLE_USER': { 'title': _user, 'class': 'info' },
                                 'ROLE_ACCOUNTING': { 'title': _accounting, 'class': 'info' },
                                 'ROLE_ADMINISTRATOR': { 'title': _administrator, 'class': 'success' },
