@@ -23,6 +23,10 @@ var KTcontactOverview= {
                 btn_two.removeClass('active');
                 loading()
             }, 100);
+            if (deleteC == 1) {
+				$('#kt_modal_add_contact_reload_button').click();
+                deleteC = 0;
+            }
         });
         $(btn_two).click(function() {
             loading(true);
@@ -41,6 +45,10 @@ var KTcontactOverview= {
                 }));
                 isInit = true;
             }
+            if (deleteG == 1) {
+				$('#kt_modal_add_contact_group_reload_button').click();
+                deleteG = 0;
+            }
         });
 
     }
@@ -51,3 +59,4 @@ var KTcontactOverview= {
 KTUtil.onDOMContentLoaded((function() {
     KTcontactOverview.init()
 }));
+

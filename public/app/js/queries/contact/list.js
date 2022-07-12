@@ -3,6 +3,8 @@
 var allHidden           =   [];
 var group               =   [];
 var tabUpdateContact    =   [];
+var deleteC             =   0;
+var deleteG             =   0;
 var KTContactList = function() {
     var e, t, n, r, o = document.getElementById("kt_contacts_table"),
         c = () => {
@@ -76,6 +78,7 @@ var KTContactList = function() {
                     }).then((function(t) { 
                         if (t.value) 
                         {
+                            loading(true);
                             let tabUid  =  [];
                             c.forEach((t => {
                                         if(t.checked && $(t).attr("data-value") != undefined){
@@ -100,8 +103,9 @@ var KTContactList = function() {
                                         });
         
                                         if (response.type === 'success') {
-        
+                                            loading();
                                             $('#kt_modal_add_contact_reload_button').click();
+                                            
                                         }
                                     },
                                     error: function () { 
@@ -281,7 +285,7 @@ var KTContactList = function() {
                                 var deleterIcon =  `<!--begin::Delete-->
                                 <button class="btn btn-icon btn-active-light-primary w-30px h-30px contactDeleter" 
                                     data-id=`+data+`>
-                                        <i id=`+data+` class="text-danger fa fa-trash-alt"></i>
+                                        <i id="deleteC`+data+`" class="text-danger fa fa-trash-alt"></i>
                                 </button>
                                 <!--end::Delete-->`;
                                 updaterIcon = (pUpdate) ? updaterIcon : '' ;
@@ -297,11 +301,9 @@ var KTContactList = function() {
                     language: {
                         url: _language_datatables,
                     },
-                    dom: `<"tab-content"
-                            <"top text-end bt-export d-none"B>
-                            <"#campaign_targets_card_pane.tab-pane fade row">
-                            <"#campaign_targets_table_pane.tab-pane fade show active"rtF>>
-                            <"row"<"col-sm-6"l><"col-sm-6"p>>`               
+                    dom: `<"top text-end bt-export d-none"B>
+					<"table-responsive w-100%"rtF>
+					<"row"<"col-sm-6"l><"col-sm-6"p>>`,               
                 }),
                 $('#kt_modal_add_contact_reload_button').on('click', function() {
                     e.ajax.reload(null, false);
@@ -336,6 +338,24 @@ var KTContactList = function() {
                 }),
 			    $("#export").on('click', ($this)=>{ 
                     $this.preventDefault(); return $(".bt-export").hasClass('d-none')?$(".bt-export").removeClass('d-none'):$(".bt-export").addClass('d-none');
+                }),
+                $(document).on('click', "#add_contact_id", function(e) 
+                {
+                    e.preventDefault();
+                    let uid_user = document.querySelector('[data-kt-contact-user="user"]').value;
+                    if (uid_user) {
+                        rechargeGroups(uid_user) ;
+                        $("#kt_modal_create_contact").modal("show") ;
+                    }else
+                    Swal.fire({
+                    html: _selectUser,
+                    icon: "warning",
+                    buttonsStyling: !1,
+                    confirmButtonText: _Form_Ok_Swal_Button_Text_Notification,
+                    customClass: {
+                        confirmButton: "btn fw-bold btn-primary"
+                    }
+                    });
                 }),
                 document.querySelector('[data-kt-contact-table-filter="reset"]').addEventListener("click", (function() {
                     document.querySelector('[data-kt-contact-table-filter="form"]').querySelectorAll("select").forEach((e => {
@@ -475,6 +495,25 @@ $(document).on('change',"#list_user_contact_id", function (e) {
 function infoImportFile() {
     window.location.href = _base_url+'/app/exemple/exemple.xlsx';
 }
+
+$(document).on('entityUpBegin', function(e, identifier, id, icon) {
+    $(identifier + id).removeClass("fa");
+	$(identifier + id).removeClass("fa");
+	$(identifier + id).removeClass(icon).addClass("fa fa-spin fa-circle-notch");
+});
+
+$(document).on('entityUpStop', function(event, identifier, id, icon) {
+    $(identifier + id).removeClass("fa");
+	$(identifier + id).removeClass("fa-spin");
+	$(identifier + id).removeClass("fa-circle-notch").addClass("fa " + icon);
+});
+
+$(document).on('securityFirewall', function(e, r, identifier, rowData, icon) {
+    if (r.status == 'error')
+        toastr.error(r.message),
+        $(document).trigger('entityUpStop', [identifier, rowData, icon]);
+});
+
 // Champ Importation
 var myDropzone = new Dropzone("#kt_import", {
     url: url_import, // Set the url for your upload script location
