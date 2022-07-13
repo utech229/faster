@@ -26,10 +26,10 @@ const SMSMewMessageManager = function(){
 		// Charge par ajax les utilisateurs sous la marque sélectionnée
 		$(user).css("width","100%");
 		$(brand).on("change.select2", ($this)=>{
-			const $thisValue = $($this.target).val()
+			const $thisValue = $($this.target).val();
 			if(typeof defaultSenders[$thisValue] !== "undefined") viewAlert("#message_modal_scroll", defaultSenders[$thisValue].name);
 			$(user).select2({data:[{id:'',text:''}]});
-			$(user).val("").trigger("change.select2");
+			$(user).val("").change();//.trigger("change.select2");
 			$(user).select2({
 				data: dataUsers,
 				ajax: {
@@ -51,7 +51,7 @@ const SMSMewMessageManager = function(){
 		$(sender).css("width","100%");
 		$(user).on("change", ($this)=>{
 			$(sender).select2({data:[{id:'',text:''}]});
-			$(sender).val("").trigger("change.select2");
+			$(sender).val("").change();//.trigger("change.select2");
 			$(sender).select2({
 				data: dataSenders,
 				ajax: {
@@ -70,11 +70,13 @@ const SMSMewMessageManager = function(){
 			});
 		});
 
-		if(brandInit) $(brand).val(brandInit).trigger("change.select2");
+		if(brandInit) $(brand).val(brandInit).change();//.trigger("change.select2");
 
-		if(userInit) $(user).val(userInit).trigger("change.select2"); else $(user).val("").trigger("change.select2");
+		if(userInit) $(user).val(userInit).change();//.trigger("change.select2");
+		else $(user).val("").change();//.trigger("change.select2");
 
-		if(senderInit) $(sender).val(senderInit).trigger("change.select2"); else $(sender).val("").trigger("change.select2");
+		if(senderInit) $(sender).val(senderInit).change();//.trigger("change.select2");
+		else $(sender).val("").change();//.trigger("change.select2");
 	}
 
 	return {
@@ -93,26 +95,109 @@ const SMSMewMessageManager = function(){
 			};
 			if(_locale.toUpperCase() == "FR") flatpickr["time_24hr"] = true;
 			$(datetime_message).flatpickr(flatpickr);
-			$("[name=timezone]").val(now.format("Z")).trigger("change");
+			$("[name=timezone]").val(now.format("Z")).change();//.trigger("change");
 
-			initSelects()
+			initSelects();
 
-			$(btnClose).on("click", ()=>{modal.hide()})
-			$(modalClose).on("click", ()=>{modal.hide()})
+			$(btnClose).on("click", ()=>{modal.hide();});
+			$(modalClose).on("click", ()=>{modal.hide();});
 
 			$(btn_new).on("click", ($this)=>{
-				initSelects()
-				$(message_phone).val("").trigger("change");
-				$(datetime_message).val("").trigger("change");
-				$(message).val("").trigger("change");
+				initSelects();
+				$(message_phone).val("").change();//.trigger("change");
+				$(datetime_message).val("").change();//.trigger("change");
+				$(message).val("").change();//.trigger("change");
 				modal.show();
-			})
+			});
 
 			$(message).on("keyup change", ()=>{
-				$(true_message).val(countMessageCaracts(message, "#countThree"))
-			})
+				$(true_message).val(countMessageCaracts(message, "#countThree"));
+			});
 
-			$("#message_form #clear").on("click", ()=>{$("#message_form #datetime_message").val("")})
+			$("#message_form #clear").on("click", ()=>{$("#message_form #datetime_message").val("");});
+
+			var validatorPhone = ()=>{
+				return {
+					validate: function(input){
+						if(intlTel.isValidNumber()){
+							return {
+								valid: true,
+							}
+						}else if(checkPhone(intlTel.getNumber())){
+							return {
+								valid: true,
+							}
+						}
+						return {
+							valid: false,
+						}
+					}
+				}
+			};
+
+			FormValidation.validators.isValidPhone = validatorPhone;
+
+			var validator = FormValidation.formValidation(
+				form_message,
+				{
+					fields: {
+						'brand': {
+							validators: {
+								notEmpty: {
+									message: noEmptyBrand
+								}
+							}
+						},
+						'user': {
+							validators: {
+								notEmpty: {
+									message: noEmptyManager
+								}
+							}
+						},
+						'message': {
+							validators: {
+								notEmpty: {
+									message: noEmptyMessage
+								}
+							}
+						},
+						'message_phone': {
+							validators: {
+								notEmpty: {
+									message: noEmptyPhone
+								},
+								isValidPhone: {
+									message: invalidPhone
+								}
+							}
+						},
+					},
+
+					plugins: {
+						trigger: new FormValidation.plugins.Trigger(),
+						bootstrap: new FormValidation.plugins.Bootstrap5({
+							rowSelector: '.fv-row',
+							eleInvalidClass: '',
+							eleValidClass: ''
+						})
+					}
+				}
+			);
+
+			$(btnSubmit).on('click', (e)=>{
+				e.preventDefault();
+				if (validator) {
+					validator.validate().then(function (status) {
+						if (status == 'Valid') {
+							$("[name=full_number]").val(intlTel.getNumber());
+							$(form_message).submit();
+						}else{
+							swalSimple('error', _Form_Error_Swal_Notification);
+						}
+					});
+				}
+			});
 
 			$(document).on("submit", "#message_form", ($this)=>{
 				$this.preventDefault();
@@ -131,9 +216,9 @@ const SMSMewMessageManager = function(){
 								swalConfirm("success", (response.message)+"<br/>"+loadPage, ()=>{window.location.replace(url_message)});
 							}else{
 								swalSimple(response.type, response.message);
-								datatableMessage.ajax.reload();
+								datatableMessage.ajax.reload(null, false);
 							}
-							modal.hide()
+							modal.hide();
 						}else{
 							swalSimple(response.type, response.message);
 						}
@@ -144,7 +229,7 @@ const SMSMewMessageManager = function(){
 						console.log(response);
 					}
 				});
-			})
+			});
 		}
 	}
 }();

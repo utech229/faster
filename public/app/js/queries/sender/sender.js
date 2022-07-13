@@ -125,7 +125,7 @@ const SenderManager = function(){
 		$(userFilter).css("width","100%");
 		$(brandFilter).on("change.select2", ($this)=>{
 			$(userFilter).select2({data:[{id:'',text:''}]});
-			$(userFilter).val("").trigger("change.select2");
+			$(userFilter).val("").change();//.trigger("change.select2");
 			$(userFilter).select2({
 				data: dataUsers,
 				ajax: {
@@ -144,9 +144,11 @@ const SenderManager = function(){
 			});
 		});
 
-		if(brandInit) $(brandFilter).val(brandInit).trigger("change.select2"); else  $(brandFilter).val("").trigger("change.select2");
+		if(brandInit) $(brandFilter).val(brandInit).change();//.trigger("change.select2");
+		else  $(brandFilter).val("").change();//.trigger("change.select2");
 
-		if(userInit) $(userFilter).val(userInit).trigger("change.select2"); else  $(userFilter).val("").trigger("change.select2");
+		if(userInit) $(userFilter).val(userInit).change();//.trigger("change.select2");
+		else  $(userFilter).val("").change();//.trigger("change.select2");
 	}
 
 	const initSelectsSender = ()=>{
@@ -159,7 +161,7 @@ const SenderManager = function(){
 		$(userSender).css("width","100%");
 		$(brandSender).on("change.select2", ($this)=>{
 			$(userSender).select2({data:[{id:'',text:''}]});
-			$(userSender).val("").trigger("change.select2");
+			$(userSender).val("").change();//.trigger("change.select2");
 			$(userSender).select2({
 				data: dataUsers,
 				ajax: {
@@ -178,15 +180,16 @@ const SenderManager = function(){
 			});
 		});
 
-		if(brandInit) $(brandSender).val(brandInit).trigger("change.select2");
+		if(brandInit) $(brandSender).val(brandInit).change();//.trigger("change.select2");
 
-		if(userInit) $(userSender).val(userInit).trigger("change.select2"); else $(userSender).val("").trigger("change.select2");
+		if(userInit) $(userSender).val(userInit).change();//.trigger("change.select2");
+		else $(userSender).val("").change();//.trigger("change.select2");
 	}
 
 	const resetSenderForm = ()=>{
 		senderForm.reset();
 
-		initSelectsSender()
+		initSelectsSender();
 
 		$(senderForm.querySelector("#sender__token")).val(_token);
 		btnAnimation(submitSender);
@@ -199,12 +202,12 @@ const SenderManager = function(){
 		const id = $($this).attr("data-id");
 		$(senderForm).attr("action",url_edit.replace("_1_", id));
 
-		$(brandSender).val(saveData[id][3][1]).trigger("change")
+		$(brandSender).val(saveData[id][3][1]).change();//.trigger("change")
 
 		$(userSender).select2({
 			data: [{id:saveData[id][4][1],text:saveData[id][4][0]}]
 		});
-		$(userSender).val(saveData[id][4][1]).trigger("change")
+		$(userSender).val(saveData[id][4][1]).change();//.trigger("change");
 
 		$(senderForm.querySelector("#sender_name")).val(saveData[id][0]);
 		$(senderForm.querySelector("#sender_observation")).val(saveData[id][6]);
@@ -231,7 +234,7 @@ const SenderManager = function(){
 				success: function (response) {
 					swalSimple(response.type, response.message);
 					if (response.status === 'success') {
-						datatable.ajax.reload();
+						datatable.ajax.reload(null, false);
 					}
 					btnAnimation($this);
 				},
@@ -313,7 +316,7 @@ const SenderManager = function(){
 				loading();
 			});
 
-			$("#search").on('keyup', ($this)=>{ datatable.search($this.target.value).draw() })
+			$("#search").on('keyup', ($this)=>{ datatable.search($this.target.value).draw(); })
 
 			// Action sur bouton export
 			$("#export").on('click', ($this)=>{
@@ -321,39 +324,94 @@ const SenderManager = function(){
 				return $(".bt-export").hasClass('d-none')?$(".bt-export").removeClass('d-none'):$(".bt-export").addClass('d-none');
 			})
 
-			initSelectsFilter()
+			initSelectsFilter();
 
 			$(submitFilter).on("click", ($this)=>{
-				loading(true)
-				datatable.ajax.reload()
+				loading(true);
+				datatable.ajax.reload(null, false);
 			})
 
 			$(resetFilter).on("click", ($this)=>{
-				initSelectsFilter()
-				$(statusFilter).val("").trigger("change.select2");
+				initSelectsFilter();
+				$(statusFilter).val("").change();//.trigger("change.select2");
 				loading(true);
-				datatable.ajax.reload()
+				datatable.ajax.reload();
 			})
 
 			$(elSenderModal.querySelector("#close")).on("click", ($this)=>{
 				$this.preventDefault();
-				senderModal.hide()
+				senderModal.hide();
 			})
 
 			$(cancelSenderForm).on("click", ($this)=>{
 				$this.preventDefault();
-				senderModal.hide()
+				senderModal.hide();
 			})
 
-			initSelectsSender()
+			initSelectsSender();
 
 			$("#add_sender").on("click", ($this)=>{
 				$this.preventDefault();
-				$(titleSenderModal).html(addTitle)
+				$(titleSenderModal).html(addTitle);
 				$(senderForm).attr("action",url_new);
-				resetSenderForm()
-				senderModal.show()
+				resetSenderForm();
+				senderModal.show();
 			})
+
+			var validator = FormValidation.formValidation(
+				senderForm,
+				{
+					fields: {
+						'brand': {
+							validators: {
+								notEmpty: {
+									message: noEmptyBrand
+								}
+							}
+						},
+						'manager': {
+							validators: {
+								notEmpty: {
+									message: noEmptyManager
+								}
+							}
+						},
+						'name': {
+							validators: {
+								notEmpty: {
+									message: noEmptyName
+								},
+								stringLength: {
+									max: 11,
+									message: maxLengthName
+								}
+							}
+						},
+					},
+
+					plugins: {
+						trigger: new FormValidation.plugins.Trigger(),
+						bootstrap: new FormValidation.plugins.Bootstrap5({
+							rowSelector: '.fv-row',
+							eleInvalidClass: '',
+							eleValidClass: ''
+						})
+					}
+				}
+			);
+
+			$(submitSenderForm).on('click', (e)=>{
+				e.preventDefault();
+				if (validator) {
+					validator.validate().then(function (status) {
+						if (status == 'Valid') {
+							$(senderForm).submit();
+						}else{
+							swalSimple('error', _Form_Error_Swal_Notification);
+						}
+					});
+				}
+			});
 
 			$(document).on("submit", "#form_sender", ($this)=>{ // soumission du formulaire
 				$this.preventDefault();
@@ -368,7 +426,7 @@ const SenderManager = function(){
 					success: function (response) {
 						swalSimple(response.type, response.message);
 						if (response.status === 'success') {
-							datatable.ajax.reload();
+							datatable.ajax.reload(null, false);
 							senderModal.hide();
 						}
 						btnAnimation(submitSender);
@@ -385,5 +443,5 @@ const SenderManager = function(){
 }();
 
 KTUtil.onDOMContentLoaded((function() {
-	SenderManager.init()
+	SenderManager.init();
 }));

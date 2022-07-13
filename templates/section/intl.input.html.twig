@@ -21,7 +21,7 @@
             // onlyCountries: ['us', 'gb', 'ch', 'ca', 'do'],
             // placeholderNumberType: "MOBILE",
             preferredCountries: [
-                'bj', 'bf', 'ci', 'cm', 'cd', 'gn', 'ml', 'ne', 'sn', 'tg', 'be', 'de', 'fr', 'ng', 'us'
+                'bj', 'bf', 'ci', 'cm', 'cd', 'ga', 'gn', 'ml', 'ne', 'sn', 'tg', 'be', 'de', 'fr', 'ng', 'us'
             ],
             separateDialCode: true,
             utilsScript: "{{asset('librairies/intl/build/js/utils.js') }}",
@@ -42,4 +42,23 @@
         $(selector).parent('div.iti').addClass("w-100");
     });
     //End -- Initialisation des selects téléphone dans tous le document
+
+	function checkPhone(full_number) {
+		const full = full_number;
+
+		if(
+			(full.length == 12 && full.substr(0, 6) == "+22952")
+			|| (full.length == 14 && full.substr(0, 4) == "+225")
+			|| (full.length == 12 && full.substr(0, 6) == "+22953")
+			|| (full.length == 12 && full.substr(0, 6) == "+22954")
+			|| (full.length == 12 && full.substr(0, 6) == "+22955")
+			|| (full.length == 12 && full.substr(0, 6) == "+22957")
+			|| (full.length == 12 && full.substr(0, 6) == "+22956")
+			|| (full.length == 12 && full.substr(0, 6) == "+22959")
+		){
+			return true;
+		}
+
+		return false;
+	};
 </script>

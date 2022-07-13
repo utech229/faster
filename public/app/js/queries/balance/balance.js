@@ -82,7 +82,7 @@ const ListBalanceManager = function(){
 		$(userFilter).css("width","100%");
 		$(brandFilter).on("change.select2", ($this)=>{
 			$(userFilter).select2({data:[{id:'',text:''}]});
-			$(userFilter).val("").trigger("change.select2");
+			$(userFilter).val("").change();//.trigger("change.select2");
 			$(userFilter).select2({
 				data: dataUsers,
 				ajax: {
@@ -101,9 +101,11 @@ const ListBalanceManager = function(){
 			});
 		});
 
-		if(brandInit) $(brandFilter).val(brandInit).trigger("change.select2"); else  $(brandFilter).val("").trigger("change.select2");
+		if(brandInit) $(brandFilter).val(brandInit).change();//.trigger("change.select2");
+		else  $(brandFilter).val("").change();//.trigger("change.select2");
 
-		if(userInit) $(userFilter).val(userInit).trigger("change.select2"); else  $(userFilter).val("").trigger("change.select2");
+		if(userInit) $(userFilter).val(userInit).change();//.trigger("change.select2");
+		else  $(userFilter).val("").change();//.trigger("change.select2");
 	}
 
 	return {
@@ -159,14 +161,14 @@ const ListBalanceManager = function(){
 
 			$(submitFilter).on("click", ($this)=>{
 				loading(true)
-				datatable.ajax.reload()
+				datatable.ajax.reload(null, false)
 			})
 
 			$(resetFilter).on("click", ($this)=>{
 				initSelectsFilter()
-				$(statusFilter).val("").trigger("change.select2");
+				$(statusFilter).val("").change();//.trigger("change.select2");
 				loading(true);
-				datatable.ajax.reload()
+				datatable.ajax.reload(null, false)
 			})
 		}
 	}

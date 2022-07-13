@@ -120,7 +120,7 @@ const SMSStatistiquesManager = function(){
 		$(brand).on("change.select2", ($this)=>{
 			const $thisValue = $($this.target).val()
 			$(user).select2({data:[{id:'',text:''}]});
-			$(user).val("").trigger("change.select2");
+			$(user).val("").change();//.trigger("change.select2");
 			$(user).select2({
 				data: dataUsers,
 				ajax: {
@@ -142,7 +142,7 @@ const SMSStatistiquesManager = function(){
 		$(sender).css("width","100%");
 		$(user).on("change", ($this)=>{
 			$(sender).select2({data:[{id:'',text:''}]});
-			$(sender).val("").trigger("change.select2");
+			$(sender).val("").change();//.trigger("change.select2");
 			$(sender).select2({
 				data: dataSenders,
 				ajax: {
@@ -161,14 +161,16 @@ const SMSStatistiquesManager = function(){
 			});
 		});
 
-		if(brandInit) $(brand).val(brandInit).trigger("change.select2");
+		if(brandInit) $(brand).val(brandInit).change();//.trigger("change.select2");
 
-		if(userInit) $(user).val(userInit).trigger("change.select2"); else $(user).val("").trigger("change.select2");
+		if(userInit) $(user).val(userInit).change();//.trigger("change.select2");
+		else $(user).val("").change();//.trigger("change.select2");
 
-		if(senderInit) $(sender).val(senderInit).trigger("change.select2"); else $(sender).val("").trigger("change.select2");
+		if(senderInit) $(sender).val(senderInit).change();//.trigger("change.select2");
+		else $(sender).val("").change();//.trigger("change.select2");
 
-		$(status).val("").trigger("change");
-		$(periode).val("1w").trigger("change");
+		$(status).val("").change();//.trigger("change");
+		$(periode).val("1w").change();//.trigger("change");
 	}
 
 	// Init ChartJS -- for more info, please visit: https://www.chartjs.org/docs/latest/
@@ -451,7 +453,7 @@ const SMSStatistiquesManager = function(){
 					$("#count_invalid").html(responseData.stats[2]);
 					$("#count_delivered").html(responseData.stats[3]);
 				}
-				
+
 				initChart();
 				loading();
 			});
@@ -466,7 +468,7 @@ const SMSStatistiquesManager = function(){
 			});
 
 			// Si bouton submit du filtre et cliqué
-			$("#menu-filter #submit").on("click", ()=>{ loading(true); datatable.ajax.reload(); });
+			$("#menu-filter #submit").on("click", ()=>{ loading(true); datatable.ajax.reload(null, false); });
 		}
 	}
 }();

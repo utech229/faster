@@ -84,7 +84,7 @@ const SMSListCampaignManager = function(){
 		$(user).css("width","100%");
 		$(brand).on("change.select2", ($this)=>{
 			const $thisValue = $($this.target).val()
-			$(user).val("").trigger("change.select2");
+			$(user).val("").change();//.trigger("change.select2");
 			$(user).select2({
 				data: dataUsers,
 				ajax: {
@@ -106,7 +106,7 @@ const SMSListCampaignManager = function(){
 		$(sender).css("width","100%");
 		$(user).on("change", ($this)=>{
 			// $(sender).select2({data:[{id:'',text:''}]});
-			$(sender).val("").trigger("change.select2");
+			$(sender).val("").change();//.trigger("change.select2");
 			$(sender).select2({
 				data: dataSenders,
 				ajax: {
@@ -125,11 +125,13 @@ const SMSListCampaignManager = function(){
 			});
 		});
 
-		if(brandInit) $(brand).val(brandInit).trigger("change.select2");
+		if(brandInit) $(brand).val(brandInit).change();//.trigger("change.select2");
 
-		if(userInit) $(user).val(userInit).trigger("change.select2"); else $(user).val("").trigger("change.select2");
+		if(userInit) $(user).val(userInit).change();//.trigger("change.select2");
+		else $(user).val("").change();//.trigger("change.select2");
 
-		if(senderInit) $(sender).val(senderInit).trigger("change.select2"); else $(sender).val("").trigger("change.select2");
+		if(senderInit) $(sender).val(senderInit).change();//.trigger("change.select2");
+		else $(sender).val("").change();//.trigger("change.select2");
 	}
 
 	function addContentPane(dataInner, adding = true){
@@ -343,6 +345,7 @@ const SMSListCampaignManager = function(){
 				$("#count_suspend").html(countSuspend);
 				$("#count_completed").html(countCompleted);
 				$("#count_brouillon").html(countBrouillon);
+				$("#count_all").html(countProgramming+countInProgress+countSuspend+countCompleted+countBrouillon);
 
 				const alltr = el.querySelectorAll("tr");
 
@@ -375,7 +378,7 @@ const SMSListCampaignManager = function(){
 							success: function (response) {
 								if (response.status === 'success') {
 									swalSimple(response.type, response.message);
-									datatable.ajax.reload();
+									datatable.ajax.reload(null, false);
 								}else if(response.data){
 									swalConfirm("info", response.message+"<br/>"+redirectConfirm, ()=>{
 										var url = url_message_create.replace("_1_", id)
@@ -411,7 +414,7 @@ const SMSListCampaignManager = function(){
 							dataType: 'json',
 							success: function (response) {
 								swalSimple(response.type, response.message);
-								if (response.status === 'success') datatable.ajax.reload();
+								if (response.status === 'success') datatable.ajax.reload(null, false);
 								btnAnimation(elem);
 							},
 							error: function (response) {
@@ -442,7 +445,7 @@ const SMSListCampaignManager = function(){
 							dataType: 'json',
 							success: function (response) {
 								swalSimple(response.type, response.message);
-								if (response.status === 'success') datatable.ajax.reload();
+								if (response.status === 'success') datatable.ajax.reload(null, false);
 								btnAnimation(elem);
 							},
 							error: function (response) {
@@ -454,6 +457,8 @@ const SMSListCampaignManager = function(){
 					}, ()=>{btnAnimation(elem);});
 				});
 				loading();
+
+				// console.log(datatable.page.info());
 			});
 
 			// Action sur bouton export
@@ -461,15 +466,15 @@ const SMSListCampaignManager = function(){
 
 			$("#search").on('keyup', ($this)=>{ datatable.search($this.target.value).draw(); }); // Recherche dans l'input search
 
-			$("#reload").on('click', ()=>{ loading(true); datatable.ajax.reload(); });
+			$("#reload").on('click', ()=>{ loading(true); datatable.ajax.reload(null, false); });
 
 			initSelects()
 
 			// Si bouton reset du filtre et cliqué
 			$("#menu-filter #reset").on("click", ()=>{
 				initSelects()
-				$(status).val("").trigger("change");
-				$(periode).val("1w").trigger("change");
+				$(status).val("").change();//.trigger("change");
+				$(periode).val("1w").change();//.trigger("change");
 				loading(true);
 				datatable.ajax.reload();
 			});

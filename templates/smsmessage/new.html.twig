@@ -237,6 +237,9 @@
 
 	const url_message = "{{path("message_sms")}}";
 
+	const noEmptyPhone	= "{{"Veuillez saisir le numero de téléphone"|trans}}",
+	invalidPhone	= "{{"Le numero de téléphone est invalide"|trans}}";
+
 	function viewAlert(content, sender){
 		$("#alertDefaultSender").remove()
 		$(content).prepend(`

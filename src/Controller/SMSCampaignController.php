@@ -753,7 +753,7 @@ class SMSCampaignController extends AbstractController
 		$dataAmount = $this->sMessage->getAmountSMS($dataMessage[3], $campaign->getManager(), $phone_data?$phone_data["code"]:"null");
 		if(!$dataAmount[0]) $errors[] = $dataAmount[2];
 
-		if($phone_data) $phone_data["operator"] = $this->phoneOperator($phone_data["code"], $phoneNumber);
+		if($phone_data) $phone_data["operator"] = $this->sMessage->phoneOperator($phone_data["code"], $phoneNumber, $this->brickPhone);
 
 		$lastMessage["updatedAt"]       = (new \DateTimeImmutable())->format("Y-m-d H:i:sP");
 		$lastMessage["message"]         = $dataMessage[1];
@@ -761,7 +761,7 @@ class SMSCampaignController extends AbstractController
 		$lastMessage["status"]          = count($errors) == 0 ? $this->programming->getCode() : $this->suspend->getCode();
 		$lastMessage["phone"]           = str_replace("+","",$phoneNumber);
 		$lastMessage["phoneCountry"]    = $phone_data?$phone_data:$this->initDataPhone;
-		$lastMessage["error"]           = implode("; ", $errors);
+		$lastMessage["errors"]          = implode("; ", $errors);
 		$lastMessage["contact"]         = $contact;
 
 		$messages[$positionNbr] = $lastMessage;
@@ -1256,7 +1256,7 @@ class SMSCampaignController extends AbstractController
 				$dataError[] = [
 					$key+1,
 					$message["contact"]["number"],
-					$message["error"],
+					$message["errors"],
 					[$message["contact"], $message["phoneCountry"]],
 					$message["message"],
 					[$position, $key, $campaign->getUid()],

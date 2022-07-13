@@ -27,7 +27,7 @@ const SMSCampaignManager = function(){
 			const $thisValue = $($this.target).val()
 			if(typeof defaultSenders[$thisValue] !== "undefined") viewAlert("#campaign_content", defaultSenders[$thisValue].name);
 			$(user).select2({data:[{id:'',text:''}]});
-			$(user).val("").trigger("change.select2");
+			$(user).val("").change();//.trigger("change.select2");
 			$(user).select2({
 				data: dataUsers,
 				ajax: {
@@ -49,7 +49,7 @@ const SMSCampaignManager = function(){
 		$(sender).css("width","100%");
 		$(user).on("change", ($this)=>{
 			$(sender).select2({data:[{id:'',text:''}]});
-			$(sender).val("").trigger("change.select2");
+			$(sender).val("").change();//.trigger("change.select2");
 			$(sender).select2({
 				data: dataSenders,
 				ajax: {
@@ -68,7 +68,7 @@ const SMSCampaignManager = function(){
 			});
 
 			// $(group_contacts).select2({data:[{id:'',text:''}]});
-			$(group_contacts).val("").trigger("change");
+			$(group_contacts).val("").change();//.trigger("change");
 			$(group_contacts).select2({
 				ajax: {
 					url: url_groups,
@@ -86,7 +86,7 @@ const SMSCampaignManager = function(){
 			});
 
 			$("#template").select2({data:[{id:'',text:''}]});
-			$("#template").val("").trigger("change");
+			$("#template").val("").change();//.trigger("change");
 			$("#template").select2({
 				ajax: {
 					url: url_template,
@@ -104,15 +104,17 @@ const SMSCampaignManager = function(){
 			});
 		});
 
-		if(brandInit) $(brand).val(brandInit).trigger("change.select2");
+		if(brandInit) $(brand).val(brandInit).change();//trigger("change.select2");
 
-		if(userInit) $(user).val(userInit).trigger("change.select2"); else $(user).val("").trigger("change.select2");
+		if(userInit) $(user).val(userInit).change();//.trigger("change.select2");
+		else $(user).val("").change();//.trigger("change.select2");
 
-		if(senderInit) $(sender).val(senderInit).trigger("change.select2"); else $(sender).val("").trigger("change.select2");
+		if(senderInit) $(sender).val(senderInit).change();//.trigger("change.select2");
+		else $(sender).val("").change();//.trigger("change.select2");
 
-		if(campaignType)	$("[name=type]").val(campaignType).trigger("change");
-		if(timezone)		$("[name=timezone]").val(timezone).trigger("change");
-		if(groups.length > 0)	$(group_contacts).val(groups).trigger("change");
+		if(campaignType)	$("[name=type]").val(campaignType).change();//.trigger("change");
+		if(timezone)		$("[name=timezone]").val(timezone).change();//.trigger("change");
+		if(groups.length > 0)	$(group_contacts).val(groups).change();//.trigger("change");
 	}
 
 	const checkActiveTab = (finalPoint, $this)=>{
@@ -128,7 +130,7 @@ const SMSCampaignManager = function(){
 				"warning",
 				ongletAlert,
 				()=>{
-					$(group_contacts).val("").trigger("change");
+					$(group_contacts).val("").change();//.trigger("change");
 					$(input_fileUrl).val("");
 					$(input_phones).val("");
 				},
@@ -157,7 +159,7 @@ const SMSCampaignManager = function(){
 			};
 			if(_locale.toUpperCase() == "FR") flatpickr["time_24hr"] = true;
 			$("#datetime").flatpickr(flatpickr);
-			$("[name=timezone]").val(now.format("Z")).trigger("change");
+			$("[name=timezone]").val(now.format("Z")).change();//.trigger("change");
 
 			// Champ Importation
 			const dropzoneEl = document.querySelector("#kt_import");
@@ -187,7 +189,98 @@ const SMSCampaignManager = function(){
 				}
 			});
 
-			initSelects()
+			initSelects();
+
+			var validatorPhone = ()=>{
+				return {
+					validate: function(input){
+						if(
+							$("[name=saveMode]").val() != "live"
+							|| $(input_fileUrl).val() != ""
+							|| $(input_phones).val() != ""
+							|| $(group_contacts).val() != ""
+							|| $("[name=id]").val() != ""
+						){
+							return {
+								valid: true,
+							}
+						}
+
+						return {
+							valid: false,
+						}
+					}
+				}
+			};
+
+			FormValidation.validators.isValidPhone = validatorPhone;
+
+			var validator = FormValidation.formValidation(
+				form,
+				{
+					fields: {
+						'brand': {
+							validators: {
+								notEmpty: {
+									message: noEmptyBrand
+								}
+							}
+						},
+						'user': {
+							validators: {
+								notEmpty: {
+									message: noEmptyManager
+								}
+							}
+						},
+						'message': {
+							validators: {
+								notEmpty: {
+									message: noEmptyMessage
+								}
+							}
+						},
+						'name': {
+							validators: {
+								notEmpty: {
+									message: noEmptyName
+								}
+							}
+						},
+						'phones': {
+							validators: {
+								isValidPhone: {
+									message: invalidPhones
+								}
+							}
+						}
+					},
+
+					plugins: {
+						trigger: new FormValidation.plugins.Trigger(),
+						bootstrap: new FormValidation.plugins.Bootstrap5({
+							rowSelector: '.fv-row',
+							eleInvalidClass: '',
+							eleValidClass: ''
+						})
+					}
+				}
+			);
+
+			$(submitForm).on('click', (e)=>{
+				e.preventDefault();
+				$("[name=saveMode]").val("live");
+				if (validator) {
+					validator.validate().then(function (status) {
+						if (status == 'Valid') {
+							submitButton = submitForm;
+							$(form).submit()
+						}else{
+							swalSimple('error', _Form_Error_Swal_Notification);
+						}
+					});
+				}
+			});
 
 			$(document).on("submit", "#form", ($this)=>{
 				$this.preventDefault();
@@ -224,7 +317,7 @@ const SMSCampaignManager = function(){
 
 			$("#template").on("change", ($this)=>{
 				var text = $($this.target).val();
-				if(text != "") $(message).val(text).trigger("change");
+				if(text != "") $(message).val(text).change();//.trigger("change");
 			});
 
 			$("#li_group").on("click", ($this)=>{
@@ -247,13 +340,6 @@ const SMSCampaignManager = function(){
 				$("[name=saveMode]").val("offlive");
 				toastr.info(textBrouillon)
 				submitButton = ($this.target).closest("#brouillon");
-				$("#form").submit()
-			})
-
-			$("#form #submit").on("click", ($this)=>{
-				$this.preventDefault()
-				$("[name=saveMode]").val("live");
-				submitButton = ($this.target).closest("#submit");
 				$("#form").submit()
 			})
 

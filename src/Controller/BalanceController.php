@@ -120,7 +120,7 @@ class BalanceController extends AbstractController
 			$data[$key][] = $line->getBeforeBalance();
 			$data[$key][] = $line->getAmount();
 			$data[$key][] = $line->getAfterBalance();
-			$data[$key][] = $line->getCreatedAt()->format("Y-m-d H:i:sP");
+			$data[$key][] = $line->getCreatedAt()->format("Y-m-dTH:i:sP");
 			$data[$key][] = $line->getDescription();
 			$data[$key][] = $line->getIdTrace();
 			$data[$key][] = [
