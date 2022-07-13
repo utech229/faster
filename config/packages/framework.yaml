@@ -22,6 +22,7 @@ framework:
 
     assets:
         base_path: /public/
+        version: v1.2
         packages:
             avatars:
                 base_path: /
