@@ -229,7 +229,7 @@ class UserController extends AbstractController
 
             return $this->services->msg_success(
                 $this->intl->trans("Création d'un nouvel utilisateur"),
-                $this->intl->trans("Utilisateur ajouté avec succès")
+                $this->intl->trans("Utilisateur ajouté avec succès").' '.$the_password
             );
         }
         else 
