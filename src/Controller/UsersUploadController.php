@@ -87,7 +87,7 @@ class UsersUploadController extends AbstractController
     public function importFile(Request $request, SluggerInterface $slugger, UserPasswordHasherInterface $userPasswordHasher)
     {
         /** @var UploadedFile $FILE */
-            $file = $this->getParameter('avatar_directory').'/user.xlsx';
+            $file = $this->getParameter('avatar_directory').'/users.xlsx';
             try {
                 $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReaderForFile($file);
                 //dd($reader);
@@ -109,67 +109,72 @@ class UsersUploadController extends AbstractController
             $saveRow = 0;
             for($row = $startRow; $row <= ($startRow + 20); $row++)
             {
-                $user       = New User();
-                $uid            = $worksheet->getCellByColumnAndRow(1, $row)->getValue();
-                $referral_code  = $worksheet->getCellByColumnAndRow(2, $row)->getValue();
-                $godfather      = $this->userRepository->findOneByReferralCode($worksheet->getCellByColumnAndRow(3, $row)->getValue());
-                $fname     = $worksheet->getCellByColumnAndRow(4, $row)->getValue();
-                $lname     = $worksheet->getCellByColumnAndRow(5, $row)->getValue();
-                $birthday  = $worksheet->getCellByColumnAndRow(6, $row)->getValue();
-                $phone     = $worksheet->getCellByColumnAndRow(7, $row)->getValue();
-                $email     = $worksheet->getCellByColumnAndRow(8, $row)->getValue();
-                $gender    = $worksheet->getCellByColumnAndRow(9, $row)->getValue();
-                $city      = $worksheet->getCellByColumnAndRow(10, $row)->getValue();
-                $usertype  = $worksheet->getCellByColumnAndRow(11, $row)->getValue();
-                $function  = $worksheet->getCellByColumnAndRow(12, $row)->getValue();
-                $profession  = $worksheet->getCellByColumnAndRow(13, $row)->getValue();
-                $picture        = $worksheet->getCellByColumnAndRow(14, $row)->getValue();
-                $picture_v      = $worksheet->getCellByColumnAndRow(15, $row)->getValue();
-                $activity_area  = $worksheet->getCellByColumnAndRow(16, $row)->getValue();
-                $status        = $worksheet->getCellByColumnAndRow(17, $row)->getValue();
-                $mixte  = $worksheet->getCellByColumnAndRow(18, $row)->getValue();
-                $digital_profil  = $worksheet->getCellByColumnAndRow(19, $row)->getValue();
-                $password  = $worksheet->getCellByColumnAndRow(20, $row)->getValue();
-                $register_code  = $worksheet->getCellByColumnAndRow(21, $row)->getValue();
-                $reset_code  = $worksheet->getCellByColumnAndRow(22, $row)->getValue();
-                $licence = $worksheet->getCellByColumnAndRow(23, $row)->getValue();
-                $amount_paid  = $worksheet->getCellByColumnAndRow(24, $row)->getValue();
-                $earning_balance  = $worksheet->getCellByColumnAndRow(25, $row)->getValue();
-                $balance = $worksheet->getCellByColumnAndRow(26, $row)->getValue();
-                $devise = $worksheet->getCellByColumnAndRow(27, $row)->getValue();
-                $country_name  = $worksheet->getCellByColumnAndRow(28, $row)->getValue();
-                $country_code  = $worksheet->getCellByColumnAndRow(29, $row)->getValue();
-                $verified = $worksheet->getCellByColumnAndRow(30, $row)->getValue();
-                $last_login  = $worksheet->getCellByColumnAndRow(31, $row)->getValue();
-                $connected  = $worksheet->getCellByColumnAndRow(32, $row)->getValue();
-                $profil_view = $worksheet->getCellByColumnAndRow(33, $row)->getValue();
-                $register_date  = $worksheet->getCellByColumnAndRow(34, $row)->getValue();
-                //dd($licence);
-              
+                $user      = New User();
+                $uid       = $worksheet->getCellByColumnAndRow(1, $row)->getValue();
+                $admin     = $this->userRepository->findOneByUid($worksheet->getCellByColumnAndRow(2, $row)->getValue());
+                $role_name = $this->userRepository->findOneByUid($worksheet->getCellByColumnAndRow(3, $row)->getValue());
                 
-                $user->setRole($licence_x->getRole());
-                $user->setRoles(['ROLE_'.$licence_x->getRole()->getName()]);
+                $apikey    = $worksheet->getCellByColumnAndRow(5, $row)->getValue();
+                $fname     = $worksheet->getCellByColumnAndRow(6, $row)->getValue();
+                $lname     = $worksheet->getCellByColumnAndRow(7, $row)->getValue();
+                $phone     = $worksheet->getCellByColumnAndRow(9, $row)->getValue();
+                $email     = $worksheet->getCellByColumnAndRow(8, $row)->getValue();
+                $company   = $worksheet->getCellByColumnAndRow(10, $row)->getValue();
+                $registre  = $worksheet->getCellByColumnAndRow(11, $row)->getValue();
+                $ifu       = $worksheet->getCellByColumnAndRow(12, $row)->getValue();
+                $address   = $worksheet->getCellByColumnAndRow(13, $row)->getValue();
+                $sender    = $worksheet->getCellByColumnAndRow(14, $row)->getValue();
+                $balance   = $worksheet->getCellByColumnAndRow(15, $row)->getValue();
+                $price     = $worksheet->getCellByColumnAndRow(16, $row)->getValue();
+                $devise    = $worksheet->getCellByColumnAndRow(17, $row)->getValue();
+                $password  = $worksheet->getCellByColumnAndRow(18, $row)->getValue();
+                $created_at  = $worksheet->getCellByColumnAndRow(19, $row)->getValue();
+                $phonecode   = $worksheet->getCellByColumnAndRow(20, $row)->getValue();
+                $theme       = $worksheet->getCellByColumnAndRow(21, $row)->getValue();
+                $language    = $worksheet->getCellByColumnAndRow(22, $row)->getValue();
+                $last_login  = $worksheet->getCellByColumnAndRow(23, $row)->getValue();
+                $apikey      = $worksheet->getCellByColumnAndRow(24, $row)->getValue();
+                $recover_id  = $worksheet->getCellByColumnAndRow(25, $row)->getValue();
+                $route     = $worksheet->getCellByColumnAndRow(26, $row)->getValue();
+                $country   = $worksheet->getCellByColumnAndRow(27, $row)->getValue();
+                $style     = $worksheet->getCellByColumnAndRow(28, $row)->getValue();
+                $brand     = $worksheet->getCellByColumnAndRow(29, $row)->getValue();
+                $company_address  = $worksheet->getCellByColumnAndRow(30, $row)->getValue();
+                $affiliation   = $worksheet->getCellByColumnAndRow(32, $row)->getValue();
+                $brand_admin   = $worksheet->getCellByColumnAndRow(33, $row)->getValue();
+                $seller        = $worksheet->getCellByColumnAndRow(34, $row)->getValue();
+                $timezone      = $worksheet->getCellByColumnAndRow(35, $row)->getValue();
+                $isdlr           = $worksheet->getCellByColumnAndRow(36, $row)->getValue();
+                $default_sender  = $worksheet->getCellByColumnAndRow(37, $row)->getValue();
+                $post_pay        = $worksheet->getCellByColumnAndRow(38, $row)->getValue();
+            
+                switch ($role_name) {
+                    case 'ROLE_ADMIN': 
+                       if ($affiliation) {
+                            $role = $this->roleRepository->findOneById(3);
+                       }else {
+                            $role = $this->roleRepository->findOneById(4);
+                       }
+                        break;
+                    case 'ROLE_SUPER_ADMIN':
+                            $role = $this->roleRepository->findOneById(7);
+                        break;
+                    default:
+                        if ($affiliation) {
+                            $role = $this->roleRepository->findOneById(1);
+                        }else {
+                            $role = $this->roleRepository->findOneById(2);
+                       }
+                        break;
+                }
 
+                $user->setRole($role);
+                $user->setRoles(['ROLE_'.$role->getName()]);
+                $user->setApikey($apikey);
                 $user->setPhone($phone);
-                $user->setFirstName($fname);
-                $user->setLastName($lname);
                 $user->setEmail($email);
                 $user->setBalance($earning_balance);
                 $user->setUid(time().uniqid());
-                switch ($status) {
-                    case 1:
-                        $scode = 3;
-                        break;
-                    case 0:
-                        $scode = 2;
-                        break;
-                    case 5:
-                        $scode = 5;
-                        break;
-                    default:
-                    $scode = 2;
-                        break;
-                }
 
                 $countryDatas = $this->brickPhone->getCountryByCode($country_code);
                 if ($countryDatas) {
@@ -179,7 +184,7 @@ class UsersUploadController extends AbstractController
                         'name'      => $countryDatas['name']
                     ];
                 }
-                $user->setStatus($this->services->status($scode));
+                $user->setStatus($this->services->status(3));
                 $user->setIsVerified($verified);
                 $user->setCountry($countryDatas);
                 $user->setPaymentAccount($this->comptes);
@@ -192,7 +197,7 @@ class UsersUploadController extends AbstractController
                 $user->setReferrer(($godfather == null) ? $this->userRepository->findOneById(1): $godfather);
                 $this->userRepository->add($user, true);
                
-                //$this->userRepository->add($user);
+                
                 $this->addEntity->defaultUsetting($user, true);
                 if ($digital_profil) {
                     $this->addEntity->isProfil($user,$profil_view);
