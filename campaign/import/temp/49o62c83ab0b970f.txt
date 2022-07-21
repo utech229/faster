@@ -1,0 +1,2 @@
+Id	Dénomination	Date de création	Objectifs	Code postal	Ville	Pays	Mail	Téléphone
+Geraud	[nom_client]	[prenom_client]	[adresse_client]	[cp_client]	[ville_client]	[pays_client]	[mail_client]	[tel_client]
