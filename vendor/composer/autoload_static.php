@@ -581,9 +581,9 @@ class ComposerStaticInita747b675ce0726c12a7b51416be97bc7
         ),
         'League\\Uri\\' => 
         array (
-            0 => __DIR__ . '/..' . '/league/uri-interfaces/src',
-            1 => __DIR__ . '/..' . '/league/uri-parser/src',
-            2 => __DIR__ . '/..' . '/league/uri/src',
+            0 => __DIR__ . '/..' . '/league/uri/src',
+            1 => __DIR__ . '/..' . '/league/uri-interfaces/src',
+            2 => __DIR__ . '/..' . '/league/uri-parser/src',
         ),
         'Laminas\\Code\\' => 
         array (
@@ -1073,6 +1073,7 @@ class ComposerStaticInita747b675ce0726c12a7b51416be97bc7
         'App\\Repository\\TransactionRepository' => __DIR__ . '/../..' . '/src/Repository/TransactionRepository.php',
         'App\\Repository\\UserRepository' => __DIR__ . '/../..' . '/src/Repository/UserRepository.php',
         'App\\Repository\\UsettingRepository' => __DIR__ . '/../..' . '/src/Repository/UsettingRepository.php',
+        'App\\Security\\AuthenticationEntryPoint' => __DIR__ . '/../..' . '/src/Security/AuthenticationEntryPoint.php',
         'App\\Security\\EmailVerifier' => __DIR__ . '/../..' . '/src/Security/EmailVerifier.php',
         'App\\Security\\UserAuthenticator' => __DIR__ . '/../..' . '/src/Security/UserAuthenticator.php',
         'App\\Service\\APIResponse' => __DIR__ . '/../..' . '/src/Service/APIResponse.php',

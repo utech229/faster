@@ -335,6 +335,7 @@ return array(
     'App\\Repository\\TransactionRepository' => $baseDir . '/src/Repository/TransactionRepository.php',
     'App\\Repository\\UserRepository' => $baseDir . '/src/Repository/UserRepository.php',
     'App\\Repository\\UsettingRepository' => $baseDir . '/src/Repository/UsettingRepository.php',
+    'App\\Security\\AuthenticationEntryPoint' => $baseDir . '/src/Security/AuthenticationEntryPoint.php',
     'App\\Security\\EmailVerifier' => $baseDir . '/src/Security/EmailVerifier.php',
     'App\\Security\\UserAuthenticator' => $baseDir . '/src/Security/UserAuthenticator.php',
     'App\\Service\\APIResponse' => $baseDir . '/src/Service/APIResponse.php',
