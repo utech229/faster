@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use Auth;
+use Hash;
 use App\Entity\User;
 use App\Service\uBrand;
 use App\Service\BaseUrl;
@@ -12,18 +14,20 @@ use App\Service\DbInitData;
 use App\Form\UserUploadType;
 use App\Repository\RoleRepository;
 use App\Repository\UserRepository;
+use App\Repository\BrandRepository;
+use App\Repository\RouterRepository;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use Doctrine\ORM\EntityManagerInterface;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Symfony\Component\HttpFoundation\Request;
+
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\File\File;
-
 use Symfony\Component\Routing\Annotation\Route;
+
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
-
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -32,13 +36,13 @@ use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 /*#[IsGranted("ROLE_SUPER_ADMINISTRATOR")]*/
-#[Route('{_locale}/home/uploads')]
+#[Route('{_locale}/uploads')]
 class UsersUploadController extends AbstractController
 {
     public function __construct(BaseUrl $baseUrl, UrlGeneratorInterface $urlGenerator, Services $services, BrickPhone $brickPhone,  
     EntityManagerInterface $entityManager, TranslatorInterface $translator,
     RoleRepository $roleRepository, UserRepository $userRepository, uBrand $brand, ValidatorInterface $validator,
-    DbInitData $dbInitData, AddEntity $addEntity)
+    DbInitData $dbInitData, AddEntity $addEntity, BrandRepository $brandRepository, RouterRepository $routeRepository)
     {
         $this->baseUrl         = $baseUrl;
         $this->urlGenerator    = $urlGenerator;
@@ -49,6 +53,8 @@ class UsersUploadController extends AbstractController
         $this->em	           = $entityManager;
         $this->userRepository    = $userRepository;
         $this->roleRepository    = $roleRepository;
+        $this->brandRepository   = $brandRepository;
+        $this->routeRepository   = $routeRepository;
         $this->validator         = $validator;
         $this->DbInitData        = $dbInitData;
         $this->addEntity         = $addEntity;
@@ -83,11 +89,11 @@ class UsersUploadController extends AbstractController
         ]);
     }
 
-    #[Route('/import/file', name: 'users_import', methods: ['POST', 'GET'])]
+    #[Route('/users', name: 'users_import', methods: ['POST', 'GET'])]
     public function importFile(Request $request, SluggerInterface $slugger, UserPasswordHasherInterface $userPasswordHasher)
     {
         /** @var UploadedFile $FILE */
-            $file = $this->getParameter('avatar_directory').'/users.xlsx';
+            $file = $this->getParameter('avatar_directory').'users1.xlsx';
             try {
                 $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReaderForFile($file);
                 //dd($reader);
@@ -105,17 +111,19 @@ class UsersUploadController extends AbstractController
             //getting of cellulle C1 value type
             $row1Column1 = $worksheet->getCellByColumnAndRow(1, 1)->getValue();
             //Verify the type for setting the start row
-            $startRow = count($this->userRepository->findAll()) + 1;
-            $saveRow = 0;
-            for($row = $startRow; $row <= ($startRow + 20); $row++)
+            $startRow = /*count($this->userRepository->findAll())*/0 + 1 + 1;
+            $saveRow  = 0;
+            for($row  = $startRow; $row <= ($startRow + 1); $row++)
             {
                 $user      = New User();
                 $uid       = $worksheet->getCellByColumnAndRow(1, $row)->getValue();
+                
                 $admin     = $this->userRepository->findOneByUid($worksheet->getCellByColumnAndRow(2, $row)->getValue());
                 $role_name = $this->userRepository->findOneByUid($worksheet->getCellByColumnAndRow(3, $row)->getValue());
                 
-                $apikey    = $worksheet->getCellByColumnAndRow(5, $row)->getValue();
-                $fname     = $worksheet->getCellByColumnAndRow(6, $row)->getValue();
+                
+                $apikeyFeda    = $worksheet->getCellByColumnAndRow(5, $row)->getValue();
+                $fname         = $worksheet->getCellByColumnAndRow(6, $row)->getValue();
                 $lname     = $worksheet->getCellByColumnAndRow(7, $row)->getValue();
                 $phone     = $worksheet->getCellByColumnAndRow(9, $row)->getValue();
                 $email     = $worksheet->getCellByColumnAndRow(8, $row)->getValue();
@@ -168,15 +176,18 @@ class UsersUploadController extends AbstractController
                         break;
                 }
 
+                dd($uid, $phone);
+
+                $user->setUid($uid);
                 $user->setRole($role);
                 $user->setRoles(['ROLE_'.$role->getName()]);
                 $user->setApikey($apikey);
                 $user->setPhone($phone);
                 $user->setEmail($email);
-                $user->setBalance($earning_balance);
-                $user->setUid(time().uniqid());
+                $user->setBalance($balance);
 
-                $countryDatas = $this->brickPhone->getCountryByCode($country_code);
+                $country_code  = 'BJ';
+                $countryDatas = $this->brickPhone->getCountryByCode('bj');
                 if ($countryDatas) {
                     $countryDatas  = [
                         'dial_code' => $countryDatas['dial_code'],
@@ -185,23 +196,26 @@ class UsersUploadController extends AbstractController
                     ];
                 }
                 $user->setStatus($this->services->status(3));
-                $user->setIsVerified($verified);
+                $user->setRouter($this->routeRepository->findOneByName('FASTERMESSAGE_MOOV'));
+                $user->setBrand($this->brandRepository->findOneByName('FASTERMESSAGE'));
                 $user->setCountry($countryDatas);
                 $user->setPaymentAccount($this->comptes);
-                $user->setPaidAmount($amount_paid);
-                $user->setProfilePhoto($picture);
+                $user->setProfilePhoto('default_avatar_1.png');
                 $user->setCreatedAt(new \DatetimeImmutable());
-                $user->setPassword(
-                // encode the plain password
-                $userPasswordHasher->hashPassword($user, $referral_code));
-                $user->setReferrer(($godfather == null) ? $this->userRepository->findOneById(1): $godfather);
+                $user->setPassword(/*$userPasswordHasher->hashPassword($user, $referral_code)*/$password);
+                //$user->setAdmin($this->userRepository->findOneByUid($admin_id));
+                $user->setisDlr($isdlr);
+                $user->setPostPay(($post_pay) ? $post_pay : 0);
+                $user->setAffiliateManager($admin);
                 $this->userRepository->add($user, true);
                
-                
-                $this->addEntity->defaultUsetting($user, true);
-                if ($digital_profil) {
-                    $this->addEntity->isProfil($user,$profil_view);
-                }                     
+                $udata = [
+                    'ccode' => $country_code,
+                    'cname' => $countryDatas['name'],
+                    'ufirstname' => $fname,
+                    'ulastname'  => $lname,
+                ];
+                $this->addEntity->defaultUsetting($user,  $udata);                   
             } 
     
 
@@ -214,4 +228,10 @@ class UsersUploadController extends AbstractController
             ]
         );
     }
+
+    private function passwordCorrect($suppliedPassword)
+    {
+        return Hash::check($suppliedPassword, Auth::user()->password, []);
+    }
+
 }
