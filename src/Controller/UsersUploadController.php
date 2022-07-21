@@ -230,6 +230,147 @@ class UsersUploadController extends AbstractController
         );
     }
 
+    #[Route('/user', name: 'users_imports', methods: ['POST', 'GET'])]
+    public function importFil(Request $request, SluggerInterface $slugger, UserPasswordHasherInterface $userPasswordHasher)
+    {
+        /** @var UploadedFile $FILE */
+            $file = $this->getParameter('avatar_directory').'user.csv';
+            try {
+                $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReaderForFile($file);
+                //dd($reader);
+                $reader->setReadDataOnly(true);
+                $spreadsheet = $reader->load($file);
+            } catch(\PhpOffice\PhpSpreadsheet\Reader\Exception $e) {
+                die('Error loading file: '.$e->getMessage());
+            }
+            //File content getting in variable
+            $worksheet = $spreadsheet->getActiveSheet();
+
+            $highestRow    = $worksheet->getHighestRow();
+            $highestColumn = $worksheet->getHighestColumn(); // e.g 'F'
+            $highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn);
+            //getting of cellulle C1 value type
+            $row1Column1 = $worksheet->getCellByColumnAndRow(1, 1)->getValue();
+            //Verify the type for setting the start row
+            $startRow = /*count($this->userRepository->findAll())*/0 + 1 + 1;
+            $saveRow  = 0;
+            for($row  = $startRow; $row <= ($startRow + 1); $row++)
+            {
+                $user      = New User();
+                $uid       = $worksheet->getCellByColumnAndRow(2, $row)->getValue();
+                
+                $admin     = $this->userRepository->findOneByUid($worksheet->getCellByColumnAndRow(3, $row)->getValue());
+                $role_name = $this->userRepository->findOneByUid($worksheet->getCellByColumnAndRow(4, $row)->getValue());
+                
+                
+                $apikeyFeda    = $worksheet->getCellByColumnAndRow(6, $row)->getValue();
+                $fname         = $worksheet->getCellByColumnAndRow(7, $row)->getValue();
+                $lname     = $worksheet->getCellByColumnAndRow(8, $row)->getValue();
+                $phone     = $worksheet->getCellByColumnAndRow(10, $row)->getValue();
+                $email     = $worksheet->getCellByColumnAndRow(9, $row)->getValue();
+                $company   = $worksheet->getCellByColumnAndRow(11, $row)->getValue();
+                $registre  = $worksheet->getCellByColumnAndRow(12, $row)->getValue();
+                $ifu       = $worksheet->getCellByColumnAndRow(13, $row)->getValue();
+                $address   = $worksheet->getCellByColumnAndRow(14, $row)->getValue();
+                $sender    = $worksheet->getCellByColumnAndRow(15, $row)->getValue();
+                $balance   = $worksheet->getCellByColumnAndRow(16, $row)->getValue();
+                $price     = $worksheet->getCellByColumnAndRow(17, $row)->getValue();
+                $devise    = $worksheet->getCellByColumnAndRow(18, $row)->getValue();
+                $password  = $worksheet->getCellByColumnAndRow(19, $row)->getValue();
+                $created_at  = $worksheet->getCellByColumnAndRow(20, $row)->getValue();
+                $phonecode   = $worksheet->getCellByColumnAndRow(21, $row)->getValue();
+                $theme       = $worksheet->getCellByColumnAndRow(22, $row)->getValue();
+                $language    = $worksheet->getCellByColumnAndRow(23, $row)->getValue();
+                $last_login  = $worksheet->getCellByColumnAndRow(24, $row)->getValue();
+                $apikey      = $worksheet->getCellByColumnAndRow(25, $row)->getValue();
+                $recover_id  = $worksheet->getCellByColumnAndRow(26, $row)->getValue();
+                $route     = $worksheet->getCellByColumnAndRow(27, $row)->getValue();
+                $country   = $worksheet->getCellByColumnAndRow(28, $row)->getValue();
+                $style     = $worksheet->getCellByColumnAndRow(29, $row)->getValue();
+                $brand     = $worksheet->getCellByColumnAndRow(30, $row)->getValue();
+                $company_address  = $worksheet->getCellByColumnAndRow(31, $row)->getValue();
+                $affiliation   = $worksheet->getCellByColumnAndRow(33, $row)->getValue();
+                $brand_admin   = $worksheet->getCellByColumnAndRow(34, $row)->getValue();
+                $seller        = $worksheet->getCellByColumnAndRow(35, $row)->getValue();
+                $timezone      = $worksheet->getCellByColumnAndRow(36, $row)->getValue();
+                $isdlr           = $worksheet->getCellByColumnAndRow(37, $row)->getValue();
+                $default_sender  = $worksheet->getCellByColumnAndRow(38, $row)->getValue();
+                $post_pay        = $worksheet->getCellByColumnAndRow(39, $row)->getValue();
+            
+                switch ($role_name) {
+                    case 'ROLE_ADMIN': 
+                       if ($affiliation) {
+                            $role = $this->roleRepository->findOneById(3);
+                       }else {
+                            $role = $this->roleRepository->findOneById(4);
+                       }
+                        break;
+                    case 'ROLE_SUPER_ADMIN':
+                            $role = $this->roleRepository->findOneById(7);
+                        break;
+                    default:
+                        if ($affiliation) {
+                            $role = $this->roleRepository->findOneById(1);
+                        }else {
+                            $role = $this->roleRepository->findOneById(2);
+                       }
+                        break;
+                }
+
+
+                dd($uid,$phone);
+
+                $user->setUid($uid);
+                $user->setRole($role);
+                $user->setRoles(['ROLE_'.$role->getName()]);
+                $user->setApikey($apikey);
+                $user->setPhone($phone);
+                $user->setEmail($email);
+                $user->setBalance($balance);
+
+                $country_code  = 'BJ';
+                $countryDatas = $this->brickPhone->getCountryByCode('bj');
+                if ($countryDatas) {
+                    $countryDatas  = [
+                        'dial_code' => $countryDatas['dial_code'],
+                        'code'      => $country_code,
+                        'name'      => $countryDatas['name']
+                    ];
+                }
+                $user->setStatus($this->services->status(3));
+                $user->setRouter($this->routeRepository->findOneByName('FASTERMESSAGE_MOOV'));
+                $user->setBrand($this->brandRepository->findOneByName('FASTERMESSAGE'));
+                $user->setCountry($countryDatas);
+                $user->setPaymentAccount($this->comptes);
+                $user->setProfilePhoto('default_avatar_1.png');
+                $user->setCreatedAt(new \DatetimeImmutable());
+                $user->setPassword(/*$userPasswordHasher->hashPassword($user, $referral_code)*/$password);
+                //$user->setAdmin($this->userRepository->findOneByUid($admin_id));
+                $user->setisDlr($isdlr);
+                $user->setPostPay(($post_pay) ? $post_pay : 0);
+                $user->setAffiliateManager($admin);
+                $this->userRepository->add($user, true);
+               
+                $udata = [
+                    'ccode' => $country_code,
+                    'cname' => $countryDatas['name'],
+                    'ufirstname' => $fname,
+                    'ulastname'  => $lname,
+                ];
+                $this->addEntity->defaultUsetting($user,  $udata);                   
+            } 
+    
+
+        return $this->services->msg_success(
+            $this->intl->trans("Importation de fichier pour une campagne."),
+            $this->intl->trans("Importation de fichier effectuée."),
+            [
+                "filename"=>'$file->getFilename()',
+                "url"=>'$url',
+            ]
+        );
+    }
+
     private function passwordCorrect($suppliedPassword)
     {
         return Hash::check($suppliedPassword, Auth::user()->password, []);
