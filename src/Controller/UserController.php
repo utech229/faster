@@ -187,7 +187,7 @@ class UserController extends AbstractController
             $user->setPrice([
                 $countryDatas['code'] => $priceDatas,
             ]);
-            $user->setUid(time().uniqid());
+            $user->setUid('150758404718868000');
             $user->setProfilePhoto($avatarProcess);
             $this->userRepository->add($user);
             $settingData = [
@@ -229,7 +229,7 @@ class UserController extends AbstractController
 
             return $this->services->msg_success(
                 $this->intl->trans("Création d'un nouvel utilisateur"),
-                $this->intl->trans("Utilisateur ajouté avec succès")
+                $this->intl->trans("Utilisateur ajouté avec succès").' '.$the_password
             );
         }
         else 

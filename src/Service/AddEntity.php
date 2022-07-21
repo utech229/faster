@@ -83,8 +83,7 @@ class AddEntity extends AbstractController
     //usetting datas for new user
     public function defaultUsetting($user, $data)
     {
-        $usetting = new Usetting();
-
+        $usetting  = new Usetting();
         $language  = [ 'code' => 'fr', 'name' => 'French'];
         $currency  = [ 'code' => $data['ccode'], 'name' => $data['cname']];
 
