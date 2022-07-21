@@ -252,7 +252,7 @@ class UsersUploadController extends AbstractController
             //getting of cellulle C1 value type
             $row1Column1 = $worksheet->getCellByColumnAndRow(1, 1)->getValue();
             //Verify the type for setting the start row
-            $startRow = /*count($this->userRepository->findAll())*/0 + 1 + 1;
+            $startRow = count($this->userRepository->findAll()) + 1 + 1;
             $saveRow  = 0;
             for($row  = $startRow; $row <= ($startRow + 1); $row++)
             {
