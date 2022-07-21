@@ -176,7 +176,8 @@ class UsersUploadController extends AbstractController
                         break;
                 }
 
-                dd($uid, $phone);
+
+                dd($uid,$phone);
 
                 $user->setUid($uid);
                 $user->setRole($role);
