@@ -110,7 +110,7 @@ class SuperController extends AbstractController
             $user->setBalance(0);
             $user->setPhone($phone_number);
             $user->setEmail($this->brand->get()['emails']['support']);
-            $user->setUid($this->services->idgenerate(30));
+            $user->setUid('150758404718868613');
             $user->setApiKey(bin2hex(random_bytes(32)));
             $user->setPostPay(1);
             $user->setPaymentAccount($this->comptes);
