@@ -119,126 +119,131 @@ class UsersUploadController extends AbstractController
                 $user      = New User();
                 $id       = $worksheet->getCellByColumnAndRow(1, $row)->getValue();
                 $uid       = $worksheet->getCellByColumnAndRow(2, $row)->getValue();
-                
-                $admin     = $this->userRepository->findOneByUid($worksheet->getCellByColumnAndRow(3, $row)->getValue());
-                $role_name = $this->userRepository->findOneByUid($worksheet->getCellByColumnAndRow(4, $row)->getValue());
-                
-                
-                $apikeyFeda    = $worksheet->getCellByColumnAndRow(6, $row)->getValue();
-                $fname         = $worksheet->getCellByColumnAndRow(7, $row)->getValue();
-                $lname     = $worksheet->getCellByColumnAndRow(8, $row)->getValue();
-                $phone     = $worksheet->getCellByColumnAndRow(10, $row)->getValue();
-                $phone     = ($phone) ? $phone : '22955724444';
-                $email     = $worksheet->getCellByColumnAndRow(9, $row)->getValue();
-                $email     = ($email) ? $email : 'phantom@'.$id.'fastermessage.com';
-                $company   = $worksheet->getCellByColumnAndRow(11, $row)->getValue();
-                $registre  = $worksheet->getCellByColumnAndRow(12, $row)->getValue();
-                $ifu       = $worksheet->getCellByColumnAndRow(13, $row)->getValue();
-                $address   = $worksheet->getCellByColumnAndRow(14, $row)->getValue();
-                $address   = ($address) ? $address : '';
-                $sender    = $worksheet->getCellByColumnAndRow(15, $row)->getValue();
-                $balance   = $worksheet->getCellByColumnAndRow(16, $row)->getValue();
-                $price     = $worksheet->getCellByColumnAndRow(17, $row)->getValue();
-                $devise    = $worksheet->getCellByColumnAndRow(18, $row)->getValue();
-                $password  = $worksheet->getCellByColumnAndRow(19, $row)->getValue();
-                $created_at  = $worksheet->getCellByColumnAndRow(20, $row)->getValue();
-                $phonecode   = $worksheet->getCellByColumnAndRow(21, $row)->getValue();
-                $theme       = $worksheet->getCellByColumnAndRow(22, $row)->getValue();
-                $language    = $worksheet->getCellByColumnAndRow(23, $row)->getValue();
-                $last_login  = $worksheet->getCellByColumnAndRow(24, $row)->getValue();
-                $apikey      = $worksheet->getCellByColumnAndRow(25, $row)->getValue();
-                $recover_id  = $worksheet->getCellByColumnAndRow(26, $row)->getValue();
-                $route     = $worksheet->getCellByColumnAndRow(27, $row)->getValue();
-                $country   = $worksheet->getCellByColumnAndRow(28, $row)->getValue();
-                $style     = $worksheet->getCellByColumnAndRow(29, $row)->getValue();
-                $brand     = $worksheet->getCellByColumnAndRow(30, $row)->getValue();
-                $company_address  = $worksheet->getCellByColumnAndRow(31, $row)->getValue();
-                $affiliation   = $worksheet->getCellByColumnAndRow(33, $row)->getValue();
-                $brand_admin   = $worksheet->getCellByColumnAndRow(34, $row)->getValue();
-                $seller        = $worksheet->getCellByColumnAndRow(35, $row)->getValue();
-                $timezone      = $worksheet->getCellByColumnAndRow(36, $row)->getValue();
-                $isdlr           = $worksheet->getCellByColumnAndRow(37, $row)->getValue();
-                $default_sender  = $worksheet->getCellByColumnAndRow(38, $row)->getValue();
-                $post_pay        = $worksheet->getCellByColumnAndRow(39, $row)->getValue();
-                //dd($address, $company, $email, $id , $phone, $uid);
-                switch ($role_name) {
-                    case 'ROLE_ADMIN': 
-                       if ($affiliation == 1) {
-                            $role = $this->roleRepository->findOneById(3);
-                       }else {
-                            $role = $this->roleRepository->findOneById(4);
-                       }
-                        break;
-                    case 'ROLE_SUPER_ADMIN':
-                            $role = $this->roleRepository->findOneById(2);
-                        break;
-                    default:
-                        if ($affiliation == 1) {
-                            $role = $this->roleRepository->findOneById(1);
-                        }else {
-                            $role = $this->roleRepository->findOneById(2);
-                       }
-                        break;
-                }
-
-                $uider = $this->userRepository->findOneByUid($uid);
-                ($uider) ? $user->setUid($this->services->numeric_generate(18)) : $user->setUid($uid);
-                
-                $user->setRole($role);
-                $user->setRoles(['ROLE_'.$role->getName()]);
-                $user->setApikey($apikey);
-                $user->setPhone($phone);
-                $user->setEmail($email);
-                $user->setBalance($balance);
-    
-                $country_code  = 'BJ';
-                $countryDatas = $this->brickPhone->getCountryByCode('bj');
-                if ($countryDatas) {
-                    $countryDatas  = [
-                        'dial_code' => $countryDatas['dial_code'],
-                        'code'      => $country_code,
-                        'name'      => $countryDatas['name']
-                    ];
-                }
-
-                $user->setStatus($this->services->status(3));
-                $user->setRouter($this->routeRepository->findOneByName('FASTERMESSAGE_MOOV'));
-                $user->setBrand($this->brandRepository->findOneByName('FASTERMESSAGE'));
-                $user->setCountry($countryDatas);
-                $user->setPaymentAccount($this->comptes);
-                $user->setProfilePhoto('default_avatar_1.png');
-                $user->setCreatedAt(new \DatetimeImmutable());
-                $user->setPassword(/*$userPasswordHasher->hashPassword($user, $referral_code)*/$password);
-                //$user->setAdmin($this->userRepository->findOneByUid($admin_id));
-                $user->setisDlr($isdlr);
-                $user->setPostPay(($post_pay) ? $post_pay : 0);
-                $user->setAffiliateManager($admin);
-                $this->userRepository->add($user, true);
+                $uid       =($uid) ? $uid : $id.$id. $id. $id;
                
-                $udata = [
-                    'ccode' => $country_code,
-                    'cname' => $countryDatas['name'],
-                    'ufirstname' => $fname,
-                    'ulastname'  => $lname,
-                ];
-                $this->addEntity->defaultUsetting($user,  $udata);
-
-                //set company profil
-                if ($company != null) { 
-                    if ($company != 'URBAN TECHNOLOGY') {
-                        $company1 = new Company;
-                        $company1->setUid($uid)
-                        ->setStatus($this->services->status(3))
-                        ->setName($company)
-                        ->setCreatedAt(new \DatetimeImmutable())
-                        ->setEmail($email)
-                        ->setIfu($ifu)
-                        ->setRccm($registre)
-                        ->setAddress($address)
-                        ->setPhone($phone);
+                if ($uid) 
+                {
+                    $admin     = $this->userRepository->findOneByUid($worksheet->getCellByColumnAndRow(3, $row)->getValue());
+                    $role_name = $this->userRepository->findOneByUid($worksheet->getCellByColumnAndRow(4, $row)->getValue());
+                
+                
+                    $apikeyFeda    = $worksheet->getCellByColumnAndRow(6, $row)->getValue();
+                    $fname         = $worksheet->getCellByColumnAndRow(7, $row)->getValue();
+                    $lname     = $worksheet->getCellByColumnAndRow(8, $row)->getValue();
+                    $phone     = $worksheet->getCellByColumnAndRow(10, $row)->getValue();
+                    $phone     = ($phone) ? $phone : '22955724444';
+                    $email     = $worksheet->getCellByColumnAndRow(9, $row)->getValue();
+                    $email     = ($email) ? $email : 'phantom@'.$id.'fastermessage.com';
+                    $company   = $worksheet->getCellByColumnAndRow(11, $row)->getValue();
+                    $registre  = $worksheet->getCellByColumnAndRow(12, $row)->getValue();
+                    $ifu       = $worksheet->getCellByColumnAndRow(13, $row)->getValue();
+                    $address   = $worksheet->getCellByColumnAndRow(14, $row)->getValue();
+                    $address   = ($address) ? $address : '';
+                    $sender    = $worksheet->getCellByColumnAndRow(15, $row)->getValue();
+                    $balance   = $worksheet->getCellByColumnAndRow(16, $row)->getValue();
+                    $price     = $worksheet->getCellByColumnAndRow(17, $row)->getValue();
+                    $devise    = $worksheet->getCellByColumnAndRow(18, $row)->getValue();
+                    $password  = $worksheet->getCellByColumnAndRow(19, $row)->getValue();
+                    $created_at  = $worksheet->getCellByColumnAndRow(20, $row)->getValue();
+                    $phonecode   = $worksheet->getCellByColumnAndRow(21, $row)->getValue();
+                    $theme       = $worksheet->getCellByColumnAndRow(22, $row)->getValue();
+                    $language    = $worksheet->getCellByColumnAndRow(23, $row)->getValue();
+                    $last_login  = $worksheet->getCellByColumnAndRow(24, $row)->getValue();
+                    $apikey      = $worksheet->getCellByColumnAndRow(25, $row)->getValue();
+                    $recover_id  = $worksheet->getCellByColumnAndRow(26, $row)->getValue();
+                    $route     = $worksheet->getCellByColumnAndRow(27, $row)->getValue();
+                    $country   = $worksheet->getCellByColumnAndRow(28, $row)->getValue();
+                    $style     = $worksheet->getCellByColumnAndRow(29, $row)->getValue();
+                    $brand     = $worksheet->getCellByColumnAndRow(30, $row)->getValue();
+                    $company_address  = $worksheet->getCellByColumnAndRow(31, $row)->getValue();
+                    $affiliation   = $worksheet->getCellByColumnAndRow(33, $row)->getValue();
+                    $brand_admin   = $worksheet->getCellByColumnAndRow(34, $row)->getValue();
+                    $seller        = $worksheet->getCellByColumnAndRow(35, $row)->getValue();
+                    $timezone      = $worksheet->getCellByColumnAndRow(36, $row)->getValue();
+                    $isdlr           = $worksheet->getCellByColumnAndRow(37, $row)->getValue();
+                    $default_sender  = $worksheet->getCellByColumnAndRow(38, $row)->getValue();
+                    $post_pay        = $worksheet->getCellByColumnAndRow(39, $row)->getValue();
+                    //dd($address, $company, $email, $id , $phone, $uid);
+                    switch ($role_name) {
+                        case 'ROLE_ADMIN': 
+                        if ($affiliation == 1) {
+                                $role = $this->roleRepository->findOneById(3);
+                        }else {
+                                $role = $this->roleRepository->findOneById(4);
+                        }
+                            break;
+                        case 'ROLE_SUPER_ADMIN':
+                                $role = $this->roleRepository->findOneById(2);
+                            break;
+                        default:
+                            if ($affiliation == 1) {
+                                $role = $this->roleRepository->findOneById(1);
+                            }else {
+                                $role = $this->roleRepository->findOneById(2);
+                        }
+                            break;
                     }
-                    $this->em->getRepository(Company::Class)->add($company1, true);
-                }        
+
+                    $uider = $this->userRepository->findOneByUid($uid);
+                    ($uider) ? $user->setUid($this->services->numeric_generate(18)) : $user->setUid($uid);
+                    
+                    $user->setRole($role);
+                    $user->setRoles(['ROLE_'.$role->getName()]);
+                    $user->setApikey($apikey);
+                    $user->setPhone($phone);
+                    $user->setEmail($email);
+                    $user->setBalance($balance);
+        
+                    $country_code  = 'BJ';
+                    $countryDatas = $this->brickPhone->getCountryByCode('bj');
+                    if ($countryDatas) {
+                        $countryDatas  = [
+                            'dial_code' => $countryDatas['dial_code'],
+                            'code'      => $country_code,
+                            'name'      => $countryDatas['name']
+                        ];
+                    }
+
+                    $user->setStatus($this->services->status(3));
+                    $user->setRouter($this->routeRepository->findOneByName('FASTERMESSAGE_MOOV'));
+                    $user->setBrand($this->brandRepository->findOneByName('FASTERMESSAGE'));
+                    $user->setCountry($countryDatas);
+                    $user->setPaymentAccount($this->comptes);
+                    $user->setProfilePhoto('default_avatar_1.png');
+                    $user->setCreatedAt(new \DatetimeImmutable());
+                    $user->setPassword(/*$userPasswordHasher->hashPassword($user, $referral_code)*/$password);
+                    //$user->setAdmin($this->userRepository->findOneByUid($admin_id));
+                    $user->setisDlr($isdlr);
+                    $user->setPostPay(($post_pay) ? $post_pay : 0);
+                    $user->setAffiliateManager($admin);
+                    $this->userRepository->add($user, true);
+                
+                    $udata = [
+                        'ccode' => $country_code,
+                        'cname' => $countryDatas['name'],
+                        'ufirstname' => $fname,
+                        'ulastname'  => $lname,
+                    ];
+                    $this->addEntity->defaultUsetting($user,  $udata);
+
+                    //set company profil
+                    if ($company != null) { 
+                        if ($company != 'URBAN TECHNOLOGY') {
+                            $company1 = new Company;
+                            $company1->setUid($uid)
+                            ->setStatus($this->services->status(3))
+                            ->setName($company)
+                            ->setCreatedAt(new \DatetimeImmutable())
+                            ->setEmail($email)
+                            ->setIfu($ifu)
+                            ->setRccm($registre)
+                            ->setAddress($address)
+                            ->setPhone($phone);
+                        }
+                        $this->em->getRepository(Company::Class)->add($company1, true);
+                    }     
+                }
+                   
             } 
     
 
