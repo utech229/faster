@@ -297,7 +297,7 @@ class UsersUploadController extends AbstractController
                 $email_noreply  = $worksheet->getCellByColumnAndRow(7, $row)->getValue();
                 $phone          = $worksheet->getCellByColumnAndRow(8, $row)->getValue();
                 $admin          = $this->userRepository->findOneByUid($uid);
-                dd($admin, $uid);
+                //dd($admin, $uid);
                     
                 $brand = new Brand();
                 $brand->setUid($this->services->idgenerate(10))
