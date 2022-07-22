@@ -316,7 +316,7 @@ class UsersUploadController extends AbstractController
                     ->setPhone($phone)
                     ->setIsDefault(true)
                     ->setCreatedAt(new \DatetimeImmutable());
-                    dd($brand);
+                    //dd($brand);
                     $this->brandRepository->add($brand, true);
             } 
     
