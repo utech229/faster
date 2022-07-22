@@ -305,7 +305,7 @@ class UsersUploadController extends AbstractController
                     ->setValidator($this->userRepository->findOneById(1))
                     ->setManager($this->userRepository->findOneByUid($uid))
                     ->setCreator($this->userRepository->findOneByUid($uid))
-                    ->setDefaultSender($this->em->getRepository(Sender::Class)->findOneById(1))
+                    //->setDefaultSender($this->em->getRepository(Sender::Class)->findOneById(1))
                     ->setName('NRANDNAME')
                     ->setSiteUrl($url)
                     ->setFavicon($logo)
