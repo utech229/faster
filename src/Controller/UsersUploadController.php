@@ -298,6 +298,7 @@ class UsersUploadController extends AbstractController
                 $phone          = $worksheet->getCellByColumnAndRow(8, $row)->getValue();
                 $admin          = $this->userRepository->findOneByUid($uid);
                 //dd($admin, $uid);
+                dd($url);
                     
                 $brand = new Brand();
                 $brand->setUid($this->services->idgenerate(10))
