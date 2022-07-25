@@ -171,9 +171,9 @@ class UsersUploadController extends AbstractController
                     $default_sender  = $worksheet->getCellByColumnAndRow(38, $row)->getValue();
                     $post_pay        = $worksheet->getCellByColumnAndRow(39, $row)->getValue();
                     $decode     = json_decode($price);
-                    $bjprice    = $decode[24];
+                    $bjprice      = $decode[24];
                     $bjpriceArray = /*json_decode(*/$bjprice/*)*/;
-                    dd($bjprice);
+                    dd($bjprice["price"]);
                     dd($bjpriceArray);
                     $nbre       = count($decode);
                     $row        = array();
