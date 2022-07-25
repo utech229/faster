@@ -177,7 +177,7 @@ class UsersUploadController extends AbstractController
                         /*$row[]  = [array($line->name), array($line->dial_code), array($line->code), array($line->price), array('<a href="javascript:void(0)"data-toggle="modal" data-target="#UserModalUpdatePrice" class="userUpPrice"  data-id="'.$userLogin->getUid().'" data-code="'.$line->code.'" data-country="'.$line->name.'" data-price="'.$line->price.'" title="'.$translator->trans('Modifier le prix').'">
                         <i class="fa fa-pencil-alt text-warning m-r-10"></i></a>')];*/
                     };
-                    dd($address, $company, $email, $id , $phone, $uid, $startRow,  $price, $decode[24], $nbre);
+                    dd($address, $company, $email, $id , $phone, $uid, $startRow,  $price, $decode[24]['price'], $nbre);
                     switch ($role_name){
                         case 'ROLE_ADMIN': 
                         if ($affiliation == 1) {
