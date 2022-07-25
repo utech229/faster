@@ -95,7 +95,6 @@ class UsersUploadController extends AbstractController
     #[Route('/user', name: 'users_imports', methods: ['POST', 'GET'])]
     public function importFil(Request $request, SluggerInterface $slugger, UserPasswordHasherInterface $userPasswordHasher)
     {
-        dd('de');
         /** @var UploadedFile $FILE */
             $file = $this->getParameter('avatar_directory').'reseller.csv';
             try {
@@ -137,7 +136,7 @@ class UsersUploadController extends AbstractController
                     $phone     = ($phone) ? $phone : '22955724444';
                     $email     = $worksheet->getCellByColumnAndRow(9, $row)->getValue();
                     $email     = ($email) ? $email : 'phantom@'.$id.'fastermessage.com';
-                    dd($email);
+                    
                     $company   = $worksheet->getCellByColumnAndRow(11, $row)->getValue();
                     $registre  = $worksheet->getCellByColumnAndRow(12, $row)->getValue();
                     $ifu       = $worksheet->getCellByColumnAndRow(13, $row)->getValue();
@@ -187,7 +186,7 @@ class UsersUploadController extends AbstractController
                         }
                             break;
                     }
-                    dd($role);
+                    dd($role, $email);
                     $uider = $this->userRepository->findOneByUid($uid);
                     ($uider) ? $user->setUid($this->services->numeric_generate(18)) : $user->setUid($uid);
                     
