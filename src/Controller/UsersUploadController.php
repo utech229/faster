@@ -193,7 +193,7 @@ class UsersUploadController extends AbstractController
                         }
                             break;
                     } 
-                    dd($uid, $role);
+                    dd($uid, $role, $email);
                     if ($role->getId() == 1) {
                         dd($uid);
                     }
