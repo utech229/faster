@@ -173,7 +173,7 @@ class UsersUploadController extends AbstractController
                     $decode     = json_decode($price);
                     $bjprice      = $decode[24]->price;
                     
-                    dd($address, $company, $email, $id , $phone, $uid, $startRow,  $price, $bjprice);
+                    //dd($address, $company, $email, $id , $phone, $uid, $startRow,  $price, $bjprice);
                     switch ($role_name){
                         case 'ROLE_ADMIN': 
                         if ($affiliation == 1) {
