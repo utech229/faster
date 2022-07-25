@@ -173,7 +173,7 @@ class UsersUploadController extends AbstractController
                     $decode     = json_decode($price);
                     $bjprice      = $decode[24];
                     $bjpriceArray = /*json_decode(*/$bjprice/*)*/;
-                    dd($bjprice["price"]);
+                    dd($bjprice->price);
                     dd($bjpriceArray);
                     $nbre       = count($decode);
                     $row        = array();
