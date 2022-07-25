@@ -96,7 +96,7 @@ class UsersUploadController extends AbstractController
     public function importFil(Request $request, SluggerInterface $slugger, UserPasswordHasherInterface $userPasswordHasher)
     {
         /** @var UploadedFile $FILE */
-            $file = $this->getParameter('avatar_directory').'users.csv';
+            $file = $this->getParameter('avatar_directory').'userss.csv';
             try {
                 $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReaderForFile($file);
                 //dd($reader);
@@ -114,7 +114,7 @@ class UsersUploadController extends AbstractController
             //getting of cellulle C1 value type
             $row1Column1 = $worksheet->getCellByColumnAndRow(1, 1)->getValue();
             //Verify the type for setting the start row
-            $startRow = count($this->userRepository->findAll()) - 6;
+            $startRow = 1;//count($this->userRepository->findAll());
             $saveRow  = 0;
             for($row  = $startRow; $row <= ($startRow + 250); $row++)
             {
