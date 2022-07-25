@@ -116,7 +116,7 @@ class UsersUploadController extends AbstractController
             //Verify the type for setting the start row
             $startRow = count($this->userRepository->findAll()) - 6;
             $saveRow  = 0;
-            for($row  = $startRow; $row <= ($startRow + 100); $row++)
+            for($row  = $startRow; $row <= ($startRow + 150); $row++)
             {
                 $user      = New User();
                 $id       = $worksheet->getCellByColumnAndRow(1, $row)->getValue();
