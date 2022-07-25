@@ -170,7 +170,7 @@ class UsersUploadController extends AbstractController
                     $isdlr           = $worksheet->getCellByColumnAndRow(37, $row)->getValue();
                     $default_sender  = $worksheet->getCellByColumnAndRow(38, $row)->getValue();
                     $post_pay        = $worksheet->getCellByColumnAndRow(39, $row)->getValue();
-                    //dd($address, $company, $email, $id , $phone, $uid);
+                    dd($address, $company, $email, $id , $phone, $uid);
                     switch ($role_name) {
                         case 'ROLE_ADMIN': 
                         if ($affiliation == 1) {
@@ -190,7 +190,6 @@ class UsersUploadController extends AbstractController
                         }
                             break;
                     } 
-                    dd($role, $email, $role_name, $admin, $phone, $a, $b, $c, $d);
                     $uider = $this->userRepository->findOneByUid($uid);
                     ($uider) ? $user->setUid($this->services->numeric_generate(13)) : $user->setUid($uid);
                     
