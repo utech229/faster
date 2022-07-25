@@ -139,7 +139,7 @@ class UsersUploadController extends AbstractController
                     $phone     = $worksheet->getCellByColumnAndRow(10, $row)->getValue();
                     $phone     = ($phone) ? $phone : '22955724444';
                     $email     = $worksheet->getCellByColumnAndRow(9, $row)->getValue();
-                    //$email     = ($email) ? $email : 'phantom@'.$id.'fastermessage.com';
+                    $email     = ($email) ? $email : 'phantom@'.$id.'fastermessage.com';
                     
                     $company   = $worksheet->getCellByColumnAndRow(11, $row)->getValue();
                     $registre  = $worksheet->getCellByColumnAndRow(12, $row)->getValue();
@@ -170,7 +170,7 @@ class UsersUploadController extends AbstractController
                     $isdlr           = $worksheet->getCellByColumnAndRow(37, $row)->getValue();
                     $default_sender  = $worksheet->getCellByColumnAndRow(38, $row)->getValue();
                     $post_pay        = $worksheet->getCellByColumnAndRow(39, $row)->getValue();
-                    dd($address, $company, $email, $id , $phone, $uid);
+                    dd($address, $company, $email, $id , $phone, $uid, $startRow);
                     switch ($role_name) {
                         case 'ROLE_ADMIN': 
                         if ($affiliation == 1) {
