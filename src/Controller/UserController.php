@@ -187,7 +187,7 @@ class UserController extends AbstractController
             $user->setPrice([
                 $countryDatas['code'] => $priceDatas,
             ]);
-            $user->setUid('150758404718868000');
+            $user->setUid($this->services->numeric_generate(15));
             $user->setProfilePhoto($avatarProcess);
             $this->userRepository->add($user);
             $settingData = [

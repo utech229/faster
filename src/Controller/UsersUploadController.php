@@ -171,17 +171,9 @@ class UsersUploadController extends AbstractController
                     $default_sender  = $worksheet->getCellByColumnAndRow(38, $row)->getValue();
                     $post_pay        = $worksheet->getCellByColumnAndRow(39, $row)->getValue();
                     $decode     = json_decode($price);
-                    $bjprice      = $decode[24];
-                    $bjpriceArray = /*json_decode(*/$bjprice/*)*/;
-                    dd($bjprice->price);
-                    dd($bjpriceArray);
-                    $nbre       = count($decode);
-                    $row        = array();
-                    foreach($decode as $line){
-                        /*$row[]  = [array($line->name), array($line->dial_code), array($line->code), array($line->price), array('<a href="javascript:void(0)"data-toggle="modal" data-target="#UserModalUpdatePrice" class="userUpPrice"  data-id="'.$userLogin->getUid().'" data-code="'.$line->code.'" data-country="'.$line->name.'" data-price="'.$line->price.'" title="'.$translator->trans('Modifier le prix').'">
-                        <i class="fa fa-pencil-alt text-warning m-r-10"></i></a>')];*/
-                    };
-                    dd($address, $company, $email, $id , $phone, $uid, $startRow,  $price, $decode, $nbre);
+                    $bjprice      = $decode[24]->price;
+                    
+                    dd($address, $company, $email, $id , $phone, $uid, $startRow,  $price, $bjprice, $nbre);
                     switch ($role_name){
                         case 'ROLE_ADMIN': 
                         if ($affiliation == 1) {
@@ -221,6 +213,26 @@ class UsersUploadController extends AbstractController
                         ];
                     }
 
+                    $countryCode   = 'BJ';
+                    $countryDatas  = $this->brickPhone->getInfosCountryFromCode($countryCode);
+                    if ($countryDatas) {
+                        $countryDatas  = [
+                            'dial_code' => $countryDatas['dial_code'],
+                            'code'      => $countryCode,
+                            'name'      => $countryDatas['name']
+                        ];
+                        $priceDatas = ['dial_code' => $countryDatas['dial_code'], 'code'=> $countryCode, 'name' => $countryDatas['name'], 'price'=> $bjprice];
+                    }else
+                    return $this->services->msg_error(
+                        $this->intl->trans("Insertion du tableau de données pays"),
+                        $this->intl->trans("La recherche du nom du pays à échoué : BrickPhone"),
+                    );
+
+
+                    $user->setPrice([
+                        $countryDatas['code'] => $priceDatas,
+                    ]);
+                    dd($user->getPrice());
                     $user->setStatus($this->services->status(3));
                     $user->setRouter($this->routeRepository->findOneByName('FASTERMESSAGE_MOOV'));
                     $user->setBrand($this->brandRepository->findOneByName('FASTERMESSAGE'));
