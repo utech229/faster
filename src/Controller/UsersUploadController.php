@@ -270,7 +270,7 @@ class UsersUploadController extends AbstractController
                             ->setCreatedAt(new \DatetimeImmutable())
                             ->setEmail($email)
                             ->setIfu($ifu)
-                            ->setRccm($registre)
+                            ->setRccm(($registre) ? $registre : 'null')
                             ->setAddress($address)
                             ->setPhone($phone);
                         }
