@@ -186,7 +186,7 @@ class UsersUploadController extends AbstractController
                         }
                             break;
                     }
-                    dd($role, $email);
+                    dd($role, $email, $role_name);
                     $uider = $this->userRepository->findOneByUid($uid);
                     ($uider) ? $user->setUid($this->services->numeric_generate(18)) : $user->setUid($uid);
                     
