@@ -132,7 +132,6 @@ class UsersUploadController extends AbstractController
                     $admin     = $this->userRepository->findOneByUid($worksheet->getCellByColumnAndRow(3, $row)->getValue());
                     $role_name = $worksheet->getCellByColumnAndRow(4, $row)->getValue();
                 
-                
                     $apikeyFeda    = $worksheet->getCellByColumnAndRow(6, $row)->getValue();
                     $fname         = $worksheet->getCellByColumnAndRow(7, $row)->getValue();
                     $lname     = $worksheet->getCellByColumnAndRow(8, $row)->getValue();
@@ -178,6 +177,7 @@ class UsersUploadController extends AbstractController
                         case 'ROLE_ADMIN': 
                         if ($affiliation == 1) {
                                 $role = $this->roleRepository->findOneById(3);
+                                $user->setAffiliateManager($admin);
                         }else {
                                 $role = $this->roleRepository->findOneById(4);
                         }
@@ -188,6 +188,7 @@ class UsersUploadController extends AbstractController
                         default:
                             if ($affiliation == 1) {
                                 $role = $this->roleRepository->findOneById(1);
+                                $user->setAffiliateManager($admin);
                             }else {
                                 $role = $this->roleRepository->findOneById(2);
                         }
@@ -248,7 +249,7 @@ class UsersUploadController extends AbstractController
                     //$user->setAdmin($this->userRepository->findOneByUid($admin_id));
                     $user->setisDlr($isdlr);
                     $user->setPostPay(($post_pay) ? $post_pay : 0);
-                    //$user->setAffiliateManager($admin);
+                    
                     $this->userRepository->add($user, true);
                 
                     $udata = [
