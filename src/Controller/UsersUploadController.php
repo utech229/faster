@@ -114,7 +114,7 @@ class UsersUploadController extends AbstractController
             //getting of cellulle C1 value type
             $row1Column1 = $worksheet->getCellByColumnAndRow(1, 1)->getValue();
             //Verify the type for setting the start row
-            $startRow = count($this->userRepository->findAll()) - 8;
+            $startRow = count($this->userRepository->findAll()) - 6;
             $saveRow  = 0;
             for($row  = $startRow; $row <= ($startRow + 1); $row++)
             {
@@ -170,7 +170,7 @@ class UsersUploadController extends AbstractController
                     $isdlr           = $worksheet->getCellByColumnAndRow(37, $row)->getValue();
                     $default_sender  = $worksheet->getCellByColumnAndRow(38, $row)->getValue();
                     $post_pay        = $worksheet->getCellByColumnAndRow(39, $row)->getValue();
-                    dd($address, $company, $email, $id , $phone, $uid, $startRow);
+                    dd($address, $company, $email, $id , $phone, $uid, $startRow,  $price);
                     switch ($role_name) {
                         case 'ROLE_ADMIN': 
                         if ($affiliation == 1) {
