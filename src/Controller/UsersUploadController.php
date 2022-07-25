@@ -171,16 +171,14 @@ class UsersUploadController extends AbstractController
                     $default_sender  = $worksheet->getCellByColumnAndRow(38, $row)->getValue();
                     $post_pay        = $worksheet->getCellByColumnAndRow(39, $row)->getValue();
                     $decode     = json_decode($price);
-                    dd($decode[24]);
-                    $decode     = json_decode(array($decode[24]));
-                    $decode     = $decode['price'];
+                    $decode     = 
                     $nbre       = count($decode);
                     $row        = array();
                     foreach($decode as $line){
                         /*$row[]  = [array($line->name), array($line->dial_code), array($line->code), array($line->price), array('<a href="javascript:void(0)"data-toggle="modal" data-target="#UserModalUpdatePrice" class="userUpPrice"  data-id="'.$userLogin->getUid().'" data-code="'.$line->code.'" data-country="'.$line->name.'" data-price="'.$line->price.'" title="'.$translator->trans('Modifier le prix').'">
                         <i class="fa fa-pencil-alt text-warning m-r-10"></i></a>')];*/
                     };
-                    dd($address, $company, $email, $id , $phone, $uid, $startRow,  $price, $decode, $nbre);
+                    dd($address, $company, $email, $id , $phone, $uid, $startRow,  $price, json_decode($decode[24]), $nbre);
                     switch ($role_name){
                         case 'ROLE_ADMIN': 
                         if ($affiliation == 1) {
