@@ -96,7 +96,7 @@ class UsersUploadController extends AbstractController
     public function importFil(Request $request, SluggerInterface $slugger, UserPasswordHasherInterface $userPasswordHasher)
     {
         /** @var UploadedFile $FILE */
-            $file = $this->getParameter('avatar_directory').'user.csv';
+            $file = $this->getParameter('avatar_directory').'users.csv';
             try {
                 $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReaderForFile($file);
                 //dd($reader);
