@@ -193,6 +193,9 @@ class UsersUploadController extends AbstractController
                         }
                             break;
                     } 
+                    if ($role->getId() == 1) {
+                        dd($uid);
+                    }
                     $uider = $this->userRepository->findOneByUid($uid);
                     ($uider) ? $user->setUid($this->services->numeric_generate(13)) : $user->setUid($uid);
                     
@@ -362,7 +365,7 @@ class UsersUploadController extends AbstractController
     public function importSender(Request $request, SluggerInterface $slugger, UserPasswordHasherInterface $userPasswordHasher)
     {
         /** @var UploadedFile $FILE */
-            $file = $this->getParameter('avatar_directory').'brand.csv';
+            $file = $this->getParameter('avatar_directory').'sender.csv';
             try {
                 $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReaderForFile($file);
                 //dd($reader);
