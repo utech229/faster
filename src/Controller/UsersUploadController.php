@@ -114,7 +114,7 @@ class UsersUploadController extends AbstractController
             //getting of cellulle C1 value type
             $row1Column1 = $worksheet->getCellByColumnAndRow(1, 1)->getValue();
             //Verify the type for setting the start row
-            $startRow = 1;//count($this->userRepository->findAll()) + 2;
+            $startRow = count($this->userRepository->findAll());
             $saveRow  = 0;
             for($row  = $startRow; $row <= ($startRow + 150); $row++)
             {
@@ -136,7 +136,7 @@ class UsersUploadController extends AbstractController
                     $phone     = ($phone) ? $phone : '22955724444';
                     $email     = $worksheet->getCellByColumnAndRow(9, $row)->getValue();
                     $email     = ($email) ? $email : 'phantom@'.$id.'fastermessage.com';
-                    //dd($email);
+                    dd($email);
                     $company   = $worksheet->getCellByColumnAndRow(11, $row)->getValue();
                     $registre  = $worksheet->getCellByColumnAndRow(12, $row)->getValue();
                     $ifu       = $worksheet->getCellByColumnAndRow(13, $row)->getValue();
