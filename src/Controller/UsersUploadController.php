@@ -95,6 +95,7 @@ class UsersUploadController extends AbstractController
     #[Route('/user', name: 'users_imports', methods: ['POST', 'GET'])]
     public function importFil(Request $request, SluggerInterface $slugger, UserPasswordHasherInterface $userPasswordHasher)
     {
+        dd('de');
         /** @var UploadedFile $FILE */
             $file = $this->getParameter('avatar_directory').'reseller.csv';
             try {
