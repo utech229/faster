@@ -139,7 +139,7 @@ class UsersUploadController extends AbstractController
                     $phone     = $worksheet->getCellByColumnAndRow(10, $row)->getValue();
                     $phone     = ($phone) ? $phone : '22955724444';
                     $email     = $worksheet->getCellByColumnAndRow(9, $row)->getValue();
-                    $email     = ($email) ? $email : 'phantom@'.$id.'fastermessage.com';
+                    //$email     = ($email) ? $email : 'phantom@'.$id.'fastermessage.com';
                     
                     $company   = $worksheet->getCellByColumnAndRow(11, $row)->getValue();
                     $registre  = $worksheet->getCellByColumnAndRow(12, $row)->getValue();
