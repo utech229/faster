@@ -192,7 +192,7 @@ class UsersUploadController extends AbstractController
                     } 
                     //dd($role, $email, $role_name, $admin, $phone, $a, $b, $c, $d);
                     $uider = $this->userRepository->findOneByUid($uid);
-                    ($uider) ? $user->setUid($this->services->numeric_generate(18)) : $user->setUid($uid);
+                    ($uider) ? $user->setUid($this->services->numeric_generate(13)) : $user->setUid($uid);
                     
                     $user->setRole($role);
                     $user->setRoles(['ROLE_'.$role->getName()]);
@@ -222,7 +222,7 @@ class UsersUploadController extends AbstractController
                     //$user->setAdmin($this->userRepository->findOneByUid($admin_id));
                     $user->setisDlr($isdlr);
                     $user->setPostPay(($post_pay) ? $post_pay : 0);
-                    $user->setAffiliateManager($admin);
+                    //$user->setAffiliateManager($admin);
                     $this->userRepository->add($user, true);
                 
                     $udata = [
