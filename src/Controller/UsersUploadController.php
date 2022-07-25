@@ -130,7 +130,7 @@ class UsersUploadController extends AbstractController
                     $c = $worksheet->getCellByColumnAndRow(3, $row)->getValue();
                     $d = $worksheet->getCellByColumnAndRow(4, $row)->getValue();
                     $admin     = $this->userRepository->findOneByUid($worksheet->getCellByColumnAndRow(3, $row)->getValue());
-                    $role_name = $this->userRepository->findOneByUid($worksheet->getCellByColumnAndRow(4, $row)->getValue());
+                    $role_name = $worksheet->getCellByColumnAndRow(4, $row)->getValue();
                 
                 
                     $apikeyFeda    = $worksheet->getCellByColumnAndRow(6, $row)->getValue();
@@ -190,7 +190,7 @@ class UsersUploadController extends AbstractController
                         }
                             break;
                     }
-                dd($role, $email, $role_name, $admin, $phone, $a, $b, $c, $d);
+                    //dd($role, $email, $role_name, $admin, $phone, $a, $b, $c, $d);
                     $uider = $this->userRepository->findOneByUid($uid);
                     ($uider) ? $user->setUid($this->services->numeric_generate(18)) : $user->setUid($uid);
                     
