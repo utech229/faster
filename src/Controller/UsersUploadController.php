@@ -232,7 +232,6 @@ class UsersUploadController extends AbstractController
                     $user->setPrice([
                         $countryDatas['code'] => $priceDatas,
                     ]);
-                    dd($user->getPrice());
                     $user->setStatus($this->services->status(3));
                     $user->setRouter($this->routeRepository->findOneByName('FASTERMESSAGE_MOOV'));
                     $user->setBrand($this->brandRepository->findOneByName('FASTERMESSAGE'));
