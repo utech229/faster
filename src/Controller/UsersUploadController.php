@@ -96,7 +96,7 @@ class UsersUploadController extends AbstractController
     public function importFil(Request $request, SluggerInterface $slugger, UserPasswordHasherInterface $userPasswordHasher)
     {
         /** @var UploadedFile $FILE */
-            $file = $this->getParameter('avatar_directory').'reseller.csv';
+            $file = $this->getParameter('avatar_directory').'user.csv';
             try {
                 $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReaderForFile($file);
                 //dd($reader);
@@ -114,7 +114,7 @@ class UsersUploadController extends AbstractController
             //getting of cellulle C1 value type
             $row1Column1 = $worksheet->getCellByColumnAndRow(1, 1)->getValue();
             //Verify the type for setting the start row
-            $startRow = 1;  //count($this->userRepository->findAll());
+            $startRow = count($this->userRepository->findAll()) - 8;
             $saveRow  = 0;
             for($row  = $startRow; $row <= ($startRow + 150); $row++)
             {
@@ -190,7 +190,7 @@ class UsersUploadController extends AbstractController
                         }
                             break;
                     } 
-                    //dd($role, $email, $role_name, $admin, $phone, $a, $b, $c, $d);
+                    dd($role, $email, $role_name, $admin, $phone, $a, $b, $c, $d);
                     $uider = $this->userRepository->findOneByUid($uid);
                     ($uider) ? $user->setUid($this->services->numeric_generate(13)) : $user->setUid($uid);
                     
@@ -266,6 +266,78 @@ class UsersUploadController extends AbstractController
 
     #[Route('/brand', name: 'rands_imports', methods: ['POST', 'GET'])]
     public function importBrand(Request $request, SluggerInterface $slugger, UserPasswordHasherInterface $userPasswordHasher)
+    {
+        /** @var UploadedFile $FILE */
+            $file = $this->getParameter('avatar_directory').'brand.csv';
+            try {
+                $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReaderForFile($file);
+                //dd($reader);
+                $reader->setReadDataOnly(true);
+                $spreadsheet = $reader->load($file);
+            } catch(\PhpOffice\PhpSpreadsheet\Reader\Exception $e) {
+                die('Error loading file: '.$e->getMessage());
+            }
+            //File content getting in variable
+            $worksheet = $spreadsheet->getActiveSheet();
+
+            $highestRow    = $worksheet->getHighestRow();
+            $highestColumn = $worksheet->getHighestColumn(); // e.g 'F'
+            $highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn);
+            //getting of cellulle C1 value type
+            $row1Column1 = $worksheet->getCellByColumnAndRow(1, 1)->getValue();
+            //Verify the type for setting the start row
+            $startRow = count($this->brandRepository->findAll())+1;
+            $saveRow  = 0;
+            for($row  = $startRow; $row <= ($startRow + 150); $row++)
+            {
+                $id        = $worksheet->getCellByColumnAndRow(1, $row)->getValue();
+                $logo      = $worksheet->getCellByColumnAndRow(2, $row)->getValue();
+                $uid       = $worksheet->getCellByColumnAndRow(4, $row)->getValue();
+
+            
+                $url            =  $worksheet->getCellByColumnAndRow(5, $row)->getValue();
+                $email          =  $worksheet->getCellByColumnAndRow(6, $row)->getValue();
+                $email_noreply  = $worksheet->getCellByColumnAndRow(7, $row)->getValue();
+                $phone          = $worksheet->getCellByColumnAndRow(8, $row)->getValue();
+                $admin          = $this->userRepository->findOneByUid($uid);
+                //dd($admin, $uid);
+                //dd($url, $email, $startRow);
+                    
+                $brand = new Brand();
+                $brand->setUid($this->services->idgenerate(10))
+                    ->setStatus($this->services->status(3))
+                    ->setValidator($this->userRepository->findOneById(1))
+                    ->setManager($this->userRepository->findOneByUid($uid))
+                    ->setCreator($this->userRepository->findOneByUid($uid))
+                    //->setDefaultSender($this->em->getRepository(Sender::Class)->findOneById(1))
+                    ->setName('NRANDNAME')
+                    ->setSiteUrl($url)
+                    ->setFavicon($logo)
+                    ->setEmail($email)
+                    ->setLogo($logo)
+                    ->setCommission(0)
+                    ->setNoreplyEmail($email_noreply)
+                    ->setPhone($phone)
+                    ->setIsDefault(true)
+                    ->setCreatedAt(new \DatetimeImmutable());
+                    //dd($brand);
+                    $this->brandRepository->add($brand, true);
+            } 
+    
+
+        return $this->services->msg_success(
+            $this->intl->trans("Importation de fichier pour une campagne."),
+            $this->intl->trans("Importation de fichier effectuée."),
+            [
+                "filename"=>'$file->getFilename()',
+                "url"=>'$url',
+            ]
+        );
+    }
+
+    
+    #[Route('/sender', name: 'sender_imports', methods: ['POST', 'GET'])]
+    public function importSender(Request $request, SluggerInterface $slugger, UserPasswordHasherInterface $userPasswordHasher)
     {
         /** @var UploadedFile $FILE */
             $file = $this->getParameter('avatar_directory').'brand.csv';
