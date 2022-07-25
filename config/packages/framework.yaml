@@ -21,7 +21,7 @@ framework:
         legacy_error_messages: false
 
     assets:
-        base_path: /
+        base_path: /public/
         version: v1.2
         packages:
             avatars:
