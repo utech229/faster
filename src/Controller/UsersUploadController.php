@@ -232,7 +232,7 @@ class UsersUploadController extends AbstractController
                     $user->setPrice([
                         $countryDatas['code'] => $priceDatas,
                     ]);
-                    dd($email);
+                    //dd($email);
                     $user->setStatus($this->services->status(3));
                     $user->setRouter($this->routeRepository->findOneByName('FASTERMESSAGE_MOOV'));
                     $user->setBrand($this->brandRepository->findOneByName('FASTERMESSAGE'));
